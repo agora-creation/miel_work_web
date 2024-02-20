@@ -46,71 +46,74 @@ class _UserScreenState extends State<UserScreen> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'ここで追加したスタッフのメールアドレスとパスワードは、スマホアプリでログインする時に使用します。',
-                  style: TextStyle(fontSize: 14),
-                ),
-                CustomButtonSm(
-                  labelText: 'スタッフ追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AddUserDialog(
-                      organization: widget.organization,
-                      group: widget.group,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'ここで追加したスタッフのメールアドレスとパスワードは、スマホアプリでログインする時に使用します。',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  CustomButtonSm(
+                    labelText: 'スタッフ追加',
+                    labelColor: kWhiteColor,
+                    backgroundColor: kBlueColor,
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => AddUserDialog(
+                        organization: widget.organization,
+                        group: widget.group,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: userService.streamList(
-                organizationId: widget.organization?.id ?? 'error',
-                groupId: widget.group?.id ?? 'error',
+                ],
               ),
-              builder: (context, snapshot) {
-                List<UserModel> users = [];
-                if (snapshot.hasData) {
-                  for (DocumentSnapshot<Map<String, dynamic>> doc
-                      in snapshot.data!.docs) {
-                    users.add(UserModel.fromSnapshot(doc));
+              const SizedBox(height: 8),
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: userService.streamList(
+                  organizationId: widget.organization?.id ?? 'error',
+                  groupId: widget.group?.id ?? 'error',
+                ),
+                builder: (context, snapshot) {
+                  List<UserModel> users = [];
+                  if (snapshot.hasData) {
+                    for (DocumentSnapshot<Map<String, dynamic>> doc
+                        in snapshot.data!.docs) {
+                      users.add(UserModel.fromSnapshot(doc));
+                    }
                   }
-                }
-                return CustomDataGrid(
-                  source: UserSource(
-                    context: context,
-                    users: users,
-                  ),
-                  columns: [
-                    GridColumn(
-                      columnName: 'name',
-                      label: const CustomColumnLabel('スタッフ名'),
+                  return CustomDataGrid(
+                    source: UserSource(
+                      context: context,
+                      users: users,
                     ),
-                    GridColumn(
-                      columnName: 'email',
-                      label: const CustomColumnLabel('メールアドレス'),
-                    ),
-                    GridColumn(
-                      columnName: 'password',
-                      label: const CustomColumnLabel('パスワード'),
-                    ),
-                    GridColumn(
-                      columnName: 'edit',
-                      label: const CustomColumnLabel('操作'),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+                    columns: [
+                      GridColumn(
+                        columnName: 'name',
+                        label: const CustomColumnLabel('スタッフ名'),
+                      ),
+                      GridColumn(
+                        columnName: 'email',
+                        label: const CustomColumnLabel('メールアドレス'),
+                      ),
+                      GridColumn(
+                        columnName: 'password',
+                        label: const CustomColumnLabel('パスワード'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

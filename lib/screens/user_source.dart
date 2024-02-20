@@ -72,6 +72,16 @@ class UserSource extends DataGridSource {
             builder: (context) => ModUserDialog(user: user),
           ),
         ),
+        const SizedBox(width: 4),
+        CustomButtonSm(
+          labelText: '削除',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => DelUserDialog(user: user),
+          ),
+        ),
       ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
@@ -213,6 +223,75 @@ class _ModUserDialogState extends State<ModUserDialog> {
             });
             if (!mounted) return;
             showMessage(context, 'スタッフ情報を編集しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DelUserDialog extends StatefulWidget {
+  final UserModel user;
+
+  const DelUserDialog({
+    required this.user,
+    super.key,
+  });
+
+  @override
+  State<DelUserDialog> createState() => _DelUserDialogState();
+}
+
+class _DelUserDialogState extends State<DelUserDialog> {
+  UserService userService = UserService();
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'スタッフ - 削除',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(child: Text('本当に削除しますか？')),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'スタッフ名',
+            child: Text(widget.user.name),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'メールアドレス',
+            child: Text(widget.user.email),
+          ),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'パスワード',
+            child: Text(widget.user.password),
+          ),
+        ],
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () {
+            userService.delete({
+              'id': widget.user.id,
+            });
+            if (!mounted) return;
+            showMessage(context, 'スタッフを削除しました', true);
             Navigator.pop(context);
           },
         ),

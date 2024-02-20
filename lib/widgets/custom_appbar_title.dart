@@ -57,7 +57,7 @@ class _CustomAppbarTitleState extends State<CustomAppbarTitle> {
           ),
           const SizedBox(width: 4),
           CustomButtonSm(
-            labelText: 'グループを追加',
+            labelText: 'グループ追加',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: widget.addOnPressed,

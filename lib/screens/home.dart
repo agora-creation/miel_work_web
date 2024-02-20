@@ -4,7 +4,13 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/chat.dart';
+import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/login.dart';
+import 'package:miel_work_web/screens/manual.dart';
+import 'package:miel_work_web/screens/notice.dart';
+import 'package:miel_work_web/screens/plan.dart';
+import 'package:miel_work_web/screens/plan_shift.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_appbar_title.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -75,72 +81,56 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.schedule_event_action),
+            icon: const Icon(FluentIcons.calendar),
             title: const Text('スケジュール表'),
-            body: const Center(
-              child: Text(
-                'グループが選択されていません',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 18,
-                ),
-              ),
+            body: PlanScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.check_list),
+            icon: const Icon(FluentIcons.view_list),
             title: const Text('シフト表'),
-            body: const Center(
-              child: Text(
-                'グループが選択されていません',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 18,
-                ),
-              ),
+            body: PlanShiftScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.timeline_delivery),
+            icon: const Icon(FluentIcons.office_chat),
             title: const Text('チャット'),
-            body: const Center(
-              child: Text(
-                'グループが選択されていません',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 18,
-                ),
-              ),
+            body: ChatScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
+            ),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.news),
+            title: const Text('お知らせ'),
+            body: NoticeScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
+            ),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.documentation),
+            title: const Text('業務マニュアル'),
+            body: ManualScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.settings),
-            title: const Text('お知らせ'),
-            body: const Center(
-              child: Text(
-                'グループが選択されていません',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.group),
             title: const Text('グループ設定'),
-            body: const Center(
-              child: Text(
-                'グループが選択されていません',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 18,
-                ),
-              ),
+            body: GroupSettingScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -250,7 +240,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('本当にログアウトしますか？'),
+            Center(child: Text('本当にログアウトしますか？')),
           ],
         ),
       ),
