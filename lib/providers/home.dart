@@ -36,6 +36,11 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void currentGroupClear() {
+    currentGroup = null;
+    notifyListeners();
+  }
+
   Future<String?> groupCreate({
     required OrganizationModel? organization,
     required String name,

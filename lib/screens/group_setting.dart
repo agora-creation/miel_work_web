@@ -1,7 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/screens/home.dart';
+import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
@@ -58,7 +61,13 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
               LinkText(
                 label: 'このグループを削除',
                 color: kRedColor,
-                onTap: () {},
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => DelGroupDialog(
+                    organization: widget.organization,
+                    group: widget.group,
+                  ),
+                ),
               ),
             ],
           ),
@@ -83,7 +92,14 @@ class ModGroupNameDialog extends StatefulWidget {
 }
 
 class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
+  OrganizationGroupService groupService = OrganizationGroupService();
   TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.group?.name ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,25 +129,90 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         CustomButtonSm(
-          labelText: '追加する',
+          labelText: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            // String id = userService.id();
-            // userService.create({
-            //   'id': id,
-            //   'organizationId': widget.organization?.id,
-            //   'groupId': widget.group?.id,
-            //   'name': nameController.text,
-            //   'email': emailController.text,
-            //   'password': passwordController.text,
-            //   'uid': '',
-            //   'token': '',
-            //   'createdAt': DateTime.now(),
-            // });
-            // if (!mounted) return;
-            // showMessage(context, 'スタッフを追加しました', true);
-            // Navigator.pop(context);
+            groupService.update({
+              'id': widget.group?.id,
+              'organizationId': widget.organization?.id,
+              'name': nameController.text,
+            });
+            if (!mounted) return;
+            showMessage(context, 'グループ名を更新しました', true);
+            Navigator.pushReplacement(
+              context,
+              FluentPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DelGroupDialog extends StatefulWidget {
+  final OrganizationModel? organization;
+  final OrganizationGroupModel? group;
+
+  const DelGroupDialog({
+    required this.organization,
+    required this.group,
+    super.key,
+  });
+
+  @override
+  State<DelGroupDialog> createState() => _DelGroupDialogState();
+}
+
+class _DelGroupDialogState extends State<DelGroupDialog> {
+  OrganizationGroupService groupService = OrganizationGroupService();
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'グループ - 削除',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Center(child: Text('本当に削除しますか？')),
+          const SizedBox(height: 8),
+          InfoLabel(
+            label: 'グループ名',
+            child: Text(widget.group?.name ?? ''),
+          ),
+        ],
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () {
+            groupService.delete({
+              'id': widget.group?.id,
+              'organizationId': widget.organization?.id,
+            });
+            if (!mounted) return;
+            showMessage(context, 'グループを削除しました', true);
+            Navigator.pushReplacement(
+              context,
+              FluentPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
           },
         ),
       ],

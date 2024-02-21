@@ -134,6 +134,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.document),
+            title: const Text('稟議書申請'),
+            body: Container(),
+          ),
+          PaneItemSeparator(),
         ],
       ),
     );

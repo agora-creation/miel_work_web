@@ -54,9 +54,9 @@ class _UserScreenState extends State<UserScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'ここで追加したスタッフのメールアドレスとパスワードは、スマホアプリでログインする時に使用します。',
-                    style: TextStyle(fontSize: 14),
+                  Text(
+                    '『${widget.group?.name}』のスタッフを追加してください。',
+                    style: const TextStyle(fontSize: 14),
                   ),
                   CustomButtonSm(
                     labelText: 'スタッフ追加',
