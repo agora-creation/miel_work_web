@@ -52,7 +52,7 @@ class OrganizationGroupService {
         .collection(collection)
         .doc(organizationId)
         .collection(subCollection)
-        .orderBy('createdAt', descending: true)
+        .orderBy('createdAt', descending: false)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {

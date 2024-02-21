@@ -18,12 +18,17 @@ class CustomButtonSm extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton(
       onPressed: onPressed,
-      style: ButtonStyle(backgroundColor: ButtonState.all(backgroundColor)),
-      child: Text(
-        labelText,
-        style: TextStyle(
-          color: labelColor,
-          fontSize: 14,
+      style: ButtonStyle(
+        backgroundColor: ButtonState.all(backgroundColor),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: Text(
+          labelText,
+          style: TextStyle(
+            color: labelColor,
+            fontSize: 14,
+          ),
         ),
       ),
     );

@@ -44,21 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
               homeProvider: homeProvider,
             ),
           ),
-        ),
-        actions: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: CustomButtonSm(
-              labelText: 'ログアウト',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => LogoutDialog(
-                  loginProvider: loginProvider,
-                ),
-              ),
+          logoutOnPressed: () => showDialog(
+            context: context,
+            builder: (context) => LogoutDialog(
+              loginProvider: loginProvider,
             ),
           ),
         ),
@@ -70,15 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         displayMode: PaneDisplayMode.top,
         items: [
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.group),
-            title: const Text('スタッフ管理'),
-            body: UserScreen(
-              organization: organization,
-              group: homeProvider.currentGroup,
-            ),
-          ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.calendar),
@@ -126,18 +106,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.settings),
-            title: const Text('グループ設定'),
-            body: GroupSettingScreen(
-              organization: organization,
-              group: homeProvider.currentGroup,
-            ),
+            icon: const Icon(FluentIcons.number_field),
+            title: const Text('メーター検針'),
+            body: Container(),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.document),
             title: const Text('稟議書申請'),
             body: Container(),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.group),
+            title: const Text('スタッフ管理'),
+            body: UserScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
+            ),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.settings),
+            title: const Text('グループ設定'),
+            body: GroupSettingScreen(
+              organization: organization,
+              group: homeProvider.currentGroup,
+            ),
           ),
           PaneItemSeparator(),
         ],
@@ -167,7 +162,7 @@ class _AddGroupDialogState extends State<AddGroupDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        'グループ - 追加',
+        'グループを新規追加する',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -179,7 +174,7 @@ class _AddGroupDialogState extends State<AddGroupDialog> {
               label: 'グループ名',
               child: CustomTextBox(
                 controller: nameController,
-                placeholder: '例) 部署名や役職名など',
+                placeholder: '',
                 keyboardType: TextInputType.text,
                 maxLines: 1,
               ),

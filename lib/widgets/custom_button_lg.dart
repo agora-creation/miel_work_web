@@ -20,7 +20,9 @@ class CustomButtonLg extends StatelessWidget {
       width: double.infinity,
       child: FilledButton(
         onPressed: onPressed,
-        style: ButtonStyle(backgroundColor: ButtonState.all(backgroundColor)),
+        style: ButtonStyle(
+          backgroundColor: ButtonState.all(backgroundColor),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(

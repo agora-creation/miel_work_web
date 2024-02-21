@@ -55,7 +55,7 @@ class _UserScreenState extends State<UserScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '『${widget.group?.name}』のスタッフを追加してください。',
+                    '『${widget.group?.name}』に所属しているスタッフを登録してください。',
                     style: const TextStyle(fontSize: 14),
                   ),
                   CustomButtonSm(
