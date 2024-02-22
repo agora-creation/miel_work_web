@@ -6,6 +6,7 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/user_source.dart';
 import 'package:miel_work_web/services/organization.dart';
 import 'package:miel_work_web/services/organization_group.dart';
@@ -35,7 +36,7 @@ class _UserScreenState extends State<UserScreen> {
   UserService userService = UserService();
   List<UserModel> users = [];
 
-  void _init() async {
+  void _getUses() async {
     List<UserModel> tmpUsers = [];
     if (widget.group == null) {
       tmpUsers = await userService.selectList(
@@ -54,7 +55,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
-    _init();
+    _getUses();
   }
 
   @override
@@ -83,6 +84,7 @@ class _UserScreenState extends State<UserScreen> {
                     builder: (context) => AddUserDialog(
                       organization: widget.organization,
                       group: widget.group,
+                      getUsers: _getUses,
                     ),
                   ),
                 ),
@@ -93,6 +95,7 @@ class _UserScreenState extends State<UserScreen> {
               source: UserSource(
                 context: context,
                 users: users,
+                getUsers: _getUses,
               ),
               columns: [
                 GridColumn(
@@ -106,6 +109,10 @@ class _UserScreenState extends State<UserScreen> {
                 GridColumn(
                   columnName: 'password',
                   label: const CustomColumnLabel('パスワード'),
+                ),
+                GridColumn(
+                  columnName: 'smartphone',
+                  label: const CustomColumnLabel('スマホアプリ'),
                 ),
                 GridColumn(
                   columnName: 'edit',
@@ -123,10 +130,12 @@ class _UserScreenState extends State<UserScreen> {
 class AddUserDialog extends StatefulWidget {
   final OrganizationModel? organization;
   final OrganizationGroupModel? group;
+  final Function() getUsers;
 
   const AddUserDialog({
     required this.organization,
     required this.group,
+    required this.getUsers,
     super.key,
   });
 
@@ -144,9 +153,16 @@ class _AddUserDialogState extends State<AddUserDialog> {
   TextEditingController passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    selectedGroup = widget.group;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
     if (homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
@@ -170,21 +186,6 @@ class _AddUserDialogState extends State<AddUserDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InfoLabel(
-              label: '所属グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
-            ),
-            const SizedBox(height: 8),
             InfoLabel(
               label: 'スタッフ名',
               child: CustomTextBox(
@@ -214,6 +215,21 @@ class _AddUserDialogState extends State<AddUserDialog> {
                 maxLines: 1,
               ),
             ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '所属グループ',
+              child: ComboBox<OrganizationGroupModel>(
+                isExpanded: true,
+                value: selectedGroup,
+                items: groupItems,
+                onChanged: (value) {
+                  setState(() {
+                    selectedGroup = value;
+                  });
+                },
+                placeholder: const Text('グループ未選択'),
+              ),
+            ),
           ],
         ),
       ),
@@ -229,41 +245,23 @@ class _AddUserDialogState extends State<AddUserDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            if (nameController.text == '') return;
-            if (emailController.text == '') return;
-            if (passwordController.text == '') return;
-            String id = userService.id();
-            userService.create({
-              'id': id,
-              'name': nameController.text,
-              'email': emailController.text,
-              'password': passwordController.text,
-              'uid': '',
-              'token': '',
-              'createdAt': DateTime.now(),
-            });
-            if (widget.organization != null) {
-              List<String> userIds = widget.organization?.userIds ?? [];
-              if (!userIds.contains(id)) {
-                userIds.add(id);
-              }
-              organizationService.update({
-                'id': widget.organization?.id,
-                'userIds': userIds,
-              });
-            }
-            if (selectedGroup != null) {
-              List<String> userIds = selectedGroup?.userIds ?? [];
-              if (!userIds.contains(id)) {
-                userIds.add(id);
-              }
-              groupService.update({
-                'id': selectedGroup?.id,
-                'organizationId': selectedGroup?.organizationId,
-                'userIds': userIds,
-              });
+            String? error = await userProvider.create(
+              organization: widget.organization,
+              name: nameController.text,
+              email: emailController.text,
+              password: passwordController.text,
+              group: selectedGroup,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
             }
             await loginProvider.reload();
+            homeProvider.setGroups(
+              organizationId: selectedGroup?.organizationId ?? 'error',
+            );
+            widget.getUsers();
             if (!mounted) return;
             showMessage(context, 'スタッフを追加しました', true);
             Navigator.pop(context);

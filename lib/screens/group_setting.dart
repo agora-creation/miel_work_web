@@ -3,12 +3,13 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
-import 'package:miel_work_web/screens/home.dart';
+import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:provider/provider.dart';
 
 class GroupSettingScreen extends StatefulWidget {
   final OrganizationModel? organization;
@@ -27,17 +28,6 @@ class GroupSettingScreen extends StatefulWidget {
 class _GroupSettingScreenState extends State<GroupSettingScreen> {
   @override
   Widget build(BuildContext context) {
-    if (widget.group == null) {
-      return const Center(
-        child: Text(
-          'グループが選択されていません',
-          style: TextStyle(
-            color: kWhiteColor,
-            fontSize: 18,
-          ),
-        ),
-      );
-    }
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -103,6 +93,8 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<HomeProvider>(context);
+
     return ContentDialog(
       content: SingleChildScrollView(
         child: Column(
@@ -133,19 +125,19 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            groupService.update({
-              'id': widget.group?.id,
-              'organizationId': widget.organization?.id,
-              'name': nameController.text,
-            });
-            if (!mounted) return;
-            showMessage(context, 'グループ名を更新しました', true);
-            Navigator.pushReplacement(
-              context,
-              FluentPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
+            String? error = await homeProvider.groupUpdate(
+              organization: widget.organization,
+              group: widget.group,
+              name: nameController.text,
             );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'グループ名を変更しました', true);
+            Navigator.pop(context);
           },
         ),
       ],
@@ -172,9 +164,11 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<HomeProvider>(context);
+
     return ContentDialog(
       title: const Text(
-        'グループ - 削除',
+        'グループを削除する',
         style: TextStyle(fontSize: 18),
       ),
       content: Column(
@@ -200,19 +194,20 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
           labelText: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () {
-            groupService.delete({
-              'id': widget.group?.id,
-              'organizationId': widget.organization?.id,
-            });
+          onPressed: () async {
+            String? error = await homeProvider.groupDelete(
+              organization: widget.organization,
+              group: widget.group,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            homeProvider.currentGroupClear();
             if (!mounted) return;
             showMessage(context, 'グループを削除しました', true);
-            Navigator.pushReplacement(
-              context,
-              FluentPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
       ],

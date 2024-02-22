@@ -1,20 +1,29 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/providers/user.dart';
+import 'package:miel_work_web/services/organization.dart';
+import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserSource extends DataGridSource {
   final BuildContext context;
   final List<UserModel> users;
+  final Function() getUsers;
 
   UserSource({
     required this.context,
     required this.users,
+    required this.getUsers,
   }) {
     buildDataGridRows();
   }
@@ -40,6 +49,10 @@ class UserSource extends DataGridSource {
           columnName: 'password',
           value: user.password,
         ),
+        DataGridCell(
+          columnName: 'uid',
+          value: user.uid,
+        ),
       ]);
     }).toList();
   }
@@ -61,6 +74,11 @@ class UserSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
+    String loginStatus = '';
+    if (row.getCells()[4].value != '') {
+      loginStatus = 'ログイン中';
+    }
+    cells.add(CustomColumnLabel(loginStatus));
     cells.add(Row(
       children: [
         CustomButtonSm(
@@ -69,7 +87,10 @@ class UserSource extends DataGridSource {
           backgroundColor: kBlueColor,
           onPressed: () => showDialog(
             context: context,
-            builder: (context) => ModUserDialog(user: user),
+            builder: (context) => ModUserDialog(
+              user: user,
+              getUsers: getUsers,
+            ),
           ),
         ),
         const SizedBox(width: 4),
@@ -136,9 +157,11 @@ class UserSource extends DataGridSource {
 
 class ModUserDialog extends StatefulWidget {
   final UserModel user;
+  final Function() getUsers;
 
   const ModUserDialog({
     required this.user,
+    required this.getUsers,
     super.key,
   });
 
@@ -147,7 +170,10 @@ class ModUserDialog extends StatefulWidget {
 }
 
 class _ModUserDialogState extends State<ModUserDialog> {
+  OrganizationService organizationService = OrganizationService();
+  OrganizationGroupService groupService = OrganizationGroupService();
   UserService userService = UserService();
+  OrganizationGroupModel? selectedGroup;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -162,46 +188,79 @@ class _ModUserDialogState extends State<ModUserDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final loginProvider = Provider.of<LoginProvider>(context);
+    final homeProvider = Provider.of<HomeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
+    if (homeProvider.groups.isNotEmpty) {
+      groupItems.add(const ComboBoxItem(
+        value: null,
+        child: Text('グループ未選択'),
+      ));
+      for (OrganizationGroupModel group in homeProvider.groups) {
+        groupItems.add(ComboBoxItem(
+          value: group,
+          child: Text(group.name),
+        ));
+      }
+    }
     return ContentDialog(
       title: const Text(
-        'スタッフ - 編集',
+        'スタッフ情報を編集する',
         style: TextStyle(fontSize: 18),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InfoLabel(
-            label: 'スタッフ名',
-            child: CustomTextBox(
-              controller: nameController,
-              placeholder: '例) 山田花子',
-              keyboardType: TextInputType.text,
-              maxLines: 1,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: 'スタッフ名',
+              child: CustomTextBox(
+                controller: nameController,
+                placeholder: '例) 山田花子',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'メールアドレス',
-            child: CustomTextBox(
-              controller: emailController,
-              placeholder: '例) yamada@example.jp',
-              keyboardType: TextInputType.emailAddress,
-              maxLines: 1,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'メールアドレス',
+              child: CustomTextBox(
+                controller: emailController,
+                placeholder: '例) yamada@example.jp',
+                keyboardType: TextInputType.emailAddress,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'パスワード',
-            child: CustomTextBox(
-              controller: passwordController,
-              placeholder: '',
-              keyboardType: TextInputType.visiblePassword,
-              maxLines: 1,
-              obscureText: true,
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'パスワード',
+              child: CustomTextBox(
+                controller: passwordController,
+                placeholder: '',
+                keyboardType: TextInputType.visiblePassword,
+                maxLines: 1,
+                obscureText: true,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '所属グループ',
+              child: ComboBox<OrganizationGroupModel>(
+                isExpanded: true,
+                value: selectedGroup,
+                items: groupItems,
+                onChanged: (value) {
+                  setState(() {
+                    selectedGroup = value;
+                  });
+                },
+                placeholder: const Text('グループ未選択'),
+              ),
+            ),
+          ],
+        ),
       ),
       actions: [
         CustomButtonSm(
@@ -214,13 +273,24 @@ class _ModUserDialogState extends State<ModUserDialog> {
           labelText: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () {
-            userService.update({
-              'id': widget.user.id,
-              'name': nameController.text,
-              'email': emailController.text,
-              'password': passwordController.text,
-            });
+          onPressed: () async {
+            String? error = await userProvider.update(
+              user: widget.user,
+              name: nameController.text,
+              email: emailController.text,
+              password: passwordController.text,
+              group: selectedGroup,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            await loginProvider.reload();
+            homeProvider.setGroups(
+              organizationId: selectedGroup?.organizationId ?? 'error',
+            );
+            widget.getUsers();
             if (!mounted) return;
             showMessage(context, 'スタッフ情報を編集しました', true);
             Navigator.pop(context);

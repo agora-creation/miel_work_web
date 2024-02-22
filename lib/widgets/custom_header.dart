@@ -28,7 +28,7 @@ class _CustomHeaderState extends State<CustomHeader> {
   void initState() {
     super.initState();
     widget.homeProvider.setGroups(
-      organization: widget.loginProvider.organization,
+      organizationId: widget.loginProvider.organization?.id ?? 'error',
     );
   }
 

@@ -31,11 +31,11 @@ class _NoticeScreenState extends State<NoticeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'お知らせをここで作成し、各スタッフに送信してください。',
+                  'お知らせを作成し、各スタッフに送信してください。',
                   style: TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
-                  labelText: 'お知らせ作成',
+                  labelText: 'お知らせの作成',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   onPressed: () {},
