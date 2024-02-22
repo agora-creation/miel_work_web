@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController loginIdController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Text(
-                    '団体管理者用',
+                    '管理画面',
                     style: TextStyle(
                       color: kWhiteColor,
                       fontSize: 18,
@@ -57,12 +57,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
+                      Text('管理者のメールアドレスとパスワードを入力してください。'),
+                      const SizedBox(height: 8),
                       InfoLabel(
-                        label: 'ログインID',
+                        label: 'メールアドレス',
                         child: CustomTextBox(
-                          controller: loginIdController,
+                          controller: emailController,
                           placeholder: '',
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.emailAddress,
                           maxLines: 1,
                         ),
                       ),
@@ -84,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         backgroundColor: kBlueColor,
                         onPressed: () async {
                           String? error = await loginProvider.login(
-                            loginId: loginIdController.text,
+                            email: emailController.text,
                             password: passwordController.text,
                           );
                           if (error != null) {

@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void showMessage(BuildContext context, String msg, bool success) {
@@ -10,6 +11,14 @@ void showMessage(BuildContext context, String msg, bool success) {
           success == true ? InfoBarSeverity.success : InfoBarSeverity.error,
     );
   });
+}
+
+void showBottomUpScreen(BuildContext context, Widget widget) {
+  showMaterialModalBottomSheet(
+    expand: true,
+    context: context,
+    builder: (context) => widget,
+  );
 }
 
 Future<int?> getPrefsInt(String key) async {

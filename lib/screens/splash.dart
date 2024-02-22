@@ -26,7 +26,7 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '団体管理者用',
+                    '管理画面',
                     style: TextStyle(
                       color: kWhiteColor,
                       fontSize: 18,

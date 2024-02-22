@@ -4,6 +4,7 @@ class OrganizationGroupModel {
   String _id = '';
   String _organizationId = '';
   String _name = '';
+  List<String> userIds = [];
   DateTime _createdAt = DateTime.now();
 
   String get id => _id;
@@ -18,6 +19,15 @@ class OrganizationGroupModel {
     _id = data['id'] ?? '';
     _organizationId = data['organizationId'] ?? '';
     _name = data['name'] ?? '';
+    userIds = _convertUserIds(data['userIds']);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
+  }
+
+  List<String> _convertUserIds(List list) {
+    List<String> ret = [];
+    for (dynamic id in list) {
+      ret.add('$id');
+    }
+    return ret;
   }
 }

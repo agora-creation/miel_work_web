@@ -4,7 +4,7 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 
 class HomeProvider with ChangeNotifier {
-  int currentIndex = 0;
+  int currentIndex = 4;
   final OrganizationGroupService _groupService = OrganizationGroupService();
   List<OrganizationGroupModel> groups = [];
   OrganizationGroupModel? currentGroup;
@@ -19,9 +19,7 @@ class HomeProvider with ChangeNotifier {
   }) async {
     if (organization != null) {
       groups = await _groupService.selectList(organizationId: organization.id);
-      if (groups.isNotEmpty) {
-        currentGroup = groups.first;
-      } else {
+      if (groups.isEmpty) {
         currentGroup = null;
       }
     } else {
@@ -31,8 +29,8 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void currentGroupChange(OrganizationGroupModel group) {
-    currentGroup = group;
+  void currentGroupChange(OrganizationGroupModel? value) {
+    currentGroup = value;
     notifyListeners();
   }
 
@@ -46,15 +44,18 @@ class HomeProvider with ChangeNotifier {
     required String name,
   }) async {
     String? error;
+    if (organization == null) return 'グループの追加に失敗しました';
     if (name == '') return 'グループ名は必須です';
     try {
-      String id = _groupService.id(organizationId: organization?.id ?? '');
+      String id = _groupService.id(organizationId: organization.id);
       _groupService.create({
         'id': id,
-        'organizationId': organization?.id,
+        'organizationId': organization.id,
         'name': name,
+        'userIds': [],
         'createdAt': DateTime.now(),
       });
+      setGroups(organization: organization);
     } catch (e) {
       error = 'グループの追加に失敗しました';
     }
