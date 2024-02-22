@@ -67,7 +67,8 @@ class UserProvider with ChangeNotifier {
     required String name,
     required String email,
     required String password,
-    required OrganizationGroupModel? group,
+    required OrganizationGroupModel? befGroup,
+    required OrganizationGroupModel? aftGroup,
   }) async {
     String? error;
     if (name == '') return 'スタッフ名を入力してください';
@@ -83,10 +84,49 @@ class UserProvider with ChangeNotifier {
         'email': email,
         'password': password,
       });
+      if (befGroup != aftGroup) {
+        if (befGroup != null) {
+          List<String> befGroupUserIds = befGroup.userIds;
+          if (befGroupUserIds.contains(user.id)) {
+            befGroupUserIds.remove(user.id);
+          }
+          _groupService.update({
+            'id': befGroup.id,
+            'organizationId': befGroup.organizationId,
+            'userIds': befGroupUserIds,
+          });
+        }
+        if (aftGroup != null) {
+          List<String> aftGroupUserIds = aftGroup.userIds;
+          if (!aftGroupUserIds.contains(user.id)) {
+            aftGroupUserIds.add(user.id);
+          }
+          _groupService.update({
+            'id': aftGroup.id,
+            'organizationId': aftGroup.organizationId,
+            'userIds': aftGroupUserIds,
+          });
+        }
+      }
+    } catch (e) {
+      error = 'スタッフ情報の編集に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> delete({
+    required UserModel user,
+    required OrganizationGroupModel? group,
+  }) async {
+    String? error;
+    try {
+      _userService.delete({
+        'id': user.id,
+      });
       if (group != null) {
         List<String> groupUserIds = group.userIds;
-        if (!groupUserIds.contains(user.id)) {
-          groupUserIds.add(user.id);
+        if (groupUserIds.contains(user.id)) {
+          groupUserIds.remove(user.id);
         }
         _groupService.update({
           'id': group.id,
@@ -95,7 +135,7 @@ class UserProvider with ChangeNotifier {
         });
       }
     } catch (e) {
-      error = 'スタッフ情報の編集に失敗しました';
+      error = 'スタッフの削除に失敗しました';
     }
     return error;
   }

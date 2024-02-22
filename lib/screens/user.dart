@@ -8,8 +8,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/user_source.dart';
-import 'package:miel_work_web/services/organization.dart';
-import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
@@ -19,10 +17,12 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserScreen extends StatefulWidget {
+  final HomeProvider homeProvider;
   final OrganizationModel? organization;
   final OrganizationGroupModel? group;
 
   const UserScreen({
+    required this.homeProvider,
     required this.organization,
     required this.group,
     super.key,
@@ -95,6 +95,7 @@ class _UserScreenState extends State<UserScreen> {
               source: UserSource(
                 context: context,
                 users: users,
+                groups: widget.homeProvider.groups,
                 getUsers: _getUses,
               ),
               columns: [
@@ -111,7 +112,11 @@ class _UserScreenState extends State<UserScreen> {
                   label: const CustomColumnLabel('パスワード'),
                 ),
                 GridColumn(
-                  columnName: 'smartphone',
+                  columnName: 'group',
+                  label: const CustomColumnLabel('所属グループ'),
+                ),
+                GridColumn(
+                  columnName: 'uid',
                   label: const CustomColumnLabel('スマホアプリ'),
                 ),
                 GridColumn(
@@ -144,9 +149,6 @@ class AddUserDialog extends StatefulWidget {
 }
 
 class _AddUserDialogState extends State<AddUserDialog> {
-  OrganizationService organizationService = OrganizationService();
-  OrganizationGroupService groupService = OrganizationGroupService();
-  UserService userService = UserService();
   OrganizationGroupModel? selectedGroup;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();

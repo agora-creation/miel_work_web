@@ -4,6 +4,8 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/draft.dart';
+import 'package:miel_work_web/screens/meter.dart';
 import 'package:miel_work_web/screens/user_setting.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
@@ -95,14 +97,20 @@ class _CustomHeaderState extends State<CustomHeader> {
                 labelText: 'メーター検針',
                 labelColor: kBlackColor,
                 backgroundColor: kYellowColor,
-                onPressed: () {},
+                onPressed: () => showBottomUpScreen(
+                  context,
+                  const MeterScreen(),
+                ),
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
                 labelText: '稟議書申請',
                 labelColor: kBlackColor,
                 backgroundColor: kOrangeColor,
-                onPressed: () {},
+                onPressed: () => showBottomUpScreen(
+                  context,
+                  const DraftScreen(),
+                ),
               ),
               const SizedBox(width: 4),
               CustomButtonSm(

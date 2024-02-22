@@ -6,9 +6,6 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
-import 'package:miel_work_web/services/organization.dart';
-import 'package:miel_work_web/services/organization_group.dart';
-import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
@@ -18,11 +15,13 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 class UserSource extends DataGridSource {
   final BuildContext context;
   final List<UserModel> users;
+  final List<OrganizationGroupModel> groups;
   final Function() getUsers;
 
   UserSource({
     required this.context,
     required this.users,
+    required this.groups,
     required this.getUsers,
   }) {
     buildDataGridRows();
@@ -74,6 +73,15 @@ class UserSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
+    OrganizationGroupModel? currentGroup;
+    if (groups.isNotEmpty) {
+      for (OrganizationGroupModel group in groups) {
+        if (group.userIds.contains(user.id)) {
+          currentGroup = group;
+        }
+      }
+    }
+    cells.add(CustomColumnLabel(currentGroup?.name ?? ''));
     String loginStatus = '';
     if (row.getCells()[4].value != '') {
       loginStatus = 'ログイン中';
@@ -89,6 +97,7 @@ class UserSource extends DataGridSource {
             context: context,
             builder: (context) => ModUserDialog(
               user: user,
+              currentGroup: currentGroup,
               getUsers: getUsers,
             ),
           ),
@@ -100,7 +109,11 @@ class UserSource extends DataGridSource {
           backgroundColor: kRedColor,
           onPressed: () => showDialog(
             context: context,
-            builder: (context) => DelUserDialog(user: user),
+            builder: (context) => DelUserDialog(
+              user: user,
+              currentGroup: currentGroup,
+              getUsers: getUsers,
+            ),
           ),
         ),
       ],
@@ -157,10 +170,12 @@ class UserSource extends DataGridSource {
 
 class ModUserDialog extends StatefulWidget {
   final UserModel user;
+  final OrganizationGroupModel? currentGroup;
   final Function() getUsers;
 
   const ModUserDialog({
     required this.user,
+    required this.currentGroup,
     required this.getUsers,
     super.key,
   });
@@ -170,9 +185,6 @@ class ModUserDialog extends StatefulWidget {
 }
 
 class _ModUserDialogState extends State<ModUserDialog> {
-  OrganizationService organizationService = OrganizationService();
-  OrganizationGroupService groupService = OrganizationGroupService();
-  UserService userService = UserService();
   OrganizationGroupModel? selectedGroup;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -184,6 +196,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
     nameController.text = widget.user.name;
     emailController.text = widget.user.email;
     passwordController.text = widget.user.password;
+    selectedGroup = widget.currentGroup;
   }
 
   @override
@@ -241,7 +254,6 @@ class _ModUserDialogState extends State<ModUserDialog> {
                 placeholder: '',
                 keyboardType: TextInputType.visiblePassword,
                 maxLines: 1,
-                obscureText: true,
               ),
             ),
             const SizedBox(height: 8),
@@ -279,7 +291,8 @@ class _ModUserDialogState extends State<ModUserDialog> {
               name: nameController.text,
               email: emailController.text,
               password: passwordController.text,
-              group: selectedGroup,
+              befGroup: widget.currentGroup,
+              aftGroup: selectedGroup,
             );
             if (error != null) {
               if (!mounted) return;
@@ -303,9 +316,13 @@ class _ModUserDialogState extends State<ModUserDialog> {
 
 class DelUserDialog extends StatefulWidget {
   final UserModel user;
+  final OrganizationGroupModel? currentGroup;
+  final Function() getUsers;
 
   const DelUserDialog({
     required this.user,
+    required this.currentGroup,
+    required this.getUsers,
     super.key,
   });
 
@@ -314,36 +331,44 @@ class DelUserDialog extends StatefulWidget {
 }
 
 class _DelUserDialogState extends State<DelUserDialog> {
-  UserService userService = UserService();
-
   @override
   Widget build(BuildContext context) {
+    final loginProvider = Provider.of<LoginProvider>(context);
+    final homeProvider = Provider.of<HomeProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     return ContentDialog(
       title: const Text(
-        'スタッフ - 削除',
+        'スタッフを削除する',
         style: TextStyle(fontSize: 18),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(child: Text('本当に削除しますか？')),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'スタッフ名',
-            child: Text(widget.user.name),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'メールアドレス',
-            child: Text(widget.user.email),
-          ),
-          const SizedBox(height: 8),
-          InfoLabel(
-            label: 'パスワード',
-            child: Text(widget.user.password),
-          ),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(child: Text('本当に削除しますか？')),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'スタッフ名',
+              child: Text(widget.user.name),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'メールアドレス',
+              child: Text(widget.user.email),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'パスワード',
+              child: Text(widget.user.email),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '所属グループ',
+              child: Text(widget.currentGroup?.name ?? ''),
+            ),
+          ],
+        ),
       ),
       actions: [
         CustomButtonSm(
@@ -356,10 +381,21 @@ class _DelUserDialogState extends State<DelUserDialog> {
           labelText: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () {
-            userService.delete({
-              'id': widget.user.id,
-            });
+          onPressed: () async {
+            String? error = await userProvider.delete(
+              user: widget.user,
+              group: widget.currentGroup,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            await loginProvider.reload();
+            homeProvider.setGroups(
+              organizationId: widget.currentGroup?.organizationId ?? 'error',
+            );
+            widget.getUsers();
             if (!mounted) return;
             showMessage(context, 'スタッフを削除しました', true);
             Navigator.pop(context);
