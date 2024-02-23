@@ -91,39 +91,41 @@ class _UserScreenState extends State<UserScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            CustomDataGrid(
-              source: UserSource(
-                context: context,
-                users: users,
-                groups: widget.homeProvider.groups,
-                getUsers: _getUses,
+            Expanded(
+              child: CustomDataGrid(
+                source: UserSource(
+                  context: context,
+                  users: users,
+                  groups: widget.homeProvider.groups,
+                  getUsers: _getUses,
+                ),
+                columns: [
+                  GridColumn(
+                    columnName: 'name',
+                    label: const CustomColumnLabel('スタッフ名'),
+                  ),
+                  GridColumn(
+                    columnName: 'email',
+                    label: const CustomColumnLabel('メールアドレス'),
+                  ),
+                  GridColumn(
+                    columnName: 'password',
+                    label: const CustomColumnLabel('パスワード'),
+                  ),
+                  GridColumn(
+                    columnName: 'group',
+                    label: const CustomColumnLabel('所属グループ'),
+                  ),
+                  GridColumn(
+                    columnName: 'uid',
+                    label: const CustomColumnLabel('スマホアプリ'),
+                  ),
+                  GridColumn(
+                    columnName: 'edit',
+                    label: const CustomColumnLabel('操作'),
+                  ),
+                ],
               ),
-              columns: [
-                GridColumn(
-                  columnName: 'name',
-                  label: const CustomColumnLabel('スタッフ名'),
-                ),
-                GridColumn(
-                  columnName: 'email',
-                  label: const CustomColumnLabel('メールアドレス'),
-                ),
-                GridColumn(
-                  columnName: 'password',
-                  label: const CustomColumnLabel('パスワード'),
-                ),
-                GridColumn(
-                  columnName: 'group',
-                  label: const CustomColumnLabel('所属グループ'),
-                ),
-                GridColumn(
-                  columnName: 'uid',
-                  label: const CustomColumnLabel('スマホアプリ'),
-                ),
-                GridColumn(
-                  columnName: 'edit',
-                  label: const CustomColumnLabel('操作'),
-                ),
-              ],
             ),
           ],
         ),
