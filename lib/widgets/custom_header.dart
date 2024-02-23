@@ -104,7 +104,7 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
-                labelText: '稟議書申請',
+                labelText: '稟議申請',
                 labelColor: kBlackColor,
                 backgroundColor: kOrangeColor,
                 onPressed: () => showBottomUpScreen(

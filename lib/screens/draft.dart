@@ -21,7 +21,7 @@ class _DraftScreenState extends State<DraftScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '稟議書申請',
+                '稟議申請',
                 style: TextStyle(fontSize: 16),
               ),
               IconButton(
