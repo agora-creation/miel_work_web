@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/screens/login.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: LoginProvider.initialize()),
         ChangeNotifierProvider.value(value: HomeProvider()),
         ChangeNotifierProvider.value(value: UserProvider()),
+        ChangeNotifierProvider.value(value: ManualProvider()),
       ],
       child: FluentApp(
         debugShowCheckedModeBanner: false,

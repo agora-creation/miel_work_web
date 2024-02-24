@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NoticeService {
-  String collection = 'notice';
+class ManualService {
+  String collection = 'manual';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String id() {
