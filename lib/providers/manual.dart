@@ -11,13 +11,12 @@ class ManualProvider with ChangeNotifier {
 
   Future<String?> create({
     required OrganizationModel? organization,
-    required OrganizationGroupModel? group,
     required String title,
     required PlatformFile? pickedFile,
+    required OrganizationGroupModel? group,
   }) async {
     String? error;
     if (organization == null) return '業務マニュアルの追加に失敗しました';
-    if (group == null) return '業務マニュアルの追加に失敗しました';
     if (title == '') return 'タイトルを入力してください';
     if (pickedFile == null) return 'PDFファイルを選択してください';
     try {
@@ -35,7 +34,7 @@ class ManualProvider with ChangeNotifier {
       _manualService.create({
         'id': id,
         'organizationId': organization.id,
-        'groupId': group.id,
+        'groupId': group?.id ?? '',
         'title': title,
         'file': file,
         'createdAt': DateTime.now(),

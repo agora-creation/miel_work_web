@@ -1,22 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/notice.dart';
+import 'package:miel_work_web/models/manual.dart';
 import 'package:miel_work_web/models/organization_group.dart';
-import 'package:miel_work_web/providers/notice.dart';
+import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class NoticeSource extends DataGridSource {
+class ManualSource extends DataGridSource {
   final BuildContext context;
-  final List<NoticeModel> notices;
+  final List<ManualModel> manuals;
   final List<OrganizationGroupModel> groups;
 
-  NoticeSource({
+  ManualSource({
     required this.context,
-    required this.notices,
+    required this.manuals,
     required this.groups,
   }) {
     buildDataGridRows();
@@ -25,23 +25,23 @@ class NoticeSource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
   void buildDataGridRows() {
-    dataGridRows = notices.map<DataGridRow>((notice) {
+    dataGridRows = manuals.map<DataGridRow>((manual) {
       return DataGridRow(cells: [
         DataGridCell(
           columnName: 'id',
-          value: notice.id,
+          value: manual.id,
         ),
         DataGridCell(
           columnName: 'title',
-          value: notice.title,
+          value: manual.title,
         ),
         DataGridCell(
-          columnName: 'content',
-          value: notice.content,
+          columnName: 'file',
+          value: manual.file,
         ),
         DataGridCell(
           columnName: 'groupId',
-          value: notice.groupId,
+          value: manual.groupId,
         ),
       ]);
     }).toList();
@@ -58,7 +58,7 @@ class NoticeSource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    NoticeModel notice = notices.singleWhere(
+    ManualModel manual = manuals.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
@@ -66,7 +66,7 @@ class NoticeSource extends DataGridSource {
     OrganizationGroupModel? currentGroup;
     if (groups.isNotEmpty) {
       for (OrganizationGroupModel group in groups) {
-        if (group.id == notice.groupId) {
+        if (group.id == manual.groupId) {
           currentGroup = group;
         }
       }
@@ -80,8 +80,8 @@ class NoticeSource extends DataGridSource {
           backgroundColor: kRedColor,
           onPressed: () => showDialog(
             context: context,
-            builder: (context) => DelNoticeDialog(
-              notice: notice,
+            builder: (context) => DelManualDialog(
+              manual: manual,
             ),
           ),
         ),
@@ -137,25 +137,25 @@ class NoticeSource extends DataGridSource {
   }
 }
 
-class DelNoticeDialog extends StatefulWidget {
-  final NoticeModel notice;
+class DelManualDialog extends StatefulWidget {
+  final ManualModel manual;
 
-  const DelNoticeDialog({
-    required this.notice,
+  const DelManualDialog({
+    required this.manual,
     super.key,
   });
 
   @override
-  State<DelNoticeDialog> createState() => _DelNoticeDialogState();
+  State<DelManualDialog> createState() => _DelManualDialogState();
 }
 
-class _DelNoticeDialogState extends State<DelNoticeDialog> {
+class _DelManualDialogState extends State<DelManualDialog> {
   @override
   Widget build(BuildContext context) {
-    final noticeProvider = Provider.of<NoticeProvider>(context);
+    final manualProvider = Provider.of<ManualProvider>(context);
     return ContentDialog(
       title: const Text(
-        'お知らせを削除する',
+        '業務マニュアルを削除する',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -167,17 +167,12 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
-              child: Text(widget.notice.title),
+              child: Text(widget.manual.title),
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: 'お知らせ内容',
-              child: Text(widget.notice.content),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'ファイル',
-              child: Text(widget.notice.file),
+              label: 'PDFファイル',
+              child: Text(widget.manual.file),
             ),
           ],
         ),
@@ -194,8 +189,8 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            String? error = await noticeProvider.delete(
-              notice: widget.notice,
+            String? error = await manualProvider.delete(
+              manual: widget.manual,
             );
             if (error != null) {
               if (!mounted) return;
@@ -203,7 +198,7 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'お知らせを削除しました', true);
+            showMessage(context, '業務マニュアルを削除しました', true);
             Navigator.pop(context);
           },
         ),

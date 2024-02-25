@@ -12,12 +12,12 @@ import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:provider/provider.dart';
 
 class GroupSettingScreen extends StatefulWidget {
+  final HomeProvider homeProvider;
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
 
   const GroupSettingScreen({
+    required this.homeProvider,
     required this.organization,
-    required this.group,
     super.key,
   });
 
@@ -28,6 +28,7 @@ class GroupSettingScreen extends StatefulWidget {
 class _GroupSettingScreenState extends State<GroupSettingScreen> {
   @override
   Widget build(BuildContext context) {
+    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -38,12 +39,12 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
             children: [
               CustomSettingList(
                 label: 'グループ名',
-                value: widget.group?.name ?? '',
+                value: group?.name ?? '',
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) => ModGroupNameDialog(
                     organization: widget.organization,
-                    group: widget.group,
+                    group: group,
                   ),
                 ),
               ),
@@ -55,7 +56,7 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                   context: context,
                   builder: (context) => DelGroupDialog(
                     organization: widget.organization,
-                    group: widget.group,
+                    group: group,
                   ),
                 ),
               ),

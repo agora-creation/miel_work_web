@@ -1,21 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/manual.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/manual.dart';
+import 'package:miel_work_web/screens/manual_source.dart';
+import 'package:miel_work_web/services/manual.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManualScreen extends StatefulWidget {
+  final HomeProvider homeProvider;
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
 
   const ManualScreen({
+    required this.homeProvider,
     required this.organization,
-    required this.group,
     super.key,
   });
 
@@ -24,10 +32,13 @@ class ManualScreen extends StatefulWidget {
 }
 
 class _ManualScreenState extends State<ManualScreen> {
+  ManualService manualService = ManualService();
+
   @override
   Widget build(BuildContext context) {
     String organizationName = widget.organization?.name ?? '';
-    String groupName = widget.group?.name ?? '';
+    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
+    String groupName = group?.name ?? '';
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -49,7 +60,7 @@ class _ManualScreenState extends State<ManualScreen> {
                     context: context,
                     builder: (context) => AddManualDialog(
                       organization: widget.organization,
-                      group: widget.group,
+                      group: group,
                     ),
                   ),
                 ),
@@ -57,7 +68,46 @@ class _ManualScreenState extends State<ManualScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: Container(),
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: manualService.streamList(
+                  organizationId: widget.organization?.id,
+                  groupId: group?.id,
+                ),
+                builder: (context, snapshot) {
+                  List<ManualModel> manuals = [];
+                  if (snapshot.hasData) {
+                    for (DocumentSnapshot<Map<String, dynamic>> doc
+                        in snapshot.data!.docs) {
+                      manuals.add(ManualModel.fromSnapshot(doc));
+                    }
+                  }
+                  return CustomDataGrid(
+                    source: ManualSource(
+                      context: context,
+                      manuals: manuals,
+                      groups: widget.homeProvider.groups,
+                    ),
+                    columns: [
+                      GridColumn(
+                        columnName: 'title',
+                        label: const CustomColumnLabel('タイトル'),
+                      ),
+                      GridColumn(
+                        columnName: 'file',
+                        label: const CustomColumnLabel('PDFファイル'),
+                      ),
+                      GridColumn(
+                        columnName: 'groupId',
+                        label: const CustomColumnLabel('公開グループ'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -83,10 +133,31 @@ class AddManualDialog extends StatefulWidget {
 class _AddManualDialogState extends State<AddManualDialog> {
   TextEditingController titleController = TextEditingController();
   PlatformFile? pickedFile;
+  OrganizationGroupModel? selectedGroup;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedGroup = widget.group;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<HomeProvider>(context);
     final manualProvider = Provider.of<ManualProvider>(context);
+    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
+    if (homeProvider.groups.isNotEmpty) {
+      groupItems.add(const ComboBoxItem(
+        value: null,
+        child: Text('グループ未選択'),
+      ));
+      for (OrganizationGroupModel group in homeProvider.groups) {
+        groupItems.add(ComboBoxItem(
+          value: group,
+          child: Text(group.name),
+        ));
+      }
+    }
     return ContentDialog(
       title: const Text(
         '業務マニュアルを追加する',
@@ -122,7 +193,22 @@ class _AddManualDialogState extends State<AddManualDialog> {
                 });
               },
             ),
-            pickedFile != null ? Text('${pickedFile?.name}') : Container()
+            pickedFile != null ? Text('${pickedFile?.name}') : Container(),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '公開グループ',
+              child: ComboBox<OrganizationGroupModel>(
+                isExpanded: true,
+                value: selectedGroup,
+                items: groupItems,
+                onChanged: (value) {
+                  setState(() {
+                    selectedGroup = value;
+                  });
+                },
+                placeholder: const Text('グループ未選択'),
+              ),
+            ),
           ],
         ),
       ),
@@ -140,9 +226,9 @@ class _AddManualDialogState extends State<AddManualDialog> {
           onPressed: () async {
             String? error = await manualProvider.create(
               organization: widget.organization,
-              group: widget.group,
               title: titleController.text,
               pickedFile: pickedFile,
+              group: selectedGroup,
             );
             if (error != null) {
               if (!mounted) return;

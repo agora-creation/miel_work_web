@@ -21,13 +21,13 @@ class NoticeService {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
-    required String organizationId,
+    required String? organizationId,
     required String? groupId,
   }) {
     return FirebaseFirestore.instance
         .collection(collection)
-        .where('organizationId', isEqualTo: organizationId)
-        .where('groupId', isEqualTo: groupId)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('createdAt', descending: true)
         .snapshots();
   }

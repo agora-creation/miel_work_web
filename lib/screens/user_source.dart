@@ -185,10 +185,10 @@ class ModUserDialog extends StatefulWidget {
 }
 
 class _ModUserDialogState extends State<ModUserDialog> {
-  OrganizationGroupModel? selectedGroup;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  OrganizationGroupModel? selectedGroup;
 
   @override
   void initState() {

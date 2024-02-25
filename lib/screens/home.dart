@@ -81,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.news),
             title: const Text('お知らせ'),
             body: NoticeScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -90,8 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.documentation),
             title: const Text('業務マニュアル'),
             body: ManualScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -101,7 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
             body: UserScreen(
               homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -109,8 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.settings),
             title: const Text('グループ設定'),
             body: GroupSettingScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
             enabled: homeProvider.currentGroup != null,
           ),

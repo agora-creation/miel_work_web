@@ -19,12 +19,10 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 class UserScreen extends StatefulWidget {
   final HomeProvider homeProvider;
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
 
   const UserScreen({
     required this.homeProvider,
     required this.organization,
-    required this.group,
     super.key,
   });
 
@@ -38,13 +36,13 @@ class _UserScreenState extends State<UserScreen> {
 
   void _getUses() async {
     List<UserModel> tmpUsers = [];
-    if (widget.group == null) {
+    if (widget.homeProvider.currentGroup == null) {
       tmpUsers = await userService.selectList(
         userIds: widget.organization?.userIds ?? [],
       );
     } else {
       tmpUsers = await userService.selectList(
-        userIds: widget.group?.userIds ?? [],
+        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
       );
     }
     setState(() {
@@ -61,7 +59,8 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     String organizationName = widget.organization?.name ?? '';
-    String groupName = widget.group?.name ?? '';
+    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
+    String groupName = group?.name ?? '';
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -83,7 +82,7 @@ class _UserScreenState extends State<UserScreen> {
                     context: context,
                     builder: (context) => AddUserDialog(
                       organization: widget.organization,
-                      group: widget.group,
+                      group: group,
                       getUsers: _getUses,
                     ),
                   ),
@@ -151,10 +150,10 @@ class AddUserDialog extends StatefulWidget {
 }
 
 class _AddUserDialogState extends State<AddUserDialog> {
-  OrganizationGroupModel? selectedGroup;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  OrganizationGroupModel? selectedGroup;
 
   @override
   void initState() {
