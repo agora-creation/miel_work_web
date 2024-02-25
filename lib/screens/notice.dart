@@ -53,7 +53,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   style: const TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
-                  labelText: 'お知らせを作成',
+                  labelText: 'お知らせを作成・送信',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   onPressed: () => showDialog(
@@ -161,7 +161,7 @@ class _AddNoticeDialogState extends State<AddNoticeDialog> {
     }
     return ContentDialog(
       title: const Text(
-        'お知らせを作成する',
+        'お知らせを作成・送信する',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -169,6 +169,8 @@ class _AddNoticeDialogState extends State<AddNoticeDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text('作成時、送信先グループに通知を送信します。'),
+            const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
               child: CustomTextBox(
@@ -231,7 +233,7 @@ class _AddNoticeDialogState extends State<AddNoticeDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         CustomButtonSm(
-          labelText: '作成する',
+          labelText: '作成・送信する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
@@ -248,7 +250,7 @@ class _AddNoticeDialogState extends State<AddNoticeDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'お知らせを作成しました', true);
+            showMessage(context, 'お知らせを作成・送信しました', true);
             Navigator.pop(context);
           },
         ),

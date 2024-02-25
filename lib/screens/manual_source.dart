@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/manual.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/manual.dart';
+import 'package:miel_work_web/screens/manual_pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_column_link.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -62,7 +67,16 @@ class ManualSource extends DataGridSource {
       (e) => e.id == '${row.getCells()[0].value}',
     );
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
+    File file = File('${row.getCells()[2].value}');
+    String fileName = p.basename(file.path);
+    cells.add(CustomColumnLink(
+      label: fileName,
+      color: kBlueColor,
+      onTap: () => showBottomUpScreen(
+        context,
+        ManualPdfScreen(file: file),
+      ),
+    ));
     OrganizationGroupModel? currentGroup;
     if (groups.isNotEmpty) {
       for (OrganizationGroupModel group in groups) {

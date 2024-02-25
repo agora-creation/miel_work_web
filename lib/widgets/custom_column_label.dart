@@ -13,6 +13,8 @@ class CustomColumnLabel extends StatelessWidget {
       child: Text(
         label,
         softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
       ),
     );
   }

@@ -4,10 +4,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/services/user.dart';
 
 class NoticeProvider with ChangeNotifier {
   final NoticeService _noticeService = NoticeService();
+  final UserService _userService = UserService();
+  final FmService _fmService = FmService();
 
   Future<String?> create({
     required OrganizationModel? organization,
@@ -44,6 +49,20 @@ class NoticeProvider with ChangeNotifier {
         'file': file,
         'createdAt': DateTime.now(),
       });
+      if (group != null) {
+        List<UserModel> sendUsers = await _userService.selectList(
+          userIds: group.userIds,
+        );
+        if (sendUsers.isNotEmpty) {
+          for (UserModel user in sendUsers) {
+            _fmService.send(
+              token: user.token,
+              title: title,
+              body: content,
+            );
+          }
+        }
+      }
     } catch (e) {
       error = 'お知らせの作成に失敗しました';
     }

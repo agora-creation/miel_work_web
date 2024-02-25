@@ -23,8 +23,9 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
   http: ^1.2.0
   flutter_spinkit: ^5.2.0
-  syncfusion_flutter_datagrid_export: ^21.1.35-beta
-  syncfusion_localizations: ^21.2.5
+  syncfusion_flutter_datagrid_export: ^23.2.7
+  syncfusion_localizations: ^23.2.7
+  syncfusion_flutter_pdfviewer: ^23.2.7
   file_picker: ^6.1.1
   file_selector: ^1.0.3
   pdf: ^3.10.8
@@ -33,6 +34,8 @@ dependencies:
   firebase_auth: ^4.17.4
   cloud_firestore: ^4.15.4
   firebase_storage: ^11.6.6
+  firebase_messaging: ^14.7.16
+  flutter_local_notifications: ^16.3.2
 
 dependency_overrides:
   modal_bottom_sheet: ^3.0.0-pre
