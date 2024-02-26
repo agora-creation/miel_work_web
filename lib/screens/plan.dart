@@ -18,6 +18,8 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
+  List<sfc.Appointment> appointments = [];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,10 +28,26 @@ class _PlanScreenState extends State<PlanScreen> {
         child: sfc.SfCalendar(
           view: sfc.CalendarView.month,
           showNavigationArrow: true,
+          showDatePickerButton: true,
           headerDateFormat: 'yyyy年MM月',
-          onTap: (calendarTapDetails) {},
+          onTap: (calendarTapDetails) {
+            print(calendarTapDetails.date);
+          },
+          onViewChanged: (viewChangedDetails) {
+            print(viewChangedDetails.visibleDates);
+          },
+          monthViewSettings: const sfc.MonthViewSettings(
+            appointmentDisplayMode: sfc.MonthAppointmentDisplayMode.appointment,
+          ),
+          dataSource: _DataSource(appointments),
         ),
       ),
     );
+  }
+}
+
+class _DataSource extends sfc.CalendarDataSource {
+  _DataSource(List<sfc.Appointment> source) {
+    appointments = source;
   }
 }

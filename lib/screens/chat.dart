@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 
@@ -19,18 +20,33 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('各個人やグループ、団体に対してやりとりができるチャットルームを表示します。'),
-            Text('グループを選択している場合は、選択したグループと、そのグループに所属している個人のみ表示します。'),
-            Text('グループを選択していない場合は、全てのグループと個人を表示します。'),
-            SizedBox(height: 8),
-            Text('左側にルーム一覧、右側にチャット画面'),
-          ],
+        child: Container(
+          decoration: BoxDecoration(border: Border.all(color: kGreyColor)),
+          child: Row(
+            children: [
+              Container(
+                width: 300,
+                decoration: const BoxDecoration(
+                  border: Border(right: BorderSide(color: kGreyColor)),
+                ),
+                child: ListView.builder(
+                  itemCount: 50,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: kGreyColor)),
+                      ),
+                      child: ListTile(title: Text('スタッフ$index')),
+                    );
+                  },
+                ),
+              ),
+              Expanded(child: Container(color: kGrey200Color)),
+            ],
+          ),
         ),
       ),
     );

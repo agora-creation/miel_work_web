@@ -6,7 +6,6 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/manual.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/manual.dart';
-import 'package:miel_work_web/screens/manual_pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
@@ -70,10 +69,7 @@ class ManualSource extends DataGridSource {
     cells.add(CustomColumnLink(
       label: '${row.getCells()[0].value}.pdf',
       color: kBlueColor,
-      onTap: () => showBottomUpScreen(
-        context,
-        ManualPdfScreen(file: file),
-      ),
+      onTap: () {},
     ));
     OrganizationGroupModel? currentGroup;
     if (groups.isNotEmpty) {
