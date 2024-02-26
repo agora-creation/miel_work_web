@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatRoomModel {
+class ChatModel {
   String _id = '';
   String _organizationId = '';
   String _groupId = '';
@@ -14,7 +14,7 @@ class ChatRoomModel {
   String get name => _name;
   DateTime get createdAt => _createdAt;
 
-  ChatRoomModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  ChatModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     Map<String, dynamic>? data = snapshot.data();
     if (data == null) return;
     _id = data['id'] ?? '';

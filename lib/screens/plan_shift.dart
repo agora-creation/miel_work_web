@@ -1,16 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
-import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/services/user.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanShiftScreen extends StatefulWidget {
+  final HomeProvider homeProvider;
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
 
   const PlanShiftScreen({
+    required this.homeProvider,
     required this.organization,
-    required this.group,
     super.key,
   });
 
@@ -19,6 +21,39 @@ class PlanShiftScreen extends StatefulWidget {
 }
 
 class _PlanShiftScreenState extends State<PlanShiftScreen> {
+  UserService userService = UserService();
+  List<sfc.CalendarResource> resourceColl = [];
+  List<sfc.Appointment> source = [];
+
+  void _getUsers() async {
+    List<UserModel> tmpUsers = [];
+    if (widget.homeProvider.currentGroup == null) {
+      tmpUsers = await userService.selectList(
+        userIds: widget.organization?.userIds ?? [],
+      );
+    } else {
+      tmpUsers = await userService.selectList(
+        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
+      );
+    }
+    if (tmpUsers.isNotEmpty) {
+      for (UserModel user in tmpUsers) {
+        resourceColl.add(sfc.CalendarResource(
+          displayName: user.name,
+          id: user.id,
+          color: kGrey300Color,
+        ));
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,62 +73,13 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
           resourceViewSettings: const sfc.ResourceViewSettings(
             visibleResourceCount: 5,
             showAvatar: false,
+            displayNameTextStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          dataSource: _ShiftDataSource(
-            [],
-            [
-              sfc.CalendarResource(
-                displayName: 'テスト一郎',
-                id: '0001',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト二郎',
-                id: '0002',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト三郎',
-                id: '0003',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト四郎',
-                id: '0004',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト五郎',
-                id: '0005',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト六郎',
-                id: '0006',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト七郎',
-                id: '0007',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト八郎',
-                id: '0008',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト九郎',
-                id: '0009',
-                color: kGrey300Color,
-              ),
-              sfc.CalendarResource(
-                displayName: 'テスト十郎',
-                id: '0010',
-                color: kGrey300Color,
-              ),
-            ],
-          ),
+          cellBorderColor: kGrey600Color,
+          dataSource: _ShiftDataSource(source, resourceColl),
         ),
       ),
     );

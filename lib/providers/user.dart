@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/organization.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -10,6 +11,7 @@ class UserProvider with ChangeNotifier {
   final OrganizationService _organizationService = OrganizationService();
   final OrganizationGroupService _groupService = OrganizationGroupService();
   final UserService _userService = UserService();
+  final FmService _fmService = FmService();
 
   Future<String?> create({
     required OrganizationModel? organization,
@@ -133,6 +135,13 @@ class UserProvider with ChangeNotifier {
           'organizationId': group.organizationId,
           'userIds': groupUserIds,
         });
+      }
+      if (user.token != '') {
+        _fmService.send(
+          token: user.token,
+          title: 'あなたの情報が削除されました',
+          body: 'あなたの情報が管理者によって削除されました。アプリをアンインストールしてください。',
+        );
       }
     } catch (e) {
       error = 'スタッフの削除に失敗しました';

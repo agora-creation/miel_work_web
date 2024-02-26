@@ -52,10 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.calendar),
-            title: const Text('スケジュール表'),
+            title: const Text('スケジュールカレンダー'),
             body: PlanScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.view_list),
             title: const Text('シフト表'),
             body: PlanShiftScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),
@@ -72,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.office_chat),
             title: const Text('チャット'),
             body: ChatScreen(
+              homeProvider: homeProvider,
               organization: organization,
-              group: homeProvider.currentGroup,
             ),
           ),
           PaneItemSeparator(),

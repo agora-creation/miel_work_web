@@ -1,15 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
-import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/providers/home.dart';
 
 class ChatScreen extends StatefulWidget {
+  final HomeProvider homeProvider;
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
 
   const ChatScreen({
+    required this.homeProvider,
     required this.organization,
-    required this.group,
     super.key,
   });
 
@@ -28,23 +28,35 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: [
               Container(
-                width: 300,
+                width: 250,
                 decoration: const BoxDecoration(
                   border: Border(right: BorderSide(color: kGreyColor)),
                 ),
                 child: ListView.builder(
-                  itemCount: 50,
+                  itemCount: 10,
                   itemBuilder: (context, index) {
                     return Container(
                       decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(color: kGreyColor)),
                       ),
-                      child: ListTile(title: Text('スタッフ$index')),
+                      padding: const EdgeInsets.all(8),
+                      child: ListTile(
+                        title: Text('スタッフ$index'),
+                        trailing: const Icon(FluentIcons.chevron_right),
+                        onPressed: () {},
+                      ),
                     );
                   },
                 ),
               ),
-              Expanded(child: Container(color: kGrey200Color)),
+              Expanded(
+                child: Container(
+                  color: kGrey200Color,
+                  child: const Center(
+                    child: Text('左側でスタッフもしくはグループを選んで、チャットする'),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

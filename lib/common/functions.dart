@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_html/html.dart' as uhtml;
 
 void showMessage(BuildContext context, String msg, bool success) {
   displayInfoBar(context, builder: (context, close) {
@@ -77,4 +78,13 @@ String dateText(String format, DateTime? date) {
     ret = DateFormat(format, 'ja').format(date);
   }
   return ret;
+}
+
+void downloadFile({
+  required String url,
+  required String name,
+}) {
+  var anchorElement = uhtml.AnchorElement(href: url);
+  anchorElement.download = name;
+  anchorElement.click();
 }
