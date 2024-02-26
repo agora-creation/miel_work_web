@@ -10,7 +10,6 @@ import 'package:miel_work_web/screens/manual_pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
-import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -68,9 +67,8 @@ class ManualSource extends DataGridSource {
     );
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
     File file = File('${row.getCells()[2].value}');
-    String fileName = p.basename(file.path);
     cells.add(CustomColumnLink(
-      label: fileName,
+      label: '${row.getCells()[0].value}.pdf',
       color: kBlueColor,
       onTap: () => showBottomUpScreen(
         context,
@@ -96,6 +94,7 @@ class ManualSource extends DataGridSource {
             context: context,
             builder: (context) => DelManualDialog(
               manual: manual,
+              currentGroup: currentGroup,
             ),
           ),
         ),
@@ -153,9 +152,11 @@ class ManualSource extends DataGridSource {
 
 class DelManualDialog extends StatefulWidget {
   final ManualModel manual;
+  final OrganizationGroupModel? currentGroup;
 
   const DelManualDialog({
     required this.manual,
+    required this.currentGroup,
     super.key,
   });
 
@@ -186,7 +187,12 @@ class _DelManualDialogState extends State<DelManualDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'PDFファイル',
-              child: Text(widget.manual.file),
+              child: Text('${widget.manual.id}.pdf'),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '公開グループ',
+              child: Text(widget.currentGroup?.name ?? ''),
             ),
           ],
         ),

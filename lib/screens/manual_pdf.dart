@@ -28,10 +28,7 @@ class _ManualPdfScreenState extends State<ManualPdfScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'PDFファイル詳細',
-                style: TextStyle(fontSize: 16),
-              ),
+              Container(),
               IconButton(
                 icon: const Icon(FluentIcons.clear),
                 onPressed: () =>
@@ -41,10 +38,7 @@ class _ManualPdfScreenState extends State<ManualPdfScreen> {
           ),
         ),
       ),
-      content: Container(
-        color: kWhiteColor,
-        child: SfPdfViewer.network(widget.file.path),
-      ),
+      content: SfPdfViewer.network(widget.file.path),
     );
   }
 }

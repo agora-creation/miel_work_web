@@ -82,6 +82,7 @@ class NoticeSource extends DataGridSource {
             context: context,
             builder: (context) => DelNoticeDialog(
               notice: notice,
+              currentGroup: currentGroup,
             ),
           ),
         ),
@@ -139,9 +140,11 @@ class NoticeSource extends DataGridSource {
 
 class DelNoticeDialog extends StatefulWidget {
   final NoticeModel notice;
+  final OrganizationGroupModel? currentGroup;
 
   const DelNoticeDialog({
     required this.notice,
+    required this.currentGroup,
     super.key,
   });
 
@@ -178,6 +181,11 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
             InfoLabel(
               label: 'ファイル',
               child: Text(widget.notice.file),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '送信先グループ',
+              child: Text(widget.currentGroup?.name ?? ''),
             ),
           ],
         ),
