@@ -25,6 +25,9 @@ class _PlanScreenState extends State<PlanScreen> {
       child: Card(
         child: sfc.SfCalendar(
           view: sfc.CalendarView.month,
+          showNavigationArrow: true,
+          headerDateFormat: 'yyyy年MM月',
+          onTap: (calendarTapDetails) {},
         ),
       ),
     );

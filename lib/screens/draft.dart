@@ -35,6 +35,7 @@ class _DraftScreenState extends State<DraftScreen> {
       ),
       content: Container(
         color: kWhiteColor,
+        child: const Center(child: Text('稟議申請一覧を表示したり、承認したり')),
       ),
     );
   }

@@ -35,6 +35,7 @@ class _MeterScreenState extends State<MeterScreen> {
       ),
       content: Container(
         color: kWhiteColor,
+        child: const Center(child: Text('年月度毎のメーター値を確認したり、それをCSVでダウンロードしたり')),
       ),
     );
   }
