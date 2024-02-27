@@ -14,7 +14,10 @@ class _MeterScreenState extends State<MeterScreen> {
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
-        color: kWhiteColor,
+        decoration: const BoxDecoration(
+          color: kWhiteColor,
+          border: Border(bottom: BorderSide(color: kGrey300Color)),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(

@@ -367,6 +367,11 @@ class _DelUserDialogState extends State<DelUserDialog> {
               label: '所属グループ',
               child: Text(widget.currentGroup?.name ?? ''),
             ),
+            const SizedBox(height: 8),
+            const Text(
+              '※削除完了時、スタッフアプリに通知を送信します',
+              style: TextStyle(color: kRedColor),
+            ),
           ],
         ),
       ),

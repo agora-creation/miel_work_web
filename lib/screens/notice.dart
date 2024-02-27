@@ -220,6 +220,11 @@ class _AddNoticeDialogState extends State<AddNoticeDialog> {
                 placeholder: const Text('グループ未選択'),
               ),
             ),
+            const SizedBox(height: 8),
+            const Text(
+              '※作成完了時、送信先グループに所属しているスタッフアプリに通知を送信します',
+              style: TextStyle(color: kRedColor),
+            ),
           ],
         ),
       ),

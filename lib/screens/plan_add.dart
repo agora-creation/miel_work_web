@@ -1,8 +1,19 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/organization.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 
 class PlanAddScreen extends StatefulWidget {
-  const PlanAddScreen({super.key});
+  final OrganizationModel? organization;
+  final OrganizationGroupModel? group;
+  final DateTime date;
+
+  const PlanAddScreen({
+    required this.organization,
+    required this.group,
+    required this.date,
+    super.key,
+  });
 
   @override
   State<PlanAddScreen> createState() => _PlanAddScreenState();
@@ -14,7 +25,10 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
-        color: kWhiteColor,
+        decoration: const BoxDecoration(
+          color: kWhiteColor,
+          border: Border(bottom: BorderSide(color: kGrey300Color)),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -35,7 +49,14 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
       ),
       content: Container(
         color: kWhiteColor,
-        child: const Center(child: Text('日時と件名、スタッフを設定する')),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            InfoLabel(
+              label: '件名',
+            ),
+          ],
+        ),
       ),
     );
   }

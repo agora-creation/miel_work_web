@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/widgets/message_form_field.dart';
 
 class ChatScreen extends StatefulWidget {
   final HomeProvider homeProvider;
@@ -39,10 +40,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(color: kGreyColor)),
                       ),
-                      padding: const EdgeInsets.all(8),
                       child: ListTile(
+                        leading: CircleAvatar(),
                         title: Text('スタッフ$index'),
-                        trailing: const Icon(FluentIcons.chevron_right),
+                        subtitle: Text('メッセージ'),
                         onPressed: () {},
                       ),
                     );
@@ -52,8 +53,21 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: Container(
                   color: kGrey200Color,
-                  child: const Center(
-                    child: Text('左側でスタッフもしくはグループを選んで、チャットする'),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text('チャットゾーン'),
+                        ),
+                      ),
+                      MessageFormField(
+                        controller: TextEditingController(),
+                        galleryPressed: () {},
+                        sendPressed: () {},
+                      ),
+                    ],
                   ),
                 ),
               ),

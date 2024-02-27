@@ -85,6 +85,7 @@ void downloadFile({
   required String name,
 }) {
   var anchorElement = uhtml.AnchorElement(href: url);
+  anchorElement.target = 'blank';
   anchorElement.download = name;
   anchorElement.click();
 }

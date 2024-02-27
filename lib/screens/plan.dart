@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/screens/plan_add.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
@@ -46,6 +47,9 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String organizationName = widget.organization?.name ?? '';
+    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
+    String groupName = group?.name ?? '';
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -55,8 +59,21 @@ class _PlanScreenState extends State<PlanScreen> {
           showDatePickerButton: true,
           headerDateFormat: 'yyyy年MM月',
           onTap: (calendarTapDetails) {
-            print(calendarTapDetails.date);
-            showBottomUpScreen(context, const PlanAddScreen());
+            DateTime? tapDate = calendarTapDetails.date;
+            if (tapDate == null) return;
+            sfc.CalendarElement tapElement = calendarTapDetails.targetElement;
+            if (tapElement == sfc.CalendarElement.calendarCell) {
+              showBottomUpScreen(
+                context,
+                PlanAddScreen(
+                  organization: widget.organization,
+                  group: group,
+                  date: tapDate,
+                ),
+              );
+            } else if (tapElement == sfc.CalendarElement.appointment) {
+              //編集
+            }
           },
           onViewChanged: (viewChangedDetails) {
             // print(viewChangedDetails.visibleDates);

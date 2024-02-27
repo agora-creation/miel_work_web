@@ -14,7 +14,10 @@ class _DraftScreenState extends State<DraftScreen> {
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
-        color: kWhiteColor,
+        decoration: const BoxDecoration(
+          color: kWhiteColor,
+          border: Border(bottom: BorderSide(color: kGrey300Color)),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -35,7 +38,20 @@ class _DraftScreenState extends State<DraftScreen> {
       ),
       content: Container(
         color: kWhiteColor,
-        child: const Center(child: Text('稟議申請一覧を表示したり、承認したり')),
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: 100,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Card(
+                child: ListTile(
+                  title: Text('稟議申請$index'),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

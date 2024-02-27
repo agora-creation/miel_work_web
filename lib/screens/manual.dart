@@ -209,6 +209,11 @@ class _AddManualDialogState extends State<AddManualDialog> {
                 placeholder: const Text('グループ未選択'),
               ),
             ),
+            const SizedBox(height: 8),
+            const Text(
+              '※追加完了時、公開グループに所属しているスタッフアプリに通知を送信します',
+              style: TextStyle(color: kRedColor),
+            ),
           ],
         ),
       ),

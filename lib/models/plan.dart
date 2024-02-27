@@ -5,23 +5,23 @@ class PlanModel {
   String _organizationId = '';
   String _groupId = '';
   List<String> userIds = [];
-  String _title = '';
-  String _content = '';
-  String _file = '';
+  String _subject = '';
   DateTime _startedAt = DateTime.now();
   DateTime _endedAt = DateTime.now();
   bool _allDay = false;
+  String _memo = '';
+  String _file = '';
   DateTime _createdAt = DateTime.now();
 
   String get id => _id;
   String get organizationId => _organizationId;
   String get groupId => _groupId;
-  String get title => _title;
-  String get content => _content;
-  String get file => _file;
+  String get subject => _subject;
   DateTime get startedAt => _startedAt;
   DateTime get endedAt => _endedAt;
   bool get allDay => _allDay;
+  String get memo => _memo;
+  String get file => _file;
   DateTime get createdAt => _createdAt;
 
   PlanModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -31,12 +31,12 @@ class PlanModel {
     _organizationId = data['organizationId'] ?? '';
     _groupId = data['groupId'] ?? '';
     userIds = _convertUserIds(data['userIds']);
-    _title = data['title'] ?? '';
-    _content = data['content'] ?? '';
-    _file = data['file'] ?? '';
+    _subject = data['subject'] ?? '';
     _startedAt = data['startedAt'].toDate() ?? DateTime.now();
     _endedAt = data['endedAt'].toDate() ?? DateTime.now();
     _allDay = data['allDay'] ?? false;
+    _memo = data['memo'] ?? '';
+    _file = data['file'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
   }
 
