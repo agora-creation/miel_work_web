@@ -75,7 +75,7 @@ class NoticeSource extends DataGridSource {
     if (row.getCells()[3].value != '') {
       File file = File('${row.getCells()[3].value}');
       cells.add(CustomColumnLink(
-        label: '添付あり',
+        label: '${row.getCells()[3].value}',
         color: kBlueColor,
         onTap: () => downloadFile(
           url: '${row.getCells()[3].value}',
