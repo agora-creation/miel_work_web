@@ -32,12 +32,12 @@ class NoticeProvider with ChangeNotifier {
       String id = _noticeService.id();
       String file = '';
       if (pickedFile != null) {
-        String extension = pickedFile.extension ?? '.txt';
+        String extension = pickedFile.extension ?? 'txt';
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
             .child('notice')
-            .child('/$id$extension');
+            .child('/$id.$extension');
         uploadTask = ref.putData(pickedFile.bytes!);
         await uploadTask.whenComplete(() => null);
         file = await ref.getDownloadURL();
@@ -49,6 +49,7 @@ class NoticeProvider with ChangeNotifier {
         'title': title,
         'content': content,
         'file': file,
+        'readUserIds': [],
         'createdAt': DateTime.now(),
       });
       if (group != null) {
@@ -83,12 +84,12 @@ class NoticeProvider with ChangeNotifier {
     if (content == '') return 'お知らせ内容を入力してください';
     try {
       if (pickedFile != null) {
-        String extension = pickedFile.extension ?? '.txt';
+        String extension = pickedFile.extension ?? 'txt';
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
             .child('notice')
-            .child('/${notice.id}$extension');
+            .child('/${notice.id}.$extension');
         uploadTask = ref.putData(pickedFile.bytes!);
         await uploadTask.whenComplete(() => null);
       }
@@ -132,7 +133,7 @@ class NoticeProvider with ChangeNotifier {
         await storage.FirebaseStorage.instance
             .ref()
             .child('notice')
-            .child('/${notice.id}$extension')
+            .child('/${notice.id}.$extension')
             .delete();
       }
     } catch (e) {

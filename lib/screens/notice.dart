@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -7,14 +6,12 @@ import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
-import 'package:miel_work_web/providers/notice.dart';
+import 'package:miel_work_web/screens/notice_add.dart';
 import 'package:miel_work_web/screens/notice_source.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class NoticeScreen extends StatefulWidget {
@@ -56,9 +53,9 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   labelText: 'お知らせを作成',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AddNoticeDialog(
+                  onPressed: () => showBottomUpScreen(
+                    context,
+                    NoticeAddScreen(
                       organization: widget.organization,
                       group: group,
                     ),
@@ -97,6 +94,10 @@ class _NoticeScreenState extends State<NoticeScreen> {
                         label: const CustomColumnLabel('お知らせ内容'),
                       ),
                       GridColumn(
+                        columnName: 'file',
+                        label: const CustomColumnLabel('ファイル'),
+                      ),
+                      GridColumn(
                         columnName: 'groupId',
                         label: const CustomColumnLabel('送信先グループ'),
                       ),
@@ -112,152 +113,6 @@ class _NoticeScreenState extends State<NoticeScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AddNoticeDialog extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
-
-  const AddNoticeDialog({
-    required this.organization,
-    required this.group,
-    super.key,
-  });
-
-  @override
-  State<AddNoticeDialog> createState() => _AddNoticeDialogState();
-}
-
-class _AddNoticeDialogState extends State<AddNoticeDialog> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-  PlatformFile? pickedFile;
-  OrganizationGroupModel? selectedGroup;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedGroup = widget.group;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
-    final noticeProvider = Provider.of<NoticeProvider>(context);
-    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
-      groupItems.add(const ComboBoxItem(
-        value: null,
-        child: Text('グループ未選択'),
-      ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
-        groupItems.add(ComboBoxItem(
-          value: group,
-          child: Text(group.name),
-        ));
-      }
-    }
-    return ContentDialog(
-      title: const Text(
-        'お知らせを作成する',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'タイトル',
-              child: CustomTextBox(
-                controller: titleController,
-                placeholder: '例) 休館日について',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'お知らせ内容',
-              child: CustomTextBox(
-                controller: contentController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
-            ),
-            const SizedBox(height: 8),
-            CustomButtonSm(
-              labelText: 'ファイル選択',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['pdf'],
-                );
-                if (result == null) return;
-                setState(() {
-                  pickedFile = result.files.first;
-                });
-              },
-            ),
-            pickedFile != null ? Text('${pickedFile?.name}') : Container(),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '送信先グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '※作成完了時、送信先グループに所属しているスタッフアプリに通知を送信します',
-              style: TextStyle(color: kRedColor),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '作成する',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            String? error = await noticeProvider.create(
-              organization: widget.organization,
-              title: titleController.text,
-              content: contentController.text,
-              pickedFile: pickedFile,
-              group: selectedGroup,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, 'お知らせを作成しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
     );
   }
 }

@@ -14,10 +14,7 @@ class _DraftScreenState extends State<DraftScreen> {
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
-        decoration: const BoxDecoration(
-          color: kWhiteColor,
-          border: Border(bottom: BorderSide(color: kGrey300Color)),
-        ),
+        decoration: kHeaderDecoration,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(

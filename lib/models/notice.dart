@@ -7,6 +7,7 @@ class NoticeModel {
   String _title = '';
   String _content = '';
   String _file = '';
+  List<String> readUserIds = [];
   DateTime _createdAt = DateTime.now();
 
   String get id => _id;
@@ -26,6 +27,15 @@ class NoticeModel {
     _title = data['title'] ?? '';
     _content = data['content'] ?? '';
     _file = data['file'] ?? '';
+    readUserIds = _convertReadUserIds(data['readUserIds']);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
+  }
+
+  List<String> _convertReadUserIds(List list) {
+    List<String> ret = [];
+    for (dynamic id in list) {
+      ret.add('$id');
+    }
+    return ret;
   }
 }

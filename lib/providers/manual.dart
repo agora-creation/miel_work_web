@@ -42,6 +42,7 @@ class ManualProvider with ChangeNotifier {
         'groupId': group?.id ?? '',
         'title': title,
         'file': file,
+        'readUserIds': [],
         'createdAt': DateTime.now(),
       });
       if (group != null) {

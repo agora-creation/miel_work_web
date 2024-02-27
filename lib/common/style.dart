@@ -41,3 +41,8 @@ FluentThemeData customTheme() {
     ),
   );
 }
+
+const kHeaderDecoration = BoxDecoration(
+  color: kWhiteColor,
+  border: Border(bottom: BorderSide(color: kGrey300Color)),
+);

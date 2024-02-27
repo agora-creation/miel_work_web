@@ -25,10 +25,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
-        decoration: const BoxDecoration(
-          color: kWhiteColor,
-          border: Border(bottom: BorderSide(color: kGrey300Color)),
-        ),
+        decoration: kHeaderDecoration,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -54,6 +51,16 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           children: [
             InfoLabel(
               label: '件名',
+              child: TextBox(),
+            ),
+            SizedBox(height: 8),
+            InfoLabel(
+              label: '開始日時',
+              child: TextBox(),
+            ),
+            InfoLabel(
+              label: '終了日時',
+              child: TextBox(),
             ),
           ],
         ),
