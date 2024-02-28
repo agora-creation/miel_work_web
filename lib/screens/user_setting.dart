@@ -22,6 +22,31 @@ class UserSettingScreen extends StatefulWidget {
 }
 
 class _UserSettingScreenState extends State<UserSettingScreen> {
+  UserService userService = UserService();
+  List<UserModel> users = [];
+  String usersText = '';
+
+  void _init() async {
+    users = await userService.selectList(
+      userIds: widget.loginProvider.organization?.userIds ?? [],
+    );
+    for (UserModel user in users) {
+      List<String> adminUserIds =
+          widget.loginProvider.organization?.adminUserIds ?? [];
+      if (adminUserIds.contains(user.id)) {
+        if (usersText != '') usersText += ',';
+        usersText += user.name;
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
@@ -55,11 +80,12 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
             children: [
               CustomSettingList(
                 label: '現在の管理者',
-                value: widget.loginProvider.user?.name ?? '',
+                value: usersText,
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) => AdminDialog(
                     loginProvider: widget.loginProvider,
+                    users: users,
                   ),
                 ),
               ),
@@ -84,9 +110,11 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
 
 class AdminDialog extends StatefulWidget {
   final LoginProvider loginProvider;
+  final List<UserModel> users;
 
   const AdminDialog({
     required this.loginProvider,
+    required this.users,
     super.key,
   });
 
@@ -95,15 +123,16 @@ class AdminDialog extends StatefulWidget {
 }
 
 class _AdminDialogState extends State<AdminDialog> {
-  UserService userService = UserService();
-  List<UserModel> users = [];
-  UserModel? selectedUser;
+  List<UserModel> selectedUsers = [];
 
   void _init() async {
-    users = await userService.selectList(
-      userIds: widget.loginProvider.organization?.userIds ?? [],
-    );
-    selectedUser = widget.loginProvider.user;
+    for (UserModel user in widget.users) {
+      List<String> adminUserIds =
+          widget.loginProvider.organization?.adminUserIds ?? [];
+      if (adminUserIds.contains(user.id)) {
+        selectedUsers.add(user);
+      }
+    }
     setState(() {});
   }
 
@@ -117,41 +146,26 @@ class _AdminDialogState extends State<AdminDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        '管理者変更',
+        '管理者を選択する',
         style: TextStyle(fontSize: 18),
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('変更時、自動的にログアウトします。'),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '現在の管理者',
-              child: Text('${selectedUser?.name}'),
-            ),
-            const SizedBox(height: 16),
-            const Center(child: Icon(FluentIcons.down)),
-            const SizedBox(height: 16),
-            ComboBox(
-              isExpanded: true,
-              value: selectedUser,
-              items: users.map((user) {
-                return ComboBoxItem(
-                  value: user,
-                  child: Text(user.name),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedUser = value;
-                });
-              },
-              placeholder: const Text('スタッフを選択してください'),
-            ),
-          ],
-        ),
+      content: ListView.builder(
+        itemCount: widget.users.length,
+        itemBuilder: (context, index) {
+          UserModel user = widget.users[index];
+          return Checkbox(
+            checked: selectedUsers.contains(user),
+            onChanged: (value) {
+              if (selectedUsers.contains(user)) {
+                selectedUsers.remove(user);
+              } else {
+                selectedUsers.add(user);
+              }
+              setState(() {});
+            },
+            content: Text(user.name),
+          );
+        },
       ),
       actions: [
         CustomButtonSm(
@@ -161,12 +175,12 @@ class _AdminDialogState extends State<AdminDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         CustomButtonSm(
-          labelText: '変更する',
+          labelText: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.loginProvider.adminChange(
-              adminUser: selectedUser,
+            String? error = await widget.loginProvider.updateAdminUserIds(
+              selectedUsers: selectedUsers,
             );
             if (error != null) {
               if (!mounted) return;
@@ -175,7 +189,7 @@ class _AdminDialogState extends State<AdminDialog> {
             }
             await widget.loginProvider.logout();
             if (!mounted) return;
-            showMessage(context, '管理者を変更しました', true);
+            showMessage(context, '管理者を選択しました', true);
             Navigator.pushReplacement(
               context,
               FluentPageRoute(

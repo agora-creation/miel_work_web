@@ -15,7 +15,7 @@ class OrganizationService {
     OrganizationModel? ret;
     await firestore
         .collection(collection)
-        .where('adminUserId', isEqualTo: adminUserId)
+        .where('adminUserIds', arrayContains: adminUserId)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {

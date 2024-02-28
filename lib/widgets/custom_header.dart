@@ -115,8 +115,8 @@ class _CustomHeaderState extends State<CustomHeader> {
               const SizedBox(width: 4),
               CustomButtonSm(
                 labelText: '稟議申請(承認済)',
-                labelColor: kBlackColor,
-                backgroundColor: kOrangeColor,
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
                 onPressed: () {},
               ),
               const SizedBox(width: 4),

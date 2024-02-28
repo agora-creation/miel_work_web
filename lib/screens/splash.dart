@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
                   Text(
                     'ひろめWORK',
                     style: TextStyle(
-                      color: kWhiteColor,
+                      color: kBlackColor,
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 4,
@@ -28,7 +28,7 @@ class SplashScreen extends StatelessWidget {
                   Text(
                     '管理画面',
                     style: TextStyle(
-                      color: kWhiteColor,
+                      color: kBlackColor,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 3,
@@ -37,7 +37,7 @@ class SplashScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 24),
-              SpinKitFadingCircle(color: kWhiteColor),
+              SpinKitFadingCircle(color: kBlackColor),
             ],
           ),
         ),
