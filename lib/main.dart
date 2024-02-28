@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale('ja')],
         locale: const Locale('ja'),
-        title: 'みえるWORK - 管理画面',
+        title: 'ひろめWORK - 管理画面',
         theme: customTheme(),
         home: const SplashController(),
       ),

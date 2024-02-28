@@ -114,6 +114,13 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
+                labelText: '稟議申請(承認済)',
+                labelColor: kBlackColor,
+                backgroundColor: kOrangeColor,
+                onPressed: () {},
+              ),
+              const SizedBox(width: 4),
+              CustomButtonSm(
                 labelText: '$userNameでログイン中',
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,

@@ -147,7 +147,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
             pickedFile != null
                 ? Text('${pickedFile?.name}')
                 : widget.notice.file != ''
-                    ? const Text('添付あり')
+                    ? Text(widget.notice.file)
                     : Container(),
             const SizedBox(height: 8),
             InfoLabel(

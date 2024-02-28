@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.group),
             title: const Text('スタッフ管理'),
             body: UserScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
               organization: organization,
             ),

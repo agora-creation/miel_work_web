@@ -43,6 +43,26 @@ class _PlanScreenState extends State<PlanScreen> {
       notes: '',
       resourceIds: [],
     ),
+    sfc.Appointment(
+      id: 'c',
+      startTime: DateTime.now(),
+      endTime: DateTime.now().add(const Duration(minutes: 30)),
+      subject: '工事',
+      color: kOrangeColor,
+      isAllDay: false,
+      notes: '',
+      resourceIds: [],
+    ),
+    sfc.Appointment(
+      id: 'd',
+      startTime: DateTime.now(),
+      endTime: DateTime.now().add(const Duration(minutes: 30)),
+      subject: '工事',
+      color: kOrangeColor,
+      isAllDay: false,
+      notes: '',
+      resourceIds: [],
+    ),
   ];
 
   @override
@@ -72,7 +92,9 @@ class _PlanScreenState extends State<PlanScreen> {
                 ),
               );
             } else if (tapElement == sfc.CalendarElement.appointment) {
-              //編集
+              final sfc.Appointment appointment =
+                  calendarTapDetails.appointments![0];
+              print(appointment);
             }
           },
           onViewChanged: (viewChangedDetails) {

@@ -14,12 +14,14 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserSource extends DataGridSource {
   final BuildContext context;
+  final UserModel? loginUser;
   final List<UserModel> users;
   final List<OrganizationGroupModel> groups;
   final Function() getUsers;
 
   UserSource({
     required this.context,
+    required this.loginUser,
     required this.users,
     required this.groups,
     required this.getUsers,
@@ -103,19 +105,25 @@ class UserSource extends DataGridSource {
           ),
         ),
         const SizedBox(width: 4),
-        CustomButtonSm(
-          labelText: '削除',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => DelUserDialog(
-              user: user,
-              currentGroup: currentGroup,
-              getUsers: getUsers,
-            ),
-          ),
-        ),
+        user.id != loginUser?.id
+            ? CustomButtonSm(
+                labelText: '削除',
+                labelColor: kWhiteColor,
+                backgroundColor: kRedColor,
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) => DelUserDialog(
+                    user: user,
+                    currentGroup: currentGroup,
+                    getUsers: getUsers,
+                  ),
+                ),
+              )
+            : const CustomButtonSm(
+                labelText: '削除',
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
+              ),
       ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);

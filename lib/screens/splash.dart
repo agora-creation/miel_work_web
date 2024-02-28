@@ -17,7 +17,7 @@ class SplashScreen extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    'みえるWORK',
+                    'ひろめWORK',
                     style: TextStyle(
                       color: kWhiteColor,
                       fontSize: 26,

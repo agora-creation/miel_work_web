@@ -17,10 +17,12 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final OrganizationModel? organization;
 
   const UserScreen({
+    required this.loginProvider,
     required this.homeProvider,
     required this.organization,
     super.key,
@@ -94,6 +96,7 @@ class _UserScreenState extends State<UserScreen> {
               child: CustomDataGrid(
                 source: UserSource(
                   context: context,
+                  loginUser: widget.loginProvider.user,
                   users: users,
                   groups: widget.homeProvider.groups,
                   getUsers: _getUses,

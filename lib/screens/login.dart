@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Column(
                 children: [
                   Text(
-                    'みえるWORK',
+                    'ひろめWORK',
                     style: TextStyle(
                       color: kWhiteColor,
                       fontSize: 26,
