@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -14,14 +15,14 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserSource extends DataGridSource {
   final BuildContext context;
-  final UserModel? loginUser;
+  final OrganizationModel? organization;
   final List<UserModel> users;
   final List<OrganizationGroupModel> groups;
   final Function() getUsers;
 
   UserSource({
     required this.context,
-    required this.loginUser,
+    required this.organization,
     required this.users,
     required this.groups,
     required this.getUsers,
@@ -89,6 +90,11 @@ class UserSource extends DataGridSource {
       loginStatus = 'ログイン中';
     }
     cells.add(CustomColumnLabel(loginStatus));
+    bool deleteDisabled = false;
+    List<String> adminUserIds = organization?.adminUserIds ?? [];
+    if (adminUserIds.contains(user.id)) {
+      deleteDisabled = true;
+    }
     cells.add(Row(
       children: [
         CustomButtonSm(
@@ -105,7 +111,7 @@ class UserSource extends DataGridSource {
           ),
         ),
         const SizedBox(width: 4),
-        user.id != loginUser?.id
+        !deleteDisabled
             ? CustomButtonSm(
                 labelText: '削除',
                 labelColor: kWhiteColor,

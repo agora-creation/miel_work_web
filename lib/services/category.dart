@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miel_work_web/models/plan.dart';
+import 'package:miel_work_web/models/category.dart';
 
-class PlanService {
-  String collection = 'plan';
+class CategoryService {
+  String collection = 'category';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String id() {
@@ -21,17 +21,18 @@ class PlanService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<PlanModel?> selectData({
-    required String id,
+  Future<List<CategoryModel>> selectList({
+    required String? organizationId,
   }) async {
-    PlanModel? ret;
+    List<CategoryModel> ret = [];
     await firestore
         .collection(collection)
-        .where('id', isEqualTo: id)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .orderBy('createdAt', descending: false)
         .get()
         .then((value) {
-      if (value.docs.isNotEmpty) {
-        ret = PlanModel.fromSnapshot(value.docs.first);
+      for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
+        ret.add(CategoryModel.fromSnapshot(map));
       }
     });
     return ret;
@@ -39,13 +40,11 @@ class PlanService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
-    required String? groupId,
   }) {
     return FirebaseFirestore.instance
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
-        .orderBy('startedAt', descending: true)
+        .orderBy('createdAt', descending: false)
         .snapshots();
   }
 }

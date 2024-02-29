@@ -96,7 +96,7 @@ class _UserScreenState extends State<UserScreen> {
               child: CustomDataGrid(
                 source: UserSource(
                   context: context,
-                  loginUser: widget.loginProvider.user,
+                  organization: widget.loginProvider.organization,
                   users: users,
                   groups: widget.homeProvider.groups,
                   getUsers: _getUses,

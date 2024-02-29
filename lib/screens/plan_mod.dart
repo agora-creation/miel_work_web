@@ -6,32 +6,35 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/services/category.dart';
+import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_date_box.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/custom_time_box.dart';
 import 'package:provider/provider.dart';
 
-class PlanAddScreen extends StatefulWidget {
+class PlanModScreen extends StatefulWidget {
   final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
-  final DateTime date;
+  final String planId;
+  final List<OrganizationGroupModel> groups;
 
-  const PlanAddScreen({
+  const PlanModScreen({
     required this.organization,
-    required this.group,
-    required this.date,
+    required this.planId,
+    required this.groups,
     super.key,
   });
 
   @override
-  State<PlanAddScreen> createState() => _PlanAddScreenState();
+  State<PlanModScreen> createState() => _PlanModScreenState();
 }
 
-class _PlanAddScreenState extends State<PlanAddScreen> {
+class _PlanModScreenState extends State<PlanModScreen> {
+  PlanService planService = PlanService();
   CategoryService categoryService = CategoryService();
   OrganizationGroupModel? selectedGroup;
   List<CategoryModel> categories = [];
@@ -45,13 +48,29 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   PlatformFile? pickedFile;
 
   void _init() async {
-    selectedGroup = widget.group;
+    PlanModel? plan = await planService.selectData(id: widget.planId);
+    if (plan == null) {
+      if (!mounted) return;
+      showMessage(context, '予定データの取得に失敗しました', false);
+      Navigator.of(context, rootNavigator: true).pop();
+      return;
+    }
+    for (OrganizationGroupModel group in widget.groups) {
+      if (group.id == plan.groupId) {
+        selectedGroup = group;
+      }
+    }
     List<CategoryModel> tmpCategories = await categoryService.selectList(
       organizationId: widget.organization?.id,
     );
     categories = tmpCategories;
-    startedAt = widget.date;
-    endedAt = startedAt.add(const Duration(hours: 1));
+    selectedCategory = plan.category;
+    subjectController.text = plan.subject;
+    startedAt = plan.startedAt;
+    endedAt = plan.endedAt;
+    allDay = plan.allDay;
+    color = plan.color.value.toRadixString(16);
+    memoController.text = plan.memo;
     setState(() {});
   }
 
@@ -112,17 +131,37 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '予定を新しく追加する',
+                '予定を編集する',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
                 children: [
                   CustomButtonSm(
+                    labelText: '削除',
+                    labelColor: kWhiteColor,
+                    backgroundColor: kRedColor,
+                    onPressed: () async {
+                      String? error = await planProvider.delete(
+                        planId: widget.planId,
+                      );
+                      if (error != null) {
+                        if (!mounted) return;
+                        showMessage(context, error, false);
+                        return;
+                      }
+                      if (!mounted) return;
+                      showMessage(context, '予定を削除しました', true);
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  CustomButtonSm(
                     labelText: '入力内容を保存',
                     labelColor: kWhiteColor,
                     backgroundColor: kBlueColor,
                     onPressed: () async {
-                      String? error = await planProvider.create(
+                      String? error = await planProvider.update(
+                        planId: widget.planId,
                         organization: widget.organization,
                         group: selectedGroup,
                         category: selectedCategory,
@@ -140,7 +179,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                         return;
                       }
                       if (!mounted) return;
-                      showMessage(context, '予定を追加しました', true);
+                      showMessage(context, '予定を編集しました', true);
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                   ),
