@@ -164,11 +164,6 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                 placeholder: const Text('グループ未選択'),
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              '※編集完了時、送信先グループに所属しているスタッフアプリに通知を送信します',
-              style: TextStyle(color: kRedColor),
-            ),
           ],
         ),
       ),

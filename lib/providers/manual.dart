@@ -45,18 +45,23 @@ class ManualProvider with ChangeNotifier {
         'readUserIds': [],
         'createdAt': DateTime.now(),
       });
+      List<UserModel> sendUsers = [];
       if (group != null) {
-        List<UserModel> sendUsers = await _userService.selectList(
+        sendUsers = await _userService.selectList(
           userIds: group.userIds,
         );
-        if (sendUsers.isNotEmpty) {
-          for (UserModel user in sendUsers) {
-            _fmService.send(
-              token: user.token,
-              title: title,
-              body: '業務マニュアルを追加しました',
-            );
-          }
+      } else {
+        sendUsers = await _userService.selectList(
+          userIds: organization.userIds,
+        );
+      }
+      if (sendUsers.isNotEmpty) {
+        for (UserModel user in sendUsers) {
+          _fmService.send(
+            token: user.token,
+            title: title,
+            body: '業務マニュアルを追加しました',
+          );
         }
       }
     } catch (e) {
@@ -90,20 +95,6 @@ class ManualProvider with ChangeNotifier {
         'groupId': group?.id ?? '',
         'title': title,
       });
-      if (group != null) {
-        List<UserModel> sendUsers = await _userService.selectList(
-          userIds: group.userIds,
-        );
-        if (sendUsers.isNotEmpty) {
-          for (UserModel user in sendUsers) {
-            _fmService.send(
-              token: user.token,
-              title: title,
-              body: '業務マニュアルを編集しました',
-            );
-          }
-        }
-      }
     } catch (e) {
       error = '業務マニュアルの編集に失敗しました';
     }

@@ -52,18 +52,23 @@ class NoticeProvider with ChangeNotifier {
         'readUserIds': [],
         'createdAt': DateTime.now(),
       });
+      List<UserModel> sendUsers = [];
       if (group != null) {
-        List<UserModel> sendUsers = await _userService.selectList(
+        sendUsers = await _userService.selectList(
           userIds: group.userIds,
         );
-        if (sendUsers.isNotEmpty) {
-          for (UserModel user in sendUsers) {
-            _fmService.send(
-              token: user.token,
-              title: title,
-              body: content,
-            );
-          }
+      } else {
+        sendUsers = await _userService.selectList(
+          userIds: organization.userIds,
+        );
+      }
+      if (sendUsers.isNotEmpty) {
+        for (UserModel user in sendUsers) {
+          _fmService.send(
+            token: user.token,
+            title: title,
+            body: content,
+          );
         }
       }
     } catch (e) {
@@ -99,20 +104,6 @@ class NoticeProvider with ChangeNotifier {
         'title': title,
         'content': content,
       });
-      if (group != null) {
-        List<UserModel> sendUsers = await _userService.selectList(
-          userIds: group.userIds,
-        );
-        if (sendUsers.isNotEmpty) {
-          for (UserModel user in sendUsers) {
-            _fmService.send(
-              token: user.token,
-              title: title,
-              body: 'お知らせを編集しました',
-            );
-          }
-        }
-      }
     } catch (e) {
       error = 'お知らせの編集に失敗しました';
     }

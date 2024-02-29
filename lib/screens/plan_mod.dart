@@ -140,21 +140,14 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     labelText: '削除',
                     labelColor: kWhiteColor,
                     backgroundColor: kRedColor,
-                    onPressed: () async {
-                      String? error = await planProvider.delete(
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => DelPlanDialog(
                         planId: widget.planId,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, '予定を削除しました', true);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   CustomButtonSm(
                     labelText: '入力内容を保存',
                     labelColor: kWhiteColor,
@@ -356,6 +349,67 @@ class _PlanModScreenState extends State<PlanModScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DelPlanDialog extends StatefulWidget {
+  final String planId;
+
+  const DelPlanDialog({
+    required this.planId,
+    super.key,
+  });
+
+  @override
+  State<DelPlanDialog> createState() => _DelPlanDialogState();
+}
+
+class _DelPlanDialogState extends State<DelPlanDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final planProvider = Provider.of<PlanProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        '予定を削除する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Text('本当に削除しますか？')),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await planProvider.delete(
+              planId: widget.planId,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '予定を削除しました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }
