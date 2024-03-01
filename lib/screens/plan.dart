@@ -69,7 +69,6 @@ class _PlanScreenState extends State<PlanScreen> {
                         endTime: plan.endedAt,
                         isAllDay: plan.allDay,
                         color: plan.color,
-                        notes: plan.memo,
                       ));
                     }
                   }

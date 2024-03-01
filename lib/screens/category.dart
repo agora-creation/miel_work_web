@@ -97,6 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       GridColumn(
                         columnName: 'edit',
                         label: const CustomColumnLabel('操作'),
+                        width: 100,
                       ),
                     ],
                   );

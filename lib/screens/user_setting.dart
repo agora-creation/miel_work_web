@@ -6,6 +6,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/login.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_checkbox.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
 
@@ -153,7 +154,8 @@ class _AdminDialogState extends State<AdminDialog> {
         itemCount: widget.users.length,
         itemBuilder: (context, index) {
           UserModel user = widget.users[index];
-          return Checkbox(
+          return CustomCheckbox(
+            label: user.name,
             checked: selectedUsers.contains(user),
             onChanged: (value) {
               if (selectedUsers.contains(user)) {
@@ -163,7 +165,6 @@ class _AdminDialogState extends State<AdminDialog> {
               }
               setState(() {});
             },
-            content: Text(user.name),
           );
         },
       ),
