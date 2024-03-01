@@ -201,9 +201,8 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                 value: selectedGroup,
                 items: groupItems,
                 onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
+                  selectedUserIds.clear();
+                  _groupChange(value);
                 },
                 placeholder: const Text('グループ未選択'),
               ),

@@ -150,23 +150,29 @@ class _AdminDialogState extends State<AdminDialog> {
         '管理者を選択する',
         style: TextStyle(fontSize: 18),
       ),
-      content: ListView.builder(
-        itemCount: widget.users.length,
-        itemBuilder: (context, index) {
-          UserModel user = widget.users[index];
-          return CustomCheckbox(
-            label: user.name,
-            checked: selectedUsers.contains(user),
-            onChanged: (value) {
-              if (selectedUsers.contains(user)) {
-                selectedUsers.remove(user);
-              } else {
-                selectedUsers.add(user);
-              }
-              setState(() {});
-            },
-          );
-        },
+      content: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: kGrey300Color),
+        ),
+        height: 300,
+        child: ListView.builder(
+          itemCount: widget.users.length,
+          itemBuilder: (context, index) {
+            UserModel user = widget.users[index];
+            return CustomCheckbox(
+              label: user.name,
+              checked: selectedUsers.contains(user),
+              onChanged: (value) {
+                if (selectedUsers.contains(user)) {
+                  selectedUsers.remove(user);
+                } else {
+                  selectedUsers.add(user);
+                }
+                setState(() {});
+              },
+            );
+          },
+        ),
       ),
       actions: [
         CustomButtonSm(

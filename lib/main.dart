@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/category.dart';
 import 'package:miel_work_web/providers/chat.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/manual.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ManualProvider()),
         ChangeNotifierProvider.value(value: NoticeProvider()),
         ChangeNotifierProvider.value(value: ChatProvider()),
+        ChangeNotifierProvider.value(value: ChatMessageProvider()),
         ChangeNotifierProvider.value(value: CategoryProvider()),
         ChangeNotifierProvider.value(value: PlanProvider()),
         ChangeNotifierProvider.value(value: PlanShiftProvider()),

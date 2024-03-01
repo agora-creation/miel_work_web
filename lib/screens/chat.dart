@@ -1,8 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/chat.dart';
+import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/models/organization.dart';
+import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/services/chat.dart';
+import 'package:miel_work_web/services/chat_message.dart';
+import 'package:miel_work_web/services/user.dart';
+import 'package:miel_work_web/widgets/chat_room_area.dart';
+import 'package:miel_work_web/widgets/chat_room_header.dart';
+import 'package:miel_work_web/widgets/chat_room_list.dart';
+import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/message_form_field.dart';
+import 'package:miel_work_web/widgets/message_list.dart';
+import 'package:miel_work_web/widgets/user_list.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final HomeProvider homeProvider;
@@ -19,62 +37,183 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  ChatService chatService = ChatService();
+  ChatMessageService messageService = ChatMessageService();
+  UserService userService = UserService();
+  List<ChatModel> chats = [];
+  ChatModel? currentChat;
+  List<UserModel> currentChatUsers = [];
+
+  void _getChats() async {
+    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
+    chats = await chatService.selectList(
+      organizationId: widget.organization?.id,
+      groupId: group?.id,
+    );
+    setState(() {});
+  }
+
+  void _currentChatChange(ChatModel chat) async {
+    currentChat = chat;
+    currentChatUsers = await userService.selectList(
+      userIds: chat.userIds,
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getChats();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loginProvider = Provider.of<LoginProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
+    UserModel? loginUser = loginProvider.user;
+    List<String> chatUserIds = currentChat?.userIds ?? [];
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: kGreyColor)),
-          child: Row(
-            children: [
-              Container(
-                width: 250,
-                decoration: const BoxDecoration(
-                  border: Border(right: BorderSide(color: kGreyColor)),
-                ),
-                child: ListView.builder(
-                  itemCount: 10,
+        child: ChatRoomArea(
+          chatsView: chats.isNotEmpty
+              ? ListView.builder(
+                  itemCount: chats.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: kGreyColor)),
-                      ),
-                      child: ListTile(
-                        leading: CircleAvatar(),
-                        title: Text('スタッフ$index'),
-                        subtitle: Text('メッセージ'),
-                        onPressed: () {},
-                      ),
+                    ChatModel chat = chats[index];
+                    return ChatRoomList(
+                      chat: chat,
+                      selected: currentChat == chat,
+                      onTap: () => _currentChatChange(chat),
                     );
                   },
-                ),
-              ),
-              Expanded(
-                child: Container(
+                )
+              : const Center(child: Text('チャットルームはありません')),
+          messageView: currentChat != null
+              ? Container(
                   color: kGrey200Color,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      ChatRoomHeader(
+                        chat: currentChat!,
+                        usersOnPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => ChatUsersDialog(
+                            chat: currentChat!,
+                            users: currentChatUsers,
+                          ),
+                        ),
+                      ),
                       Expanded(
-                        child: Center(
-                          child: Text('チャットゾーン'),
+                        child:
+                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: messageService.streamList(
+                            chatId: currentChat?.id,
+                          ),
+                          builder: (context, snapshot) {
+                            List<ChatMessageModel> messages = [];
+                            if (snapshot.hasData) {
+                              for (DocumentSnapshot<Map<String, dynamic>> doc
+                                  in snapshot.data!.docs) {
+                                messages
+                                    .add(ChatMessageModel.fromSnapshot(doc));
+                              }
+                            }
+                            if (messages.isEmpty) {
+                              return const Center(child: Text('メッセージはありません'));
+                            }
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              reverse: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: messages.length,
+                              itemBuilder: (context, index) {
+                                ChatMessageModel message = messages[index];
+                                return MessageList(
+                                  message: message,
+                                  isMe: message.userId == loginUser?.id,
+                                  onTapImage: () {},
+                                  users: currentChatUsers,
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
                       MessageFormField(
-                        controller: TextEditingController(),
+                        controller: messageProvider.contentController,
                         galleryPressed: () {},
-                        sendPressed: () {},
+                        sendPressed: () async {
+                          String? error = await messageProvider.send(
+                            chat: currentChat,
+                            loginUser: loginUser,
+                          );
+                          if (error != null) {
+                            if (!mounted) return;
+                            showMessage(context, error, false);
+                            return;
+                          }
+                        },
+                        enabled: chatUserIds.contains(loginUser?.id),
                       ),
                     ],
                   ),
+                )
+              : Container(
+                  color: kGrey200Color,
+                  child: const Center(
+                    child: Text('左側のチャットルームを選択してください'),
+                  ),
                 ),
-              ),
-            ],
-          ),
         ),
       ),
+    );
+  }
+}
+
+class ChatUsersDialog extends StatelessWidget {
+  final ChatModel chat;
+  final List<UserModel> users;
+
+  const ChatUsersDialog({
+    required this.chat,
+    required this.users,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: Text(
+        chat.name,
+        style: const TextStyle(fontSize: 18),
+      ),
+      content: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: kGrey300Color),
+        ),
+        height: 300,
+        child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            UserModel user = users[index];
+            return UserList(user: user);
+          },
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 }

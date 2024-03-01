@@ -60,7 +60,6 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
         userIds: widget.organization?.userIds ?? [],
       );
     }
-    selectedUserIds.clear();
     setState(() {});
   }
 
@@ -172,7 +171,10 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                 isExpanded: true,
                 value: selectedGroup,
                 items: groupItems,
-                onChanged: _groupChange,
+                onChanged: (value) {
+                  selectedUserIds.clear();
+                  _groupChange(value);
+                },
                 placeholder: const Text('グループ未選択'),
               ),
             ),

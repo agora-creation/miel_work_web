@@ -1,16 +1,19 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 
 class MessageFormField extends StatelessWidget {
   final TextEditingController controller;
   final Function()? galleryPressed;
   final Function()? sendPressed;
+  final bool enabled;
 
   const MessageFormField({
     required this.controller,
     required this.galleryPressed,
     required this.sendPressed,
+    this.enabled = false,
     super.key,
   });
 
@@ -26,10 +29,18 @@ class MessageFormField extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
-            child: IconButton(
-              onPressed: galleryPressed,
-              icon: const Icon(FluentIcons.photo, color: kGrey300Color),
-            ),
+            child: enabled
+                ? CustomIconButtonSm(
+                    icon: FluentIcons.photo2,
+                    iconColor: kWhiteColor,
+                    backgroundColor: kCyanColor,
+                    onPressed: galleryPressed,
+                  )
+                : const CustomIconButtonSm(
+                    icon: FluentIcons.photo2,
+                    iconColor: kWhiteColor,
+                    backgroundColor: kGreyColor,
+                  ),
           ),
           Expanded(
             child: Padding(
@@ -39,17 +50,24 @@ class MessageFormField extends StatelessWidget {
                 placeholder: 'メッセージを入力...',
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
+                enabled: enabled,
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
-            child: CustomButtonSm(
-              labelText: '送信',
-              labelColor: kWhiteColor,
-              backgroundColor: kBlueColor,
-              onPressed: sendPressed,
-            ),
+            child: enabled
+                ? CustomButtonSm(
+                    labelText: '送信',
+                    labelColor: kWhiteColor,
+                    backgroundColor: kBlueColor,
+                    onPressed: sendPressed,
+                  )
+                : const CustomButtonSm(
+                    labelText: '送信',
+                    labelColor: kWhiteColor,
+                    backgroundColor: kGreyColor,
+                  ),
           ),
         ],
       ),

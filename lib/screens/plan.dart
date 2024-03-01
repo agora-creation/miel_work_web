@@ -42,7 +42,7 @@ class _PlanScreenState extends State<PlanScreen> {
           children: [
             CustomButtonSm(
               labelText: 'カテゴリ管理',
-              labelColor: kBlackColor,
+              labelColor: kWhiteColor,
               backgroundColor: kCyanColor,
               onPressed: () => showBottomUpScreen(
                 context,
