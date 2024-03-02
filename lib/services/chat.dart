@@ -21,6 +21,26 @@ class ChatService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
+  Future<ChatModel?> selectData({
+    required String organizationId,
+    required String groupId,
+    required int priority,
+  }) async {
+    ChatModel? ret;
+    await firestore
+        .collection(collection)
+        .where('organizationId', isEqualTo: organizationId)
+        .where('groupId', isEqualTo: groupId)
+        .where('priority', isEqualTo: priority)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        ret = ChatModel.fromSnapshot(value.docs.first);
+      }
+    });
+    return ret;
+  }
+
   Future<List<ChatModel>> selectList({
     required String? organizationId,
     required String? groupId,

@@ -1,7 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/organization.dart';
 import 'package:miel_work_web/services/organization_group.dart';
@@ -11,6 +13,7 @@ class UserProvider with ChangeNotifier {
   final OrganizationService _organizationService = OrganizationService();
   final OrganizationGroupService _groupService = OrganizationGroupService();
   final UserService _userService = UserService();
+  final ChatService _chatService = ChatService();
   final FmService _fmService = FmService();
 
   Future<String?> create({
@@ -47,6 +50,17 @@ class UserProvider with ChangeNotifier {
         'id': organization.id,
         'userIds': orgUserIds,
       });
+      ChatModel? orgChat = await _chatService.selectData(
+        organizationId: organization.id,
+        groupId: '',
+        priority: 0,
+      );
+      if (orgChat != null) {
+        _chatService.update({
+          'id': orgChat.id,
+          'userIds': orgUserIds,
+        });
+      }
       if (group != null) {
         List<String> groupUserIds = group.userIds;
         if (!groupUserIds.contains(id)) {
@@ -57,6 +71,17 @@ class UserProvider with ChangeNotifier {
           'organizationId': group.organizationId,
           'userIds': groupUserIds,
         });
+        ChatModel? groupChat = await _chatService.selectData(
+          organizationId: organization.id,
+          groupId: group.id,
+          priority: 1,
+        );
+        if (groupChat != null) {
+          _chatService.update({
+            'id': groupChat.id,
+            'userIds': groupUserIds,
+          });
+        }
       }
     } catch (e) {
       error = 'スタッフの追加に失敗しました';
@@ -97,6 +122,17 @@ class UserProvider with ChangeNotifier {
             'organizationId': befGroup.organizationId,
             'userIds': befGroupUserIds,
           });
+          ChatModel? groupChat = await _chatService.selectData(
+            organizationId: befGroup.organizationId,
+            groupId: befGroup.id,
+            priority: 1,
+          );
+          if (groupChat != null) {
+            _chatService.update({
+              'id': groupChat.id,
+              'userIds': befGroupUserIds,
+            });
+          }
         }
         if (aftGroup != null) {
           List<String> aftGroupUserIds = aftGroup.userIds;
@@ -108,6 +144,17 @@ class UserProvider with ChangeNotifier {
             'organizationId': aftGroup.organizationId,
             'userIds': aftGroupUserIds,
           });
+          ChatModel? groupChat = await _chatService.selectData(
+            organizationId: aftGroup.organizationId,
+            groupId: aftGroup.id,
+            priority: 1,
+          );
+          if (groupChat != null) {
+            _chatService.update({
+              'id': groupChat.id,
+              'userIds': aftGroupUserIds,
+            });
+          }
         }
       }
     } catch (e) {
@@ -117,14 +164,35 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<String?> delete({
+    required OrganizationModel? organization,
     required UserModel user,
     required OrganizationGroupModel? group,
   }) async {
     String? error;
+    if (organization == null) return 'スタッフの削除に失敗しました';
     try {
       _userService.delete({
         'id': user.id,
       });
+      List<String> orgUserIds = organization.userIds;
+      if (orgUserIds.contains(user.id)) {
+        orgUserIds.remove(user.id);
+      }
+      _organizationService.update({
+        'id': organization.id,
+        'userIds': orgUserIds,
+      });
+      ChatModel? orgChat = await _chatService.selectData(
+        organizationId: organization.id,
+        groupId: '',
+        priority: 0,
+      );
+      if (orgChat != null) {
+        _chatService.update({
+          'id': orgChat.id,
+          'userIds': orgUserIds,
+        });
+      }
       if (group != null) {
         List<String> groupUserIds = group.userIds;
         if (groupUserIds.contains(user.id)) {
@@ -135,6 +203,17 @@ class UserProvider with ChangeNotifier {
           'organizationId': group.organizationId,
           'userIds': groupUserIds,
         });
+        ChatModel? groupChat = await _chatService.selectData(
+          organizationId: group.organizationId,
+          groupId: group.id,
+          priority: 1,
+        );
+        if (groupChat != null) {
+          _chatService.update({
+            'id': groupChat.id,
+            'userIds': groupUserIds,
+          });
+        }
       }
       if (user.token != '') {
         _fmService.send(

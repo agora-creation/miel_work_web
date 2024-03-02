@@ -402,6 +402,7 @@ class _DelUserDialogState extends State<DelUserDialog> {
           backgroundColor: kRedColor,
           onPressed: () async {
             String? error = await userProvider.delete(
+              organization: loginProvider.organization,
               user: widget.user,
               group: widget.currentGroup,
             );
