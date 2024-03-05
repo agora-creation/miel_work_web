@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
@@ -12,9 +13,9 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/user.dart';
-import 'package:miel_work_web/widgets/chat_room_area.dart';
-import 'package:miel_work_web/widgets/chat_room_header.dart';
-import 'package:miel_work_web/widgets/chat_room_list.dart';
+import 'package:miel_work_web/widgets/chat_area.dart';
+import 'package:miel_work_web/widgets/chat_header.dart';
+import 'package:miel_work_web/widgets/chat_list.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/message_form_field.dart';
 import 'package:miel_work_web/widgets/message_list.dart';
@@ -57,6 +58,20 @@ class _ChatScreenState extends State<ChatScreen> {
     currentChatUsers = await userService.selectList(
       userIds: chat.userIds,
     );
+    List<ChatMessageModel> messages = await messageService.selectList(
+      chatId: currentChat?.id,
+      user: widget.loginProvider.user,
+    );
+    if (messages.isNotEmpty) {
+      for (ChatMessageModel message in messages) {
+        List<String> readUserIds = message.readUserIds;
+        readUserIds.add(widget.loginProvider.user?.id ?? '');
+        messageService.update({
+          'id': message.id,
+          'readUserIds': readUserIds,
+        });
+      }
+    }
     setState(() {});
   }
 
@@ -74,16 +89,31 @@ class _ChatScreenState extends State<ChatScreen> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
-        child: ChatRoomArea(
+        child: ChatArea(
           chatsView: chats.isNotEmpty
               ? ListView.builder(
                   itemCount: chats.length,
                   itemBuilder: (context, index) {
                     ChatModel chat = chats[index];
-                    return ChatRoomList(
-                      chat: chat,
-                      selected: currentChat == chat,
-                      onTap: () => _currentChatChange(chat),
+                    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: messageService.streamList(
+                        chatId: chat.id,
+                      ),
+                      builder: (context, snapshot) {
+                        bool unread = false;
+                        if (snapshot.hasData) {
+                          unread = messageService.unreadCheck(
+                            data: snapshot.data,
+                            user: loginUser,
+                          );
+                        }
+                        return ChatList(
+                          chat: chat,
+                          unread: unread,
+                          selected: currentChat == chat,
+                          onTap: () => _currentChatChange(chat),
+                        );
+                      },
                     );
                   },
                 )
@@ -95,7 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ChatRoomHeader(
+                      ChatHeader(
                         chat: currentChat!,
                         usersOnPressed: () => showDialog(
                           context: context,
@@ -142,7 +172,22 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       MessageFormField(
                         controller: messageProvider.contentController,
-                        galleryPressed: () {},
+                        galleryPressed: () async {
+                          final result = await ImagePicker().pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (result == null) return;
+                          String? error = await messageProvider.sendImage(
+                            chat: currentChat,
+                            loginUser: loginUser,
+                            imageXFile: result,
+                          );
+                          if (error != null) {
+                            if (!mounted) return;
+                            showMessage(context, error, false);
+                            return;
+                          }
+                        },
                         sendPressed: () async {
                           String? error = await messageProvider.send(
                             chat: currentChat,

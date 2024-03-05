@@ -1,11 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 
-class ChatRoomArea extends StatelessWidget {
+class ChatArea extends StatelessWidget {
   final Widget chatsView;
   final Widget messageView;
 
-  const ChatRoomArea({
+  const ChatArea({
     required this.chatsView,
     required this.messageView,
     super.key,

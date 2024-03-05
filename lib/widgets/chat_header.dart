@@ -2,11 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 
-class ChatRoomHeader extends StatelessWidget {
+class ChatHeader extends StatelessWidget {
   final ChatModel chat;
   final Function()? usersOnPressed;
 
-  const ChatRoomHeader({
+  const ChatHeader({
     required this.chat,
     required this.usersOnPressed,
     super.key,

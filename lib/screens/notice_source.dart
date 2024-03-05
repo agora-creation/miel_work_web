@@ -40,10 +40,6 @@ class NoticeSource extends DataGridSource {
           value: notice.title,
         ),
         DataGridCell(
-          columnName: 'content',
-          value: notice.content,
-        ),
-        DataGridCell(
           columnName: 'groupId',
           value: notice.groupId,
         ),
@@ -66,7 +62,6 @@ class NoticeSource extends DataGridSource {
       (e) => e.id == '${row.getCells()[0].value}',
     );
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
     OrganizationGroupModel? noticeInGroup;
     if (homeProvider.groups.isNotEmpty) {
       for (OrganizationGroupModel group in homeProvider.groups) {

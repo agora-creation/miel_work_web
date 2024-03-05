@@ -88,10 +88,6 @@ class _NoticeScreenState extends State<NoticeScreen> {
                         label: const CustomColumnLabel('タイトル'),
                       ),
                       GridColumn(
-                        columnName: 'content',
-                        label: const CustomColumnLabel('お知らせ内容'),
-                      ),
-                      GridColumn(
                         columnName: 'groupId',
                         label: const CustomColumnLabel('送信先グループ'),
                       ),
