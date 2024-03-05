@@ -1,28 +1,28 @@
-import 'dart:io';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/screens/notice_mod.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_column_link.dart';
-import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class NoticeSource extends DataGridSource {
   final BuildContext context;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final List<NoticeModel> notices;
-  final List<OrganizationGroupModel> groups;
 
   NoticeSource({
     required this.context,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.notices,
-    required this.groups,
   }) {
     buildDataGridRows();
   }
@@ -43,10 +43,6 @@ class NoticeSource extends DataGridSource {
         DataGridCell(
           columnName: 'content',
           value: notice.content,
-        ),
-        DataGridCell(
-          columnName: 'file',
-          value: notice.file,
         ),
         DataGridCell(
           columnName: 'groupId',
@@ -72,28 +68,15 @@ class NoticeSource extends DataGridSource {
     );
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
-    if (row.getCells()[3].value != '') {
-      File file = File('${row.getCells()[3].value}');
-      cells.add(CustomColumnLink(
-        label: p.basename(file.path),
-        color: kBlueColor,
-        onTap: () => downloadFile(
-          url: '${row.getCells()[3].value}',
-          name: p.basename(file.path),
-        ),
-      ));
-    } else {
-      cells.add(const CustomColumnLabel(''));
-    }
-    OrganizationGroupModel? currentGroup;
-    if (groups.isNotEmpty) {
-      for (OrganizationGroupModel group in groups) {
+    OrganizationGroupModel? noticeInGroup;
+    if (homeProvider.groups.isNotEmpty) {
+      for (OrganizationGroupModel group in homeProvider.groups) {
         if (group.id == notice.groupId) {
-          currentGroup = group;
+          noticeInGroup = group;
         }
       }
     }
-    cells.add(CustomColumnLabel(currentGroup?.name ?? ''));
+    cells.add(CustomColumnLabel(noticeInGroup?.name ?? ''));
     cells.add(Row(
       children: [
         CustomButtonSm(
@@ -103,8 +86,10 @@ class NoticeSource extends DataGridSource {
           onPressed: () => showBottomUpScreen(
             context,
             NoticeModScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               notice: notice,
-              currentGroup: currentGroup,
+              noticeInGroup: noticeInGroup,
             ),
           ),
         ),
@@ -116,8 +101,10 @@ class NoticeSource extends DataGridSource {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => DelNoticeDialog(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               notice: notice,
-              currentGroup: currentGroup,
+              noticeInGroup: noticeInGroup,
             ),
           ),
         ),
@@ -174,12 +161,16 @@ class NoticeSource extends DataGridSource {
 }
 
 class DelNoticeDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final NoticeModel notice;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? noticeInGroup;
 
   const DelNoticeDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.notice,
-    required this.currentGroup,
+    required this.noticeInGroup,
     super.key,
   });
 
@@ -193,7 +184,7 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
     final noticeProvider = Provider.of<NoticeProvider>(context);
     return ContentDialog(
       title: const Text(
-        'お知らせを削除する',
+        'お知らせを削除',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -214,13 +205,8 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: 'ファイル',
-              child: Text(widget.notice.file),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
               label: '送信先グループ',
-              child: Text(widget.currentGroup?.name ?? ''),
+              child: Text(widget.noticeInGroup?.name ?? ''),
             ),
           ],
         ),

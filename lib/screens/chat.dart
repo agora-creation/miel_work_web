@@ -4,7 +4,6 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
@@ -23,12 +22,12 @@ import 'package:miel_work_web/widgets/user_list.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const ChatScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -47,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _getChats() async {
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     chats = await chatService.selectList(
-      organizationId: widget.organization?.id,
+      organizationId: widget.loginProvider.organization?.id,
       groupId: group?.id,
     );
     setState(() {});
@@ -69,9 +68,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
     final messageProvider = Provider.of<ChatMessageProvider>(context);
-    UserModel? loginUser = loginProvider.user;
+    UserModel? loginUser = widget.loginProvider.user;
     List<String> chatUserIds = currentChat?.userIds ?? [];
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -116,11 +114,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           builder: (context, snapshot) {
                             List<ChatMessageModel> messages = [];
                             if (snapshot.hasData) {
-                              for (DocumentSnapshot<Map<String, dynamic>> doc
-                                  in snapshot.data!.docs) {
-                                messages
-                                    .add(ChatMessageModel.fromSnapshot(doc));
-                              }
+                              messages = messageService.generateList(
+                                data: snapshot.data,
+                              );
                             }
                             if (messages.isEmpty) {
                               return const Center(child: Text('メッセージはありません'));

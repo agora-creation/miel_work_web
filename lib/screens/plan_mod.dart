@@ -1,13 +1,12 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
@@ -18,14 +17,14 @@ import 'package:miel_work_web/widgets/custom_time_box.dart';
 import 'package:provider/provider.dart';
 
 class PlanModScreen extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String planId;
-  final List<OrganizationGroupModel> groups;
 
   const PlanModScreen({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.planId,
-    required this.groups,
     super.key,
   });
 
@@ -45,7 +44,6 @@ class _PlanModScreenState extends State<PlanModScreen> {
   bool allDay = false;
   String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
-  PlatformFile? pickedFile;
 
   void _init() async {
     PlanModel? plan = await planService.selectData(id: widget.planId);
@@ -55,15 +53,14 @@ class _PlanModScreenState extends State<PlanModScreen> {
       Navigator.of(context, rootNavigator: true).pop();
       return;
     }
-    for (OrganizationGroupModel group in widget.groups) {
+    for (OrganizationGroupModel group in widget.homeProvider.groups) {
       if (group.id == plan.groupId) {
         selectedGroup = group;
       }
     }
-    List<CategoryModel> tmpCategories = await categoryService.selectList(
-      organizationId: widget.organization?.id,
+    categories = await categoryService.selectList(
+      organizationId: widget.loginProvider.organization?.id,
     );
-    categories = tmpCategories;
     selectedCategory = plan.category;
     subjectController.text = plan.subject;
     startedAt = plan.startedAt;
@@ -75,27 +72,26 @@ class _PlanModScreenState extends State<PlanModScreen> {
   }
 
   void _allDayChange(bool? value) {
-    setState(() {
-      allDay = value ?? false;
-      if (allDay) {
-        startedAt = DateTime(
-          startedAt.year,
-          startedAt.month,
-          startedAt.day,
-          0,
-          0,
-          0,
-        );
-        endedAt = DateTime(
-          endedAt.year,
-          endedAt.month,
-          endedAt.day,
-          23,
-          59,
-          59,
-        );
-      }
-    });
+    allDay = value ?? false;
+    if (allDay) {
+      startedAt = DateTime(
+        startedAt.year,
+        startedAt.month,
+        startedAt.day,
+        0,
+        0,
+        0,
+      );
+      endedAt = DateTime(
+        endedAt.year,
+        endedAt.month,
+        endedAt.day,
+        23,
+        59,
+        59,
+      );
+    }
+    setState(() {});
   }
 
   @override
@@ -106,15 +102,14 @@ class _PlanModScreenState extends State<PlanModScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final planProvider = Provider.of<PlanProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -131,7 +126,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '予定を編集する',
+                '予定を編集',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
@@ -143,6 +138,8 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     onPressed: () => showDialog(
                       context: context,
                       builder: (context) => DelPlanDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
                         planId: widget.planId,
                       ),
                     ),
@@ -155,7 +152,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     onPressed: () async {
                       String? error = await planProvider.update(
                         planId: widget.planId,
-                        organization: widget.organization,
+                        organization: widget.loginProvider.organization,
                         group: selectedGroup,
                         category: selectedCategory,
                         subject: subjectController.text,
@@ -164,7 +161,6 @@ class _PlanModScreenState extends State<PlanModScreen> {
                         allDay: allDay,
                         color: color,
                         memo: memoController.text,
-                        pickedFile: pickedFile,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -354,9 +350,13 @@ class _PlanModScreenState extends State<PlanModScreen> {
 }
 
 class DelPlanDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String planId;
 
   const DelPlanDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.planId,
     super.key,
   });
@@ -371,7 +371,7 @@ class _DelPlanDialogState extends State<DelPlanDialog> {
     final planProvider = Provider.of<PlanProvider>(context);
     return ContentDialog(
       title: const Text(
-        '予定を削除する',
+        '予定を削除',
         style: TextStyle(fontSize: 18),
       ),
       content: const SingleChildScrollView(

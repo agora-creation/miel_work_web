@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/models/plan.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanService {
   String collection = 'plan';
@@ -47,5 +48,26 @@ class PlanService {
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('startedAt', descending: true)
         .snapshots();
+  }
+
+  List<sfc.Appointment> generateList({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+    bool shift = false,
+  }) {
+    List<sfc.Appointment> ret = [];
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      PlanModel plan = PlanModel.fromSnapshot(doc);
+      ret.add(sfc.Appointment(
+        id: plan.id,
+        resourceIds: plan.userIds,
+        subject: '[${plan.category}]${plan.subject}',
+        startTime: plan.startedAt,
+        endTime: plan.endedAt,
+        isAllDay: plan.allDay,
+        color: shift ? plan.color.withOpacity(0.3) : plan.color,
+        notes: 'plan',
+      ));
+    }
+    return ret;
   }
 }

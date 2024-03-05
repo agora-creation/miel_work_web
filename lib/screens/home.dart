@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/chat.dart';
@@ -23,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
-    OrganizationModel? organization = loginProvider.organization;
     final homeProvider = Provider.of<HomeProvider>(context);
 
     return NavigationView(
@@ -46,8 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.calendar),
             title: const Text('スケジュールカレンダー'),
             body: PlanScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -55,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.view_list),
             title: const Text('シフト表'),
             body: PlanShiftScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -64,8 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.office_chat),
             title: const Text('チャット'),
             body: ChatScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -73,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.news),
             title: const Text('お知らせ'),
             body: NoticeScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -82,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.documentation),
             title: const Text('業務マニュアル'),
             body: ManualScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -93,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
             body: UserScreen(
               loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
           ),
           PaneItemSeparator(),
@@ -101,8 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.settings),
             title: const Text('グループ設定'),
             body: GroupSettingScreen(
+              loginProvider: loginProvider,
               homeProvider: homeProvider,
-              organization: organization,
             ),
             enabled: homeProvider.currentGroup != null,
           ),

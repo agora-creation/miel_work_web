@@ -2,10 +2,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_shift.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -15,14 +15,14 @@ import 'package:miel_work_web/widgets/custom_time_box.dart';
 import 'package:provider/provider.dart';
 
 class PlanShiftAddScreen extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String userId;
   final DateTime date;
 
   const PlanShiftAddScreen({
-    required this.organization,
-    required this.group,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.userId,
     required this.date,
     super.key,
@@ -42,7 +42,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
   bool allDay = false;
 
   void _init() async {
-    _groupChange(widget.group);
+    _groupChange(widget.homeProvider.currentGroup);
     selectedUserIds.add(widget.userId);
     startedAt = widget.date;
     endedAt = startedAt.add(const Duration(hours: 1));
@@ -57,34 +57,33 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
       );
     } else {
       users = await userService.selectList(
-        userIds: widget.organization?.userIds ?? [],
+        userIds: widget.loginProvider.organization?.userIds ?? [],
       );
     }
     setState(() {});
   }
 
   void _allDayChange(bool? value) {
-    setState(() {
-      allDay = value ?? false;
-      if (allDay) {
-        startedAt = DateTime(
-          startedAt.year,
-          startedAt.month,
-          startedAt.day,
-          0,
-          0,
-          0,
-        );
-        endedAt = DateTime(
-          endedAt.year,
-          endedAt.month,
-          endedAt.day,
-          23,
-          59,
-          59,
-        );
-      }
-    });
+    allDay = value ?? false;
+    if (allDay) {
+      startedAt = DateTime(
+        startedAt.year,
+        startedAt.month,
+        startedAt.day,
+        0,
+        0,
+        0,
+      );
+      endedAt = DateTime(
+        endedAt.year,
+        endedAt.month,
+        endedAt.day,
+        23,
+        59,
+        59,
+      );
+    }
+    setState(() {});
   }
 
   @override
@@ -95,15 +94,14 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final planShiftProvider = Provider.of<PlanShiftProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -120,7 +118,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '勤務予定を新しく追加する',
+                '勤務予定を新しく追加',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
@@ -131,7 +129,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                     backgroundColor: kBlueColor,
                     onPressed: () async {
                       String? error = await planShiftProvider.create(
-                        organization: widget.organization,
+                        organization: widget.loginProvider.organization,
                         group: selectedGroup,
                         userIds: selectedUserIds,
                         startedAt: startedAt,

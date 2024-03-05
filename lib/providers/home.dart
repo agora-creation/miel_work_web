@@ -19,10 +19,13 @@ class HomeProvider with ChangeNotifier {
 
   void setGroups({
     required String organizationId,
+    OrganizationGroupModel? group,
   }) async {
     groups = await _groupService.selectList(organizationId: organizationId);
     if (groups.isEmpty) {
       currentGroup = null;
+    } else {
+      currentGroup = group;
     }
     notifyListeners();
   }
@@ -63,8 +66,7 @@ class HomeProvider with ChangeNotifier {
         'userIds': [],
         'name': name,
         'lastMessage': '',
-        'personal': false,
-        'priority': 1,
+        'updatedAt': DateTime.now(),
         'createdAt': DateTime.now(),
       });
       setGroups(organizationId: organization.id);
@@ -92,7 +94,6 @@ class HomeProvider with ChangeNotifier {
       ChatModel? chat = await _chatService.selectData(
         organizationId: organization.id,
         groupId: group.id,
-        priority: 1,
       );
       if (chat != null) {
         _chatService.update({
@@ -122,7 +123,6 @@ class HomeProvider with ChangeNotifier {
       ChatModel? chat = await _chatService.selectData(
         organizationId: organization.id,
         groupId: group.id,
-        priority: 1,
       );
       if (chat != null) {
         _chatService.delete({

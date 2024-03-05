@@ -24,14 +24,12 @@ class ChatService {
   Future<ChatModel?> selectData({
     required String organizationId,
     required String groupId,
-    required int priority,
   }) async {
     ChatModel? ret;
     await firestore
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId)
         .where('groupId', isEqualTo: groupId)
-        .where('priority', isEqualTo: priority)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
@@ -50,7 +48,7 @@ class ChatService {
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
-        .orderBy('priority', descending: false)
+        .orderBy('updatedAt', descending: true)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {

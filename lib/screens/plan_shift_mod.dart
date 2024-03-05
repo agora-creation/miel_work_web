@@ -2,11 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan_shift.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_shift.dart';
 import 'package:miel_work_web/services/plan_shift.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -17,14 +17,14 @@ import 'package:miel_work_web/widgets/custom_time_box.dart';
 import 'package:provider/provider.dart';
 
 class PlanShiftModScreen extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String planShiftId;
-  final List<OrganizationGroupModel> groups;
 
   const PlanShiftModScreen({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.planShiftId,
-    required this.groups,
     super.key,
   });
 
@@ -52,7 +52,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
       Navigator.of(context, rootNavigator: true).pop();
       return;
     }
-    for (OrganizationGroupModel group in widget.groups) {
+    for (OrganizationGroupModel group in widget.homeProvider.groups) {
       if (group.id == planShift.groupId) {
         selectedGroup = group;
       }
@@ -73,34 +73,33 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
       );
     } else {
       users = await userService.selectList(
-        userIds: widget.organization?.userIds ?? [],
+        userIds: widget.loginProvider.organization?.userIds ?? [],
       );
     }
     setState(() {});
   }
 
   void _allDayChange(bool? value) {
-    setState(() {
-      allDay = value ?? false;
-      if (allDay) {
-        startedAt = DateTime(
-          startedAt.year,
-          startedAt.month,
-          startedAt.day,
-          0,
-          0,
-          0,
-        );
-        endedAt = DateTime(
-          endedAt.year,
-          endedAt.month,
-          endedAt.day,
-          23,
-          59,
-          59,
-        );
-      }
-    });
+    allDay = value ?? false;
+    if (allDay) {
+      startedAt = DateTime(
+        startedAt.year,
+        startedAt.month,
+        startedAt.day,
+        0,
+        0,
+        0,
+      );
+      endedAt = DateTime(
+        endedAt.year,
+        endedAt.month,
+        endedAt.day,
+        23,
+        59,
+        59,
+      );
+    }
+    setState(() {});
   }
 
   @override
@@ -111,15 +110,14 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final planShiftProvider = Provider.of<PlanShiftProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -136,7 +134,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '勤務予定を編集する',
+                '勤務予定を編集',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
@@ -148,6 +146,8 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                     onPressed: () => showDialog(
                       context: context,
                       builder: (context) => DelPlanShiftDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
                         planShiftId: widget.planShiftId,
                       ),
                     ),
@@ -160,7 +160,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                     onPressed: () async {
                       String? error = await planShiftProvider.update(
                         planShiftId: widget.planShiftId,
-                        organization: widget.organization,
+                        organization: widget.loginProvider.organization,
                         group: selectedGroup,
                         userIds: selectedUserIds,
                         startedAt: startedAt,
@@ -320,9 +320,13 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
 }
 
 class DelPlanShiftDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String planShiftId;
 
   const DelPlanShiftDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.planShiftId,
     super.key,
   });
@@ -337,7 +341,7 @@ class _DelPlanShiftDialogState extends State<DelPlanShiftDialog> {
     final planShiftProvider = Provider.of<PlanShiftProvider>(context);
     return ContentDialog(
       title: const Text(
-        '勤務予定を削除する',
+        '勤務予定を削除',
         style: TextStyle(fontSize: 18),
       ),
       content: const SingleChildScrollView(

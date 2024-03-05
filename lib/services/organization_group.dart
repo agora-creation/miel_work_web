@@ -61,4 +61,23 @@ class OrganizationGroupService {
     });
     return ret;
   }
+
+  Future<OrganizationGroupModel?> selectData({
+    required String organizationId,
+    required String userId,
+  }) async {
+    OrganizationGroupModel? ret;
+    await firestore
+        .collection(collection)
+        .doc(organizationId)
+        .collection(subCollection)
+        .where('userIds', arrayContains: userId)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        ret = OrganizationGroupModel.fromSnapshot(value.docs.first);
+      }
+    });
+    return ret;
+  }
 }

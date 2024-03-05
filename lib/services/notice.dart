@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/models/notice.dart';
 
 class NoticeService {
   String collection = 'notice';
@@ -30,5 +31,15 @@ class NoticeService {
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('createdAt', descending: true)
         .snapshots();
+  }
+
+  List<NoticeModel> generateList({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+  }) {
+    List<NoticeModel> ret = [];
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      ret.add(NoticeModel.fromSnapshot(doc));
+    }
+    return ret;
   }
 }

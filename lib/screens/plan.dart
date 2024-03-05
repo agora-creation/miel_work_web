@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
-import 'package:miel_work_web/models/organization_group.dart';
-import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
 import 'package:miel_work_web/screens/plan_add.dart';
 import 'package:miel_work_web/screens/plan_mod.dart';
@@ -15,12 +13,12 @@ import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const PlanScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -33,7 +31,6 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -46,31 +43,24 @@ class _PlanScreenState extends State<PlanScreen> {
               backgroundColor: kCyanColor,
               onPressed: () => showBottomUpScreen(
                 context,
-                CategoryScreen(organization: widget.organization),
+                CategoryScreen(
+                  loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
+                ),
               ),
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: planService.streamList(
-                  organizationId: widget.organization?.id,
-                  groupId: group?.id,
+                  organizationId: widget.loginProvider.organization?.id,
+                  groupId: widget.homeProvider.currentGroup?.id,
                 ),
                 builder: (context, snapshot) {
                   List<sfc.Appointment> appointments = [];
                   if (snapshot.hasData) {
-                    for (DocumentSnapshot<Map<String, dynamic>> doc
-                        in snapshot.data!.docs) {
-                      PlanModel plan = PlanModel.fromSnapshot(doc);
-                      appointments.add(sfc.Appointment(
-                        id: plan.id,
-                        resourceIds: plan.userIds,
-                        subject: '[${plan.category}]${plan.subject}',
-                        startTime: plan.startedAt,
-                        endTime: plan.endedAt,
-                        isAllDay: plan.allDay,
-                        color: plan.color,
-                      ));
-                    }
+                    appointments = planService.generateList(
+                      data: snapshot.data,
+                    );
                   }
                   return CustomCalendar(
                     dataSource: _DataSource(appointments),
@@ -83,9 +73,9 @@ class _PlanScreenState extends State<PlanScreen> {
                         showBottomUpScreen(
                           context,
                           PlanModScreen(
-                            organization: widget.organization,
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
                             planId: '${appointmentDetails.id}',
-                            groups: widget.homeProvider.groups,
                           ),
                         );
                       } else if (details.targetElement ==
@@ -95,8 +85,8 @@ class _PlanScreenState extends State<PlanScreen> {
                         showBottomUpScreen(
                           context,
                           PlanAddScreen(
-                            organization: widget.organization,
-                            group: group,
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
                             date: date,
                           ),
                         );

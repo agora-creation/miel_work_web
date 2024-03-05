@@ -3,9 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/notice_add.dart';
 import 'package:miel_work_web/screens/notice_source.dart';
 import 'package:miel_work_web/services/notice.dart';
@@ -15,12 +15,12 @@ import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class NoticeScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const NoticeScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -33,7 +33,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.organization?.name ?? '';
+    String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
     return Padding(
@@ -56,8 +56,8 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   onPressed: () => showBottomUpScreen(
                     context,
                     NoticeAddScreen(
-                      organization: widget.organization,
-                      group: group,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                     ),
                   ),
                 ),
@@ -67,22 +67,20 @@ class _NoticeScreenState extends State<NoticeScreen> {
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: noticeService.streamList(
-                  organizationId: widget.organization?.id,
+                  organizationId: widget.loginProvider.organization?.id,
                   groupId: group?.id,
                 ),
                 builder: (context, snapshot) {
                   List<NoticeModel> notices = [];
                   if (snapshot.hasData) {
-                    for (DocumentSnapshot<Map<String, dynamic>> doc
-                        in snapshot.data!.docs) {
-                      notices.add(NoticeModel.fromSnapshot(doc));
-                    }
+                    notices = noticeService.generateList(data: snapshot.data);
                   }
                   return CustomDataGrid(
                     source: NoticeSource(
                       context: context,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                       notices: notices,
-                      groups: widget.homeProvider.groups,
                     ),
                     columns: [
                       GridColumn(
@@ -92,10 +90,6 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       GridColumn(
                         columnName: 'content',
                         label: const CustomColumnLabel('お知らせ内容'),
-                      ),
-                      GridColumn(
-                        columnName: 'file',
-                        label: const CustomColumnLabel('ファイル'),
                       ),
                       GridColumn(
                         columnName: 'groupId',

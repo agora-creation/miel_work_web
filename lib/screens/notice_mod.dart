@@ -1,22 +1,26 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
 class NoticeModScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final NoticeModel notice;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? noticeInGroup;
 
   const NoticeModScreen({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.notice,
-    required this.currentGroup,
+    required this.noticeInGroup,
     super.key,
   });
 
@@ -27,7 +31,6 @@ class NoticeModScreen extends StatefulWidget {
 class _NoticeModScreenState extends State<NoticeModScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
-  PlatformFile? pickedFile;
   OrganizationGroupModel? selectedGroup;
 
   @override
@@ -35,20 +38,19 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
     super.initState();
     titleController.text = widget.notice.title;
     contentController.text = widget.notice.content;
-    selectedGroup = widget.currentGroup;
+    selectedGroup = widget.noticeInGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final noticeProvider = Provider.of<NoticeProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -65,7 +67,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'お知らせを編集する',
+                'お知らせを編集',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
@@ -79,8 +81,8 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                         notice: widget.notice,
                         title: titleController.text,
                         content: contentController.text,
-                        pickedFile: pickedFile,
                         group: selectedGroup,
+                        user: widget.loginProvider.user,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -129,26 +131,6 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                 maxLines: null,
               ),
             ),
-            const SizedBox(height: 8),
-            CustomButtonSm(
-              labelText: 'ファイル選択',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.any,
-                );
-                if (result == null) return;
-                setState(() {
-                  pickedFile = result.files.first;
-                });
-              },
-            ),
-            pickedFile != null
-                ? Text('${pickedFile?.name}')
-                : widget.notice.file != ''
-                    ? Text(widget.notice.file)
-                    : Container(),
             const SizedBox(height: 8),
             InfoLabel(
               label: '送信先グループ',

@@ -19,6 +19,7 @@ class ManualProvider with ChangeNotifier {
     required String title,
     required PlatformFile? pickedFile,
     required OrganizationGroupModel? group,
+    required UserModel? user,
   }) async {
     String? error;
     if (organization == null) return '業務マニュアルの追加に失敗しました';
@@ -42,7 +43,7 @@ class ManualProvider with ChangeNotifier {
         'groupId': group?.id ?? '',
         'title': title,
         'file': file,
-        'readUserIds': [],
+        'readUserIds': [user?.id],
         'createdAt': DateTime.now(),
       });
       List<UserModel> sendUsers = [];
@@ -75,6 +76,7 @@ class ManualProvider with ChangeNotifier {
     required String title,
     required PlatformFile? pickedFile,
     required OrganizationGroupModel? group,
+    required UserModel? user,
   }) async {
     String? error;
     if (title == '') return 'タイトルを入力してください';
@@ -94,6 +96,7 @@ class ManualProvider with ChangeNotifier {
         'id': manual.id,
         'groupId': group?.id ?? '',
         'title': title,
+        'readUserIds': [user?.id],
       });
     } catch (e) {
       error = '業務マニュアルの編集に失敗しました';

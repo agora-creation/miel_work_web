@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/login.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -12,9 +13,11 @@ import 'package:miel_work_web/widgets/link_text.dart';
 
 class UserSettingScreen extends StatefulWidget {
   final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const UserSettingScreen({
     required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -30,10 +33,11 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
   void _init() async {
     users = await userService.selectList(
       userIds: widget.loginProvider.organization?.userIds ?? [],
+      removeGroups: widget.homeProvider.groups,
     );
+    List<String> adminUserIds =
+        widget.loginProvider.organization?.adminUserIds ?? [];
     for (UserModel user in users) {
-      List<String> adminUserIds =
-          widget.loginProvider.organization?.adminUserIds ?? [];
       if (adminUserIds.contains(user.id)) {
         if (usersText != '') usersText += ',';
         usersText += user.name;
@@ -147,7 +151,7 @@ class _AdminDialogState extends State<AdminDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        '管理者を選択する',
+        '管理者を選択',
         style: TextStyle(fontSize: 18),
       ),
       content: Container(
@@ -182,7 +186,7 @@ class _AdminDialogState extends State<AdminDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         CustomButtonSm(
-          labelText: '入力内容を保存',
+          labelText: '選択内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {

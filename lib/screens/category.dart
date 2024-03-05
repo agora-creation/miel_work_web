@@ -3,8 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/category.dart';
+import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category_source.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -15,10 +16,12 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class CategoryScreen extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const CategoryScreen({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -66,7 +69,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) => AddCategoryDialog(
-                  organization: widget.organization,
+                  loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
                 ),
               ),
             ),
@@ -74,19 +78,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: categoryService.streamList(
-                  organizationId: widget.organization?.id,
+                  organizationId: widget.loginProvider.organization?.id,
                 ),
                 builder: (context, snapshot) {
                   List<CategoryModel> categories = [];
                   if (snapshot.hasData) {
-                    for (DocumentSnapshot<Map<String, dynamic>> doc
-                        in snapshot.data!.docs) {
-                      categories.add(CategoryModel.fromSnapshot(doc));
-                    }
+                    categories = categoryService.generateList(
+                      data: snapshot.data,
+                    );
                   }
                   return CustomDataGrid(
                     source: CategorySource(
                       context: context,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                       categories: categories,
                     ),
                     columns: [
@@ -112,10 +117,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
 }
 
 class AddCategoryDialog extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const AddCategoryDialog({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -164,7 +171,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             String? error = await categoryProvider.create(
-              organization: widget.organization,
+              organization: widget.loginProvider.organization,
               name: nameController.text,
             );
             if (error != null) {

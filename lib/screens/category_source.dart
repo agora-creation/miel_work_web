@@ -3,6 +3,8 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/providers/category.dart';
+import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +12,14 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class CategorySource extends DataGridSource {
   final BuildContext context;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final List<CategoryModel> categories;
 
   CategorySource({
     required this.context,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.categories,
   }) {
     buildDataGridRows();
@@ -60,6 +66,8 @@ class CategorySource extends DataGridSource {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => DelCategoryDialog(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               category: category,
             ),
           ),
@@ -117,9 +125,13 @@ class CategorySource extends DataGridSource {
 }
 
 class DelCategoryDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final CategoryModel category;
 
   const DelCategoryDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.category,
     super.key,
   });

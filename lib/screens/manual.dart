@@ -4,9 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/manual.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/screens/manual_source.dart';
 import 'package:miel_work_web/services/manual.dart';
@@ -18,12 +18,12 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManualScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const ManualScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -36,7 +36,7 @@ class _ManualScreenState extends State<ManualScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.organization?.name ?? '';
+    String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
     return Padding(
@@ -59,8 +59,8 @@ class _ManualScreenState extends State<ManualScreen> {
                   onPressed: () => showDialog(
                     context: context,
                     builder: (context) => AddManualDialog(
-                      organization: widget.organization,
-                      group: group,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                     ),
                   ),
                 ),
@@ -70,22 +70,20 @@ class _ManualScreenState extends State<ManualScreen> {
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: manualService.streamList(
-                  organizationId: widget.organization?.id,
+                  organizationId: widget.loginProvider.organization?.id,
                   groupId: group?.id,
                 ),
                 builder: (context, snapshot) {
                   List<ManualModel> manuals = [];
                   if (snapshot.hasData) {
-                    for (DocumentSnapshot<Map<String, dynamic>> doc
-                        in snapshot.data!.docs) {
-                      manuals.add(ManualModel.fromSnapshot(doc));
-                    }
+                    manuals = manualService.generateList(data: snapshot.data);
                   }
                   return CustomDataGrid(
                     source: ManualSource(
                       context: context,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                       manuals: manuals,
-                      groups: widget.homeProvider.groups,
                     ),
                     columns: [
                       GridColumn(
@@ -117,12 +115,12 @@ class _ManualScreenState extends State<ManualScreen> {
 }
 
 class AddManualDialog extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const AddManualDialog({
-    required this.organization,
-    required this.group,
+    required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -138,20 +136,19 @@ class _AddManualDialogState extends State<AddManualDialog> {
   @override
   void initState() {
     super.initState();
-    selectedGroup = widget.group;
+    selectedGroup = widget.homeProvider.currentGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final manualProvider = Provider.of<ManualProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -160,7 +157,7 @@ class _AddManualDialogState extends State<AddManualDialog> {
     }
     return ContentDialog(
       title: const Text(
-        '業務マニュアルを追加する',
+        '業務マニュアルを追加',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -230,10 +227,11 @@ class _AddManualDialogState extends State<AddManualDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             String? error = await manualProvider.create(
-              organization: widget.organization,
+              organization: widget.loginProvider.organization,
               title: titleController.text,
               pickedFile: pickedFile,
               group: selectedGroup,
+              user: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

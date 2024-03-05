@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan.dart';
-import 'package:miel_work_web/models/plan_shift.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/plan_shift_add.dart';
 import 'package:miel_work_web/screens/plan_shift_mod.dart';
 import 'package:miel_work_web/services/plan.dart';
@@ -19,12 +18,12 @@ import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanShiftScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const PlanShiftScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -39,18 +38,18 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
   List<sfc.CalendarResource> resourceColl = [];
 
   void _getUsers() async {
-    List<UserModel> tmpUsers = [];
+    List<UserModel> users = [];
     if (widget.homeProvider.currentGroup == null) {
-      tmpUsers = await userService.selectList(
-        userIds: widget.organization?.userIds ?? [],
+      users = await userService.selectList(
+        userIds: widget.loginProvider.organization?.userIds ?? [],
       );
     } else {
-      tmpUsers = await userService.selectList(
+      users = await userService.selectList(
         userIds: widget.homeProvider.currentGroup?.userIds ?? [],
       );
     }
-    if (tmpUsers.isNotEmpty) {
-      for (UserModel user in tmpUsers) {
+    if (users.isNotEmpty) {
+      for (UserModel user in users) {
         resourceColl.add(sfc.CalendarResource(
           displayName: user.name,
           id: user.id,
@@ -69,14 +68,13 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
 
   @override
   Widget build(BuildContext context) {
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     var stream1 = planService.streamList(
-      organizationId: widget.organization?.id,
-      groupId: group?.id,
+      organizationId: widget.loginProvider.organization?.id,
+      groupId: widget.homeProvider.currentGroup?.id,
     );
     var stream2 = planShiftService.streamList(
-      organizationId: widget.organization?.id,
-      groupId: group?.id,
+      organizationId: widget.loginProvider.organization?.id,
+      groupId: widget.homeProvider.currentGroup?.id,
     );
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -87,36 +85,15 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
           builder: (context, snapshot) {
             List<sfc.Appointment> source = [];
             if (snapshot.snapshot1.hasData) {
-              for (DocumentSnapshot<Map<String, dynamic>> doc
-                  in snapshot.snapshot1.data!.docs) {
-                PlanModel plan = PlanModel.fromSnapshot(doc);
-                source.add(sfc.Appointment(
-                  id: plan.id,
-                  resourceIds: plan.userIds,
-                  subject: '[${plan.category}]${plan.subject}',
-                  startTime: plan.startedAt,
-                  endTime: plan.endedAt,
-                  isAllDay: plan.allDay,
-                  color: plan.color.withOpacity(0.5),
-                  notes: 'plan',
-                ));
-              }
+              source = planService.generateList(
+                data: snapshot.snapshot1.data,
+                shift: true,
+              );
             }
             if (snapshot.snapshot2.hasData) {
-              for (DocumentSnapshot<Map<String, dynamic>> doc
-                  in snapshot.snapshot2.data!.docs) {
-                PlanShiftModel planShift = PlanShiftModel.fromSnapshot(doc);
-                source.add(sfc.Appointment(
-                  id: planShift.id,
-                  resourceIds: planShift.userIds,
-                  subject: '勤務予定',
-                  startTime: planShift.startedAt,
-                  endTime: planShift.endedAt,
-                  isAllDay: planShift.allDay,
-                  color: kBlueColor,
-                  notes: 'planShift',
-                ));
-              }
+              source.addAll(planShiftService.generateList(
+                data: snapshot.snapshot2.data,
+              ));
             }
             return CustomCalendarShift(
               dataSource: _ShiftDataSource(source, resourceColl),
@@ -130,17 +107,18 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                     showDialog(
                       context: context,
                       builder: (context) => PlanDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
                         planId: '${appointmentDetails.id}',
-                        groups: widget.homeProvider.groups,
                       ),
                     );
                   } else if (type == 'planShift') {
                     showBottomUpScreen(
                       context,
                       PlanShiftModScreen(
-                        organization: widget.organization,
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
                         planShiftId: '${appointmentDetails.id}',
-                        groups: widget.homeProvider.groups,
                       ),
                     );
                   }
@@ -153,8 +131,8 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                   showBottomUpScreen(
                     context,
                     PlanShiftAddScreen(
-                      organization: widget.organization,
-                      group: group,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                       userId: '$userId',
                       date: date,
                     ),
@@ -180,12 +158,14 @@ class _ShiftDataSource extends sfc.CalendarDataSource {
 }
 
 class PlanDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final String planId;
-  final List<OrganizationGroupModel> groups;
 
   const PlanDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.planId,
-    required this.groups,
     super.key,
   });
 
@@ -210,7 +190,7 @@ class _PlanDialogState extends State<PlanDialog> {
       return;
     }
     titleText = '[${plan.category}]${plan.subject}';
-    for (OrganizationGroupModel group in widget.groups) {
+    for (OrganizationGroupModel group in widget.homeProvider.groups) {
       if (group.id == plan.groupId) {
         groupText = group.name;
       }

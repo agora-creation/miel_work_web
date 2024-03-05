@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -19,12 +18,10 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 class UserScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const UserScreen({
     required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -37,19 +34,16 @@ class _UserScreenState extends State<UserScreen> {
   List<UserModel> users = [];
 
   void _getUses() async {
-    List<UserModel> tmpUsers = [];
     if (widget.homeProvider.currentGroup == null) {
-      tmpUsers = await userService.selectList(
-        userIds: widget.organization?.userIds ?? [],
+      users = await userService.selectList(
+        userIds: widget.loginProvider.organization?.userIds ?? [],
       );
     } else {
-      tmpUsers = await userService.selectList(
+      users = await userService.selectList(
         userIds: widget.homeProvider.currentGroup?.userIds ?? [],
       );
     }
-    setState(() {
-      users = tmpUsers;
-    });
+    setState(() {});
   }
 
   @override
@@ -60,7 +54,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.organization?.name ?? '';
+    String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
     return Padding(
@@ -83,8 +77,8 @@ class _UserScreenState extends State<UserScreen> {
                   onPressed: () => showDialog(
                     context: context,
                     builder: (context) => AddUserDialog(
-                      organization: widget.organization,
-                      group: group,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
                       getUsers: _getUses,
                     ),
                   ),
@@ -96,9 +90,9 @@ class _UserScreenState extends State<UserScreen> {
               child: CustomDataGrid(
                 source: UserSource(
                   context: context,
-                  organization: widget.loginProvider.organization,
+                  loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
                   users: users,
-                  groups: widget.homeProvider.groups,
                   getUsers: _getUses,
                 ),
                 columns: [
@@ -137,13 +131,13 @@ class _UserScreenState extends State<UserScreen> {
 }
 
 class AddUserDialog extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final Function() getUsers;
 
   const AddUserDialog({
-    required this.organization,
-    required this.group,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.getUsers,
     super.key,
   });
@@ -161,21 +155,19 @@ class _AddUserDialogState extends State<AddUserDialog> {
   @override
   void initState() {
     super.initState();
-    selectedGroup = widget.group;
+    selectedGroup = widget.homeProvider.currentGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
-    final homeProvider = Provider.of<HomeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -184,7 +176,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
     }
     return ContentDialog(
       title: const Text(
-        'スタッフを追加する',
+        'スタッフを追加',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -252,7 +244,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             String? error = await userProvider.create(
-              organization: widget.organization,
+              organization: widget.loginProvider.organization,
               name: nameController.text,
               email: emailController.text,
               password: passwordController.text,
@@ -263,9 +255,9 @@ class _AddUserDialogState extends State<AddUserDialog> {
               showMessage(context, error, false);
               return;
             }
-            await loginProvider.reload();
-            homeProvider.setGroups(
-              organizationId: selectedGroup?.organizationId ?? 'error',
+            await widget.loginProvider.reload();
+            widget.homeProvider.setGroups(
+              organizationId: widget.loginProvider.organization?.id ?? 'error',
             );
             widget.getUsers();
             if (!mounted) return;

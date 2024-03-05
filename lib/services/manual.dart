@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/models/manual.dart';
 
 class ManualService {
   String collection = 'manual';
@@ -30,5 +31,15 @@ class ManualService {
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('createdAt', descending: true)
         .snapshots();
+  }
+
+  List<ManualModel> generateList({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+  }) {
+    List<ManualModel> ret = [];
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      ret.add(ManualModel.fromSnapshot(doc));
+    }
+    return ret;
   }
 }

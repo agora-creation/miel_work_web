@@ -1,22 +1,21 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
 class NoticeAddScreen extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const NoticeAddScreen({
-    required this.organization,
-    required this.group,
+    required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -27,26 +26,24 @@ class NoticeAddScreen extends StatefulWidget {
 class _NoticeAddScreenState extends State<NoticeAddScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
-  PlatformFile? pickedFile;
   OrganizationGroupModel? selectedGroup;
 
   @override
   void initState() {
     super.initState();
-    selectedGroup = widget.group;
+    selectedGroup = widget.homeProvider.currentGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final noticeProvider = Provider.of<NoticeProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -63,22 +60,22 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'お知らせを作成する',
+                'お知らせを作成',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
                 children: [
                   CustomButtonSm(
-                    labelText: '作成する',
+                    labelText: '作成',
                     labelColor: kWhiteColor,
                     backgroundColor: kBlueColor,
                     onPressed: () async {
                       String? error = await noticeProvider.create(
-                        organization: widget.organization,
+                        organization: widget.loginProvider.organization,
                         title: titleController.text,
                         content: contentController.text,
-                        pickedFile: pickedFile,
                         group: selectedGroup,
+                        user: widget.loginProvider.user,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -127,22 +124,6 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                 maxLines: null,
               ),
             ),
-            const SizedBox(height: 8),
-            CustomButtonSm(
-              labelText: 'ファイル選択',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.any,
-                );
-                if (result == null) return;
-                setState(() {
-                  pickedFile = result.files.first;
-                });
-              },
-            ),
-            pickedFile != null ? Text('${pickedFile?.name}') : Container(),
             const SizedBox(height: 8),
             InfoLabel(
               label: '送信先グループ',

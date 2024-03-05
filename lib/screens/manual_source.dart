@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/manual.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
@@ -18,13 +19,15 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ManualSource extends DataGridSource {
   final BuildContext context;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final List<ManualModel> manuals;
-  final List<OrganizationGroupModel> groups;
 
   ManualSource({
     required this.context,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.manuals,
-    required this.groups,
   }) {
     buildDataGridRows();
   }
@@ -78,15 +81,15 @@ class ManualSource extends DataGridSource {
         name: p.basename(file.path),
       ),
     ));
-    OrganizationGroupModel? currentGroup;
-    if (groups.isNotEmpty) {
-      for (OrganizationGroupModel group in groups) {
+    OrganizationGroupModel? manualInGroup;
+    if (homeProvider.groups.isNotEmpty) {
+      for (OrganizationGroupModel group in homeProvider.groups) {
         if (group.id == manual.groupId) {
-          currentGroup = group;
+          manualInGroup = group;
         }
       }
     }
-    cells.add(CustomColumnLabel(currentGroup?.name ?? ''));
+    cells.add(CustomColumnLabel(manualInGroup?.name ?? ''));
     cells.add(Row(
       children: [
         CustomButtonSm(
@@ -96,8 +99,10 @@ class ManualSource extends DataGridSource {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => ModManualDialog(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               manual: manual,
-              currentGroup: currentGroup,
+              manualInGroup: manualInGroup,
             ),
           ),
         ),
@@ -109,8 +114,10 @@ class ManualSource extends DataGridSource {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => DelManualDialog(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               manual: manual,
-              currentGroup: currentGroup,
+              manualInGroup: manualInGroup,
             ),
           ),
         ),
@@ -167,12 +174,16 @@ class ManualSource extends DataGridSource {
 }
 
 class ModManualDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final ManualModel manual;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? manualInGroup;
 
   const ModManualDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.manual,
-    required this.currentGroup,
+    required this.manualInGroup,
     super.key,
   });
 
@@ -189,20 +200,19 @@ class _ModManualDialogState extends State<ModManualDialog> {
   void initState() {
     super.initState();
     titleController.text = widget.manual.title;
-    selectedGroup = widget.currentGroup;
+    selectedGroup = widget.manualInGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final manualProvider = Provider.of<ManualProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -211,7 +221,7 @@ class _ModManualDialogState extends State<ModManualDialog> {
     }
     return ContentDialog(
       title: const Text(
-        '業務マニュアルを編集する',
+        '業務マニュアルを編集',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -282,6 +292,7 @@ class _ModManualDialogState extends State<ModManualDialog> {
               title: titleController.text,
               pickedFile: pickedFile,
               group: selectedGroup,
+              user: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -299,12 +310,16 @@ class _ModManualDialogState extends State<ModManualDialog> {
 }
 
 class DelManualDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final ManualModel manual;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? manualInGroup;
 
   const DelManualDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.manual,
-    required this.currentGroup,
+    required this.manualInGroup,
     super.key,
   });
 
@@ -318,7 +333,7 @@ class _DelManualDialogState extends State<DelManualDialog> {
     final manualProvider = Provider.of<ManualProvider>(context);
     return ContentDialog(
       title: const Text(
-        '業務マニュアルを削除する',
+        '業務マニュアルを削除',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -340,7 +355,7 @@ class _DelManualDialogState extends State<DelManualDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '公開グループ',
-              child: Text(widget.currentGroup?.name ?? ''),
+              child: Text(widget.manualInGroup?.name ?? ''),
             ),
           ],
         ),

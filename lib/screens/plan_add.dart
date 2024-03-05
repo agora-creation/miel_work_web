@@ -1,12 +1,11 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -16,13 +15,13 @@ import 'package:miel_work_web/widgets/custom_time_box.dart';
 import 'package:provider/provider.dart';
 
 class PlanAddScreen extends StatefulWidget {
-  final OrganizationModel? organization;
-  final OrganizationGroupModel? group;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final DateTime date;
 
   const PlanAddScreen({
-    required this.organization,
-    required this.group,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.date,
     super.key,
   });
@@ -42,41 +41,38 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   bool allDay = false;
   String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
-  PlatformFile? pickedFile;
 
   void _init() async {
-    selectedGroup = widget.group;
-    List<CategoryModel> tmpCategories = await categoryService.selectList(
-      organizationId: widget.organization?.id,
+    selectedGroup = widget.homeProvider.currentGroup;
+    categories = await categoryService.selectList(
+      organizationId: widget.loginProvider.organization?.id,
     );
-    categories = tmpCategories;
     startedAt = widget.date;
     endedAt = startedAt.add(const Duration(hours: 1));
     setState(() {});
   }
 
   void _allDayChange(bool? value) {
-    setState(() {
-      allDay = value ?? false;
-      if (allDay) {
-        startedAt = DateTime(
-          startedAt.year,
-          startedAt.month,
-          startedAt.day,
-          0,
-          0,
-          0,
-        );
-        endedAt = DateTime(
-          endedAt.year,
-          endedAt.month,
-          endedAt.day,
-          23,
-          59,
-          59,
-        );
-      }
-    });
+    allDay = value ?? false;
+    if (allDay) {
+      startedAt = DateTime(
+        startedAt.year,
+        startedAt.month,
+        startedAt.day,
+        0,
+        0,
+        0,
+      );
+      endedAt = DateTime(
+        endedAt.year,
+        endedAt.month,
+        endedAt.day,
+        23,
+        59,
+        59,
+      );
+    }
+    setState(() {});
   }
 
   @override
@@ -87,15 +83,14 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
     final planProvider = Provider.of<PlanProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -112,7 +107,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '予定を新しく追加する',
+                '予定を新しく追加',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
@@ -123,7 +118,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     backgroundColor: kBlueColor,
                     onPressed: () async {
                       String? error = await planProvider.create(
-                        organization: widget.organization,
+                        organization: widget.loginProvider.organization,
                         group: selectedGroup,
                         category: selectedCategory,
                         subject: subjectController.text,
@@ -132,7 +127,6 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                         allDay: allDay,
                         color: color,
                         memo: memoController.text,
-                        pickedFile: pickedFile,
                       );
                       if (error != null) {
                         if (!mounted) return;

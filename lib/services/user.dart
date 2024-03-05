@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 
 class UserService {
@@ -57,6 +58,7 @@ class UserService {
 
   Future<List<UserModel>> selectList({
     required List<String> userIds,
+    List<OrganizationGroupModel>? removeGroups,
   }) async {
     List<UserModel> ret = [];
     await firestore
@@ -68,6 +70,15 @@ class UserService {
         UserModel user = UserModel.fromSnapshot(map);
         if (userIds.contains(user.id)) {
           ret.add(user);
+        }
+        if (removeGroups != null) {
+          if (removeGroups.isNotEmpty) {
+            for (OrganizationGroupModel group in removeGroups) {
+              if (group.userIds.contains(user.id)) {
+                ret.remove(user);
+              }
+            }
+          }
         }
       }
     });

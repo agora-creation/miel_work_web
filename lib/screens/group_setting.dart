@@ -1,23 +1,22 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:provider/provider.dart';
 
 class GroupSettingScreen extends StatefulWidget {
+  final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final OrganizationModel? organization;
 
   const GroupSettingScreen({
+    required this.loginProvider,
     required this.homeProvider,
-    required this.organization,
     super.key,
   });
 
@@ -43,7 +42,8 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) => ModGroupNameDialog(
-                    organization: widget.organization,
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
                     group: group,
                   ),
                 ),
@@ -55,7 +55,8 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                 onTap: () => showDialog(
                   context: context,
                   builder: (context) => DelGroupDialog(
-                    organization: widget.organization,
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
                     group: group,
                   ),
                 ),
@@ -69,11 +70,13 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
 }
 
 class ModGroupNameDialog extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final OrganizationGroupModel? group;
 
   const ModGroupNameDialog({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.group,
     super.key,
   });
@@ -94,8 +97,6 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
-
     return ContentDialog(
       content: SingleChildScrollView(
         child: Column(
@@ -126,8 +127,8 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await homeProvider.groupUpdate(
-              organization: widget.organization,
+            String? error = await widget.homeProvider.groupUpdate(
+              organization: widget.loginProvider.organization,
               group: widget.group,
               name: nameController.text,
             );
@@ -147,11 +148,13 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
 }
 
 class DelGroupDialog extends StatefulWidget {
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final OrganizationGroupModel? group;
 
   const DelGroupDialog({
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.group,
     super.key,
   });
@@ -165,11 +168,9 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<HomeProvider>(context);
-
     return ContentDialog(
       title: const Text(
-        'グループを削除する',
+        'グループを削除',
         style: TextStyle(fontSize: 18),
       ),
       content: Column(
@@ -196,8 +197,8 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            String? error = await homeProvider.groupDelete(
-              organization: widget.organization,
+            String? error = await widget.homeProvider.groupDelete(
+              organization: widget.loginProvider.organization,
               group: widget.group,
             );
             if (error != null) {
@@ -205,7 +206,7 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
               showMessage(context, error, false);
               return;
             }
-            homeProvider.currentGroupClear();
+            widget.homeProvider.currentGroupClear();
             if (!mounted) return;
             showMessage(context, 'グループを削除しました', true);
             Navigator.pop(context);

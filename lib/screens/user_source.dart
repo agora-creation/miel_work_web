@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -15,16 +14,16 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserSource extends DataGridSource {
   final BuildContext context;
-  final OrganizationModel? organization;
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final List<UserModel> users;
-  final List<OrganizationGroupModel> groups;
   final Function() getUsers;
 
   UserSource({
     required this.context,
-    required this.organization,
+    required this.loginProvider,
+    required this.homeProvider,
     required this.users,
-    required this.groups,
     required this.getUsers,
   }) {
     buildDataGridRows();
@@ -76,22 +75,22 @@ class UserSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
-    OrganizationGroupModel? currentGroup;
-    if (groups.isNotEmpty) {
-      for (OrganizationGroupModel group in groups) {
+    OrganizationGroupModel? userInGroup;
+    if (homeProvider.groups.isNotEmpty) {
+      for (OrganizationGroupModel group in homeProvider.groups) {
         if (group.userIds.contains(user.id)) {
-          currentGroup = group;
+          userInGroup = group;
         }
       }
     }
-    cells.add(CustomColumnLabel(currentGroup?.name ?? ''));
+    cells.add(CustomColumnLabel(userInGroup?.name ?? ''));
     String loginStatus = '';
     if (row.getCells()[4].value != '') {
       loginStatus = 'ログイン中';
     }
     cells.add(CustomColumnLabel(loginStatus));
     bool deleteDisabled = false;
-    List<String> adminUserIds = organization?.adminUserIds ?? [];
+    List<String> adminUserIds = loginProvider.organization?.adminUserIds ?? [];
     if (adminUserIds.contains(user.id)) {
       deleteDisabled = true;
     }
@@ -104,8 +103,10 @@ class UserSource extends DataGridSource {
           onPressed: () => showDialog(
             context: context,
             builder: (context) => ModUserDialog(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
               user: user,
-              currentGroup: currentGroup,
+              userInGroup: userInGroup,
               getUsers: getUsers,
             ),
           ),
@@ -119,8 +120,10 @@ class UserSource extends DataGridSource {
                 onPressed: () => showDialog(
                   context: context,
                   builder: (context) => DelUserDialog(
+                    loginProvider: loginProvider,
+                    homeProvider: homeProvider,
                     user: user,
-                    currentGroup: currentGroup,
+                    userInGroup: userInGroup,
                     getUsers: getUsers,
                   ),
                 ),
@@ -183,13 +186,17 @@ class UserSource extends DataGridSource {
 }
 
 class ModUserDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final UserModel user;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? userInGroup;
   final Function() getUsers;
 
   const ModUserDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.user,
-    required this.currentGroup,
+    required this.userInGroup,
     required this.getUsers,
     super.key,
   });
@@ -210,21 +217,19 @@ class _ModUserDialogState extends State<ModUserDialog> {
     nameController.text = widget.user.name;
     emailController.text = widget.user.email;
     passwordController.text = widget.user.password;
-    selectedGroup = widget.currentGroup;
+    selectedGroup = widget.userInGroup;
   }
 
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
-    final homeProvider = Provider.of<HomeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (homeProvider.groups.isNotEmpty) {
+    if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text('グループ未選択'),
       ));
-      for (OrganizationGroupModel group in homeProvider.groups) {
+      for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
           value: group,
           child: Text(group.name),
@@ -233,7 +238,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
     }
     return ContentDialog(
       title: const Text(
-        'スタッフ情報を編集する',
+        'スタッフ情報を編集',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -305,7 +310,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
               name: nameController.text,
               email: emailController.text,
               password: passwordController.text,
-              befGroup: widget.currentGroup,
+              befGroup: widget.userInGroup,
               aftGroup: selectedGroup,
             );
             if (error != null) {
@@ -313,9 +318,9 @@ class _ModUserDialogState extends State<ModUserDialog> {
               showMessage(context, error, false);
               return;
             }
-            await loginProvider.reload();
-            homeProvider.setGroups(
-              organizationId: selectedGroup?.organizationId ?? 'error',
+            await widget.loginProvider.reload();
+            widget.homeProvider.setGroups(
+              organizationId: widget.loginProvider.organization?.id ?? 'error',
             );
             widget.getUsers();
             if (!mounted) return;
@@ -329,13 +334,17 @@ class _ModUserDialogState extends State<ModUserDialog> {
 }
 
 class DelUserDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
   final UserModel user;
-  final OrganizationGroupModel? currentGroup;
+  final OrganizationGroupModel? userInGroup;
   final Function() getUsers;
 
   const DelUserDialog({
+    required this.loginProvider,
+    required this.homeProvider,
     required this.user,
-    required this.currentGroup,
+    required this.userInGroup,
     required this.getUsers,
     super.key,
   });
@@ -347,12 +356,10 @@ class DelUserDialog extends StatefulWidget {
 class _DelUserDialogState extends State<DelUserDialog> {
   @override
   Widget build(BuildContext context) {
-    final loginProvider = Provider.of<LoginProvider>(context);
-    final homeProvider = Provider.of<HomeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
     return ContentDialog(
       title: const Text(
-        'スタッフを削除する',
+        'スタッフを削除',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -379,7 +386,7 @@ class _DelUserDialogState extends State<DelUserDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: Text(widget.currentGroup?.name ?? ''),
+              child: Text(widget.userInGroup?.name ?? ''),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -402,18 +409,18 @@ class _DelUserDialogState extends State<DelUserDialog> {
           backgroundColor: kRedColor,
           onPressed: () async {
             String? error = await userProvider.delete(
-              organization: loginProvider.organization,
+              organization: widget.loginProvider.organization,
               user: widget.user,
-              group: widget.currentGroup,
+              group: widget.userInGroup,
             );
             if (error != null) {
               if (!mounted) return;
               showMessage(context, error, false);
               return;
             }
-            await loginProvider.reload();
-            homeProvider.setGroups(
-              organizationId: widget.currentGroup?.organizationId ?? 'error',
+            await widget.loginProvider.reload();
+            widget.homeProvider.setGroups(
+              organizationId: widget.loginProvider.organization?.id ?? 'error',
             );
             widget.getUsers();
             if (!mounted) return;
