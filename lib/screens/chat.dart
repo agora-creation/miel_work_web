@@ -185,9 +185,9 @@ class ChatUsersDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: Text(
-        chat.name,
-        style: const TextStyle(fontSize: 18),
+      title: const Text(
+        '参加スタッフ',
+        style: TextStyle(fontSize: 18),
       ),
       content: Container(
         decoration: BoxDecoration(

@@ -4,7 +4,6 @@ import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/chat.dart';
-import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/organization.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -14,7 +13,6 @@ class UserProvider with ChangeNotifier {
   final OrganizationGroupService _groupService = OrganizationGroupService();
   final UserService _userService = UserService();
   final ChatService _chatService = ChatService();
-  final FmService _fmService = FmService();
 
   Future<String?> create({
     required OrganizationModel? organization,
@@ -159,6 +157,22 @@ class UserProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> updateAppLogout({
+    required UserModel user,
+  }) async {
+    String? error;
+    try {
+      _userService.update({
+        'id': user.id,
+        'uid': '',
+        'token': '',
+      });
+    } catch (e) {
+      error = 'ログアウトに失敗しました';
+    }
+    return error;
+  }
+
   Future<String?> delete({
     required OrganizationModel? organization,
     required UserModel user,
@@ -208,13 +222,6 @@ class UserProvider with ChangeNotifier {
             'userIds': groupUserIds,
           });
         }
-      }
-      if (user.token != '') {
-        _fmService.send(
-          token: user.token,
-          title: 'あなたの情報が削除されました',
-          body: 'あなたの情報が管理者によって削除されました。アプリをアンインストールしてください。',
-        );
       }
     } catch (e) {
       error = 'スタッフの削除に失敗しました';

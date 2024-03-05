@@ -177,11 +177,19 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(child: Text('本当に削除しますか？')),
+          const Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
           const SizedBox(height: 8),
           InfoLabel(
             label: 'グループ名',
-            child: Text(widget.group?.name ?? ''),
+            child: CustomTextBox(
+              controller: TextEditingController(
+                text: widget.group?.name,
+              ),
+              enabled: false,
+            ),
           ),
         ],
       ),

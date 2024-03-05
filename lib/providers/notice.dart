@@ -20,7 +20,7 @@ class NoticeProvider with ChangeNotifier {
     required UserModel? user,
   }) async {
     String? error;
-    if (organization == null) return 'お知らせの作成に失敗しました';
+    if (organization == null) return 'お知らせの追加に失敗しました';
     if (title == '') return 'タイトルを入力してください';
     if (content == '') return 'お知らせ内容を入力してください';
     try {
@@ -34,6 +34,7 @@ class NoticeProvider with ChangeNotifier {
         'readUserIds': [user?.id],
         'createdAt': DateTime.now(),
       });
+      //通知
       List<UserModel> sendUsers = [];
       if (group != null) {
         sendUsers = await _userService.selectList(
@@ -54,7 +55,7 @@ class NoticeProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      error = 'お知らせの作成に失敗しました';
+      error = 'お知らせの追加に失敗しました';
     }
     return error;
   }

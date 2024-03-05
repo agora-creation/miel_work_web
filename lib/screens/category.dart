@@ -138,7 +138,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     final categoryProvider = Provider.of<CategoryProvider>(context);
     return ContentDialog(
       title: const Text(
-        'カテゴリを追加する',
+        'カテゴリを追加',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(

@@ -29,6 +29,36 @@ class PlanScreen extends StatefulWidget {
 class _PlanScreenState extends State<PlanScreen> {
   PlanService planService = PlanService();
 
+  void _calendarTap(sfc.CalendarTapDetails details) {
+    sfc.CalendarElement element = details.targetElement;
+    switch (element) {
+      case sfc.CalendarElement.appointment:
+      case sfc.CalendarElement.agenda:
+        sfc.Appointment appointmentDetails = details.appointments![0];
+        showBottomUpScreen(
+          context,
+          PlanModScreen(
+            loginProvider: widget.loginProvider,
+            homeProvider: widget.homeProvider,
+            planId: '${appointmentDetails.id}',
+          ),
+        );
+        break;
+      case sfc.CalendarElement.calendarCell:
+        showBottomUpScreen(
+          context,
+          PlanAddScreen(
+            loginProvider: widget.loginProvider,
+            homeProvider: widget.homeProvider,
+            date: details.date ?? DateTime.now(),
+          ),
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,34 +94,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   }
                   return CustomCalendar(
                     dataSource: _DataSource(appointments),
-                    onTap: (details) {
-                      if (details.targetElement ==
-                              sfc.CalendarElement.appointment ||
-                          details.targetElement == sfc.CalendarElement.agenda) {
-                        final sfc.Appointment appointmentDetails =
-                            details.appointments![0];
-                        showBottomUpScreen(
-                          context,
-                          PlanModScreen(
-                            loginProvider: widget.loginProvider,
-                            homeProvider: widget.homeProvider,
-                            planId: '${appointmentDetails.id}',
-                          ),
-                        );
-                      } else if (details.targetElement ==
-                          sfc.CalendarElement.calendarCell) {
-                        DateTime? date = details.date;
-                        if (date == null) return;
-                        showBottomUpScreen(
-                          context,
-                          PlanAddScreen(
-                            loginProvider: widget.loginProvider,
-                            homeProvider: widget.homeProvider,
-                            date: date,
-                          ),
-                        );
-                      }
-                    },
+                    onTap: _calendarTap,
                   );
                 },
               ),

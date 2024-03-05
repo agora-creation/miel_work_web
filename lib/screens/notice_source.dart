@@ -5,11 +5,10 @@ import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/providers/notice.dart';
+import 'package:miel_work_web/screens/notice_del.dart';
 import 'package:miel_work_web/screens/notice_mod.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class NoticeSource extends DataGridSource {
@@ -98,9 +97,9 @@ class NoticeSource extends DataGridSource {
           labelText: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => DelNoticeDialog(
+          onPressed: () => showBottomUpScreen(
+            context,
+            NoticeDelScreen(
               loginProvider: loginProvider,
               homeProvider: homeProvider,
               notice: notice,
@@ -157,86 +156,5 @@ class NoticeSource extends DataGridSource {
 
   void updateDataSource() {
     notifyListeners();
-  }
-}
-
-class DelNoticeDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final NoticeModel notice;
-  final OrganizationGroupModel? noticeInGroup;
-
-  const DelNoticeDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.notice,
-    required this.noticeInGroup,
-    super.key,
-  });
-
-  @override
-  State<DelNoticeDialog> createState() => _DelNoticeDialogState();
-}
-
-class _DelNoticeDialogState extends State<DelNoticeDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final noticeProvider = Provider.of<NoticeProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'お知らせを削除',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Center(child: Text('本当に削除しますか？')),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'タイトル',
-              child: Text(widget.notice.title),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'お知らせ内容',
-              child: Text(widget.notice.content),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '送信先グループ',
-              child: Text(widget.noticeInGroup?.name ?? ''),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '削除する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await noticeProvider.delete(
-              notice: widget.notice,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, 'お知らせを削除しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
   }
 }

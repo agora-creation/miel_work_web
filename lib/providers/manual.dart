@@ -46,6 +46,7 @@ class ManualProvider with ChangeNotifier {
         'readUserIds': [user?.id],
         'createdAt': DateTime.now(),
       });
+      //通知
       List<UserModel> sendUsers = [];
       if (group != null) {
         sendUsers = await _userService.selectList(

@@ -7,6 +7,7 @@ class CustomTextBox extends StatelessWidget {
   final int? maxLines;
   final bool? obscureText;
   final Function(String)? onChanged;
+  final bool enabled;
 
   const CustomTextBox({
     this.controller,
@@ -15,6 +16,7 @@ class CustomTextBox extends StatelessWidget {
     this.maxLines,
     this.obscureText,
     this.onChanged,
+    this.enabled = true,
     Key? key,
   }) : super(key: key);
 
@@ -28,6 +30,7 @@ class CustomTextBox extends StatelessWidget {
       maxLines: maxLines,
       obscureText: obscureText ?? false,
       onChanged: onChanged,
+      enabled: enabled,
     );
   }
 }

@@ -341,21 +341,39 @@ class _DelManualDialogState extends State<DelManualDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(child: Text('本当に削除しますか？')),
+            const Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
-              child: Text(widget.manual.title),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.manual.title,
+                ),
+                enabled: false,
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'PDFファイル',
-              child: Text('${widget.manual.id}.pdf'),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: '${widget.manual.id}.pdf',
+                ),
+                enabled: false,
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '公開グループ',
-              child: Text(widget.manualInGroup?.name ?? ''),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.manualInGroup?.name,
+                ),
+                enabled: false,
+              ),
             ),
           ],
         ),

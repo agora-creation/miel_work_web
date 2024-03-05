@@ -7,6 +7,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -146,7 +147,7 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
     final categoryProvider = Provider.of<CategoryProvider>(context);
     return ContentDialog(
       title: const Text(
-        'カテゴリを削除する',
+        'カテゴリを削除',
         style: TextStyle(fontSize: 18),
       ),
       content: SingleChildScrollView(
@@ -154,11 +155,19 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(child: Text('本当に削除しますか？')),
+            const Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'カテゴリ名',
-              child: Text(widget.category.name),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.category.name,
+                ),
+                enabled: false,
+              ),
             ),
           ],
         ),

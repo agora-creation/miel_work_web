@@ -88,7 +88,7 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
                 value: usersText,
                 onTap: () => showDialog(
                   context: context,
-                  builder: (context) => AdminDialog(
+                  builder: (context) => ModAdminDialog(
                     loginProvider: widget.loginProvider,
                     users: users,
                   ),
@@ -113,21 +113,21 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
   }
 }
 
-class AdminDialog extends StatefulWidget {
+class ModAdminDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final List<UserModel> users;
 
-  const AdminDialog({
+  const ModAdminDialog({
     required this.loginProvider,
     required this.users,
     super.key,
   });
 
   @override
-  State<AdminDialog> createState() => _AdminDialogState();
+  State<ModAdminDialog> createState() => _ModAdminDialogState();
 }
 
-class _AdminDialogState extends State<AdminDialog> {
+class _ModAdminDialogState extends State<ModAdminDialog> {
   List<UserModel> selectedUsers = [];
 
   void _init() async {
@@ -154,29 +154,39 @@ class _AdminDialogState extends State<AdminDialog> {
         '管理者を選択',
         style: TextStyle(fontSize: 18),
       ),
-      content: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: kGrey300Color),
-        ),
-        height: 300,
-        child: ListView.builder(
-          itemCount: widget.users.length,
-          itemBuilder: (context, index) {
-            UserModel user = widget.users[index];
-            return CustomCheckbox(
-              label: user.name,
-              checked: selectedUsers.contains(user),
-              onChanged: (value) {
-                if (selectedUsers.contains(user)) {
-                  selectedUsers.remove(user);
-                } else {
-                  selectedUsers.add(user);
-                }
-                setState(() {});
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: kGrey300Color),
+            ),
+            height: 300,
+            child: ListView.builder(
+              itemCount: widget.users.length,
+              itemBuilder: (context, index) {
+                UserModel user = widget.users[index];
+                return CustomCheckbox(
+                  label: user.name,
+                  checked: selectedUsers.contains(user),
+                  onChanged: (value) {
+                    if (selectedUsers.contains(user)) {
+                      selectedUsers.remove(user);
+                    } else {
+                      selectedUsers.add(user);
+                    }
+                    setState(() {});
+                  },
+                );
               },
-            );
-          },
-        ),
+            ),
+          ),
+          const Text(
+            '※保存時、自動的にログアウトします。',
+            style: TextStyle(color: kRedColor),
+          ),
+        ],
       ),
       actions: [
         CustomButtonSm(
@@ -198,15 +208,10 @@ class _AdminDialogState extends State<AdminDialog> {
               showMessage(context, error, false);
               return;
             }
-            await widget.loginProvider.logout();
+            await widget.loginProvider.reload();
             if (!mounted) return;
-            showMessage(context, '管理者を選択しました', true);
-            Navigator.pushReplacement(
-              context,
-              FluentPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
+            showMessage(context, '管理者を変更しました', true);
+            Navigator.pop(context);
           },
         ),
       ],
@@ -239,7 +244,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Text('本当にログアウトしますか？')),
+            Text('本当にログアウトしますか？'),
           ],
         ),
       ),

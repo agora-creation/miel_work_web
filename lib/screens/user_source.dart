@@ -8,6 +8,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_column_link.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -84,11 +85,23 @@ class UserSource extends DataGridSource {
       }
     }
     cells.add(CustomColumnLabel(userInGroup?.name ?? ''));
-    String loginStatus = '';
     if (row.getCells()[4].value != '') {
-      loginStatus = 'ログイン中';
+      cells.add(CustomColumnLink(
+        label: 'ログイン中',
+        color: kBlueColor,
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => AppLogoutDialog(
+            loginProvider: loginProvider,
+            homeProvider: homeProvider,
+            user: user,
+            getUsers: getUsers,
+          ),
+        ),
+      ));
+    } else {
+      cells.add(const CustomColumnLabel(''));
     }
-    cells.add(CustomColumnLabel(loginStatus));
     bool deleteDisabled = false;
     List<String> adminUserIds = loginProvider.organization?.adminUserIds ?? [];
     if (adminUserIds.contains(user.id)) {
@@ -333,6 +346,73 @@ class _ModUserDialogState extends State<ModUserDialog> {
   }
 }
 
+class AppLogoutDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final UserModel user;
+  final Function() getUsers;
+
+  const AppLogoutDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.user,
+    required this.getUsers,
+    super.key,
+  });
+
+  @override
+  State<AppLogoutDialog> createState() => _AppLogoutDialogState();
+}
+
+class _AppLogoutDialogState extends State<AppLogoutDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'スマホアプリからログアウト',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('強制的にログアウトさせますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: 'ログアウト',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await userProvider.updateAppLogout(
+              user: widget.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.getUsers();
+            if (!mounted) return;
+            showMessage(context, '強制的にログアウトさせました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class DelUserDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
@@ -367,31 +447,49 @@ class _DelUserDialogState extends State<DelUserDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(child: Text('本当に削除しますか？')),
+            const Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'スタッフ名',
-              child: Text(widget.user.name),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.user.name,
+                ),
+                enabled: false,
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'メールアドレス',
-              child: Text(widget.user.email),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.user.email,
+                ),
+                enabled: false,
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'パスワード',
-              child: Text(widget.user.email),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.user.password,
+                ),
+                enabled: false,
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: Text(widget.userInGroup?.name ?? ''),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '※削除完了時、スタッフアプリに通知を送信します',
-              style: TextStyle(color: kRedColor),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.userInGroup?.name,
+                ),
+                enabled: false,
+              ),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -9,47 +10,28 @@ import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
-class NoticeAddScreen extends StatefulWidget {
+class NoticeDelScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final NoticeModel notice;
+  final OrganizationGroupModel? noticeInGroup;
 
-  const NoticeAddScreen({
+  const NoticeDelScreen({
     required this.loginProvider,
     required this.homeProvider,
+    required this.notice,
+    required this.noticeInGroup,
     super.key,
   });
 
   @override
-  State<NoticeAddScreen> createState() => _NoticeAddScreenState();
+  State<NoticeDelScreen> createState() => _NoticeDelScreenState();
 }
 
-class _NoticeAddScreenState extends State<NoticeAddScreen> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-  OrganizationGroupModel? selectedGroup;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedGroup = widget.homeProvider.currentGroup;
-  }
-
+class _NoticeDelScreenState extends State<NoticeDelScreen> {
   @override
   Widget build(BuildContext context) {
     final noticeProvider = Provider.of<NoticeProvider>(context);
-    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
-    if (widget.homeProvider.groups.isNotEmpty) {
-      groupItems.add(const ComboBoxItem(
-        value: null,
-        child: Text('グループ未選択'),
-      ));
-      for (OrganizationGroupModel group in widget.homeProvider.groups) {
-        groupItems.add(ComboBoxItem(
-          value: group,
-          child: Text(group.name),
-        ));
-      }
-    }
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -60,22 +42,18 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'お知らせを追加',
+                'お知らせを削除',
                 style: TextStyle(fontSize: 16),
               ),
               Row(
                 children: [
                   CustomButtonSm(
-                    labelText: '追加する',
+                    labelText: '削除する',
                     labelColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
+                    backgroundColor: kRedColor,
                     onPressed: () async {
-                      String? error = await noticeProvider.create(
-                        organization: widget.loginProvider.organization,
-                        title: titleController.text,
-                        content: contentController.text,
-                        group: selectedGroup,
-                        user: widget.loginProvider.user,
+                      String? error = await noticeProvider.delete(
+                        notice: widget.notice,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -83,7 +61,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                         return;
                       }
                       if (!mounted) return;
-                      showMessage(context, 'お知らせを追加しました', true);
+                      showMessage(context, 'お知らせを削除しました', true);
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                   ),
@@ -106,46 +84,37 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '※追加時、送信先グループに所属しているスタッフアプリに通知します。',
-              style: TextStyle(color: kRedColor),
-            ),
-            const Text(
-              '※グループ未選択の場合、全てのスタッフアプリに通知します。',
+              '本当に削除しますか？',
               style: TextStyle(color: kRedColor),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
               child: CustomTextBox(
-                controller: titleController,
-                placeholder: '例) 休館日について',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
+                controller: TextEditingController(
+                  text: widget.notice.title,
+                ),
+                enabled: false,
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'お知らせ内容',
               child: CustomTextBox(
-                controller: contentController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
+                controller: TextEditingController(
+                  text: widget.notice.content,
+                ),
+                enabled: false,
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '送信先グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
+              child: CustomTextBox(
+                controller: TextEditingController(
+                  text: widget.noticeInGroup?.name,
+                ),
+                enabled: false,
               ),
             ),
           ],
