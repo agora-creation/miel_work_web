@@ -132,9 +132,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ChatMessageModel message = messages[index];
                                 return MessageList(
                                   message: message,
-                                  isMe: message.userId == loginUser?.id,
+                                  isMe: message.createdUserId == loginUser?.id,
                                   onTapImage: () {},
-                                  users: currentChatUsers,
                                 );
                               },
                             );
