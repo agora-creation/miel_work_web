@@ -48,7 +48,7 @@ class MessageList extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          message.image,
+                          'https://cors-anywhere.herokuapp.com/${message.image}',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,
@@ -99,7 +99,7 @@ class MessageList extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          message.image,
+                          'https://cors-anywhere.herokuapp.com/${message.image}',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,

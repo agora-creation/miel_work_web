@@ -31,6 +31,8 @@ class ChatMessageProvider with ChangeNotifier {
       String id = _messageService.id();
       _messageService.create({
         'id': id,
+        'organizationId': chat.organizationId,
+        'groupId': chat.groupId,
         'chatId': chat.id,
         'content': contentController.text,
         'image': '',
@@ -82,6 +84,8 @@ class ChatMessageProvider with ChangeNotifier {
       final task = await storage.ref(storagePath).putFile(imageFile);
       _messageService.create({
         'id': id,
+        'organizationId': chat.organizationId,
+        'groupId': chat.groupId,
         'chatId': chat.id,
         'content': content,
         'image': await task.ref.getDownloadURL(),
@@ -111,7 +115,7 @@ class ChatMessageProvider with ChangeNotifier {
       contentController.clear();
       contentFocusNode.unfocus();
     } catch (e) {
-      error = 'メッセージの送信に失敗しました';
+      error = 'メッセージの送信に失敗しました$e';
     }
     return error;
   }
