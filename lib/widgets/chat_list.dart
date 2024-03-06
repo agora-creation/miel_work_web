@@ -4,13 +4,13 @@ import 'package:miel_work_web/models/chat.dart';
 
 class ChatList extends StatelessWidget {
   final ChatModel chat;
-  final bool unread;
+  final int unreadCount;
   final bool selected;
   final Function()? onTap;
 
   const ChatList({
     required this.chat,
-    required this.unread,
+    required this.unreadCount,
     required this.selected,
     this.onTap,
     super.key,
@@ -53,11 +53,10 @@ class ChatList extends StatelessWidget {
                 ),
               ],
             ),
-            unread
-                ? const Icon(
-                    FluentIcons.circle_fill,
+            unreadCount > 0
+                ? InfoBadge(
+                    source: Text(unreadCount.toString()),
                     color: kRedColor,
-                    size: 16,
                   )
                 : const Icon(
                     FluentIcons.chevron_right,

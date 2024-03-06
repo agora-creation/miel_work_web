@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/chat.dart';
@@ -68,7 +68,7 @@ class ChatMessageProvider with ChangeNotifier {
   Future<String?> sendImage({
     required ChatModel? chat,
     required UserModel? loginUser,
-    required XFile imageXFile,
+    required PlatformFile pickedFile,
   }) async {
     String? error;
     if (chat == null) return 'メッセージの送信に失敗しました';
@@ -76,7 +76,7 @@ class ChatMessageProvider with ChangeNotifier {
     try {
       String id = _messageService.id();
       String content = '画像を送信しました';
-      File imageFile = File(imageXFile.path);
+      File imageFile = File(pickedFile.path ?? '');
       FirebaseStorage storage = FirebaseStorage.instance;
       String storagePath = 'chat/${chat.id}/$id';
       final task = await storage.ref(storagePath).putFile(imageFile);

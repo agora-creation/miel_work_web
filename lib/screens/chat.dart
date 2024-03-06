@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
-import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -39,39 +38,23 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   ChatService chatService = ChatService();
   ChatMessageService messageService = ChatMessageService();
-  UserService userService = UserService();
   List<ChatModel> chats = [];
   ChatModel? currentChat;
-  List<UserModel> currentChatUsers = [];
 
   void _getChats() async {
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     chats = await chatService.selectList(
       organizationId: widget.loginProvider.organization?.id,
-      groupId: group?.id,
+      groupId: widget.homeProvider.currentGroup?.id,
     );
     setState(() {});
   }
 
   void _currentChatChange(ChatModel chat) async {
     currentChat = chat;
-    currentChatUsers = await userService.selectList(
-      userIds: chat.userIds,
+    await messageService.updateRead(
+      chatId: chat.id,
+      loginUser: widget.loginProvider.user,
     );
-    List<ChatMessageModel> messages = await messageService.selectList(
-      chatId: currentChat?.id,
-      user: widget.loginProvider.user,
-    );
-    if (messages.isNotEmpty) {
-      for (ChatMessageModel message in messages) {
-        List<String> readUserIds = message.readUserIds;
-        readUserIds.add(widget.loginProvider.user?.id ?? '');
-        messageService.update({
-          'id': message.id,
-          'readUserIds': readUserIds,
-        });
-      }
-    }
     setState(() {});
   }
 
@@ -84,8 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
-    UserModel? loginUser = widget.loginProvider.user;
-    List<String> chatUserIds = currentChat?.userIds ?? [];
+    List<String> currentChatUserIds = currentChat?.userIds ?? [];
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -100,16 +82,16 @@ class _ChatScreenState extends State<ChatScreen> {
                         chatId: chat.id,
                       ),
                       builder: (context, snapshot) {
-                        bool unread = false;
+                        List<ChatMessageModel> messages = [];
                         if (snapshot.hasData) {
-                          unread = messageService.unreadCheck(
+                          messages = messageService.generateListUnread(
                             data: snapshot.data,
-                            user: loginUser,
+                            loginUser: widget.loginProvider.user,
                           );
                         }
                         return ChatList(
                           chat: chat,
-                          unread: unread,
+                          unreadCount: messages.length,
                           selected: currentChat == chat,
                           onTap: () => _currentChatChange(chat),
                         );
@@ -131,7 +113,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           context: context,
                           builder: (context) => ChatUsersDialog(
                             chat: currentChat!,
-                            users: currentChatUsers,
                           ),
                         ),
                       ),
@@ -162,7 +143,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ChatMessageModel message = messages[index];
                                 return MessageList(
                                   message: message,
-                                  isMe: message.createdUserId == loginUser?.id,
+                                  isMe: message.createdUserId ==
+                                      widget.loginProvider.user?.id,
                                   onTapImage: () {},
                                 );
                               },
@@ -173,14 +155,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       MessageFormField(
                         controller: messageProvider.contentController,
                         galleryPressed: () async {
-                          final result = await ImagePicker().pickImage(
-                            source: ImageSource.gallery,
+                          final result = await FilePicker.platform.pickFiles(
+                            type: FileType.image,
                           );
                           if (result == null) return;
                           String? error = await messageProvider.sendImage(
                             chat: currentChat,
-                            loginUser: loginUser,
-                            imageXFile: result,
+                            loginUser: widget.loginProvider.user,
+                            pickedFile: result.files.first,
                           );
                           if (error != null) {
                             if (!mounted) return;
@@ -191,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         sendPressed: () async {
                           String? error = await messageProvider.send(
                             chat: currentChat,
-                            loginUser: loginUser,
+                            loginUser: widget.loginProvider.user,
                           );
                           if (error != null) {
                             if (!mounted) return;
@@ -199,7 +181,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             return;
                           }
                         },
-                        enabled: chatUserIds.contains(loginUser?.id),
+                        enabled: currentChatUserIds
+                            .contains(widget.loginProvider.user?.id),
                       ),
                     ],
                   ),
@@ -216,15 +199,34 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class ChatUsersDialog extends StatelessWidget {
+class ChatUsersDialog extends StatefulWidget {
   final ChatModel chat;
-  final List<UserModel> users;
 
   const ChatUsersDialog({
     required this.chat,
-    required this.users,
     super.key,
   });
+
+  @override
+  State<ChatUsersDialog> createState() => _ChatUsersDialogState();
+}
+
+class _ChatUsersDialogState extends State<ChatUsersDialog> {
+  UserService userService = UserService();
+  List<UserModel> users = [];
+
+  void _init() async {
+    users = await userService.selectList(
+      userIds: widget.chat.userIds,
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
   @override
   Widget build(BuildContext context) {

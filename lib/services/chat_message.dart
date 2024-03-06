@@ -22,25 +22,34 @@ class ChatMessageService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<List<ChatMessageModel>> selectList({
-    required String? chatId,
-    required UserModel? user,
+  Future updateRead({
+    required String chatId,
+    required UserModel? loginUser,
   }) async {
-    List<ChatMessageModel> ret = [];
+    List<ChatMessageModel> messages = [];
     await firestore
         .collection(collection)
-        .where('chatId', isEqualTo: chatId ?? 'error')
+        .where('chatId', isEqualTo: chatId)
         .orderBy('createdAt', descending: true)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
         ChatMessageModel message = ChatMessageModel.fromSnapshot(map);
-        if (!message.readUserIds.contains(user?.id)) {
-          ret.add(message);
+        if (!message.readUserIds.contains(loginUser?.id)) {
+          messages.add(message);
         }
       }
     });
-    return ret;
+    if (messages.isNotEmpty) {
+      for (ChatMessageModel message in messages) {
+        List<String> readUserIds = message.readUserIds;
+        readUserIds.add(loginUser?.id ?? '');
+        update({
+          'id': message.id,
+          'readUserIds': readUserIds,
+        });
+      }
+    }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
@@ -53,26 +62,26 @@ class ChatMessageService {
         .snapshots();
   }
 
-  bool unreadCheck({
-    required QuerySnapshot<Map<String, dynamic>>? data,
-    required UserModel? user,
-  }) {
-    bool ret = false;
-    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
-      ChatMessageModel message = ChatMessageModel.fromSnapshot(doc);
-      if (!message.readUserIds.contains(user?.id)) {
-        ret = true;
-      }
-    }
-    return ret;
-  }
-
   List<ChatMessageModel> generateList({
     required QuerySnapshot<Map<String, dynamic>>? data,
   }) {
     List<ChatMessageModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       ret.add(ChatMessageModel.fromSnapshot(doc));
+    }
+    return ret;
+  }
+
+  List<ChatMessageModel> generateListUnread({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+    required UserModel? loginUser,
+  }) {
+    List<ChatMessageModel> ret = [];
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      ChatMessageModel message = ChatMessageModel.fromSnapshot(doc);
+      if (!message.readUserIds.contains(loginUser?.id)) {
+        ret.add(message);
+      }
     }
     return ret;
   }
