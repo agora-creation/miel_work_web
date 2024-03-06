@@ -50,7 +50,7 @@ class PlanService {
         .snapshots();
   }
 
-  List<sfc.Appointment> generateList({
+  List<sfc.Appointment> generateListAppointment({
     required QuerySnapshot<Map<String, dynamic>>? data,
     bool shift = false,
   }) {

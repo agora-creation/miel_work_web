@@ -88,7 +88,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 builder: (context, snapshot) {
                   List<sfc.Appointment> appointments = [];
                   if (snapshot.hasData) {
-                    appointments = planService.generateList(
+                    appointments = planService.generateListAppointment(
                       data: snapshot.data,
                     );
                   }
