@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +9,7 @@ import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:path/path.dart' as p;
 
 class ChatMessageProvider with ChangeNotifier {
   final ChatService _chatService = ChatService();
@@ -70,25 +71,30 @@ class ChatMessageProvider with ChangeNotifier {
   Future<String?> sendImage({
     required ChatModel? chat,
     required UserModel? loginUser,
-    required PlatformFile pickedFile,
+    required FilePickerResult? result,
   }) async {
     String? error;
     if (chat == null) return 'メッセージの送信に失敗しました';
     if (loginUser == null) return 'メッセージの送信に失敗しました';
+    if (result == null) return 'メッセージの送信に失敗しました';
     try {
       String id = _messageService.id();
       String content = '画像を送信しました';
-      File imageFile = File(pickedFile.path ?? '');
-      FirebaseStorage storage = FirebaseStorage.instance;
-      String storagePath = 'chat/${chat.id}/$id';
-      final task = await storage.ref(storagePath).putFile(imageFile);
+      Uint8List? uploadFile = result.files.single.bytes;
+      if (uploadFile == null) return 'メッセージの送信に失敗しました';
+      String fileName = p.basename(result.files.single.name);
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('chat/${chat.id}/$id/$fileName');
+      UploadTask uploadTask = storageRef.putData(uploadFile);
+      TaskSnapshot downloadUrl = await uploadTask;
+      String url = (await downloadUrl.ref.getDownloadURL());
       _messageService.create({
         'id': id,
         'organizationId': chat.organizationId,
         'groupId': chat.groupId,
         'chatId': chat.id,
         'content': content,
-        'image': await task.ref.getDownloadURL(),
+        'image': url,
         'readUserIds': [loginUser.id],
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
@@ -115,7 +121,7 @@ class ChatMessageProvider with ChangeNotifier {
       contentController.clear();
       contentFocusNode.unfocus();
     } catch (e) {
-      error = 'メッセージの送信に失敗しました$e';
+      error = 'メッセージの送信に失敗しました';
     }
     return error;
   }

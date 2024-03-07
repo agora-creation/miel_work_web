@@ -158,11 +158,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           final result = await FilePicker.platform.pickFiles(
                             type: FileType.image,
                           );
-                          if (result == null) return;
                           String? error = await messageProvider.sendImage(
                             chat: currentChat,
                             loginUser: widget.loginProvider.user,
-                            pickedFile: result.files.first,
+                            result: result,
                           );
                           if (error != null) {
                             if (!mounted) return;

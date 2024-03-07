@@ -31,13 +31,13 @@ class MessageFormField extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: enabled
                 ? CustomIconButtonSm(
-                    icon: FluentIcons.add,
+                    icon: FluentIcons.image_pixel,
                     iconColor: kWhiteColor,
                     backgroundColor: kCyanColor,
                     onPressed: galleryPressed,
                   )
                 : const CustomIconButtonSm(
-                    icon: FluentIcons.add,
+                    icon: FluentIcons.image_pixel,
                     iconColor: kWhiteColor,
                     backgroundColor: kGreyColor,
                   ),
