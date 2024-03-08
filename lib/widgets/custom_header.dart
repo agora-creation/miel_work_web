@@ -8,6 +8,7 @@ import 'package:miel_work_web/screens/user_setting.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomHeader extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -91,33 +92,32 @@ class _CustomHeaderState extends State<CustomHeader> {
           ),
           Row(
             children: [
-              // CustomButtonSm(
-              //   labelText: 'メーター検針',
-              //   labelColor: kBlackColor,
-              //   backgroundColor: kYellowColor,
-              //   onPressed: () => showBottomUpScreen(
-              //     context,
-              //     const MeterScreen(),
-              //   ),
-              // ),
-              // const SizedBox(width: 4),
-              // CustomButtonSm(
-              //   labelText: '稟議申請',
-              //   labelColor: kBlackColor,
-              //   backgroundColor: kOrangeColor,
-              //   onPressed: () => showBottomUpScreen(
-              //     context,
-              //     const DraftScreen(),
-              //   ),
-              // ),
-              // const SizedBox(width: 4),
-              // CustomButtonSm(
-              //   labelText: '報告申請',
-              //   labelColor: kBlackColor,
-              //   backgroundColor: kOrangeColor,
-              //   onPressed: () {},
-              // ),
-              // const SizedBox(width: 4),
+              CustomButtonSm(
+                labelText: 'メーター検針',
+                labelColor: kBlackColor,
+                backgroundColor: kYellowColor,
+                onPressed: () async {
+                  Uri url = Uri.parse('https://hirome.co.jp/meter/system/');
+                  if (!await launchUrl(url)) {
+                    throw Exception('Could not launch $url');
+                  }
+                },
+              ),
+              const SizedBox(width: 4),
+              CustomButtonSm(
+                labelText: '稟議申請',
+                labelColor: kBlackColor,
+                backgroundColor: kOrangeColor,
+                onPressed: () {},
+              ),
+              const SizedBox(width: 4),
+              CustomButtonSm(
+                labelText: '報告申請',
+                labelColor: kBlackColor,
+                backgroundColor: kOrangeColor,
+                onPressed: () {},
+              ),
+              const SizedBox(width: 4),
               CustomButtonSm(
                 labelText: '$userNameでログイン中',
                 labelColor: kWhiteColor,
