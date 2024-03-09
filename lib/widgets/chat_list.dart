@@ -34,24 +34,26 @@ class ChatList extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${chat.name} (${chat.userIds.length})',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                Text(
-                  chat.lastMessage,
-                  style: const TextStyle(
-                    color: kGreyColor,
-                    fontSize: 12,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${chat.name} (${chat.userIds.length})',
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ],
+                  Text(
+                    chat.lastMessage,
+                    style: const TextStyle(
+                      color: kGreyColor,
+                      fontSize: 12,
+                    ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ],
+              ),
             ),
             unreadCount > 0
                 ? InfoBadge(

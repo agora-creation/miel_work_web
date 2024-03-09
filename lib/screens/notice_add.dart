@@ -75,7 +75,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                         title: titleController.text,
                         content: contentController.text,
                         group: selectedGroup,
-                        user: widget.loginProvider.user,
+                        loginUser: widget.loginProvider.user,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -105,15 +105,6 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '※追加時、送信先グループに所属しているスタッフアプリに通知します。',
-              style: TextStyle(color: kRedColor),
-            ),
-            const Text(
-              '※グループ未選択の場合、全てのスタッフアプリに通知します。',
-              style: TextStyle(color: kRedColor),
-            ),
-            const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
               child: CustomTextBox(

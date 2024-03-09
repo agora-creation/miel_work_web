@@ -53,9 +53,10 @@ class ChatMessageProvider with ChangeNotifier {
       );
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
+          if (user.id == loginUser.id) continue;
           _fmService.send(
             token: user.token,
-            title: '[${chat.name}]${loginUser.name}',
+            title: '[${chat.name}]${loginUser.name}からのメッセージ',
             body: contentController.text,
           );
         }
@@ -111,9 +112,10 @@ class ChatMessageProvider with ChangeNotifier {
       );
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
+          if (user.id == loginUser.id) continue;
           _fmService.send(
             token: user.token,
-            title: '[${chat.name}]${loginUser.name}',
+            title: '[${chat.name}]${loginUser.name}からのメッセージ',
             body: content,
           );
         }

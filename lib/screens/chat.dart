@@ -136,8 +136,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
                               ),
+                              shrinkWrap: true,
                               reverse: true,
-                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: messages.length,
                               itemBuilder: (context, index) {
                                 ChatMessageModel message = messages[index];

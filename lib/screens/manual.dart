@@ -206,15 +206,6 @@ class _AddManualDialogState extends State<AddManualDialog> {
                 placeholder: const Text('グループ未選択'),
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              '※追加時、公開グループに所属しているスタッフアプリに通知します。',
-              style: TextStyle(color: kRedColor),
-            ),
-            const Text(
-              '※グループ未選択の場合、全てのスタッフアプリに通知します。',
-              style: TextStyle(color: kRedColor),
-            ),
           ],
         ),
       ),
@@ -235,7 +226,7 @@ class _AddManualDialogState extends State<AddManualDialog> {
               title: titleController.text,
               pickedFile: pickedFile,
               group: selectedGroup,
-              user: widget.loginProvider.user,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
