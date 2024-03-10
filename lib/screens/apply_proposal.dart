@@ -33,6 +33,12 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
   ApplyProposalService proposalService = ApplyProposalService();
   bool searchApproval = false;
 
+  void _searchApprovalChange(bool value) {
+    setState(() {
+      searchApproval = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
@@ -63,17 +69,28 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            CustomButtonSm(
-              labelText: '新規申請',
-              labelColor: kWhiteColor,
-              backgroundColor: kBlueColor,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => AddApplyProposalDialog(
-                  loginProvider: widget.loginProvider,
-                  homeProvider: widget.homeProvider,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ToggleSwitch(
+                  checked: searchApproval,
+                  onChanged: _searchApprovalChange,
+                  content: Text(searchApproval ? '承認済み' : '承認待ち'),
                 ),
-              ),
+                const SizedBox(width: 4),
+                CustomButtonSm(
+                  labelText: '新規申請',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AddApplyProposalDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Expanded(
