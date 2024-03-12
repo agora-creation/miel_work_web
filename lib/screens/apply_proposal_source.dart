@@ -2,11 +2,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply_proposal.dart';
-import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply_proposal_approval.dart';
-import 'package:miel_work_web/screens/apply_proposal_del.dart';
+import 'package:miel_work_web/screens/apply_proposal_detail.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -85,74 +84,31 @@ class ApplyProposalSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[6].value}'));
-    bool isApproval = true;
-    bool isDelete = true;
-    if (proposal.createdUserId == loginProvider.user?.id) {
-      isApproval = false;
-    } else {
-      isDelete = false;
-    }
-    if (proposal.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in proposal.approvalUsers) {
-        if (user.userId == loginProvider.user?.id) {
-          isApproval = false;
-        }
-      }
-    }
-    if (proposal.approval) {
-      isApproval = false;
-      isDelete = false;
-    }
     cells.add(Row(
       children: [
-        isApproval
-            ? CustomButtonSm(
-                labelText: '承認',
-                labelColor: kWhiteColor,
-                backgroundColor: kRedColor,
-                onPressed: () => Navigator.push(
-                  context,
-                  FluentPageRoute(
-                    builder: (context) => ApplyProposalApprovalScreen(
-                      loginProvider: loginProvider,
-                      homeProvider: homeProvider,
-                      proposal: proposal,
-                    ),
-                  ),
-                ),
-              )
-            : const CustomButtonSm(
-                labelText: '承認',
-                labelColor: kWhiteColor,
-                backgroundColor: kGreyColor,
-              ),
-        const SizedBox(width: 4),
-        isDelete
-            ? CustomButtonSm(
-                labelText: '削除',
-                labelColor: kWhiteColor,
-                backgroundColor: kRedColor,
-                onPressed: () => Navigator.push(
-                  context,
-                  FluentPageRoute(
-                    builder: (context) => ApplyProposalDelScreen(
-                      loginProvider: loginProvider,
-                      homeProvider: homeProvider,
-                      proposal: proposal,
-                    ),
-                  ),
-                ),
-              )
-            : const CustomButtonSm(
-                labelText: '削除',
-                labelColor: kWhiteColor,
-                backgroundColor: kGreyColor,
-              ),
-        const SizedBox(width: 4),
-        const CustomButtonSm(
-          labelText: '印刷',
+        CustomButtonSm(
+          labelText: '詳細',
           labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
+          backgroundColor: kBlueColor,
+          onPressed: () => Navigator.push(
+            context,
+            FluentPageRoute(
+              builder: (context) => ApplyProposalDetailScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                proposal: proposal,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 4),
+        CustomButtonSm(
+          labelText: 'PDF印刷',
+          labelColor: kBlackColor,
+          backgroundColor: kRed200Color,
+          onPressed: () async {
+            await PdfService().download();
+          },
         ),
       ],
     ));

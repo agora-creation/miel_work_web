@@ -44,7 +44,14 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
   void _init() async {
     _groupChange(widget.homeProvider.currentGroup);
     selectedUserIds.add(widget.userId);
-    startedAt = widget.date;
+    startedAt = DateTime(
+      widget.date.year,
+      widget.date.month,
+      widget.date.day,
+      8,
+      0,
+      0,
+    );
     endedAt = startedAt.add(const Duration(hours: 1));
     setState(() {});
   }
