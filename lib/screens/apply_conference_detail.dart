@@ -107,9 +107,15 @@ class _ApplyConferenceDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '提出日: ${dateText('yyyy/MM/dd HH:mm', widget.conference.createdAt)}',
+                      '提出日時: ${dateText('yyyy/MM/dd HH:mm', widget.conference.createdAt)}',
                       style: const TextStyle(color: kGreyColor),
                     ),
+                    widget.conference.approval
+                        ? Text(
+                            '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.conference.approvedAt)}',
+                            style: const TextStyle(color: kGreyColor),
+                          )
+                        : Container(),
                     Text(
                       '作成者: ${widget.conference.createdUserName}',
                       style: const TextStyle(color: kGreyColor),

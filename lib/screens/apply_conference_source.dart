@@ -5,6 +5,7 @@ import 'package:miel_work_web/models/apply_conference.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_conference_detail.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -100,7 +101,8 @@ class ApplyConferenceSource extends DataGridSource {
           labelText: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
-          onPressed: () {},
+          onPressed: () async =>
+              await PdfService().applyConferenceDownload(conference),
         ),
       ],
     ));
