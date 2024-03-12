@@ -59,41 +59,35 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                icon: const Icon(FluentIcons.chevron_left),
+                onPressed: () => Navigator.pop(context),
+              ),
               const Text(
                 'お知らせを追加',
                 style: TextStyle(fontSize: 16),
               ),
-              Row(
-                children: [
-                  CustomButtonSm(
-                    labelText: '追加する',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
-                    onPressed: () async {
-                      String? error = await noticeProvider.create(
-                        organization: widget.loginProvider.organization,
-                        title: titleController.text,
-                        content: contentController.text,
-                        group: selectedGroup,
-                        loginUser: widget.loginProvider.user,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, 'お知らせを追加しました', true);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(FluentIcons.clear),
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
-                  ),
-                ],
+              CustomButtonSm(
+                labelText: '追加する',
+                labelColor: kWhiteColor,
+                backgroundColor: kBlueColor,
+                onPressed: () async {
+                  String? error = await noticeProvider.create(
+                    organization: widget.loginProvider.organization,
+                    title: titleController.text,
+                    content: contentController.text,
+                    group: selectedGroup,
+                    loginUser: widget.loginProvider.user,
+                  );
+                  if (error != null) {
+                    if (!mounted) return;
+                    showMessage(context, error, false);
+                    return;
+                  }
+                  if (!mounted) return;
+                  showMessage(context, 'お知らせを追加しました', true);
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),

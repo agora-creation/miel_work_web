@@ -35,22 +35,26 @@ class _PlanScreenState extends State<PlanScreen> {
       case sfc.CalendarElement.appointment:
       case sfc.CalendarElement.agenda:
         sfc.Appointment appointmentDetails = details.appointments![0];
-        showBottomUpScreen(
+        Navigator.push(
           context,
-          PlanModScreen(
-            loginProvider: widget.loginProvider,
-            homeProvider: widget.homeProvider,
-            planId: '${appointmentDetails.id}',
+          FluentPageRoute(
+            builder: (context) => PlanModScreen(
+              loginProvider: widget.loginProvider,
+              homeProvider: widget.homeProvider,
+              planId: '${appointmentDetails.id}',
+            ),
           ),
         );
         break;
       case sfc.CalendarElement.calendarCell:
-        showBottomUpScreen(
+        Navigator.push(
           context,
-          PlanAddScreen(
-            loginProvider: widget.loginProvider,
-            homeProvider: widget.homeProvider,
-            date: details.date ?? DateTime.now(),
+          FluentPageRoute(
+            builder: (context) => PlanAddScreen(
+              loginProvider: widget.loginProvider,
+              homeProvider: widget.homeProvider,
+              date: details.date ?? DateTime.now(),
+            ),
           ),
         );
         break;

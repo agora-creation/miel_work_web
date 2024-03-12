@@ -54,12 +54,14 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
             ),
           );
         } else if (type == 'planShift') {
-          showBottomUpScreen(
+          Navigator.push(
             context,
-            PlanShiftModScreen(
-              loginProvider: widget.loginProvider,
-              homeProvider: widget.homeProvider,
-              planShiftId: '${appointmentDetails.id}',
+            FluentPageRoute(
+              builder: (context) => PlanShiftModScreen(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                planShiftId: '${appointmentDetails.id}',
+              ),
             ),
           );
         }
@@ -67,13 +69,15 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
       case sfc.CalendarElement.calendarCell:
         final userId = details.resource?.id;
         if (userId == null) return;
-        showBottomUpScreen(
+        Navigator.push(
           context,
-          PlanShiftAddScreen(
-            loginProvider: widget.loginProvider,
-            homeProvider: widget.homeProvider,
-            userId: '$userId',
-            date: details.date ?? DateTime.now(),
+          FluentPageRoute(
+            builder: (context) => PlanShiftAddScreen(
+              loginProvider: widget.loginProvider,
+              homeProvider: widget.homeProvider,
+              userId: '$userId',
+              date: details.date ?? DateTime.now(),
+            ),
           ),
         );
         break;
@@ -226,12 +230,22 @@ class _PlanDialogState extends State<PlanDialog> {
           children: [
             InfoLabel(
               label: '公開グループ',
-              child: Text(groupText),
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(groupText),
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '予定期間',
-              child: Text(dateTimeText),
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(dateTimeText),
+              ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
@@ -244,7 +258,12 @@ class _PlanDialogState extends State<PlanDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'メモ',
-              child: Text(memoText),
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(memoText),
+              ),
             ),
           ],
         ),

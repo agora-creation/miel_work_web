@@ -66,42 +66,36 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                icon: const Icon(FluentIcons.chevron_left),
+                onPressed: () => Navigator.pop(context),
+              ),
               const Text(
                 'お知らせを編集',
                 style: TextStyle(fontSize: 16),
               ),
-              Row(
-                children: [
-                  CustomButtonSm(
-                    labelText: '入力内容を保存',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
-                    onPressed: () async {
-                      String? error = await noticeProvider.update(
-                        organization: widget.loginProvider.organization,
-                        notice: widget.notice,
-                        title: titleController.text,
-                        content: contentController.text,
-                        group: selectedGroup,
-                        loginUser: widget.loginProvider.user,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, 'お知らせを編集しました', true);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(FluentIcons.clear),
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
-                  ),
-                ],
+              CustomButtonSm(
+                labelText: '入力内容を保存',
+                labelColor: kWhiteColor,
+                backgroundColor: kBlueColor,
+                onPressed: () async {
+                  String? error = await noticeProvider.update(
+                    organization: widget.loginProvider.organization,
+                    notice: widget.notice,
+                    title: titleController.text,
+                    content: contentController.text,
+                    group: selectedGroup,
+                    loginUser: widget.loginProvider.user,
+                  );
+                  if (error != null) {
+                    if (!mounted) return;
+                    showMessage(context, error, false);
+                    return;
+                  }
+                  if (!mounted) return;
+                  showMessage(context, 'お知らせを編集しました', true);
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),

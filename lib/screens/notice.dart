@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
@@ -53,11 +52,13 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   labelText: 'お知らせを追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
-                  onPressed: () => showBottomUpScreen(
+                  onPressed: () => Navigator.push(
                     context,
-                    NoticeAddScreen(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
+                    FluentPageRoute(
+                      builder: (context) => NoticeAddScreen(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                      ),
                     ),
                   ),
                 ),

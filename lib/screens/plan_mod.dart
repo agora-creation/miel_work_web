@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
@@ -11,9 +10,9 @@ import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_date_box.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
-import 'package:miel_work_web/widgets/custom_time_box.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 class PlanModScreen extends StatefulWidget {
@@ -126,61 +125,41 @@ class _PlanModScreenState extends State<PlanModScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                icon: const Icon(FluentIcons.chevron_left),
+                onPressed: () => Navigator.pop(context),
+              ),
               const Text(
                 '予定を編集',
                 style: TextStyle(fontSize: 16),
               ),
-              Row(
-                children: [
-                  CustomButtonSm(
-                    labelText: '削除',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kRedColor,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) => DelPlanDialog(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                        planId: widget.planId,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  CustomButtonSm(
-                    labelText: '入力内容を保存',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
-                    onPressed: () async {
-                      String? error = await planProvider.update(
-                        planId: widget.planId,
-                        organization: widget.loginProvider.organization,
-                        group: selectedGroup,
-                        category: selectedCategory,
-                        subject: subjectController.text,
-                        startedAt: startedAt,
-                        endedAt: endedAt,
-                        allDay: allDay,
-                        color: color,
-                        memo: memoController.text,
-                        alertMinute: alertMinute,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, '予定を編集しました', true);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(FluentIcons.clear),
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
-                  ),
-                ],
+              CustomButtonSm(
+                labelText: '入力内容を保存',
+                labelColor: kWhiteColor,
+                backgroundColor: kBlueColor,
+                onPressed: () async {
+                  String? error = await planProvider.update(
+                    planId: widget.planId,
+                    organization: widget.loginProvider.organization,
+                    group: selectedGroup,
+                    category: selectedCategory,
+                    subject: subjectController.text,
+                    startedAt: startedAt,
+                    endedAt: endedAt,
+                    allDay: allDay,
+                    color: color,
+                    memo: memoController.text,
+                    alertMinute: alertMinute,
+                  );
+                  if (error != null) {
+                    if (!mounted) return;
+                    showMessage(context, error, false);
+                    return;
+                  }
+                  if (!mounted) return;
+                  showMessage(context, '予定を編集しました', true);
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),
@@ -235,83 +214,41 @@ class _PlanModScreenState extends State<PlanModScreen> {
                 maxLines: 1,
               ),
             ),
-            const SizedBox(height: 40),
-            InfoLabel(
-              label: '開始日時',
-              child: Column(
-                children: [
-                  CustomDateBox(
-                    value: startedAt,
-                    onTap: () async {
-                      final result =
-                          await CustomDateTimePicker().showDateChange(
-                        context: context,
-                        value: startedAt,
-                      );
-                      setState(() {
-                        startedAt = result;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  CustomTimeBox(
-                    value: startedAt,
-                    onTap: () async {
-                      final result =
-                          await CustomDateTimePicker().showTimeChange(
-                        context: context,
-                        value: startedAt,
-                      );
-                      setState(() {
-                        startedAt = result;
-                      });
-                    },
-                  ),
-                ],
-              ),
+            const SizedBox(height: 8),
+            DatetimeRangeForm(
+              startedAt: startedAt,
+              startedOnTap: () async {
+                final result = await showOmniDateTimePicker(
+                  context: context,
+                  initialDate: startedAt,
+                  firstDate: kFirstDate,
+                  lastDate: kLastDate,
+                  is24HourMode: true,
+                );
+                if (result == null) return;
+                setState(() {
+                  startedAt = result;
+                  endedAt = startedAt.add(const Duration(hours: 1));
+                });
+              },
+              endedAt: endedAt,
+              endedOnTap: () async {
+                final result = await showOmniDateTimePicker(
+                  context: context,
+                  initialDate: endedAt,
+                  firstDate: kFirstDate,
+                  lastDate: kLastDate,
+                  is24HourMode: true,
+                );
+                if (result == null) return;
+                setState(() {
+                  endedAt = result;
+                });
+              },
+              allDay: allDay,
+              allDayOnChanged: _allDayChange,
             ),
             const SizedBox(height: 8),
-            InfoLabel(
-              label: '終了日時',
-              child: Column(
-                children: [
-                  CustomDateBox(
-                    value: endedAt,
-                    onTap: () async {
-                      final result =
-                          await CustomDateTimePicker().showDateChange(
-                        context: context,
-                        value: endedAt,
-                      );
-                      setState(() {
-                        endedAt = result;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  CustomTimeBox(
-                    value: endedAt,
-                    onTap: () async {
-                      final result =
-                          await CustomDateTimePicker().showTimeChange(
-                        context: context,
-                        value: endedAt,
-                      );
-                      setState(() {
-                        endedAt = result;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Checkbox(
-              checked: allDay,
-              onChanged: _allDayChange,
-              content: const Text('終日'),
-            ),
-            const SizedBox(height: 40),
             InfoLabel(
               label: '色',
               child: ComboBox<String>(

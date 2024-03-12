@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
@@ -77,13 +76,15 @@ class NoticeSource extends DataGridSource {
           labelText: '編集',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () => showBottomUpScreen(
+          onPressed: () => Navigator.push(
             context,
-            NoticeModScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-              notice: notice,
-              noticeInGroup: noticeInGroup,
+            FluentPageRoute(
+              builder: (context) => NoticeModScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                notice: notice,
+                noticeInGroup: noticeInGroup,
+              ),
             ),
           ),
         ),
@@ -92,13 +93,15 @@ class NoticeSource extends DataGridSource {
           labelText: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () => showBottomUpScreen(
+          onPressed: () => Navigator.push(
             context,
-            NoticeDelScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-              notice: notice,
-              noticeInGroup: noticeInGroup,
+            FluentPageRoute(
+              builder: (context) => NoticeDelScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                notice: notice,
+                noticeInGroup: noticeInGroup,
+              ),
             ),
           ),
         ),

@@ -40,37 +40,31 @@ class _NoticeDelScreenState extends State<NoticeDelScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                icon: const Icon(FluentIcons.chevron_left),
+                onPressed: () => Navigator.pop(context),
+              ),
               const Text(
                 'お知らせを削除',
                 style: TextStyle(fontSize: 16),
               ),
-              Row(
-                children: [
-                  CustomButtonSm(
-                    labelText: '削除する',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kRedColor,
-                    onPressed: () async {
-                      String? error = await noticeProvider.delete(
-                        notice: widget.notice,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, 'お知らせを削除しました', true);
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(FluentIcons.clear),
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
-                  ),
-                ],
+              CustomButtonSm(
+                labelText: '削除する',
+                labelColor: kWhiteColor,
+                backgroundColor: kRedColor,
+                onPressed: () async {
+                  String? error = await noticeProvider.delete(
+                    notice: widget.notice,
+                  );
+                  if (error != null) {
+                    if (!mounted) return;
+                    showMessage(context, error, false);
+                    return;
+                  }
+                  if (!mounted) return;
+                  showMessage(context, 'お知らせを削除しました', true);
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),

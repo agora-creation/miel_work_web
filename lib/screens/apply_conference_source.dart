@@ -143,6 +143,12 @@ class ApplyConferenceSource extends DataGridSource {
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,
               ),
+        const SizedBox(width: 4),
+        const CustomButtonSm(
+          labelText: '印刷',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+        ),
       ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
