@@ -110,44 +110,46 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
       content: Container(
         color: kWhiteColor,
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'タイトル',
-              child: CustomTextBox(
-                controller: titleController,
-                placeholder: '例) 休館日について',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InfoLabel(
+                label: 'タイトル',
+                child: CustomTextBox(
+                  controller: titleController,
+                  placeholder: '例) 休館日について',
+                  keyboardType: TextInputType.text,
+                  maxLines: 1,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'お知らせ内容',
-              child: CustomTextBox(
-                controller: contentController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: 'お知らせ内容',
+                child: CustomTextBox(
+                  controller: contentController,
+                  placeholder: '',
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 20,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '送信先グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: '送信先グループ',
+                child: ComboBox<OrganizationGroupModel>(
+                  isExpanded: true,
+                  value: selectedGroup,
+                  items: groupItems,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGroup = value;
+                    });
+                  },
+                  placeholder: const Text('グループ未選択'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

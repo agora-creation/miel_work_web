@@ -7,7 +7,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -162,11 +161,11 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'カテゴリ名',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.category.name,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.category.name),
               ),
             ),
           ],

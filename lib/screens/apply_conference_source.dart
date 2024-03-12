@@ -2,13 +2,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply_conference.dart';
-import 'package:miel_work_web/providers/apply_conference.dart';
+import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply_conference_approval.dart';
+import 'package:miel_work_web/screens/apply_conference_del.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ApplyConferenceSource extends DataGridSource {
@@ -51,6 +51,12 @@ class ApplyConferenceSource extends DataGridSource {
           columnName: 'approval',
           value: conference.approval ? '承認済み' : '承認待ち',
         ),
+        DataGridCell(
+          columnName: 'approvedAt',
+          value: conference.approval
+              ? dateText('yyyy/MM/dd HH:mm', conference.createdAt)
+              : '',
+        ),
       ]);
     }).toList();
   }
@@ -73,25 +79,67 @@ class ApplyConferenceSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
+    cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
+    bool isApproval = true;
+    bool isDelete = true;
+    if (conference.createdUserId == loginProvider.user?.id) {
+      isApproval = false;
+    } else {
+      isDelete = false;
+    }
+    if (conference.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in conference.approvalUsers) {
+        if (user.userId == loginProvider.user?.id) {
+          isApproval = false;
+        }
+      }
+    }
+    if (conference.approval) {
+      isApproval = false;
+      isDelete = false;
+    }
     cells.add(Row(
       children: [
-        conference.createdUserId != loginProvider.user?.id &&
-                !conference.approval
+        isApproval
             ? CustomButtonSm(
                 labelText: '承認',
                 labelColor: kWhiteColor,
                 backgroundColor: kRedColor,
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) => ApprovalApplyConferenceDialog(
-                    loginProvider: loginProvider,
-                    homeProvider: homeProvider,
-                    conference: conference,
+                onPressed: () => Navigator.push(
+                  context,
+                  FluentPageRoute(
+                    builder: (context) => ApplyConferenceApprovalScreen(
+                      loginProvider: loginProvider,
+                      homeProvider: homeProvider,
+                      conference: conference,
+                    ),
                   ),
                 ),
               )
             : const CustomButtonSm(
                 labelText: '承認',
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
+              ),
+        const SizedBox(width: 4),
+        isDelete
+            ? CustomButtonSm(
+                labelText: '削除',
+                labelColor: kWhiteColor,
+                backgroundColor: kRedColor,
+                onPressed: () => Navigator.push(
+                  context,
+                  FluentPageRoute(
+                    builder: (context) => ApplyConferenceDelScreen(
+                      loginProvider: loginProvider,
+                      homeProvider: homeProvider,
+                      conference: conference,
+                    ),
+                  ),
+                ),
+              )
+            : const CustomButtonSm(
+                labelText: '削除',
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,
               ),
@@ -144,92 +192,5 @@ class ApplyConferenceSource extends DataGridSource {
 
   void updateDataSource() {
     notifyListeners();
-  }
-}
-
-class ApprovalApplyConferenceDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final ApplyConferenceModel conference;
-
-  const ApprovalApplyConferenceDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.conference,
-    super.key,
-  });
-
-  @override
-  State<ApprovalApplyConferenceDialog> createState() =>
-      _ApprovalApplyConferenceDialogState();
-}
-
-class _ApprovalApplyConferenceDialogState
-    extends State<ApprovalApplyConferenceDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        '協議申請を承認',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: '件名',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.conference.title,
-                ),
-                enabled: false,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '内容',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.conference.content,
-                ),
-                keyboardType: TextInputType.multiline,
-                enabled: false,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '承認する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await conferenceProvider.update(
-              conference: widget.conference,
-              approval: true,
-              loginUser: widget.loginProvider.user,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '承認しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
   }
 }

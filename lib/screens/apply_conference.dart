@@ -1,18 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply_conference.dart';
-import 'package:miel_work_web/providers/apply_conference.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply_conference_add.dart';
 import 'package:miel_work_web/screens/apply_conference_source.dart';
 import 'package:miel_work_web/services/apply_conference.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ApplyConferenceScreen extends StatefulWidget {
@@ -82,11 +79,13 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                   labelText: '新規申請',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AddApplyConferenceDialog(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
+                  onPressed: () => Navigator.push(
+                    context,
+                    FluentPageRoute(
+                      builder: (context) => ApplyConferenceAddScreen(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                      ),
                     ),
                   ),
                 ),
@@ -117,11 +116,11 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'createdAt',
-                        label: const CustomColumnLabel('申請日時'),
+                        label: const CustomColumnLabel('提出日時'),
                       ),
                       GridColumn(
                         columnName: 'createdUserName',
-                        label: const CustomColumnLabel('申請者名'),
+                        label: const CustomColumnLabel('作成者名'),
                       ),
                       GridColumn(
                         columnName: 'title',
@@ -130,6 +129,10 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                       GridColumn(
                         columnName: 'approval',
                         label: const CustomColumnLabel('承認状況'),
+                      ),
+                      GridColumn(
+                        columnName: 'approvedAt',
+                        label: const CustomColumnLabel('承認日時'),
                       ),
                       GridColumn(
                         columnName: 'edit',
@@ -143,94 +146,6 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AddApplyConferenceDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-
-  const AddApplyConferenceDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    super.key,
-  });
-
-  @override
-  State<AddApplyConferenceDialog> createState() =>
-      _AddApplyConferenceDialogState();
-}
-
-class _AddApplyConferenceDialogState extends State<AddApplyConferenceDialog> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        '協議申請を作成',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: '件名',
-              child: CustomTextBox(
-                controller: titleController,
-                placeholder: '',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '内容',
-              child: CustomTextBox(
-                controller: contentController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '作成する',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            String? error = await conferenceProvider.create(
-              organization: widget.loginProvider.organization,
-              group: null,
-              title: titleController.text,
-              content: contentController.text,
-              loginUser: widget.loginProvider.user,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '協議申請を作成しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
     );
   }
 }

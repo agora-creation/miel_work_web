@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/apply_proposal.dart';
+import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -31,7 +32,8 @@ class ApplyProposalProvider with ChangeNotifier {
         'content': content,
         'price': price,
         'approval': false,
-        'approvalUserIds': [],
+        'approvedAt': DateTime.now(),
+        'approvalUsers': [],
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
@@ -50,11 +52,31 @@ class ApplyProposalProvider with ChangeNotifier {
     String? error;
     if (loginUser == null) return '承認に失敗しました';
     try {
-      _proposalService.update({
-        'id': proposal.id,
-        'approval': approval,
-        'approvalUserIds': [loginUser.id],
+      List<Map> approvalUsers = [];
+      if (proposal.approvalUsers.isNotEmpty) {
+        for (ApprovalUserModel approvalUser in proposal.approvalUsers) {
+          approvalUsers.add(approvalUser.toMap());
+        }
+      }
+      approvalUsers.add({
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'approvedAt': DateTime.now(),
       });
+      if (approval) {
+        _proposalService.update({
+          'id': proposal.id,
+          'approval': approval,
+          'approvedAt': DateTime.now(),
+          'approvalUsers': approvalUsers,
+        });
+      } else {
+        _proposalService.update({
+          'id': proposal.id,
+          'approval': approval,
+          'approvalUsers': approvalUsers,
+        });
+      }
     } catch (e) {
       error = '承認に失敗しました';
     }

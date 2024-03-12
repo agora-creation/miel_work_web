@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/apply_conference.dart';
+import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -29,7 +30,8 @@ class ApplyConferenceProvider with ChangeNotifier {
         'title': title,
         'content': content,
         'approval': false,
-        'approvalUserIds': [],
+        'approvedAt': DateTime.now(),
+        'approvalUsers': [],
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
@@ -48,11 +50,31 @@ class ApplyConferenceProvider with ChangeNotifier {
     String? error;
     if (loginUser == null) return '承認に失敗しました';
     try {
-      _conferenceService.update({
-        'id': conference.id,
-        'approval': approval,
-        'approvalUserIds': [loginUser.id],
+      List<Map> approvalUsers = [];
+      if (conference.approvalUsers.isNotEmpty) {
+        for (ApprovalUserModel approvalUser in conference.approvalUsers) {
+          approvalUsers.add(approvalUser.toMap());
+        }
+      }
+      approvalUsers.add({
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'approvedAt': DateTime.now(),
       });
+      if (approval) {
+        _conferenceService.update({
+          'id': conference.id,
+          'approval': approval,
+          'approvedAt': DateTime.now(),
+          'approvalUsers': approvalUsers,
+        });
+      } else {
+        _conferenceService.update({
+          'id': conference.id,
+          'approval': approval,
+          'approvalUsers': approvalUsers,
+        });
+      }
     } catch (e) {
       error = '承認に失敗しました';
     }

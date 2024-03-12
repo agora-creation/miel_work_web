@@ -2,13 +2,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply_proposal.dart';
-import 'package:miel_work_web/providers/apply_proposal.dart';
+import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply_proposal_approval.dart';
+import 'package:miel_work_web/screens/apply_proposal_del.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ApplyProposalSource extends DataGridSource {
@@ -49,11 +49,17 @@ class ApplyProposalSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'price',
-          value: '¥${proposal.price}',
+          value: '¥ ${proposal.formatPrice()}',
         ),
         DataGridCell(
           columnName: 'approval',
           value: proposal.approval ? '承認済み' : '承認待ち',
+        ),
+        DataGridCell(
+          columnName: 'approvedAt',
+          value: proposal.approval
+              ? dateText('yyyy/MM/dd HH:mm', proposal.createdAt)
+              : '',
         ),
       ]);
     }).toList();
@@ -78,24 +84,67 @@ class ApplyProposalSource extends DataGridSource {
     cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
     cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
+    cells.add(CustomColumnLabel('${row.getCells()[6].value}'));
+    bool isApproval = true;
+    bool isDelete = true;
+    if (proposal.createdUserId == loginProvider.user?.id) {
+      isApproval = false;
+    } else {
+      isDelete = false;
+    }
+    if (proposal.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in proposal.approvalUsers) {
+        if (user.userId == loginProvider.user?.id) {
+          isApproval = false;
+        }
+      }
+    }
+    if (proposal.approval) {
+      isApproval = false;
+      isDelete = false;
+    }
     cells.add(Row(
       children: [
-        proposal.createdUserId != loginProvider.user?.id && !proposal.approval
+        isApproval
             ? CustomButtonSm(
                 labelText: '承認',
                 labelColor: kWhiteColor,
                 backgroundColor: kRedColor,
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) => ApprovalApplyProposalDialog(
-                    loginProvider: loginProvider,
-                    homeProvider: homeProvider,
-                    proposal: proposal,
+                onPressed: () => Navigator.push(
+                  context,
+                  FluentPageRoute(
+                    builder: (context) => ApplyProposalApprovalScreen(
+                      loginProvider: loginProvider,
+                      homeProvider: homeProvider,
+                      proposal: proposal,
+                    ),
                   ),
                 ),
               )
             : const CustomButtonSm(
                 labelText: '承認',
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
+              ),
+        const SizedBox(width: 4),
+        isDelete
+            ? CustomButtonSm(
+                labelText: '削除',
+                labelColor: kWhiteColor,
+                backgroundColor: kRedColor,
+                onPressed: () => Navigator.push(
+                  context,
+                  FluentPageRoute(
+                    builder: (context) => ApplyProposalDelScreen(
+                      loginProvider: loginProvider,
+                      homeProvider: homeProvider,
+                      proposal: proposal,
+                    ),
+                  ),
+                ),
+              )
+            : const CustomButtonSm(
+                labelText: '削除',
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,
               ),
@@ -148,102 +197,5 @@ class ApplyProposalSource extends DataGridSource {
 
   void updateDataSource() {
     notifyListeners();
-  }
-}
-
-class ApprovalApplyProposalDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final ApplyProposalModel proposal;
-
-  const ApprovalApplyProposalDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.proposal,
-    super.key,
-  });
-
-  @override
-  State<ApprovalApplyProposalDialog> createState() =>
-      _ApprovalApplyProposalDialogState();
-}
-
-class _ApprovalApplyProposalDialogState
-    extends State<ApprovalApplyProposalDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final proposalProvider = Provider.of<ApplyProposalProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        '稟議申請を承認',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: '件名',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.proposal.title,
-                ),
-                enabled: false,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '内容',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.proposal.content,
-                ),
-                keyboardType: TextInputType.multiline,
-                enabled: false,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '金額',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: '${widget.proposal.price}',
-                ),
-                enabled: false,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '承認する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await proposalProvider.update(
-              proposal: widget.proposal,
-              approval: true,
-              loginUser: widget.loginProvider.user,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '承認しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
   }
 }

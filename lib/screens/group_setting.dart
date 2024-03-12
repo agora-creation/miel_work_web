@@ -184,11 +184,11 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
           const SizedBox(height: 8),
           InfoLabel(
             label: 'グループ名',
-            child: CustomTextBox(
-              controller: TextEditingController(
-                text: widget.group?.name,
-              ),
-              enabled: false,
+            child: Container(
+              color: kGrey200Color,
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Text(widget.group?.name ?? ''),
             ),
           ),
         ],

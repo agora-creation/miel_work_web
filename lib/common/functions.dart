@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:intl/intl.dart';
 import 'package:miel_work_web/common/date_machine_util.dart';
+import 'package:miel_work_web/common/style.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as uhtml;
+import 'package:url_launcher/url_launcher.dart';
 
 void showMessage(BuildContext context, String msg, bool success) {
   displayInfoBar(context, builder: (context, close) {
@@ -152,6 +155,48 @@ DateTime rebuildTime(BuildContext context, DateTime? date, String? time) {
     ret = DateTime.parse('$tmpDate $tmpTime');
   }
   return ret;
+}
+
+RegExp _urlReg = RegExp(
+  r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=#]*)?',
+);
+
+extension TextEx on Text {
+  RichText urlToLink(BuildContext context) {
+    final textSpans = <InlineSpan>[];
+    data!.splitMapJoin(
+      _urlReg,
+      onMatch: (Match match) {
+        final tmpMatch = match[0] ?? '';
+        textSpans.add(
+          TextSpan(
+            text: tmpMatch,
+            style: const TextStyle(
+              color: kBlueColor,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async => await launchUrl(
+                    Uri.parse(tmpMatch),
+                  ),
+          ),
+        );
+        return '';
+      },
+      onNonMatch: (String text) {
+        textSpans.add(
+          TextSpan(
+            text: text,
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        );
+        return '';
+      },
+    );
+    return RichText(text: TextSpan(children: textSpans));
+  }
 }
 
 void downloadFile({

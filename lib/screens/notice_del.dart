@@ -7,7 +7,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
 class NoticeDelScreen extends StatefulWidget {
@@ -90,31 +89,31 @@ class _NoticeDelScreenState extends State<NoticeDelScreen> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.notice.title,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.notice.title),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'お知らせ内容',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.notice.content,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.notice.content),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '送信先グループ',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.noticeInGroup?.name,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.noticeInGroup?.name ?? ''),
               ),
             ),
           ],

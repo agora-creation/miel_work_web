@@ -44,6 +44,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
   bool allDay = false;
   String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
+  int alertMinute = 0;
 
   void _init() async {
     PlanModel? plan = await planService.selectData(id: widget.planId);
@@ -161,6 +162,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                         allDay: allDay,
                         color: color,
                         memo: memoController.text,
+                        alertMinute: alertMinute,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -233,7 +235,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                 maxLines: 1,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 40),
             InfoLabel(
               label: '開始日時',
               child: Column(
@@ -309,7 +311,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
               onChanged: _allDayChange,
               content: const Text('終日'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 40),
             InfoLabel(
               label: '色',
               child: ComboBox<String>(
@@ -340,6 +342,25 @@ class _PlanModScreenState extends State<PlanModScreen> {
                 placeholder: '',
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '事前アラート通知',
+              child: ComboBox<int>(
+                isExpanded: true,
+                value: alertMinute,
+                items: kAlertMinutes.map((value) {
+                  return ComboBoxItem(
+                    value: value,
+                    child: value == 0 ? const Text('無効') : Text('$value分前'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    alertMinute = value!;
+                  });
+                },
               ),
             ),
           ],

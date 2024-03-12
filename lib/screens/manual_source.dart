@@ -349,31 +349,31 @@ class _DelManualDialogState extends State<DelManualDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'タイトル',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.manual.title,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.manual.title),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'PDFファイル',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: '${widget.manual.id}.pdf',
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text('${widget.manual.id}.pdf'),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '公開グループ',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.manualInGroup?.name,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.manualInGroup?.name ?? ''),
               ),
             ),
           ],

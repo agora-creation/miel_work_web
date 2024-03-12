@@ -36,11 +36,11 @@ class MessageList extends StatelessWidget {
                       child: Text(
                         message.content,
                         style: const TextStyle(color: kWhiteColor),
-                      ),
+                      ).urlToLink(context),
                     ),
                   )
                 : GestureDetector(
-                    onTap: onTapImage,
+                    onLongPress: onTapImage,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),
@@ -87,11 +87,11 @@ class MessageList extends StatelessWidget {
                         vertical: 8,
                         horizontal: 12,
                       ),
-                      child: Text(message.content),
+                      child: Text(message.content).urlToLink(context),
                     ),
                   )
                 : GestureDetector(
-                    onTap: onTapImage,
+                    onLongPress: onTapImage,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),

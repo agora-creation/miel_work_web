@@ -454,41 +454,41 @@ class _DelUserDialogState extends State<DelUserDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: 'スタッフ名',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.user.name,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.user.name),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'メールアドレス',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.user.email,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.user.email),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: 'パスワード',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.user.password,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.user.password),
               ),
             ),
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: CustomTextBox(
-                controller: TextEditingController(
-                  text: widget.userInGroup?.name,
-                ),
-                enabled: false,
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.userInGroup?.name ?? ''),
               ),
             ),
           ],

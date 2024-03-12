@@ -13,6 +13,7 @@ const kBlueColor = Color(0xFF2196F3);
 const kCyanColor = Color(0xFF00BCD4);
 const kOrangeColor = Color(0xFFFF9800);
 const kYellowColor = Color(0xFFFFEB3B);
+const kGreenColor = Color(0xFF4CAF50);
 
 FluentThemeData customTheme() {
   return FluentThemeData(
@@ -68,6 +69,8 @@ List<Color> kPlanColors = const [
   Color(0xFF9E9E9E),
   Color(0xFF607D8B),
 ];
+
+List<int> kAlertMinutes = [0, 10, 30, 60];
 
 DateTime kFirstDate = DateTime.now().subtract(const Duration(days: 1095));
 DateTime kLastDate = DateTime.now().add(const Duration(days: 1095));

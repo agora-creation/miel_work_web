@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:miel_work_web/models/approval_user.dart';
 
 class ApplyProposalModel {
   String _id = '';
@@ -8,7 +10,8 @@ class ApplyProposalModel {
   String _content = '';
   int _price = 0;
   bool _approval = false;
-  List<String> approvalUserIds = [];
+  DateTime _approvedAt = DateTime.now();
+  List<ApprovalUserModel> approvalUsers = [];
   String _createdUserId = '';
   String _createdUserName = '';
   DateTime _createdAt = DateTime.now();
@@ -20,6 +23,7 @@ class ApplyProposalModel {
   String get content => _content;
   int get price => _price;
   bool get approval => _approval;
+  DateTime get approvedAt => _approvedAt;
   String get createdUserId => _createdUserId;
   String get createdUserName => _createdUserName;
   DateTime get createdAt => _createdAt;
@@ -35,17 +39,22 @@ class ApplyProposalModel {
     _content = data['content'] ?? '';
     _price = data['price'] ?? 0;
     _approval = data['approval'] ?? false;
-    approvalUserIds = _convertApprovalUserIds(data['approvalUserIds']);
+    _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
+    approvalUsers = _convertApprovalUsers(data['approvalUsers']);
     _createdUserId = data['createdUserId'] ?? '';
     _createdUserName = data['createdUserName'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
   }
 
-  List<String> _convertApprovalUserIds(List list) {
-    List<String> ret = [];
-    for (dynamic id in list) {
-      ret.add('$id');
+  List<ApprovalUserModel> _convertApprovalUsers(List list) {
+    List<ApprovalUserModel> converted = [];
+    for (Map data in list) {
+      converted.add(ApprovalUserModel.fromMap(data));
     }
-    return ret;
+    return converted;
+  }
+
+  String formatPrice() {
+    return NumberFormat("#,###").format(_price);
   }
 }

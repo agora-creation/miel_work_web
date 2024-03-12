@@ -40,6 +40,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
   bool allDay = false;
+  int alertMinute = 0;
 
   void _init() async {
     _groupChange(widget.homeProvider.currentGroup);
@@ -135,6 +136,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                         startedAt: startedAt,
                         endedAt: endedAt,
                         allDay: allDay,
+                        alertMinute: alertMinute,
                       );
                       if (error != null) {
                         if (!mounted) return;
@@ -205,7 +207,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 40),
             InfoLabel(
               label: '開始日時',
               child: Column(
@@ -280,6 +282,25 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
               checked: allDay,
               onChanged: _allDayChange,
               content: const Text('終日'),
+            ),
+            const SizedBox(height: 40),
+            InfoLabel(
+              label: '事前アラート通知',
+              child: ComboBox<int>(
+                isExpanded: true,
+                value: alertMinute,
+                items: kAlertMinutes.map((value) {
+                  return ComboBoxItem(
+                    value: value,
+                    child: value == 0 ? const Text('無効') : Text('$value分前'),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    alertMinute = value!;
+                  });
+                },
+              ),
             ),
           ],
         ),
