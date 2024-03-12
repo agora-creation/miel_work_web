@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
+import 'package:miel_work_web/models/apply_proposal.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:universal_html/html.dart' as html;
@@ -7,7 +8,7 @@ import 'package:universal_html/html.dart' as html;
 const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
 class PdfService {
-  Future download() async {
+  Future applyProposalDownload(ApplyProposalModel proposal) async {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
@@ -24,15 +25,167 @@ class PdfService {
                 font: ttf,
                 fontSize: 16,
                 fontWeight: pw.FontWeight.bold,
-                letterSpacing: 4,
+                letterSpacing: 16,
               ),
             ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              '提出日: ${dateText('yyyy/MM/dd HH:mm', proposal.createdAt)}',
+              style: pw.TextStyle(
+                font: ttf,
+                color: PdfColors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              '作成者: ${proposal.createdUserName}',
+              style: pw.TextStyle(
+                font: ttf,
+                color: PdfColors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              '承認日: ${dateText('yyyy/MM/dd HH:mm', proposal.approvedAt)}',
+              style: pw.TextStyle(
+                font: ttf,
+                color: PdfColors.grey,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '承認者一覧',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    width: 10,
+                    height: 100,
+                  ),
+                  _generateCell(
+                    label: '',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 100,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '件名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    width: 10,
+                  ),
+                  _generateCell(
+                    label: proposal.title,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '金額',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    width: 10,
+                  ),
+                  _generateCell(
+                    label: '¥ ${proposal.formatPrice()}',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '内容',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    width: 10,
+                    height: 500,
+                  ),
+                  _generateCell(
+                    label: proposal.content,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 500,
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
     ));
     final fileName = '${dateText('yyyyMMddHHmmss', DateTime.now())}.pdf';
     await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
+  pw.Widget _generateCell({
+    required String label,
+    required pw.TextStyle style,
+    PdfColor? color,
+    double? width,
+    double? height,
+  }) {
+    return pw.Container(
+      padding: const pw.EdgeInsets.all(8),
+      child: pw.Text(label, style: style),
+      color: color,
+      width: width,
+      height: height,
+    );
   }
 
   Future _pdfWebDownload({

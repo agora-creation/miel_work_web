@@ -113,6 +113,10 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                       '作成者: ${widget.proposal.createdUserName}',
                       style: const TextStyle(color: kGreyColor),
                     ),
+                    Text(
+                      '承認日: ${dateText('yyyy/MM/dd HH:mm', widget.proposal.approvedAt)}',
+                      style: const TextStyle(color: kGreyColor),
+                    ),
                   ],
                 ),
               ),

@@ -106,9 +106,8 @@ class ApplyProposalSource extends DataGridSource {
           labelText: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
-          onPressed: () async {
-            await PdfService().download();
-          },
+          onPressed: () async =>
+              await PdfService().applyProposalDownload(proposal),
         ),
       ],
     ));
