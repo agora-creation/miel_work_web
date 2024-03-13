@@ -71,6 +71,54 @@ exports.planAlertMessages = functions.region('asia-northeast1')
     })
 })
 
+exports.planShiftAlertMessages = functions.region('asia-northeast1')
+    .runWith({memory: '512MB'})
+    .pubsub.schedule('every 1 minutes')
+    .timeZone('Asia/Tokyo')
+    .onRun(async (context) => {
+
+    //現在時刻
+    const now = (() => {
+        let s = admin.firestore.Timestamp.now().seconds
+        s = s - s % 60
+        return new admin.firestore.Timestamp(s, 0)
+    })()
+    console.log('now', now.toDate())
+
+    //DB取得
+    const planShiftRef = firestore.collection('planShift')
+    const userRef = firestore.collection('user')
+    const planShiftSnapshot = await planShiftRef.where('alertMinute', '!=', 0)
+        .where('alertedAt', '==', now)
+        .get()
+    if (planShiftSnapshot.empty) {
+        console.log('No matching planShiftDocuments.')
+        return
+    }
+    planShiftSnapshot.forEach(async planShiftDoc => {
+        const category = planShiftDoc.data()['category']
+        const subject = planShiftDoc.data()['subject']
+        const userIds = planShiftDoc.data()['userIds']
+        if (!userIds.empty) {
+            for (i = 0; i < userIds.length; i++) {
+                const userId = userIds[i]
+                const userSnapshot = await userRef.where('id', '==', userId).get()
+                if (userSnapshot.empty) {
+                    console.log('No matching userDocuments.')
+                }
+                userSnapshot.forEach(async userDoc => {
+                    const token = planDoc.data()['token']
+                    admin.messaging().send(pushMessage(
+                        token,
+                        '[' + category + ']' + subject,
+                        'もうすぐ予定時刻になります。',
+                    ))
+                })
+            }
+        }
+    })
+})
+
 const pushMessage = (token, title, body) => ({
     notification: {
         title: title,

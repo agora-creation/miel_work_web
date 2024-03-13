@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
@@ -13,7 +14,6 @@ import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_checkbox.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 
 class PlanShiftModScreen extends StatefulWidget {
@@ -226,34 +226,28 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                 const SizedBox(height: 8),
                 DatetimeRangeForm(
                   startedAt: startedAt,
-                  startedOnTap: () async {
-                    final result = await showOmniDateTimePicker(
-                      context: context,
-                      initialDate: startedAt,
-                      firstDate: kFirstDate,
-                      lastDate: kLastDate,
-                      is24HourMode: true,
-                    );
-                    if (result == null) return;
-                    setState(() {
-                      startedAt = result;
-                      endedAt = startedAt.add(const Duration(hours: 1));
-                    });
-                  },
+                  startedOnTap: () async => await CustomDateTimePicker().picker(
+                    context: context,
+                    init: startedAt,
+                    title: '勤務予定開始日時を選択',
+                    onChanged: (value) {
+                      setState(() {
+                        startedAt = value;
+                        endedAt = startedAt.add(const Duration(hours: 1));
+                      });
+                    },
+                  ),
                   endedAt: endedAt,
-                  endedOnTap: () async {
-                    final result = await showOmniDateTimePicker(
-                      context: context,
-                      initialDate: endedAt,
-                      firstDate: kFirstDate,
-                      lastDate: kLastDate,
-                      is24HourMode: true,
-                    );
-                    if (result == null) return;
-                    setState(() {
-                      endedAt = result;
-                    });
-                  },
+                  endedOnTap: () async => await CustomDateTimePicker().picker(
+                    context: context,
+                    init: endedAt,
+                    title: '勤務予定終了日時を選択',
+                    onChanged: (value) {
+                      setState(() {
+                        endedAt = value;
+                      });
+                    },
+                  ),
                   allDay: allDay,
                   allDayOnChanged: _allDayChange,
                 ),

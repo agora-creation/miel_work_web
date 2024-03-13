@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.10"
+  board_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: board_datetime_picker
+      sha256: "17bc217aba10d0c329176281a642fe1b3e726d2ddf5bf9c588ac6c56852a7753"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -605,14 +613,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  omni_datetime_picker:
-    dependency: "direct main"
-    description:
-      name: omni_datetime_picker
-      sha256: d13f237b7fe8a849203563e4e95ca2a43fe3b357364ad9b224899e0710fd72fb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.9"
   path:
     dependency: transitive
     description:
