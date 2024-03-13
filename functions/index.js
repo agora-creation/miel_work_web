@@ -59,7 +59,7 @@ exports.planAlertMessages = functions.region('asia-northeast1')
                     console.log('No matching userDocuments.')
                 }
                 userSnapshot.forEach(async userDoc => {
-                    const token = planDoc.data()['token']
+                    const token = userDoc.data()['token']
                     admin.messaging().send(pushMessage(
                         token,
                         '[' + category + ']' + subject,
@@ -96,8 +96,6 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         return
     }
     planShiftSnapshot.forEach(async planShiftDoc => {
-        const category = planShiftDoc.data()['category']
-        const subject = planShiftDoc.data()['subject']
         const userIds = planShiftDoc.data()['userIds']
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
@@ -107,11 +105,11 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
                     console.log('No matching userDocuments.')
                 }
                 userSnapshot.forEach(async userDoc => {
-                    const token = planDoc.data()['token']
+                    const token = userDoc.data()['token']
                     admin.messaging().send(pushMessage(
                         token,
-                        '[' + category + ']' + subject,
-                        'もうすぐ予定時刻になります。',
+                        '勤務予定のお知らせ',
+                        'もうすぐ勤務予定時刻になります。',
                     ))
                 })
             }
