@@ -40,7 +40,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   bool allDay = false;
   String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
-  int alertMinute = 0;
+  int alertMinute = kAlertMinutes[1];
 
   void _init() async {
     selectedGroup = widget.homeProvider.currentGroup;
@@ -147,140 +147,150 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
       ),
       content: Container(
         color: kWhiteColor,
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          children: [
-            InfoLabel(
-              label: '公開グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'カテゴリ',
-              child: ComboBox<String>(
-                isExpanded: true,
-                value: selectedCategory,
-                items: categories.map((category) {
-                  return ComboBoxItem(
-                    value: category.name,
-                    child: Text(category.name),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value;
-                  });
-                },
-                placeholder: const Text('カテゴリ未選択'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '件名',
-              child: CustomTextBox(
-                controller: subjectController,
-                placeholder: '',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
-            const SizedBox(height: 8),
-            DatetimeRangeForm(
-              startedAt: startedAt,
-              startedOnTap: () async {
-                final result = await showOmniDateTimePicker(
-                  context: context,
-                  initialDate: startedAt,
-                  firstDate: kFirstDate,
-                  lastDate: kLastDate,
-                  is24HourMode: true,
-                );
-                if (result == null) return;
-                setState(() {
-                  startedAt = result;
-                  endedAt = startedAt.add(const Duration(hours: 1));
-                });
-              },
-              endedAt: endedAt,
-              endedOnTap: () async {
-                final result = await showOmniDateTimePicker(
-                  context: context,
-                  initialDate: endedAt,
-                  firstDate: kFirstDate,
-                  lastDate: kLastDate,
-                  is24HourMode: true,
-                );
-                if (result == null) return;
-                setState(() {
-                  endedAt = result;
-                });
-              },
-              allDay: allDay,
-              allDayOnChanged: _allDayChange,
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '色',
-              child: ComboBox<String>(
-                isExpanded: true,
-                value: color,
-                items: kPlanColors.map((Color value) {
-                  return ComboBoxItem(
-                    value: value.value.toRadixString(16),
-                    child: Container(
-                      color: value,
-                      width: double.infinity,
-                      height: 25,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    InfoLabel(
+                      label: '公開グループ',
+                      child: ComboBox<OrganizationGroupModel>(
+                        value: selectedGroup,
+                        items: groupItems,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedGroup = value;
+                          });
+                        },
+                        placeholder: const Text('グループ未選択'),
+                      ),
                     ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    color = value!;
-                  });
-                },
-              ),
+                    const SizedBox(width: 8),
+                    InfoLabel(
+                      label: 'カテゴリ',
+                      child: ComboBox<String>(
+                        value: selectedCategory,
+                        items: categories.map((category) {
+                          return ComboBoxItem(
+                            value: category.name,
+                            child: Text(category.name),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCategory = value;
+                          });
+                        },
+                        placeholder: const Text('カテゴリ未選択'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: InfoLabel(
+                        label: '件名',
+                        child: CustomTextBox(
+                          controller: subjectController,
+                          placeholder: '',
+                          keyboardType: TextInputType.text,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const SizedBox(height: 8),
+                DatetimeRangeForm(
+                  startedAt: startedAt,
+                  startedOnTap: () async {
+                    final result = await showOmniDateTimePicker(
+                      context: context,
+                      initialDate: startedAt,
+                      firstDate: kFirstDate,
+                      lastDate: kLastDate,
+                      is24HourMode: true,
+                    );
+                    if (result == null) return;
+                    setState(() {
+                      startedAt = result;
+                      endedAt = startedAt.add(const Duration(hours: 1));
+                    });
+                  },
+                  endedAt: endedAt,
+                  endedOnTap: () async {
+                    final result = await showOmniDateTimePicker(
+                      context: context,
+                      initialDate: endedAt,
+                      firstDate: kFirstDate,
+                      lastDate: kLastDate,
+                      is24HourMode: true,
+                    );
+                    if (result == null) return;
+                    setState(() {
+                      endedAt = result;
+                    });
+                  },
+                  allDay: allDay,
+                  allDayOnChanged: _allDayChange,
+                ),
+                const SizedBox(height: 8),
+                InfoLabel(
+                  label: '色',
+                  child: ComboBox<String>(
+                    isExpanded: true,
+                    value: color,
+                    items: kPlanColors.map((Color value) {
+                      return ComboBoxItem(
+                        value: value.value.toRadixString(16),
+                        child: Container(
+                          color: value,
+                          width: double.infinity,
+                          height: 25,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        color = value!;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+                InfoLabel(
+                  label: 'メモ',
+                  child: CustomTextBox(
+                    controller: memoController,
+                    placeholder: '',
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                InfoLabel(
+                  label: '事前アラート通知',
+                  child: ComboBox<int>(
+                    isExpanded: true,
+                    value: alertMinute,
+                    items: kAlertMinutes.map((value) {
+                      return ComboBoxItem(
+                        value: value,
+                        child: value == 0 ? const Text('無効') : Text('$value分前'),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        alertMinute = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'メモ',
-              child: CustomTextBox(
-                controller: memoController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '事前アラート通知',
-              child: ComboBox<int>(
-                isExpanded: true,
-                value: alertMinute,
-                items: kAlertMinutes.map((value) {
-                  return ComboBoxItem(
-                    value: value,
-                    child: value == 0 ? const Text('無効') : Text('$value分前'),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    alertMinute = value!;
-                  });
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

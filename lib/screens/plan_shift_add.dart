@@ -39,7 +39,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
   bool allDay = false;
-  int alertMinute = 0;
+  int alertMinute = kAlertMinutes[1];
 
   void _init() async {
     _groupChange(widget.homeProvider.currentGroup);
@@ -162,105 +162,111 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
       ),
       content: Container(
         color: kWhiteColor,
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          children: [
-            InfoLabel(
-              label: 'グループからスタッフ検索',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  selectedUserIds.clear();
-                  _groupChange(value);
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'スタッフ選択',
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  border: Border.all(color: kGrey300Color),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InfoLabel(
+                  label: '働くスタッフを選択',
+                  child: Column(
+                    children: [
+                      ComboBox<OrganizationGroupModel>(
+                        isExpanded: true,
+                        value: selectedGroup,
+                        items: groupItems,
+                        onChanged: (value) {
+                          selectedUserIds.clear();
+                          _groupChange(value);
+                        },
+                        placeholder: const Text('グループ未選択'),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: kGrey300Color),
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            UserModel user = users[index];
+                            return CustomCheckbox(
+                              label: user.name,
+                              checked: selectedUserIds.contains(user.id),
+                              onChanged: (value) {
+                                if (selectedUserIds.contains(user.id)) {
+                                  selectedUserIds.remove(user.id);
+                                } else {
+                                  selectedUserIds.add(user.id);
+                                }
+                                setState(() {});
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    UserModel user = users[index];
-                    return CustomCheckbox(
-                      label: user.name,
-                      checked: selectedUserIds.contains(user.id),
-                      onChanged: (value) {
-                        if (selectedUserIds.contains(user.id)) {
-                          selectedUserIds.remove(user.id);
-                        } else {
-                          selectedUserIds.add(user.id);
-                        }
-                        setState(() {});
-                      },
+                const SizedBox(height: 8),
+                DatetimeRangeForm(
+                  startedAt: startedAt,
+                  startedOnTap: () async {
+                    final result = await showOmniDateTimePicker(
+                      context: context,
+                      initialDate: startedAt,
+                      firstDate: kFirstDate,
+                      lastDate: kLastDate,
+                      is24HourMode: true,
                     );
+                    if (result == null) return;
+                    setState(() {
+                      startedAt = result;
+                      endedAt = startedAt.add(const Duration(hours: 1));
+                    });
                   },
+                  endedAt: endedAt,
+                  endedOnTap: () async {
+                    final result = await showOmniDateTimePicker(
+                      context: context,
+                      initialDate: endedAt,
+                      firstDate: kFirstDate,
+                      lastDate: kLastDate,
+                      is24HourMode: true,
+                    );
+                    if (result == null) return;
+                    setState(() {
+                      endedAt = result;
+                    });
+                  },
+                  allDay: allDay,
+                  allDayOnChanged: _allDayChange,
                 ),
-              ),
+                const SizedBox(height: 8),
+                InfoLabel(
+                  label: '事前アラート通知',
+                  child: ComboBox<int>(
+                    isExpanded: true,
+                    value: alertMinute,
+                    items: kAlertMinutes.map((value) {
+                      return ComboBoxItem(
+                        value: value,
+                        child: value == 0 ? const Text('無効') : Text('$value分前'),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        alertMinute = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            DatetimeRangeForm(
-              startedAt: startedAt,
-              startedOnTap: () async {
-                final result = await showOmniDateTimePicker(
-                  context: context,
-                  initialDate: startedAt,
-                  firstDate: kFirstDate,
-                  lastDate: kLastDate,
-                  is24HourMode: true,
-                );
-                if (result == null) return;
-                setState(() {
-                  startedAt = result;
-                  endedAt = startedAt.add(const Duration(hours: 1));
-                });
-              },
-              endedAt: endedAt,
-              endedOnTap: () async {
-                final result = await showOmniDateTimePicker(
-                  context: context,
-                  initialDate: endedAt,
-                  firstDate: kFirstDate,
-                  lastDate: kLastDate,
-                  is24HourMode: true,
-                );
-                if (result == null) return;
-                setState(() {
-                  endedAt = result;
-                });
-              },
-              allDay: allDay,
-              allDayOnChanged: _allDayChange,
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '事前アラート通知',
-              child: ComboBox<int>(
-                isExpanded: true,
-                value: alertMinute,
-                items: kAlertMinutes.map((value) {
-                  return ComboBoxItem(
-                    value: value,
-                    child: value == 0 ? const Text('無効') : Text('$value分前'),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    alertMinute = value!;
-                  });
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
