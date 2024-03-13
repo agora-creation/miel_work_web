@@ -54,18 +54,19 @@ exports.planAlertMessages = functions.region('asia-northeast1')
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
                 const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId).get()
-                if (userSnapshot.empty) {
-                    console.log('No matching userDocuments.')
+                const userSnapshot = await userRef.where('id', '==', userId)
+                    .where('token', '!=', '')
+                    .get()
+                if (!userSnapshot.empty) {
+                    userSnapshot.forEach(async userDoc => {
+                        const token = userDoc.data()['token']
+                        admin.messaging().send(pushMessage(
+                            token,
+                            '[' + category + ']' + subject,
+                            'もうすぐ予定時刻になります。',
+                        ))
+                    })
                 }
-                userSnapshot.forEach(async userDoc => {
-                    const token = userDoc.data()['token']
-                    admin.messaging().send(pushMessage(
-                        token,
-                        '[' + category + ']' + subject,
-                        'もうすぐ予定時刻になります。',
-                    ))
-                })
             }
         }
     })
@@ -100,18 +101,19 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
                 const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId).get()
-                if (userSnapshot.empty) {
-                    console.log('No matching userDocuments.')
+                const userSnapshot = await userRef.where('id', '==', userId)
+                    .where('token', '!=', '')
+                    .get()
+                if (!userSnapshot.empty) {
+                    userSnapshot.forEach(async userDoc => {
+                        const token = userDoc.data()['token']
+                        admin.messaging().send(pushMessage(
+                            token,
+                            '勤務予定のお知らせ',
+                            'もうすぐ勤務予定時刻になります。',
+                        ))
+                    })
                 }
-                userSnapshot.forEach(async userDoc => {
-                    const token = userDoc.data()['token']
-                    admin.messaging().send(pushMessage(
-                        token,
-                        '勤務予定のお知らせ',
-                        'もうすぐ勤務予定時刻になります。',
-                    ))
-                })
             }
         }
     })
