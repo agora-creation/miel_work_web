@@ -97,8 +97,10 @@ class UserProvider with ChangeNotifier {
     if (name == '') return 'スタッフ名を入力してください';
     if (email == '') return 'メールアドレスを入力してください';
     if (password == '') return 'パスワードを入力してください';
-    if (await _userService.emailCheck(email: email)) {
-      return '他のメールアドレスを入力してください';
+    if (user.email != email) {
+      if (await _userService.emailCheck(email: email)) {
+        return '他のメールアドレスを入力してください';
+      }
     }
     try {
       _userService.update({

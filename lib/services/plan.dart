@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/plan.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
@@ -48,6 +49,21 @@ class PlanService {
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('startedAt', descending: true)
         .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>? streamListDate({
+    required String? organizationId,
+    required String? groupId,
+    required DateTime date,
+  }) {
+    Timestamp startAt = convertTimestamp(date, false);
+    Timestamp endAt = convertTimestamp(date, true);
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
+        .orderBy('startedAt', descending: false)
+        .startAt([startAt]).endAt([endAt]).snapshots();
   }
 
   List<sfc.Appointment> generateListAppointment({

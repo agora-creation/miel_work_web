@@ -101,6 +101,7 @@ class _ManualScreenState extends State<ManualScreen> {
                       GridColumn(
                         columnName: 'edit',
                         label: const CustomColumnLabel('操作'),
+                        width: 200,
                       ),
                     ],
                   );

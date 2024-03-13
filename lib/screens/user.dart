@@ -119,6 +119,7 @@ class _UserScreenState extends State<UserScreen> {
                   GridColumn(
                     columnName: 'edit',
                     label: const CustomColumnLabel('操作'),
+                    width: 250,
                   ),
                 ],
               ),

@@ -5,8 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
-import 'package:miel_work_web/screens/plan_add.dart';
-import 'package:miel_work_web/screens/plan_mod.dart';
+import 'package:miel_work_web/screens/plan_timeline.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
@@ -30,37 +29,16 @@ class _PlanScreenState extends State<PlanScreen> {
   PlanService planService = PlanService();
 
   void _calendarTap(sfc.CalendarTapDetails details) {
-    sfc.CalendarElement element = details.targetElement;
-    switch (element) {
-      case sfc.CalendarElement.appointment:
-      case sfc.CalendarElement.agenda:
-        sfc.Appointment appointmentDetails = details.appointments![0];
-        Navigator.push(
-          context,
-          FluentPageRoute(
-            builder: (context) => PlanModScreen(
-              loginProvider: widget.loginProvider,
-              homeProvider: widget.homeProvider,
-              planId: '${appointmentDetails.id}',
-            ),
-          ),
-        );
-        break;
-      case sfc.CalendarElement.calendarCell:
-        Navigator.push(
-          context,
-          FluentPageRoute(
-            builder: (context) => PlanAddScreen(
-              loginProvider: widget.loginProvider,
-              homeProvider: widget.homeProvider,
-              date: details.date ?? DateTime.now(),
-            ),
-          ),
-        );
-        break;
-      default:
-        break;
-    }
+    Navigator.push(
+      context,
+      FluentPageRoute(
+        builder: (context) => PlanTimelineScreen(
+          loginProvider: widget.loginProvider,
+          homeProvider: widget.homeProvider,
+          date: details.date ?? DateTime.now(),
+        ),
+      ),
+    );
   }
 
   @override

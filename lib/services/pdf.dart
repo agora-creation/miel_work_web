@@ -427,7 +427,7 @@ class PdfService {
                   ),
                   pw.Center(
                     child: _generateCell(
-                      label: 'Android',
+                      label: 'iOS',
                       style: pw.TextStyle(
                         font: ttf,
                         fontSize: 12,
@@ -453,7 +453,7 @@ class PdfService {
           ),
           pw.SizedBox(height: 24),
           pw.Text(
-            'インストールが終わったら、あなたのログイン情報でログインしよう！',
+            'インストールが終わったら、以下を入力してログインしよう！',
             style: pw.TextStyle(
               font: ttf,
               fontSize: 14,
