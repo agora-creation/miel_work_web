@@ -6,6 +6,7 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
@@ -151,7 +152,7 @@ class UserSource extends DataGridSource {
           labelText: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
-          onPressed: () {},
+          onPressed: () async => await PdfService().userDownload(user),
         ),
       ],
     ));

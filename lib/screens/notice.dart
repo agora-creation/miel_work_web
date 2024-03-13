@@ -49,7 +49,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   style: const TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
-                  labelText: 'お知らせを追加',
+                  labelText: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   onPressed: () => Navigator.push(

@@ -71,7 +71,7 @@ class _UserScreenState extends State<UserScreen> {
                   style: const TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
-                  labelText: 'スタッフを追加',
+                  labelText: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   onPressed: () => showDialog(

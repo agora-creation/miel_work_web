@@ -53,7 +53,7 @@ class _ManualScreenState extends State<ManualScreen> {
                   style: const TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
-                  labelText: '業務マニュアルを追加',
+                  labelText: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   onPressed: () => showDialog(

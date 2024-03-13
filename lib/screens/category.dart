@@ -63,7 +63,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             CustomButtonSm(
-              labelText: 'カテゴリを追加',
+              labelText: '新規追加',
               labelColor: kWhiteColor,
               backgroundColor: kBlueColor,
               onPressed: () => showDialog(

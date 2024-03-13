@@ -57,7 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      const Text('管理者のメールアドレスとパスワードを入力してください。'),
+                      const Text(
+                        '管理者権限を持つスタッフのみログインできます。',
+                        style: TextStyle(color: kRedColor),
+                      ),
                       const SizedBox(height: 8),
                       InfoLabel(
                         label: 'メールアドレス',
