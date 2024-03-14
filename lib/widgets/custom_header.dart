@@ -120,7 +120,7 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
-                labelText: '報告申請',
+                labelText: '協議申請',
                 labelColor: kBlackColor,
                 backgroundColor: kOrangeColor,
                 onPressed: () => showBottomUpScreen(

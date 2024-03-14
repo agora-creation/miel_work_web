@@ -16,6 +16,7 @@ import 'package:miel_work_web/widgets/chat_area.dart';
 import 'package:miel_work_web/widgets/chat_header.dart';
 import 'package:miel_work_web/widgets/chat_list.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/message_form_field.dart';
 import 'package:miel_work_web/widgets/message_list.dart';
 import 'package:miel_work_web/widgets/user_list.dart';
@@ -109,6 +110,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       ChatHeader(
                         chat: currentChat!,
+                        searchOnPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => const SearchKeywordDialog(),
+                        ),
                         usersOnPressed: () => showDialog(
                           context: context,
                           builder: (context) => ChatUsersDialog(
@@ -196,6 +201,53 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
         ),
       ),
+    );
+  }
+}
+
+class SearchKeywordDialog extends StatefulWidget {
+  const SearchKeywordDialog({super.key});
+
+  @override
+  State<SearchKeywordDialog> createState() => _SearchKeywordDialogState();
+}
+
+class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'キーワード検索',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomTextBox(
+              controller: TextEditingController(),
+              placeholder: '',
+              keyboardType: TextInputType.text,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kLightBlueColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 }

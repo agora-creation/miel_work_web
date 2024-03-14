@@ -75,7 +75,10 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
       ),
       content: Container(
         color: kWhiteColor,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 200,
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +99,7 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
                   controller: contentController,
                   placeholder: '',
                   keyboardType: TextInputType.multiline,
-                  maxLines: 20,
+                  maxLines: 30,
                 ),
               ),
             ],

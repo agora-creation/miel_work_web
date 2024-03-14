@@ -76,6 +76,7 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                 ),
                 const SizedBox(width: 4),
                 CustomButtonSm(
+                  icon: FluentIcons.add,
                   labelText: '新規申請',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,

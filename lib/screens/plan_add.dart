@@ -148,7 +148,10 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
       content: Container(
         color: kWhiteColor,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 200,
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +204,6 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
                 const SizedBox(height: 8),
                 DatetimeRangeForm(
                   startedAt: startedAt,

@@ -175,7 +175,10 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
       content: Container(
         color: kWhiteColor,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 200,
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

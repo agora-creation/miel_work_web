@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
 import 'package:miel_work_web/screens/plan_timeline.dart';
+import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
+import 'package:miel_work_web/widgets/custom_checkbox.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanScreen extends StatefulWidget {
@@ -47,19 +50,37 @@ class _PlanScreenState extends State<PlanScreen> {
       padding: const EdgeInsets.all(16),
       child: Card(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomButtonSm(
-              labelText: 'カテゴリ管理',
-              labelColor: kWhiteColor,
-              backgroundColor: kCyanColor,
-              onPressed: () => showBottomUpScreen(
-                context,
-                CategoryScreen(
-                  loginProvider: widget.loginProvider,
-                  homeProvider: widget.homeProvider,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButtonSm(
+                  icon: FluentIcons.search,
+                  labelText: 'カテゴリ検索',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kLightBlueColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => SearchCategoryDialog(
+                      loginProvider: widget.loginProvider,
+                    ),
+                  ),
                 ),
-              ),
+                CustomButtonSm(
+                  icon: FluentIcons.bulleted_list,
+                  labelText: 'カテゴリ管理',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kCyanColor,
+                  onPressed: () => showBottomUpScreen(
+                    context,
+                    CategoryScreen(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -91,5 +112,78 @@ class _PlanScreenState extends State<PlanScreen> {
 class _DataSource extends sfc.CalendarDataSource {
   _DataSource(List<sfc.Appointment> source) {
     appointments = source;
+  }
+}
+
+class SearchCategoryDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+
+  const SearchCategoryDialog({
+    required this.loginProvider,
+    super.key,
+  });
+
+  @override
+  State<SearchCategoryDialog> createState() => _SearchCategoryDialogState();
+}
+
+class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
+  CategoryService categoryService = CategoryService();
+  List<CategoryModel> categories = [];
+
+  void _init() async {
+    categories = await categoryService.selectList(
+      organizationId: widget.loginProvider.organization?.id ?? 'error',
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'カテゴリ検索',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: kGrey300Color),
+        ),
+        height: 300,
+        child: ListView.builder(
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            CategoryModel category = categories[index];
+            return CustomCheckbox(
+              label: category.name,
+              checked: false,
+              onChanged: (value) {
+                setState(() {});
+              },
+            );
+          },
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kLightBlueColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
   }
 }

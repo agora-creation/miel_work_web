@@ -60,19 +60,29 @@ class _CategoryScreenState extends State<CategoryScreen> {
         color: kWhiteColor,
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomButtonSm(
-              labelText: '新規追加',
-              labelColor: kWhiteColor,
-              backgroundColor: kBlueColor,
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => AddCategoryDialog(
-                  loginProvider: widget.loginProvider,
-                  homeProvider: widget.homeProvider,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  '予定を追加する際に、以下のカテゴリを選択することができます。',
+                  style: TextStyle(fontSize: 14),
                 ),
-              ),
+                CustomButtonSm(
+                  icon: FluentIcons.add,
+                  labelText: '新規追加',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AddCategoryDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Expanded(

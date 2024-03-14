@@ -54,6 +54,7 @@ class _ManualScreenState extends State<ManualScreen> {
                   style: const TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(
+                  icon: FluentIcons.add,
                   labelText: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,

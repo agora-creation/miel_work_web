@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/style.dart';
 
 class CustomTextBox extends StatelessWidget {
   final TextEditingController? controller;
@@ -33,6 +34,10 @@ class CustomTextBox extends StatelessWidget {
       obscureText: obscureText ?? false,
       onChanged: onChanged,
       enabled: enabled,
+      decoration: BoxDecoration(
+        color: kGrey100Color,
+        border: Border.all(color: kGrey300Color),
+      ),
     );
   }
 }

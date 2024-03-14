@@ -4,10 +4,12 @@ import 'package:miel_work_web/models/chat.dart';
 
 class ChatHeader extends StatelessWidget {
   final ChatModel chat;
+  final Function()? searchOnPressed;
   final Function()? usersOnPressed;
 
   const ChatHeader({
     required this.chat,
+    required this.searchOnPressed,
     required this.usersOnPressed,
     super.key,
   });
@@ -27,13 +29,26 @@ class ChatHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(chat.name),
-          IconButton(
-            icon: const Icon(
-              FluentIcons.group,
-              color: kBlueColor,
-              size: 18,
-            ),
-            onPressed: usersOnPressed,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  FluentIcons.search,
+                  color: kBlueColor,
+                  size: 18,
+                ),
+                onPressed: searchOnPressed,
+              ),
+              const SizedBox(width: 4),
+              IconButton(
+                icon: const Icon(
+                  FluentIcons.group,
+                  color: kBlueColor,
+                  size: 18,
+                ),
+                onPressed: usersOnPressed,
+              ),
+            ],
           ),
         ],
       ),

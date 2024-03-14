@@ -1,12 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class CustomButtonSm extends StatelessWidget {
+  final IconData? icon;
   final String labelText;
   final Color labelColor;
   final Color backgroundColor;
   final Function()? onPressed;
 
   const CustomButtonSm({
+    this.icon,
     required this.labelText,
     required this.labelColor,
     required this.backgroundColor,
@@ -23,13 +25,31 @@ class CustomButtonSm extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Text(
-          labelText,
-          style: TextStyle(
-            color: labelColor,
-            fontSize: 14,
-          ),
-        ),
+        child: icon != null
+            ? Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: labelColor,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    labelText,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                labelText,
+                style: TextStyle(
+                  color: labelColor,
+                  fontSize: 14,
+                ),
+              ),
       ),
     );
   }
