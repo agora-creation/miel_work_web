@@ -146,6 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   isMe: message.createdUserId ==
                                       widget.loginProvider.user?.id,
                                   onTapImage: () {},
+                                  onTapFile: () {},
                                 );
                               },
                             );
@@ -154,6 +155,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       MessageFormField(
                         controller: messageProvider.contentController,
+                        filePressed: () {},
                         galleryPressed: () async {
                           final result = await FilePicker.platform.pickFiles(
                             type: FileType.image,

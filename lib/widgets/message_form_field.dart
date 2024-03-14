@@ -5,12 +5,14 @@ import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 
 class MessageFormField extends StatelessWidget {
   final TextEditingController controller;
+  final Function()? filePressed;
   final Function()? galleryPressed;
   final Function()? sendPressed;
   final bool enabled;
 
   const MessageFormField({
     required this.controller,
+    required this.filePressed,
     required this.galleryPressed,
     required this.sendPressed,
     this.enabled = false,
@@ -29,18 +31,35 @@ class MessageFormField extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
-            child: enabled
-                ? CustomIconButtonSm(
-                    icon: FluentIcons.image_pixel,
-                    iconColor: kWhiteColor,
-                    backgroundColor: kCyanColor,
-                    onPressed: galleryPressed,
-                  )
-                : const CustomIconButtonSm(
-                    icon: FluentIcons.image_pixel,
-                    iconColor: kWhiteColor,
-                    backgroundColor: kGreyColor,
-                  ),
+            child: Row(
+              children: [
+                enabled
+                    ? CustomIconButtonSm(
+                        icon: FluentIcons.page_add,
+                        iconColor: kWhiteColor,
+                        backgroundColor: kCyanColor,
+                        onPressed: filePressed,
+                      )
+                    : const CustomIconButtonSm(
+                        icon: FluentIcons.page_add,
+                        iconColor: kWhiteColor,
+                        backgroundColor: kGreyColor,
+                      ),
+                const SizedBox(width: 4),
+                enabled
+                    ? CustomIconButtonSm(
+                        icon: FluentIcons.photo2_add,
+                        iconColor: kWhiteColor,
+                        backgroundColor: kCyanColor,
+                        onPressed: galleryPressed,
+                      )
+                    : const CustomIconButtonSm(
+                        icon: FluentIcons.photo2_add,
+                        iconColor: kWhiteColor,
+                        backgroundColor: kGreyColor,
+                      ),
+              ],
+            ),
           ),
           Expanded(
             child: Padding(

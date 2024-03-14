@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -7,6 +8,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_file_field.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +34,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
+  PlatformFile? pickedFile;
 
   @override
   void initState() {
@@ -85,6 +88,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                     title: titleController.text,
                     content: contentController.text,
                     group: selectedGroup,
+                    pickedFile: pickedFile,
                     loginUser: widget.loginProvider.user,
                   );
                   if (error != null) {
@@ -141,6 +145,20 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                   },
                   placeholder: const Text('グループ未選択'),
                 ),
+              ),
+              const SizedBox(height: 8),
+              CustomFileField(
+                value: pickedFile,
+                defaultValue: widget.notice.file,
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    type: FileType.any,
+                  );
+                  if (result == null) return;
+                  setState(() {
+                    pickedFile = result.files.first;
+                  });
+                },
               ),
             ],
           ),

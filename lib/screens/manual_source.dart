@@ -12,6 +12,7 @@ import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
+import 'package:miel_work_web/widgets/custom_pdf_field.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
@@ -239,11 +240,10 @@ class _ModManualDialogState extends State<ModManualDialog> {
               ),
             ),
             const SizedBox(height: 8),
-            CustomButtonSm(
-              labelText: 'PDFファイル選択',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () async {
+            CustomPdfField(
+              value: pickedFile,
+              defaultValue: '${widget.manual.id}.pdf',
+              onTap: () async {
                 final result = await FilePicker.platform.pickFiles(
                   type: FileType.custom,
                   allowedExtensions: ['pdf'],
@@ -254,9 +254,6 @@ class _ModManualDialogState extends State<ModManualDialog> {
                 });
               },
             ),
-            pickedFile != null
-                ? Text('${pickedFile?.name}')
-                : Text('${widget.manual.id}.pdf'),
             const SizedBox(height: 8),
             InfoLabel(
               label: '公開グループ',

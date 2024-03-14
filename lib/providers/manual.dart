@@ -64,7 +64,7 @@ class ManualProvider with ChangeNotifier {
           _fmService.send(
             token: user.token,
             title: title,
-            body: '業務マニュアルを追加しました。',
+            body: '業務マニュアルが追加されました。',
           );
         }
       }
@@ -121,7 +121,7 @@ class ManualProvider with ChangeNotifier {
           _fmService.send(
             token: user.token,
             title: title,
-            body: '業務マニュアルを編集しました。',
+            body: '業務マニュアルが編集されました。',
           );
         }
       }
