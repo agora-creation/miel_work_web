@@ -54,9 +54,7 @@ exports.planAlertMessages = functions.region('asia-northeast1')
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
                 const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId)
-                    .where('token', '!=', '')
-                    .get()
+                const userSnapshot = await userRef.where('id', '==', userId).get()
                 if (!userSnapshot.empty) {
                     userSnapshot.forEach(async userDoc => {
                         const token = userDoc.data()['token']
@@ -101,9 +99,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
                 const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId)
-                    .where('token', '!=', '')
-                    .get()
+                const userSnapshot = await userRef.where('id', '==', userId).get()
                 if (!userSnapshot.empty) {
                     userSnapshot.forEach(async userDoc => {
                         const token = userDoc.data()['token']
