@@ -41,6 +41,12 @@ class _ChatScreenState extends State<ChatScreen> {
   ChatMessageService messageService = ChatMessageService();
   List<ChatModel> chats = [];
   ChatModel? currentChat;
+  String searchKeyword = '';
+
+  void _getKeyword() async {
+    searchKeyword = await getPrefsString('keyword') ?? '';
+    setState(() {});
+  }
 
   void _getChats() async {
     chats = await chatService.selectList(
@@ -63,6 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     _getChats();
+    _getKeyword();
   }
 
   @override
@@ -79,9 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemBuilder: (context, index) {
                     ChatModel chat = chats[index];
                     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: messageService.streamList(
-                        chatId: chat.id,
-                      ),
+                      stream: messageService.streamList(chatId: chat.id),
                       builder: (context, snapshot) {
                         List<ChatMessageModel> messages = [];
                         if (snapshot.hasData) {
@@ -112,7 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         chat: currentChat!,
                         searchOnPressed: () => showDialog(
                           context: context,
-                          builder: (context) => const SearchKeywordDialog(),
+                          builder: (context) => SearchKeywordDialog(
+                            getKeyword: _getKeyword,
+                          ),
                         ),
                         usersOnPressed: () => showDialog(
                           context: context,
@@ -130,8 +137,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           builder: (context, snapshot) {
                             List<ChatMessageModel> messages = [];
                             if (snapshot.hasData) {
-                              messages = messageService.generateList(
+                              messages = messageService.generateListKeyword(
                                 data: snapshot.data,
+                                keyword: searchKeyword,
                               );
                             }
                             if (messages.isEmpty) {
@@ -206,13 +214,33 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class SearchKeywordDialog extends StatefulWidget {
-  const SearchKeywordDialog({super.key});
+  final Function() getKeyword;
+
+  const SearchKeywordDialog({
+    required this.getKeyword,
+    super.key,
+  });
 
   @override
   State<SearchKeywordDialog> createState() => _SearchKeywordDialogState();
 }
 
 class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
+  TextEditingController keywordController = TextEditingController();
+
+  void _getKeyword() async {
+    keywordController = TextEditingController(
+      text: await getPrefsString('keyword') ?? '',
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getKeyword();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -226,7 +254,7 @@ class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomTextBox(
-              controller: TextEditingController(),
+              controller: keywordController,
               placeholder: '',
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -245,7 +273,12 @@ class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
           labelText: '検索する',
           labelColor: kWhiteColor,
           backgroundColor: kLightBlueColor,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            await setPrefsString('keyword', keywordController.text);
+            widget.getKeyword();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
         ),
       ],
     );
