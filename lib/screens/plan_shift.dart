@@ -37,6 +37,12 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
   PlanShiftService planShiftService = PlanShiftService();
   UserService userService = UserService();
   List<sfc.CalendarResource> resourceColl = [];
+  List<String> searchCategories = [];
+
+  void _searchCategoriesChange() async {
+    searchCategories = await getPrefsList('categories') ?? [];
+    setState(() {});
+  }
 
   void _calendarTap(sfc.CalendarTapDetails details) {
     sfc.CalendarElement element = details.targetElement;
@@ -114,6 +120,7 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
   void initState() {
     super.initState();
     _getUsers();
+    _searchCategoriesChange();
   }
 
   @override
@@ -121,6 +128,7 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
     var stream1 = planService.streamList(
       organizationId: widget.loginProvider.organization?.id,
       groupId: widget.homeProvider.currentGroup?.id,
+      categories: searchCategories,
     );
     var stream2 = planShiftService.streamList(
       organizationId: widget.loginProvider.organization?.id,
@@ -144,6 +152,7 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                     context: context,
                     builder: (context) => SearchCategoryDialog(
                       loginProvider: widget.loginProvider,
+                      searchCategoriesChange: _searchCategoriesChange,
                     ),
                   ),
                 ),

@@ -42,11 +42,13 @@ class PlanService {
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
     required String? groupId,
+    required List<String> categories,
   }) {
     return FirebaseFirestore.instance
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
+        .where('category', whereIn: categories.isNotEmpty ? categories : null)
         .orderBy('startedAt', descending: true)
         .snapshots();
   }
@@ -55,6 +57,7 @@ class PlanService {
     required String? organizationId,
     required String? groupId,
     required DateTime date,
+    required List<String> categories,
   }) {
     Timestamp startAt = convertTimestamp(date, false);
     Timestamp endAt = convertTimestamp(date, true);
@@ -62,6 +65,7 @@ class PlanService {
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
         .where('groupId', isEqualTo: groupId != '' ? groupId : null)
+        .where('category', whereIn: categories.isNotEmpty ? categories : null)
         .orderBy('startedAt', descending: false)
         .startAt([startAt]).endAt([endAt]).snapshots();
   }

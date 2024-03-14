@@ -30,6 +30,12 @@ class PlanScreen extends StatefulWidget {
 
 class _PlanScreenState extends State<PlanScreen> {
   PlanService planService = PlanService();
+  List<String> searchCategories = [];
+
+  void _searchCategoriesChange() async {
+    searchCategories = await getPrefsList('categories') ?? [];
+    setState(() {});
+  }
 
   void _calendarTap(sfc.CalendarTapDetails details) {
     Navigator.push(
@@ -42,6 +48,12 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchCategoriesChange();
   }
 
   @override
@@ -64,6 +76,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     context: context,
                     builder: (context) => SearchCategoryDialog(
                       loginProvider: widget.loginProvider,
+                      searchCategoriesChange: _searchCategoriesChange,
                     ),
                   ),
                 ),
@@ -87,6 +100,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 stream: planService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
                   groupId: widget.homeProvider.currentGroup?.id,
+                  categories: searchCategories,
                 ),
                 builder: (context, snapshot) {
                   List<sfc.Appointment> appointments = [];
@@ -117,9 +131,11 @@ class _DataSource extends sfc.CalendarDataSource {
 
 class SearchCategoryDialog extends StatefulWidget {
   final LoginProvider loginProvider;
+  final Function() searchCategoriesChange;
 
   const SearchCategoryDialog({
     required this.loginProvider,
+    required this.searchCategoriesChange,
     super.key,
   });
 
@@ -130,11 +146,13 @@ class SearchCategoryDialog extends StatefulWidget {
 class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
   CategoryService categoryService = CategoryService();
   List<CategoryModel> categories = [];
+  List<String> searchCategories = [];
 
   void _init() async {
     categories = await categoryService.selectList(
       organizationId: widget.loginProvider.organization?.id ?? 'error',
     );
+    searchCategories = await getPrefsList('categories') ?? [];
     setState(() {});
   }
 
@@ -162,8 +180,13 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
             CategoryModel category = categories[index];
             return CustomCheckbox(
               label: category.name,
-              checked: false,
+              checked: searchCategories.contains(category.name),
               onChanged: (value) {
+                if (searchCategories.contains(category.name)) {
+                  searchCategories.remove(category.name);
+                } else {
+                  searchCategories.add(category.name);
+                }
                 setState(() {});
               },
             );
@@ -181,7 +204,12 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
           labelText: '検索する',
           labelColor: kWhiteColor,
           backgroundColor: kLightBlueColor,
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            await setPrefsList('categories', searchCategories);
+            widget.searchCategoriesChange();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
         ),
       ],
     );
