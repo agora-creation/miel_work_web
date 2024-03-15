@@ -1,3 +1,5 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/apply_project.dart';
 import 'package:miel_work_web/models/approval_user.dart';
@@ -7,6 +9,7 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/apply_project.dart';
 import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:path/path.dart' as p;
 
 class ApplyProjectProvider with ChangeNotifier {
   final ApplyProjectService _projectService = ApplyProjectService();
@@ -18,6 +21,7 @@ class ApplyProjectProvider with ChangeNotifier {
     required OrganizationGroupModel? group,
     required String title,
     required String content,
+    required PlatformFile? pickedFile,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -27,12 +31,28 @@ class ApplyProjectProvider with ChangeNotifier {
     if (loginUser == null) return '企画申請に失敗しました';
     try {
       String id = _projectService.id();
+      String file = '';
+      String fileExt = '';
+      if (pickedFile != null) {
+        String ext = p.extension(pickedFile.path ?? '');
+        storage.UploadTask uploadTask;
+        storage.Reference ref = storage.FirebaseStorage.instance
+            .ref()
+            .child('applyProject')
+            .child('/$id$ext');
+        uploadTask = ref.putData(pickedFile.bytes!);
+        await uploadTask.whenComplete(() => null);
+        file = await ref.getDownloadURL();
+        fileExt = ext;
+      }
       _projectService.create({
         'id': id,
         'organizationId': organization.id,
         'groupId': group?.id ?? '',
         'title': title,
         'content': content,
+        'file': file,
+        'fileExt': fileExt,
         'approval': false,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],
@@ -123,6 +143,13 @@ class ApplyProjectProvider with ChangeNotifier {
       _projectService.delete({
         'id': project.id,
       });
+      if (project.file != '') {
+        await storage.FirebaseStorage.instance
+            .ref()
+            .child('applyProject')
+            .child('/${project.id}${project.fileExt}')
+            .delete();
+      }
     } catch (e) {
       error = '企画申請の削除に失敗しました';
     }

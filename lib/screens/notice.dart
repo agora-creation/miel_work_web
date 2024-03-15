@@ -99,6 +99,10 @@ class _NoticeScreenState extends State<NoticeScreen> {
                             label: const CustomColumnLabel('送信先グループ'),
                           ),
                           GridColumn(
+                            columnName: 'file',
+                            label: const CustomColumnLabel('添付ファイル'),
+                          ),
+                          GridColumn(
                             columnName: 'edit',
                             label: const CustomColumnLabel('操作'),
                             width: 200,

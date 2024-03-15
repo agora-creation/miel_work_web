@@ -164,6 +164,14 @@ class _ApplyConferenceDetailScreenState
                   child: Text(widget.conference.content),
                 ),
               ),
+              const SizedBox(height: 8),
+              widget.conference.file != ''
+                  ? LinkText(
+                      label: '添付ファイル',
+                      color: kBlueColor,
+                      onTap: () {},
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               isDelete
                   ? LinkText(

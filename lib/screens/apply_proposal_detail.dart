@@ -173,6 +173,14 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                   child: Text(widget.proposal.content),
                 ),
               ),
+              const SizedBox(height: 8),
+              widget.proposal.file != ''
+                  ? LinkText(
+                      label: '添付ファイル',
+                      color: kBlueColor,
+                      onTap: () {},
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               isDelete
                   ? LinkText(

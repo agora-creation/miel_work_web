@@ -7,6 +7,8 @@ class ApplyProjectModel {
   String _groupId = '';
   String _title = '';
   String _content = '';
+  String _file = '';
+  String _fileExt = '';
   bool _approval = false;
   DateTime _approvedAt = DateTime.now();
   List<ApprovalUserModel> approvalUsers = [];
@@ -19,6 +21,8 @@ class ApplyProjectModel {
   String get groupId => _groupId;
   String get title => _title;
   String get content => _content;
+  String get file => _file;
+  String get fileExt => _fileExt;
   bool get approval => _approval;
   DateTime get approvedAt => _approvedAt;
   String get createdUserId => _createdUserId;
@@ -34,6 +38,8 @@ class ApplyProjectModel {
     _groupId = data['groupId'] ?? '';
     _title = data['title'] ?? '';
     _content = data['content'] ?? '';
+    _file = data['file'] ?? '';
+    _fileExt = data['fileExt'] ?? '';
     _approval = data['approval'] ?? false;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
     approvalUsers = _convertApprovalUsers(data['approvalUsers']);

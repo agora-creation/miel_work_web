@@ -8,6 +8,7 @@ import 'package:miel_work_web/screens/notice_del.dart';
 import 'package:miel_work_web/screens/notice_mod.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_column_link.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class NoticeSource extends DataGridSource {
@@ -42,6 +43,14 @@ class NoticeSource extends DataGridSource {
           columnName: 'groupId',
           value: notice.groupId,
         ),
+        DataGridCell(
+          columnName: 'file',
+          value: notice.file,
+        ),
+        DataGridCell(
+          columnName: 'fileExt',
+          value: notice.fileExt,
+        ),
       ]);
     }).toList();
   }
@@ -70,6 +79,15 @@ class NoticeSource extends DataGridSource {
       }
     }
     cells.add(CustomColumnLabel(noticeInGroup?.name ?? ''));
+    if (notice.file != '') {
+      cells.add(CustomColumnLink(
+        label: '${row.getCells()[0].value}${row.getCells()[4].value}',
+        color: kBlueColor,
+        onTap: () {},
+      ));
+    } else {
+      cells.add(const CustomColumnLabel(''));
+    }
     cells.add(Row(
       children: [
         CustomButtonSm(

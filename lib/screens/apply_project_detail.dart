@@ -163,6 +163,14 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                   child: Text(widget.project.content),
                 ),
               ),
+              const SizedBox(height: 8),
+              widget.project.file != ''
+                  ? LinkText(
+                      label: '添付ファイル',
+                      color: kBlueColor,
+                      onTap: () {},
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               isDelete
                   ? LinkText(

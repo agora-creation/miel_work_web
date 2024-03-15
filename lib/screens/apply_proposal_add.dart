@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -5,6 +6,7 @@ import 'package:miel_work_web/providers/apply_proposal.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_file_field.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +28,7 @@ class _ApplyProposalAddScreenState extends State<ApplyProposalAddScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  PlatformFile? pickedFile;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +61,7 @@ class _ApplyProposalAddScreenState extends State<ApplyProposalAddScreen> {
                     title: titleController.text,
                     content: contentController.text,
                     price: int.parse(priceController.text),
+                    pickedFile: pickedFile,
                     loginUser: widget.loginProvider.user,
                   );
                   if (error != null) {
@@ -112,6 +116,20 @@ class _ApplyProposalAddScreenState extends State<ApplyProposalAddScreen> {
                   keyboardType: TextInputType.multiline,
                   maxLines: 30,
                 ),
+              ),
+              const SizedBox(height: 8),
+              CustomFileField(
+                value: pickedFile,
+                defaultValue: '',
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    type: FileType.any,
+                  );
+                  if (result == null) return;
+                  setState(() {
+                    pickedFile = result.files.first;
+                  });
+                },
               ),
             ],
           ),
