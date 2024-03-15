@@ -1,33 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/apply_conference.dart';
+import 'package:miel_work_web/models/apply_project.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply_conference_add.dart';
-import 'package:miel_work_web/screens/apply_conference_source.dart';
-import 'package:miel_work_web/services/apply_conference.dart';
+import 'package:miel_work_web/screens/apply_project_add.dart';
+import 'package:miel_work_web/screens/apply_project_source.dart';
+import 'package:miel_work_web/services/apply_project.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class ApplyConferenceScreen extends StatefulWidget {
+class ApplyProjectScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const ApplyConferenceScreen({
+  const ApplyProjectScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<ApplyConferenceScreen> createState() => _ApplyConferenceScreenState();
+  State<ApplyProjectScreen> createState() => _ApplyProjectScreenState();
 }
 
-class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
-  ApplyConferenceService conferenceService = ApplyConferenceService();
+class _ApplyProjectScreenState extends State<ApplyProjectScreen> {
+  ApplyProjectService projectService = ApplyProjectService();
   bool searchApproval = false;
 
   void _searchApprovalChange(bool value) {
@@ -48,7 +48,7 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '協議・報告申請一覧',
+                '企画申請一覧',
                 style: TextStyle(fontSize: 16),
               ),
               IconButton(
@@ -83,7 +83,7 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                   onPressed: () => Navigator.push(
                     context,
                     FluentPageRoute(
-                      builder: (context) => ApplyConferenceAddScreen(
+                      builder: (context) => ApplyProjectAddScreen(
                         loginProvider: widget.loginProvider,
                         homeProvider: widget.homeProvider,
                       ),
@@ -95,24 +95,24 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: conferenceService.streamList(
+                stream: projectService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
                   approval: searchApproval,
                 ),
                 builder: (context, snapshot) {
-                  List<ApplyConferenceModel> conferences = [];
+                  List<ApplyProjectModel> projects = [];
                   if (snapshot.hasData) {
-                    conferences = conferenceService.generateList(
+                    projects = projectService.generateList(
                       data: snapshot.data,
                       currentGroup: widget.homeProvider.currentGroup,
                     );
                   }
                   return CustomDataGrid(
-                    source: ApplyConferenceSource(
+                    source: ApplyProjectSource(
                       context: context,
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      conferences: conferences,
+                      projects: projects,
                     ),
                     columns: [
                       GridColumn(

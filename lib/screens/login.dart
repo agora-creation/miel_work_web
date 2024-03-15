@@ -3,6 +3,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/home.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_lg.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
@@ -23,97 +24,102 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginProvider = Provider.of<LoginProvider>(context);
 
     return ScaffoldPage(
-      content: Center(
-        child: SizedBox(
-          width: 400,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Column(
+      content: Stack(
+        children: [
+          const AnimationBackground(),
+          Center(
+            child: SizedBox(
+              width: 400,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'ひろめWORK',
-                    style: TextStyle(
-                      color: kBlackColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 4,
-                    ),
-                  ),
-                  Text(
-                    '管理画面',
-                    style: TextStyle(
-                      color: kBlackColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+                  const Column(
                     children: [
-                      const Text(
-                        '管理者権限を持つスタッフのみログインできます。',
-                        style: TextStyle(color: kRedColor),
-                      ),
-                      const SizedBox(height: 8),
-                      InfoLabel(
-                        label: 'メールアドレス',
-                        child: CustomTextBox(
-                          controller: emailController,
-                          placeholder: '',
-                          keyboardType: TextInputType.emailAddress,
-                          maxLines: 1,
+                      Text(
+                        'ひろめWORK',
+                        style: TextStyle(
+                          color: kBlackColor,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 4,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      InfoLabel(
-                        label: 'パスワード',
-                        child: CustomTextBox(
-                          controller: passwordController,
-                          placeholder: '',
-                          keyboardType: TextInputType.visiblePassword,
-                          maxLines: 1,
-                          obscureText: true,
+                      Text(
+                        '管理画面',
+                        style: TextStyle(
+                          color: kBlackColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 3,
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      CustomButtonLg(
-                        labelText: 'ログイン',
-                        labelColor: kWhiteColor,
-                        backgroundColor: kBlueColor,
-                        onPressed: () async {
-                          String? error = await loginProvider.login(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
-                          if (error != null) {
-                            if (!mounted) return;
-                            showMessage(context, error, false);
-                            return;
-                          }
-                          if (!mounted) return;
-                          showMessage(context, 'ログインに成功しました', true);
-                          Navigator.pushReplacement(
-                            context,
-                            FluentPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        },
                       ),
                     ],
                   ),
-                ),
-              )
-            ],
+                  const SizedBox(height: 40),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          const Text(
+                            '管理者権限を持つスタッフのみログインできます。',
+                            style: TextStyle(color: kRedColor),
+                          ),
+                          const SizedBox(height: 8),
+                          InfoLabel(
+                            label: 'メールアドレス',
+                            child: CustomTextBox(
+                              controller: emailController,
+                              placeholder: '',
+                              keyboardType: TextInputType.emailAddress,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          InfoLabel(
+                            label: 'パスワード',
+                            child: CustomTextBox(
+                              controller: passwordController,
+                              placeholder: '',
+                              keyboardType: TextInputType.visiblePassword,
+                              maxLines: 1,
+                              obscureText: true,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          CustomButtonLg(
+                            labelText: 'ログイン',
+                            labelColor: kWhiteColor,
+                            backgroundColor: kBlueColor,
+                            onPressed: () async {
+                              String? error = await loginProvider.login(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              );
+                              if (error != null) {
+                                if (!mounted) return;
+                                showMessage(context, error, false);
+                                return;
+                              }
+                              if (!mounted) return;
+                              showMessage(context, 'ログインに成功しました', true);
+                              Navigator.pushReplacement(
+                                context,
+                                FluentPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

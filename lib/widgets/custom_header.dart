@@ -5,6 +5,7 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_conference.dart';
+import 'package:miel_work_web/screens/apply_project.dart';
 import 'package:miel_work_web/screens/apply_proposal.dart';
 import 'package:miel_work_web/screens/user_setting.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -109,7 +110,7 @@ class _CustomHeaderState extends State<CustomHeader> {
               CustomButtonSm(
                 labelText: '稟議申請',
                 labelColor: kBlackColor,
-                backgroundColor: kOrangeColor,
+                backgroundColor: kOrange300Color,
                 onPressed: () => showBottomUpScreen(
                   context,
                   ApplyProposalScreen(
@@ -120,12 +121,25 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
-                labelText: '協議申請',
+                labelText: '協議・報告申請',
                 labelColor: kBlackColor,
-                backgroundColor: kOrangeColor,
+                backgroundColor: kOrange300Color,
                 onPressed: () => showBottomUpScreen(
                   context,
                   ApplyConferenceScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              CustomButtonSm(
+                labelText: '企画申請',
+                labelColor: kBlackColor,
+                backgroundColor: kOrange300Color,
+                onPressed: () => showBottomUpScreen(
+                  context,
+                  ApplyProjectScreen(
                     loginProvider: widget.loginProvider,
                     homeProvider: widget.homeProvider,
                   ),

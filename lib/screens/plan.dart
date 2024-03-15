@@ -9,6 +9,7 @@ import 'package:miel_work_web/screens/category.dart';
 import 'package:miel_work_web/screens/plan_timeline.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_checkbox.dart';
@@ -58,67 +59,72 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomButtonSm(
-                  icon: FluentIcons.search,
-                  labelText: 'カテゴリ検索',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => SearchCategoryDialog(
-                      loginProvider: widget.loginProvider,
-                      searchCategoriesChange: _searchCategoriesChange,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomButtonSm(
+                      icon: FluentIcons.search,
+                      labelText: 'カテゴリ検索',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kLightBlueColor,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchCategoryDialog(
+                          loginProvider: widget.loginProvider,
+                          searchCategoriesChange: _searchCategoriesChange,
+                        ),
+                      ),
                     ),
-                  ),
+                    CustomButtonSm(
+                      icon: FluentIcons.bulleted_list,
+                      labelText: 'カテゴリ管理',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kCyanColor,
+                      onPressed: () => showBottomUpScreen(
+                        context,
+                        CategoryScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                CustomButtonSm(
-                  icon: FluentIcons.bulleted_list,
-                  labelText: 'カテゴリ管理',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kCyanColor,
-                  onPressed: () => showBottomUpScreen(
-                    context,
-                    CategoryScreen(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: planService.streamList(
+                      organizationId: widget.loginProvider.organization?.id,
+                      groupId: widget.homeProvider.currentGroup?.id,
+                      categories: searchCategories,
                     ),
+                    builder: (context, snapshot) {
+                      List<sfc.Appointment> appointments = [];
+                      if (snapshot.hasData) {
+                        appointments = planService.generateListAppointment(
+                          data: snapshot.data,
+                        );
+                      }
+                      return CustomCalendar(
+                        dataSource: _DataSource(appointments),
+                        onTap: _calendarTap,
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: planService.streamList(
-                  organizationId: widget.loginProvider.organization?.id,
-                  groupId: widget.homeProvider.currentGroup?.id,
-                  categories: searchCategories,
-                ),
-                builder: (context, snapshot) {
-                  List<sfc.Appointment> appointments = [];
-                  if (snapshot.hasData) {
-                    appointments = planService.generateListAppointment(
-                      data: snapshot.data,
-                    );
-                  }
-                  return CustomCalendar(
-                    dataSource: _DataSource(appointments),
-                    onTap: _calendarTap,
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

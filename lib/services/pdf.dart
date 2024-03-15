@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply_conference.dart';
+import 'package:miel_work_web/models/apply_project.dart';
 import 'package:miel_work_web/models/apply_proposal.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -18,10 +19,9 @@ class PdfService {
     String approvalUserNameText = '';
     if (proposal.approvalUsers.isNotEmpty) {
       for (ApprovalUserModel approvalUser in proposal.approvalUsers) {
-        if (approvalUserNameText != '') approvalUserNameText += ',';
-        approvalUserNameText += approvalUser.userName;
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
         approvalUserNameText +=
-            '(${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)})';
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
       }
     }
     pdf.addPage(pw.Page(
@@ -60,8 +60,7 @@ class PdfService {
                         '承認日時: ${dateText('yyyy/MM/dd HH:mm', proposal.approvedAt)}',
                         style: pw.TextStyle(
                           font: ttf,
-                          color: PdfColors.grey,
-                          fontSize: 10,
+                          fontSize: 12,
                         ),
                       )
                     : pw.Container(),
@@ -95,7 +94,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 100,
+                    height: 80,
                   ),
                   _generateCell(
                     label: approvalUserNameText,
@@ -104,7 +103,7 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 100,
+                    height: 80,
                   ),
                 ],
               ),
@@ -117,14 +116,14 @@ class PdfService {
                     label: '件名',
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                   ),
                   _generateCell(
                     label: proposal.title,
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                     color: PdfColors.white,
                   ),
@@ -139,14 +138,14 @@ class PdfService {
                     label: '金額',
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                   ),
                   _generateCell(
                     label: '¥ ${proposal.formatPrice()}',
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                     color: PdfColors.white,
                   ),
@@ -192,10 +191,9 @@ class PdfService {
     String approvalUserNameText = '';
     if (conference.approvalUsers.isNotEmpty) {
       for (ApprovalUserModel approvalUser in conference.approvalUsers) {
-        if (approvalUserNameText != '') approvalUserNameText += ',';
-        approvalUserNameText += approvalUser.userName;
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
         approvalUserNameText +=
-            '(${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)})';
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
       }
     }
     pdf.addPage(pw.Page(
@@ -206,12 +204,12 @@ class PdfService {
         children: [
           pw.Center(
             child: pw.Text(
-              '協議書',
+              '協議・報告書',
               style: pw.TextStyle(
                 font: ttf,
                 fontSize: 18,
                 fontWeight: pw.FontWeight.bold,
-                letterSpacing: 16,
+                letterSpacing: 8,
               ),
             ),
           ),
@@ -234,8 +232,7 @@ class PdfService {
                         '承認日時: ${dateText('yyyy/MM/dd HH:mm', conference.approvedAt)}',
                         style: pw.TextStyle(
                           font: ttf,
-                          color: PdfColors.grey,
-                          fontSize: 10,
+                          fontSize: 12,
                         ),
                       )
                     : pw.Container(),
@@ -269,7 +266,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 100,
+                    height: 80,
                   ),
                   _generateCell(
                     label: approvalUserNameText,
@@ -278,7 +275,7 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 100,
+                    height: 80,
                   ),
                 ],
               ),
@@ -291,14 +288,14 @@ class PdfService {
                     label: '件名',
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                   ),
                   _generateCell(
                     label: conference.title,
                     style: pw.TextStyle(
                       font: ttf,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                     color: PdfColors.white,
                   ),
@@ -334,6 +331,156 @@ class PdfService {
       ),
     ));
     final fileName = '${conference.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
+  Future applyProjectDownload(ApplyProjectModel project) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    String approvalUserNameText = '';
+    if (project.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel approvalUser in project.approvalUsers) {
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
+        approvalUserNameText +=
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
+      }
+    }
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '企画書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 16,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.end,
+              children: [
+                pw.Text(
+                  '提出日時: ${dateText('yyyy/MM/dd HH:mm', project.createdAt)}',
+                  style: pw.TextStyle(
+                    font: ttf,
+                    color: PdfColors.grey,
+                    fontSize: 10,
+                  ),
+                ),
+                project.approval
+                    ? pw.Text(
+                        '承認日時: ${dateText('yyyy/MM/dd HH:mm', project.approvedAt)}',
+                        style: pw.TextStyle(
+                          font: ttf,
+                          fontSize: 12,
+                        ),
+                      )
+                    : pw.Container(),
+                pw.Text(
+                  '作成者: ${project.createdUserName}',
+                  style: pw.TextStyle(
+                    font: ttf,
+                    color: PdfColors.grey,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(80),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '承認者一覧',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 80,
+                  ),
+                  _generateCell(
+                    label: approvalUserNameText,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 80,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '件名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 12,
+                    ),
+                  ),
+                  _generateCell(
+                    label: project.title,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 12,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '内容',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 600,
+                  ),
+                  _generateCell(
+                    label: project.content,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 600,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
+    final fileName = '${project.id}.pdf';
     await _pdfWebDownload(pdf: pdf, fileName: fileName);
   }
 

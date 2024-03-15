@@ -1,15 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/models/apply_conference.dart';
+import 'package:miel_work_web/models/apply_project.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
-import 'package:miel_work_web/services/apply_conference.dart';
+import 'package:miel_work_web/services/apply_project.dart';
 import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/user.dart';
 
-class ApplyConferenceProvider with ChangeNotifier {
-  final ApplyConferenceService _conferenceService = ApplyConferenceService();
+class ApplyProjectProvider with ChangeNotifier {
+  final ApplyProjectService _projectService = ApplyProjectService();
   final UserService _userService = UserService();
   final FmService _fmService = FmService();
 
@@ -21,13 +21,13 @@ class ApplyConferenceProvider with ChangeNotifier {
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (organization == null) return '協議・報告申請に失敗しました';
+    if (organization == null) return '企画申請に失敗しました';
     if (title == '') return '件名を入力してください';
     if (content == '') return '内容を入力してください';
-    if (loginUser == null) return '協議・報告申請に失敗しました';
+    if (loginUser == null) return '企画申請に失敗しました';
     try {
-      String id = _conferenceService.id();
-      _conferenceService.create({
+      String id = _projectService.id();
+      _projectService.create({
         'id': id,
         'organizationId': organization.id,
         'groupId': group?.id ?? '',
@@ -51,18 +51,18 @@ class ApplyConferenceProvider with ChangeNotifier {
           _fmService.send(
             token: user.token,
             title: title,
-            body: '協議・報告申請が提出されました。',
+            body: '企画申請が提出されました。',
           );
         }
       }
     } catch (e) {
-      error = '協議・報告申請に失敗しました';
+      error = '企画申請に失敗しました';
     }
     return error;
   }
 
   Future<String?> update({
-    required ApplyConferenceModel conference,
+    required ApplyProjectModel project,
     required bool approval,
     required UserModel? loginUser,
   }) async {
@@ -70,8 +70,8 @@ class ApplyConferenceProvider with ChangeNotifier {
     if (loginUser == null) return '承認に失敗しました';
     try {
       List<Map> approvalUsers = [];
-      if (conference.approvalUsers.isNotEmpty) {
-        for (ApprovalUserModel approvalUser in conference.approvalUsers) {
+      if (project.approvalUsers.isNotEmpty) {
+        for (ApprovalUserModel approvalUser in project.approvalUsers) {
           approvalUsers.add(approvalUser.toMap());
         }
       }
@@ -81,15 +81,15 @@ class ApplyConferenceProvider with ChangeNotifier {
         'approvedAt': DateTime.now(),
       });
       if (approval) {
-        _conferenceService.update({
-          'id': conference.id,
+        _projectService.update({
+          'id': project.id,
           'approval': approval,
           'approvedAt': DateTime.now(),
           'approvalUsers': approvalUsers,
         });
       } else {
-        _conferenceService.update({
-          'id': conference.id,
+        _projectService.update({
+          'id': project.id,
           'approval': approval,
           'approvalUsers': approvalUsers,
         });
@@ -97,15 +97,15 @@ class ApplyConferenceProvider with ChangeNotifier {
       //通知
       List<UserModel> sendUsers = [];
       sendUsers = await _userService.selectList(
-        userIds: [conference.createdUserId],
+        userIds: [project.createdUserId],
       );
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
           if (user.id == loginUser.id) continue;
           _fmService.send(
             token: user.token,
-            title: conference.title,
-            body: '協議・報告申請が承認されました。',
+            title: project.title,
+            body: '企画申請が承認されました。',
           );
         }
       }
@@ -116,15 +116,15 @@ class ApplyConferenceProvider with ChangeNotifier {
   }
 
   Future<String?> delete({
-    required ApplyConferenceModel conference,
+    required ApplyProjectModel project,
   }) async {
     String? error;
     try {
-      _conferenceService.delete({
-        'id': conference.id,
+      _projectService.delete({
+        'id': project.id,
       });
     } catch (e) {
-      error = '協議・報告申請の削除に失敗しました';
+      error = '企画申請の削除に失敗しました';
     }
     return error;
   }

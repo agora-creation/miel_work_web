@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/apply_conference.dart';
+import 'package:miel_work_web/providers/apply_project.dart';
 import 'package:miel_work_web/providers/apply_proposal.dart';
 import 'package:miel_work_web/providers/category.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: PlanShiftProvider()),
         ChangeNotifierProvider.value(value: ApplyProposalProvider()),
         ChangeNotifierProvider.value(value: ApplyConferenceProvider()),
+        ChangeNotifierProvider.value(value: ApplyProjectProvider()),
       ],
       child: FluentApp(
         debugShowCheckedModeBanner: false,

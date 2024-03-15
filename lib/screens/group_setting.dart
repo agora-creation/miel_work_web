@@ -5,6 +5,7 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/services/organization_group.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
@@ -28,43 +29,48 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
   @override
   Widget build(BuildContext context) {
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomSettingList(
-                label: 'グループ名',
-                value: group?.name ?? '',
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ModGroupNameDialog(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    group: group,
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomSettingList(
+                    label: 'グループ名',
+                    value: group?.name ?? '',
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ModGroupNameDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        group: group,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              LinkText(
-                label: 'このグループを削除',
-                color: kRedColor,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => DelGroupDialog(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    group: group,
+                  const SizedBox(height: 16),
+                  LinkText(
+                    label: 'このグループを削除',
+                    color: kRedColor,
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => DelGroupDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        group: group,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

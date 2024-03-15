@@ -13,6 +13,7 @@ import 'package:miel_work_web/screens/plan_shift_mod.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/services/plan_shift.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_calendar_shift.dart';
 import 'package:multiple_stream_builder/multiple_stream_builder.dart';
@@ -134,57 +135,62 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
       organizationId: widget.loginProvider.organization?.id,
       groupId: widget.homeProvider.currentGroup?.id,
     );
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomButtonSm(
-                  icon: FluentIcons.search,
-                  labelText: 'カテゴリ検索',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => SearchCategoryDialog(
-                      loginProvider: widget.loginProvider,
-                      searchCategoriesChange: _searchCategoriesChange,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomButtonSm(
+                      icon: FluentIcons.search,
+                      labelText: 'カテゴリ検索',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kLightBlueColor,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchCategoryDialog(
+                          loginProvider: widget.loginProvider,
+                          searchCategoriesChange: _searchCategoriesChange,
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+                Expanded(
+                  child: StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
+                      QuerySnapshot<Map<String, dynamic>>>(
+                    streams: StreamTuple2(stream1!, stream2!),
+                    builder: (context, snapshot) {
+                      List<sfc.Appointment> source = [];
+                      if (snapshot.snapshot1.hasData) {
+                        source = planService.generateListAppointment(
+                          data: snapshot.snapshot1.data,
+                          shift: true,
+                        );
+                      }
+                      if (snapshot.snapshot2.hasData) {
+                        source.addAll(planShiftService.generateListAppointment(
+                          data: snapshot.snapshot2.data,
+                        ));
+                      }
+                      return CustomCalendarShift(
+                        dataSource: _ShiftDataSource(source, resourceColl),
+                        onTap: _calendarTap,
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-            Expanded(
-              child: StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
-                  QuerySnapshot<Map<String, dynamic>>>(
-                streams: StreamTuple2(stream1!, stream2!),
-                builder: (context, snapshot) {
-                  List<sfc.Appointment> source = [];
-                  if (snapshot.snapshot1.hasData) {
-                    source = planService.generateListAppointment(
-                      data: snapshot.snapshot1.data,
-                      shift: true,
-                    );
-                  }
-                  if (snapshot.snapshot2.hasData) {
-                    source.addAll(planShiftService.generateListAppointment(
-                      data: snapshot.snapshot2.data,
-                    ));
-                  }
-                  return CustomCalendarShift(
-                    dataSource: _ShiftDataSource(source, resourceColl),
-                    onTap: _calendarTap,
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

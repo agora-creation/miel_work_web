@@ -1,35 +1,34 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/providers/apply_conference.dart';
+import 'package:miel_work_web/providers/apply_project.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
-class ApplyConferenceAddScreen extends StatefulWidget {
+class ApplyProjectAddScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const ApplyConferenceAddScreen({
+  const ApplyProjectAddScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<ApplyConferenceAddScreen> createState() =>
-      _ApplyConferenceAddScreenState();
+  State<ApplyProjectAddScreen> createState() => _ApplyProjectAddScreenState();
 }
 
-class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
+class _ApplyProjectAddScreenState extends State<ApplyProjectAddScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
+    final projectProvider = Provider.of<ApplyProjectProvider>(context);
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -44,7 +43,7 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               const Text(
-                '協議・報告申請を作成',
+                '企画申請を作成',
                 style: TextStyle(fontSize: 16),
               ),
               CustomButtonSm(
@@ -52,7 +51,7 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
                 labelColor: kWhiteColor,
                 backgroundColor: kBlueColor,
                 onPressed: () async {
-                  String? error = await conferenceProvider.create(
+                  String? error = await projectProvider.create(
                     organization: widget.loginProvider.organization,
                     group: null,
                     title: titleController.text,
@@ -65,7 +64,7 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
                     return;
                   }
                   if (!mounted) return;
-                  showMessage(context, '協議・報告申請を提出しました', true);
+                  showMessage(context, '企画申請を提出しました', true);
                   Navigator.pop(context);
                 },
               ),

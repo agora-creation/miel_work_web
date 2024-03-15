@@ -8,6 +8,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/notice_add.dart';
 import 'package:miel_work_web/screens/notice_source.dart';
 import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
@@ -35,77 +36,83 @@ class _NoticeScreenState extends State<NoticeScreen> {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '『$organizationName $groupName』のお知らせを表示しています。',
-                  style: const TextStyle(fontSize: 14),
-                ),
-                CustomButtonSm(
-                  icon: FluentIcons.add,
-                  labelText: '新規追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  onPressed: () => Navigator.push(
-                    context,
-                    FluentPageRoute(
-                      builder: (context) => NoticeAddScreen(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '『$organizationName $groupName』のお知らせを表示しています。',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    CustomButtonSm(
+                      icon: FluentIcons.add,
+                      labelText: '新規追加',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kBlueColor,
+                      onPressed: () => Navigator.push(
+                        context,
+                        FluentPageRoute(
+                          builder: (context) => NoticeAddScreen(
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
+                          ),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: noticeService.streamList(
+                      organizationId: widget.loginProvider.organization?.id,
+                      groupId: group?.id,
+                    ),
+                    builder: (context, snapshot) {
+                      List<NoticeModel> notices = [];
+                      if (snapshot.hasData) {
+                        notices =
+                            noticeService.generateList(data: snapshot.data);
+                      }
+                      return CustomDataGrid(
+                        source: NoticeSource(
+                          context: context,
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          notices: notices,
+                        ),
+                        columns: [
+                          GridColumn(
+                            columnName: 'title',
+                            label: const CustomColumnLabel('タイトル'),
+                          ),
+                          GridColumn(
+                            columnName: 'groupId',
+                            label: const CustomColumnLabel('送信先グループ'),
+                          ),
+                          GridColumn(
+                            columnName: 'edit',
+                            label: const CustomColumnLabel('操作'),
+                            width: 200,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: noticeService.streamList(
-                  organizationId: widget.loginProvider.organization?.id,
-                  groupId: group?.id,
-                ),
-                builder: (context, snapshot) {
-                  List<NoticeModel> notices = [];
-                  if (snapshot.hasData) {
-                    notices = noticeService.generateList(data: snapshot.data);
-                  }
-                  return CustomDataGrid(
-                    source: NoticeSource(
-                      context: context,
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      notices: notices,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'title',
-                        label: const CustomColumnLabel('タイトル'),
-                      ),
-                      GridColumn(
-                        columnName: 'groupId',
-                        label: const CustomColumnLabel('送信先グループ'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 200,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

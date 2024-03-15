@@ -8,6 +8,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/user_source.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
@@ -57,77 +58,82 @@ class _UserScreenState extends State<UserScreen> {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '『$organizationName $groupName』に所属しているスタッフを表示しています。',
-                  style: const TextStyle(fontSize: 14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '『$organizationName $groupName』に所属しているスタッフを表示しています。PDF印刷では、アプリのインストール方法やログイン方法が記載されています。',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    CustomButtonSm(
+                      icon: FluentIcons.add,
+                      labelText: '新規追加',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kBlueColor,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => AddUserDialog(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          getUsers: _getUses,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                CustomButtonSm(
-                  icon: FluentIcons.add,
-                  labelText: '新規追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AddUserDialog(
+                const SizedBox(height: 8),
+                Expanded(
+                  child: CustomDataGrid(
+                    source: UserSource(
+                      context: context,
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
+                      users: users,
                       getUsers: _getUses,
                     ),
+                    columns: [
+                      GridColumn(
+                        columnName: 'name',
+                        label: const CustomColumnLabel('スタッフ名'),
+                      ),
+                      GridColumn(
+                        columnName: 'email',
+                        label: const CustomColumnLabel('メールアドレス'),
+                      ),
+                      GridColumn(
+                        columnName: 'password',
+                        label: const CustomColumnLabel('パスワード'),
+                      ),
+                      GridColumn(
+                        columnName: 'group',
+                        label: const CustomColumnLabel('所属グループ'),
+                      ),
+                      GridColumn(
+                        columnName: 'uid',
+                        label: const CustomColumnLabel('スマホアプリ'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                        width: 250,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: CustomDataGrid(
-                source: UserSource(
-                  context: context,
-                  loginProvider: widget.loginProvider,
-                  homeProvider: widget.homeProvider,
-                  users: users,
-                  getUsers: _getUses,
-                ),
-                columns: [
-                  GridColumn(
-                    columnName: 'name',
-                    label: const CustomColumnLabel('スタッフ名'),
-                  ),
-                  GridColumn(
-                    columnName: 'email',
-                    label: const CustomColumnLabel('メールアドレス'),
-                  ),
-                  GridColumn(
-                    columnName: 'password',
-                    label: const CustomColumnLabel('パスワード'),
-                  ),
-                  GridColumn(
-                    columnName: 'group',
-                    label: const CustomColumnLabel('所属グループ'),
-                  ),
-                  GridColumn(
-                    columnName: 'uid',
-                    label: const CustomColumnLabel('スマホアプリ'),
-                  ),
-                  GridColumn(
-                    columnName: 'edit',
-                    label: const CustomColumnLabel('操作'),
-                    width: 250,
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/chat_area.dart';
 import 'package:miel_work_web/widgets/chat_header.dart';
 import 'package:miel_work_web/widgets/chat_list.dart';
@@ -76,139 +77,147 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     List<String> currentChatUserIds = currentChat?.userIds ?? [];
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Card(
-        child: ChatArea(
-          chatsView: chats.isNotEmpty
-              ? ListView.builder(
-                  itemCount: chats.length,
-                  itemBuilder: (context, index) {
-                    ChatModel chat = chats[index];
-                    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: messageService.streamList(chatId: chat.id),
-                      builder: (context, snapshot) {
-                        List<ChatMessageModel> messages = [];
-                        if (snapshot.hasData) {
-                          messages = messageService.generateListUnread(
-                            data: snapshot.data,
-                            loginUser: widget.loginProvider.user,
-                          );
-                        }
-                        return ChatList(
-                          chat: chat,
-                          unreadCount: messages.length,
-                          selected: currentChat == chat,
-                          onTap: () => _currentChatChange(chat),
-                        );
-                      },
-                    );
-                  },
-                )
-              : const Center(child: Text('チャットルームはありません')),
-          messageView: currentChat != null
-              ? Container(
-                  color: kGrey200Color,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ChatHeader(
-                        chat: currentChat!,
-                        searchOnPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => SearchKeywordDialog(
-                            getKeyword: _getKeyword,
-                          ),
-                        ),
-                        usersOnPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => ChatUsersDialog(
-                            chat: currentChat!,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child:
-                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          stream: messageService.streamList(
-                            chatId: currentChat?.id,
-                          ),
+    return Stack(
+      children: [
+        const AnimationBackground(),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: ChatArea(
+              chatsView: chats.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: chats.length,
+                      itemBuilder: (context, index) {
+                        ChatModel chat = chats[index];
+                        return StreamBuilder<
+                            QuerySnapshot<Map<String, dynamic>>>(
+                          stream: messageService.streamList(chatId: chat.id),
                           builder: (context, snapshot) {
                             List<ChatMessageModel> messages = [];
                             if (snapshot.hasData) {
-                              messages = messageService.generateListKeyword(
+                              messages = messageService.generateListUnread(
                                 data: snapshot.data,
-                                keyword: searchKeyword,
+                                loginUser: widget.loginProvider.user,
                               );
                             }
-                            if (messages.isEmpty) {
-                              return const Center(child: Text('メッセージはありません'));
-                            }
-                            return ListView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              shrinkWrap: true,
-                              reverse: true,
-                              itemCount: messages.length,
-                              itemBuilder: (context, index) {
-                                ChatMessageModel message = messages[index];
-                                return MessageList(
-                                  message: message,
-                                  isMe: message.createdUserId ==
-                                      widget.loginProvider.user?.id,
-                                  onTapImage: () {},
-                                  onTapFile: () {},
-                                );
-                              },
+                            return ChatList(
+                              chat: chat,
+                              unreadCount: messages.length,
+                              selected: currentChat == chat,
+                              onTap: () => _currentChatChange(chat),
                             );
                           },
-                        ),
+                        );
+                      },
+                    )
+                  : const Center(child: Text('チャットルームはありません')),
+              messageView: currentChat != null
+                  ? Container(
+                      color: kGrey200Color,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ChatHeader(
+                            chat: currentChat!,
+                            searchOnPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => SearchKeywordDialog(
+                                getKeyword: _getKeyword,
+                              ),
+                            ),
+                            usersOnPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => ChatUsersDialog(
+                                chat: currentChat!,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: StreamBuilder<
+                                QuerySnapshot<Map<String, dynamic>>>(
+                              stream: messageService.streamList(
+                                chatId: currentChat?.id,
+                              ),
+                              builder: (context, snapshot) {
+                                List<ChatMessageModel> messages = [];
+                                if (snapshot.hasData) {
+                                  messages = messageService.generateListKeyword(
+                                    data: snapshot.data,
+                                    keyword: searchKeyword,
+                                  );
+                                }
+                                if (messages.isEmpty) {
+                                  return const Center(
+                                      child: Text('メッセージはありません'));
+                                }
+                                return ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  shrinkWrap: true,
+                                  reverse: true,
+                                  itemCount: messages.length,
+                                  itemBuilder: (context, index) {
+                                    ChatMessageModel message = messages[index];
+                                    return MessageList(
+                                      message: message,
+                                      isMe: message.createdUserId ==
+                                          widget.loginProvider.user?.id,
+                                      onTapImage: () {},
+                                      onTapFile: () {},
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          MessageFormField(
+                            controller: messageProvider.contentController,
+                            filePressed: () {},
+                            galleryPressed: () async {
+                              final result =
+                                  await FilePicker.platform.pickFiles(
+                                type: FileType.image,
+                              );
+                              String? error = await messageProvider.sendImage(
+                                chat: currentChat,
+                                loginUser: widget.loginProvider.user,
+                                result: result,
+                              );
+                              if (error != null) {
+                                if (!mounted) return;
+                                showMessage(context, error, false);
+                                return;
+                              }
+                            },
+                            sendPressed: () async {
+                              String? error = await messageProvider.send(
+                                chat: currentChat,
+                                loginUser: widget.loginProvider.user,
+                              );
+                              if (error != null) {
+                                if (!mounted) return;
+                                showMessage(context, error, false);
+                                return;
+                              }
+                            },
+                            enabled: currentChatUserIds
+                                .contains(widget.loginProvider.user?.id),
+                          ),
+                        ],
                       ),
-                      MessageFormField(
-                        controller: messageProvider.contentController,
-                        filePressed: () {},
-                        galleryPressed: () async {
-                          final result = await FilePicker.platform.pickFiles(
-                            type: FileType.image,
-                          );
-                          String? error = await messageProvider.sendImage(
-                            chat: currentChat,
-                            loginUser: widget.loginProvider.user,
-                            result: result,
-                          );
-                          if (error != null) {
-                            if (!mounted) return;
-                            showMessage(context, error, false);
-                            return;
-                          }
-                        },
-                        sendPressed: () async {
-                          String? error = await messageProvider.send(
-                            chat: currentChat,
-                            loginUser: widget.loginProvider.user,
-                          );
-                          if (error != null) {
-                            if (!mounted) return;
-                            showMessage(context, error, false);
-                            return;
-                          }
-                        },
-                        enabled: currentChatUserIds
-                            .contains(widget.loginProvider.user?.id),
+                    )
+                  : Container(
+                      color: kGrey200Color,
+                      child: const Center(
+                        child: Text('左側のチャットルームを選択してください'),
                       ),
-                    ],
-                  ),
-                )
-              : Container(
-                  color: kGrey200Color,
-                  child: const Center(
-                    child: Text('左側のチャットルームを選択してください'),
-                  ),
-                ),
+                    ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
