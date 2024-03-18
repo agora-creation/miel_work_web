@@ -51,6 +51,8 @@ class _ApplyConferenceDetailScreenState
       isApproval = false;
       isDelete = false;
     }
+    List<ApprovalUserModel> approvalUsers = widget.conference.approvalUsers;
+    List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -134,8 +136,7 @@ class _ApplyConferenceDetailScreenState
                         color: kRed100Color,
                         width: double.infinity,
                         child: Column(
-                          children: widget.conference.approvalUsers
-                              .map((approvalUser) {
+                          children: reApprovalUsers.map((approvalUser) {
                             return CustomApprovalUserList(
                               approvalUser: approvalUser,
                             );

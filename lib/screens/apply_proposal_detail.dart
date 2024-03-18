@@ -50,6 +50,8 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
       isApproval = false;
       isDelete = false;
     }
+    List<ApprovalUserModel> approvalUsers = widget.proposal.approvalUsers;
+    List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -133,8 +135,7 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                         color: kRed100Color,
                         width: double.infinity,
                         child: Column(
-                          children:
-                              widget.proposal.approvalUsers.map((approvalUser) {
+                          children: reApprovalUsers.map((approvalUser) {
                             return CustomApprovalUserList(
                               approvalUser: approvalUser,
                             );

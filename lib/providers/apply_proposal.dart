@@ -100,6 +100,7 @@ class ApplyProposalProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
+        'userAdmin': approval,
         'approvedAt': DateTime.now(),
       });
       if (approval) {
