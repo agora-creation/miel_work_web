@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -10,6 +12,7 @@ import 'package:miel_work_web/screens/apply_project_add.dart';
 import 'package:miel_work_web/widgets/custom_approval_user_list.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class ApplyProjectDetailScreen extends StatefulWidget {
@@ -223,7 +226,13 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                   ? LinkText(
                       label: '添付ファイル',
                       color: kBlueColor,
-                      onTap: () {},
+                      onTap: () {
+                        File file = File(widget.project.file);
+                        downloadFile(
+                          url: widget.project.file,
+                          name: p.basename(file.path),
+                        );
+                      },
                     )
                   : Container(),
               const SizedBox(height: 16),

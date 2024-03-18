@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -21,6 +23,7 @@ import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/message_form_field.dart';
 import 'package:miel_work_web/widgets/message_list.dart';
 import 'package:miel_work_web/widgets/user_list.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -164,8 +167,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                       message: message,
                                       isMe: message.createdUserId ==
                                           widget.loginProvider.user?.id,
-                                      onTapImage: () {},
-                                      onTapFile: () {},
+                                      onTapImage: () {
+                                        File file = File(message.image);
+                                        downloadFile(
+                                          url: message.image,
+                                          name: p.basename(file.path),
+                                        );
+                                      },
+                                      onTapFile: () {
+                                        File file = File(message.file);
+                                        downloadFile(
+                                          url: message.file,
+                                          name: p.basename(file.path),
+                                        );
+                                      },
                                     );
                                   },
                                 );
