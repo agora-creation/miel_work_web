@@ -74,7 +74,6 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                   onChanged: _searchApprovalChange,
                   content: Text(searchApproval ? '承認済み' : '承認待ち'),
                 ),
-                const SizedBox(width: 4),
                 CustomButtonSm(
                   icon: FluentIcons.add,
                   labelText: '新規申請',
@@ -97,7 +96,7 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: proposalService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  approval: searchApproval,
+                  approval: 0,
                 ),
                 builder: (context, snapshot) {
                   List<ApplyProposalModel> proposals = [];

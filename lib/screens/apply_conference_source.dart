@@ -48,11 +48,11 @@ class ApplyConferenceSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'approval',
-          value: conference.approval ? '承認済み' : '承認待ち',
+          value: conference.approvalText(),
         ),
         DataGridCell(
           columnName: 'approvedAt',
-          value: conference.approval
+          value: conference.approval == 1
               ? dateText('yyyy/MM/dd HH:mm', conference.createdAt)
               : '',
         ),

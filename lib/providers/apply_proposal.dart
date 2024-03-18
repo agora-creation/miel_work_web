@@ -55,7 +55,7 @@ class ApplyProposalProvider with ChangeNotifier {
         'price': price,
         'file': file,
         'fileExt': fileExt,
-        'approval': false,
+        'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],
         'createdUserId': loginUser.id,
@@ -85,7 +85,6 @@ class ApplyProposalProvider with ChangeNotifier {
 
   Future<String?> update({
     required ApplyProposalModel proposal,
-    required bool approval,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -100,23 +99,15 @@ class ApplyProposalProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
-        'userAdmin': approval,
+        'userAdmin': true,
         'approvedAt': DateTime.now(),
       });
-      if (approval) {
-        _proposalService.update({
-          'id': proposal.id,
-          'approval': approval,
-          'approvedAt': DateTime.now(),
-          'approvalUsers': approvalUsers,
-        });
-      } else {
-        _proposalService.update({
-          'id': proposal.id,
-          'approval': approval,
-          'approvalUsers': approvalUsers,
-        });
-      }
+      _proposalService.update({
+        'id': proposal.id,
+        'approval': 1,
+        'approvedAt': DateTime.now(),
+        'approvalUsers': approvalUsers,
+      });
       //通知
       List<UserModel> sendUsers = [];
       sendUsers = await _userService.selectList(

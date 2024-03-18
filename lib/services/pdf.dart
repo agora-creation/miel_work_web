@@ -55,7 +55,7 @@ class PdfService {
                     fontSize: 10,
                   ),
                 ),
-                proposal.approval
+                proposal.approval == 1
                     ? pw.Text(
                         '承認日時: ${dateText('yyyy/MM/dd HH:mm', proposal.approvedAt)}',
                         style: pw.TextStyle(
@@ -227,7 +227,7 @@ class PdfService {
                     fontSize: 10,
                   ),
                 ),
-                conference.approval
+                conference.approval == 1
                     ? pw.Text(
                         '承認日時: ${dateText('yyyy/MM/dd HH:mm', conference.approvedAt)}',
                         style: pw.TextStyle(
@@ -377,7 +377,7 @@ class PdfService {
                     fontSize: 10,
                   ),
                 ),
-                project.approval
+                project.approval == 1
                     ? pw.Text(
                         '承認日時: ${dateText('yyyy/MM/dd HH:mm', project.approvedAt)}',
                         style: pw.TextStyle(

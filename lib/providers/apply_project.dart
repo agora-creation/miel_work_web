@@ -53,7 +53,7 @@ class ApplyProjectProvider with ChangeNotifier {
         'content': content,
         'file': file,
         'fileExt': fileExt,
-        'approval': false,
+        'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],
         'createdUserId': loginUser.id,
@@ -83,7 +83,6 @@ class ApplyProjectProvider with ChangeNotifier {
 
   Future<String?> update({
     required ApplyProjectModel project,
-    required bool approval,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -98,23 +97,15 @@ class ApplyProjectProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
-        'userAdmin': approval,
+        'userAdmin': true,
         'approvedAt': DateTime.now(),
       });
-      if (approval) {
-        _projectService.update({
-          'id': project.id,
-          'approval': approval,
-          'approvedAt': DateTime.now(),
-          'approvalUsers': approvalUsers,
-        });
-      } else {
-        _projectService.update({
-          'id': project.id,
-          'approval': approval,
-          'approvalUsers': approvalUsers,
-        });
-      }
+      _projectService.update({
+        'id': project.id,
+        'approval': 1,
+        'approvedAt': DateTime.now(),
+        'approvalUsers': approvalUsers,
+      });
       //通知
       List<UserModel> sendUsers = [];
       sendUsers = await _userService.selectList(

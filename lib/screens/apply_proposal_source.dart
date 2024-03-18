@@ -52,11 +52,11 @@ class ApplyProposalSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'approval',
-          value: proposal.approval ? '承認済み' : '承認待ち',
+          value: proposal.approvalText(),
         ),
         DataGridCell(
           columnName: 'approvedAt',
-          value: proposal.approval
+          value: proposal.approval == 1
               ? dateText('yyyy/MM/dd HH:mm', proposal.createdAt)
               : '',
         ),

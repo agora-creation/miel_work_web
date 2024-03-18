@@ -46,7 +46,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
         }
       }
     }
-    if (widget.project.approval) {
+    if (widget.project.approval == 1) {
       isApproval = false;
       isDelete = false;
     }
@@ -77,7 +77,6 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                       onPressed: () async {
                         String? error = await projectProvider.update(
                           project: widget.project,
-                          approval: true,
                           loginUser: widget.loginProvider.user,
                         );
                         if (error != null) {
@@ -114,7 +113,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                       '提出日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.createdAt)}',
                       style: const TextStyle(color: kGreyColor),
                     ),
-                    widget.project.approval
+                    widget.project.approval == 1
                         ? Text(
                             '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.approvedAt)}',
                             style: const TextStyle(color: kGreyColor),

@@ -53,7 +53,7 @@ class ApplyConferenceProvider with ChangeNotifier {
         'content': content,
         'file': file,
         'fileExt': fileExt,
-        'approval': false,
+        'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],
         'createdUserId': loginUser.id,
@@ -83,7 +83,6 @@ class ApplyConferenceProvider with ChangeNotifier {
 
   Future<String?> update({
     required ApplyConferenceModel conference,
-    required bool approval,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -98,23 +97,15 @@ class ApplyConferenceProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
-        'userAdmin': approval,
+        'userAdmin': true,
         'approvedAt': DateTime.now(),
       });
-      if (approval) {
-        _conferenceService.update({
-          'id': conference.id,
-          'approval': approval,
-          'approvedAt': DateTime.now(),
-          'approvalUsers': approvalUsers,
-        });
-      } else {
-        _conferenceService.update({
-          'id': conference.id,
-          'approval': approval,
-          'approvalUsers': approvalUsers,
-        });
-      }
+      _conferenceService.update({
+        'id': conference.id,
+        'approval': 1,
+        'approvedAt': DateTime.now(),
+        'approvalUsers': approvalUsers,
+      });
       //通知
       List<UserModel> sendUsers = [];
       sendUsers = await _userService.selectList(

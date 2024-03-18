@@ -48,11 +48,11 @@ class ApplyProjectSource extends DataGridSource {
         ),
         DataGridCell(
           columnName: 'approval',
-          value: project.approval ? '承認済み' : '承認待ち',
+          value: project.approvalText(),
         ),
         DataGridCell(
           columnName: 'approvedAt',
-          value: project.approval
+          value: project.approval == 1
               ? dateText('yyyy/MM/dd HH:mm', project.createdAt)
               : '',
         ),

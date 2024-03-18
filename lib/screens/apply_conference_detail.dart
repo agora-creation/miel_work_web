@@ -47,7 +47,7 @@ class _ApplyConferenceDetailScreenState
         }
       }
     }
-    if (widget.conference.approval) {
+    if (widget.conference.approval == 1) {
       isApproval = false;
       isDelete = false;
     }
@@ -78,7 +78,6 @@ class _ApplyConferenceDetailScreenState
                       onPressed: () async {
                         String? error = await conferenceProvider.update(
                           conference: widget.conference,
-                          approval: true,
                           loginUser: widget.loginProvider.user,
                         );
                         if (error != null) {
@@ -115,7 +114,7 @@ class _ApplyConferenceDetailScreenState
                       '提出日時: ${dateText('yyyy/MM/dd HH:mm', widget.conference.createdAt)}',
                       style: const TextStyle(color: kGreyColor),
                     ),
-                    widget.conference.approval
+                    widget.conference.approval == 1
                         ? Text(
                             '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.conference.approvedAt)}',
                             style: const TextStyle(color: kGreyColor),
