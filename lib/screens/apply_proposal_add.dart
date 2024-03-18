@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/apply_proposal.dart';
 import 'package:miel_work_web/providers/apply_proposal.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -13,10 +14,12 @@ import 'package:provider/provider.dart';
 class ApplyProposalAddScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final ApplyProposalModel? proposal;
 
   const ApplyProposalAddScreen({
     required this.loginProvider,
     required this.homeProvider,
+    this.proposal,
     super.key,
   });
 
@@ -29,6 +32,20 @@ class _ApplyProposalAddScreenState extends State<ApplyProposalAddScreen> {
   TextEditingController contentController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   PlatformFile? pickedFile;
+
+  void _init() async {
+    if (widget.proposal == null) return;
+    titleController.text = widget.proposal?.title ?? '';
+    contentController.text = widget.proposal?.content ?? '';
+    priceController.text = widget.proposal?.price.toString() ?? '';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
   @override
   Widget build(BuildContext context) {

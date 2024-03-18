@@ -83,7 +83,7 @@ class ApplyProposalProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> update({
+  Future<String?> approval({
     required ApplyProposalModel proposal,
     required UserModel? loginUser,
   }) async {
@@ -125,6 +125,38 @@ class ApplyProposalProvider with ChangeNotifier {
       }
     } catch (e) {
       error = '承認に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> reject({
+    required ApplyProposalModel proposal,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (loginUser == null) return '否決に失敗しました';
+    try {
+      _proposalService.update({
+        'id': proposal.id,
+        'approval': 9,
+      });
+      //通知
+      List<UserModel> sendUsers = [];
+      sendUsers = await _userService.selectList(
+        userIds: [proposal.createdUserId],
+      );
+      if (sendUsers.isNotEmpty) {
+        for (UserModel user in sendUsers) {
+          if (user.id == loginUser.id) continue;
+          _fmService.send(
+            token: user.token,
+            title: proposal.title,
+            body: '稟議申請が否決されました。',
+          );
+        }
+      }
+    } catch (e) {
+      error = '否決に失敗しました';
     }
     return error;
   }

@@ -28,11 +28,11 @@ class ApplyConferenceScreen extends StatefulWidget {
 
 class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
   ApplyConferenceService conferenceService = ApplyConferenceService();
-  bool searchApproval = false;
+  int searchApproval = 0;
 
-  void _searchApprovalChange(bool value) {
+  void _searchApprovalChange(int? value) {
     setState(() {
-      searchApproval = value;
+      searchApproval = value ?? 0;
     });
   }
 
@@ -69,10 +69,14 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ToggleSwitch(
-                  checked: searchApproval,
+                ComboBox<int>(
+                  value: searchApproval,
+                  items: const [
+                    ComboBoxItem(value: 0, child: Text('承認待ち')),
+                    ComboBoxItem(value: 1, child: Text('承認済み')),
+                    ComboBoxItem(value: 9, child: Text('否決')),
+                  ],
                   onChanged: _searchApprovalChange,
-                  content: Text(searchApproval ? '承認済み' : '承認待ち'),
                 ),
                 CustomButtonSm(
                   icon: FluentIcons.add,
@@ -96,7 +100,7 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: conferenceService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  approval: 0,
+                  approval: searchApproval,
                 ),
                 builder: (context, snapshot) {
                   List<ApplyConferenceModel> conferences = [];

@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/apply_project.dart';
 import 'package:miel_work_web/providers/apply_project.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -13,10 +14,12 @@ import 'package:provider/provider.dart';
 class ApplyProjectAddScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final ApplyProjectModel? project;
 
   const ApplyProjectAddScreen({
     required this.loginProvider,
     required this.homeProvider,
+    this.project,
     super.key,
   });
 
@@ -28,6 +31,19 @@ class _ApplyProjectAddScreenState extends State<ApplyProjectAddScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   PlatformFile? pickedFile;
+
+  void _init() async {
+    if (widget.project == null) return;
+    titleController.text = widget.project?.title ?? '';
+    contentController.text = widget.project?.content ?? '';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
   @override
   Widget build(BuildContext context) {

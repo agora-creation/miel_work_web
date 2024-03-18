@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/apply_conference.dart';
 import 'package:miel_work_web/providers/apply_conference.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -13,10 +14,12 @@ import 'package:provider/provider.dart';
 class ApplyConferenceAddScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final ApplyConferenceModel? conference;
 
   const ApplyConferenceAddScreen({
     required this.loginProvider,
     required this.homeProvider,
+    this.conference,
     super.key,
   });
 
@@ -29,6 +32,19 @@ class _ApplyConferenceAddScreenState extends State<ApplyConferenceAddScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   PlatformFile? pickedFile;
+
+  void _init() async {
+    if (widget.conference == null) return;
+    titleController.text = widget.conference?.title ?? '';
+    contentController.text = widget.conference?.content ?? '';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
 
   @override
   Widget build(BuildContext context) {

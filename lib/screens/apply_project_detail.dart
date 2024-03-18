@@ -6,6 +6,7 @@ import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/apply_project.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply_project_add.dart';
 import 'package:miel_work_web/widgets/custom_approval_user_list.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
@@ -33,9 +34,15 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
   Widget build(BuildContext context) {
     final projectProvider = Provider.of<ApplyProjectProvider>(context);
     bool isApproval = true;
+    bool isReject = true;
+    bool isApply = false;
     bool isDelete = true;
     if (widget.project.createdUserId == widget.loginProvider.user?.id) {
       isApproval = false;
+      isReject = false;
+      if (widget.project.approval == 9) {
+        isApply = true;
+      }
     } else {
       isDelete = false;
     }
@@ -43,11 +50,13 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
       for (ApprovalUserModel user in widget.project.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
+          isReject = false;
         }
       }
     }
-    if (widget.project.approval == 1) {
+    if (widget.project.approval == 1 || widget.project.approval == 9) {
       isApproval = false;
+      isReject = false;
       isDelete = false;
     }
     List<ApprovalUserModel> approvalUsers = widget.project.approvalUsers;
@@ -69,27 +78,73 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                 '企画申請詳細',
                 style: TextStyle(fontSize: 16),
               ),
-              isApproval
-                  ? CustomButtonSm(
-                      labelText: '承認する',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kRedColor,
-                      onPressed: () async {
-                        String? error = await projectProvider.update(
-                          project: widget.project,
-                          loginUser: widget.loginProvider.user,
-                        );
-                        if (error != null) {
-                          if (!mounted) return;
-                          showMessage(context, error, false);
-                          return;
-                        }
-                        if (!mounted) return;
-                        showMessage(context, '承認しました', true);
-                        Navigator.pop(context);
-                      },
-                    )
-                  : Container(),
+              Row(
+                children: [
+                  isReject
+                      ? CustomButtonSm(
+                          icon: FluentIcons.clear,
+                          labelText: '否決する',
+                          labelColor: kRedColor,
+                          backgroundColor: kRed100Color,
+                          onPressed: () async {
+                            String? error = await projectProvider.reject(
+                              project: widget.project,
+                              loginUser: widget.loginProvider.user,
+                            );
+                            if (error != null) {
+                              if (!mounted) return;
+                              showMessage(context, error, false);
+                              return;
+                            }
+                            if (!mounted) return;
+                            showMessage(context, '否決しました', true);
+                            Navigator.pop(context);
+                          },
+                        )
+                      : Container(),
+                  const SizedBox(width: 4),
+                  isApproval
+                      ? CustomButtonSm(
+                          icon: FluentIcons.circle_ring,
+                          labelText: '承認する',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kRedColor,
+                          onPressed: () async {
+                            String? error = await projectProvider.approval(
+                              project: widget.project,
+                              loginUser: widget.loginProvider.user,
+                            );
+                            if (error != null) {
+                              if (!mounted) return;
+                              showMessage(context, error, false);
+                              return;
+                            }
+                            if (!mounted) return;
+                            showMessage(context, '承認しました', true);
+                            Navigator.pop(context);
+                          },
+                        )
+                      : Container(),
+                  const SizedBox(width: 4),
+                  isApply
+                      ? CustomButtonSm(
+                          labelText: '再申請する',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kBlueColor,
+                          onPressed: () => Navigator.push(
+                            context,
+                            FluentPageRoute(
+                              builder: (context) => ApplyProjectAddScreen(
+                                loginProvider: widget.loginProvider,
+                                homeProvider: widget.homeProvider,
+                                project: widget.project,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
             ],
           ),
         ),
