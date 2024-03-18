@@ -85,7 +85,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                 children: [
                   isReject
                       ? CustomButtonSm(
-                          icon: FluentIcons.clear,
+                          icon: FluentIcons.status_error_full,
                           labelText: '否決する',
                           labelColor: kRedColor,
                           backgroundColor: kRed100Color,
@@ -108,7 +108,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                   const SizedBox(width: 4),
                   isApproval
                       ? CustomButtonSm(
-                          icon: FluentIcons.circle_ring,
+                          icon: FluentIcons.completed_solid,
                           labelText: '承認する',
                           labelColor: kWhiteColor,
                           backgroundColor: kRedColor,
@@ -131,6 +131,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                   const SizedBox(width: 4),
                   isApply
                       ? CustomButtonSm(
+                          icon: FluentIcons.add,
                           labelText: '再申請する',
                           labelColor: kWhiteColor,
                           backgroundColor: kBlueColor,

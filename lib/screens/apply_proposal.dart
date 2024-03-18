@@ -10,6 +10,7 @@ import 'package:miel_work_web/services/apply_proposal.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
+import 'package:miel_work_web/widgets/custom_tab_view.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ApplyProposalScreen extends StatefulWidget {
@@ -28,13 +29,7 @@ class ApplyProposalScreen extends StatefulWidget {
 
 class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
   ApplyProposalService proposalService = ApplyProposalService();
-  int searchApproval = 0;
-
-  void _searchApprovalChange(int? value) {
-    setState(() {
-      searchApproval = value ?? 0;
-    });
-  }
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +59,12 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
         color: kWhiteColor,
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ComboBox<int>(
-                  value: searchApproval,
-                  items: const [
-                    ComboBoxItem(value: 0, child: Text('承認待ち')),
-                    ComboBoxItem(value: 1, child: Text('承認済み')),
-                    ComboBoxItem(value: 9, child: Text('否決')),
-                  ],
-                  onChanged: _searchApprovalChange,
-                ),
+                Container(),
                 CustomButtonSm(
                   icon: FluentIcons.add,
                   labelText: '新規申請',
@@ -97,58 +84,191 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: proposalService.streamList(
-                  organizationId: widget.loginProvider.organization?.id,
-                  approval: searchApproval,
-                ),
-                builder: (context, snapshot) {
-                  List<ApplyProposalModel> proposals = [];
-                  if (snapshot.hasData) {
-                    proposals = proposalService.generateList(
-                      data: snapshot.data,
-                      currentGroup: widget.homeProvider.currentGroup,
-                    );
-                  }
-                  return CustomDataGrid(
-                    source: ApplyProposalSource(
-                      context: context,
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      proposals: proposals,
+              child: CustomTabView(
+                tabs: [
+                  Tab(
+                    icon: const Icon(FluentIcons.progress_ring_dots),
+                    text: const Text('承認待ち'),
+                    semanticLabel: '承認待ち',
+                    body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: proposalService.streamList(
+                        organizationId: widget.loginProvider.organization?.id,
+                        approval: 0,
+                      ),
+                      builder: (context, snapshot) {
+                        List<ApplyProposalModel> proposals = [];
+                        if (snapshot.hasData) {
+                          proposals = proposalService.generateList(
+                            data: snapshot.data,
+                            currentGroup: widget.homeProvider.currentGroup,
+                          );
+                        }
+                        return CustomDataGrid(
+                          source: ApplyProposalSource(
+                            context: context,
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
+                            proposals: proposals,
+                          ),
+                          columns: [
+                            GridColumn(
+                              columnName: 'createdAt',
+                              label: const CustomColumnLabel('提出日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'createdUserName',
+                              label: const CustomColumnLabel('作成者名'),
+                            ),
+                            GridColumn(
+                              columnName: 'title',
+                              label: const CustomColumnLabel('件名'),
+                            ),
+                            GridColumn(
+                              columnName: 'price',
+                              label: const CustomColumnLabel('金額'),
+                            ),
+                            GridColumn(
+                              columnName: 'approval',
+                              label: const CustomColumnLabel('承認状況'),
+                            ),
+                            GridColumn(
+                              columnName: 'approvedAt',
+                              label: const CustomColumnLabel('承認日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'edit',
+                              label: const CustomColumnLabel('操作'),
+                              width: 200,
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'createdAt',
-                        label: const CustomColumnLabel('提出日時'),
+                  ),
+                  Tab(
+                    icon: const Icon(FluentIcons.completed_solid),
+                    text: const Text('承認済み'),
+                    semanticLabel: '承認済み',
+                    body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: proposalService.streamList(
+                        organizationId: widget.loginProvider.organization?.id,
+                        approval: 1,
                       ),
-                      GridColumn(
-                        columnName: 'createdUserName',
-                        label: const CustomColumnLabel('作成者名'),
+                      builder: (context, snapshot) {
+                        List<ApplyProposalModel> proposals = [];
+                        if (snapshot.hasData) {
+                          proposals = proposalService.generateList(
+                            data: snapshot.data,
+                            currentGroup: widget.homeProvider.currentGroup,
+                          );
+                        }
+                        return CustomDataGrid(
+                          source: ApplyProposalSource(
+                            context: context,
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
+                            proposals: proposals,
+                          ),
+                          columns: [
+                            GridColumn(
+                              columnName: 'createdAt',
+                              label: const CustomColumnLabel('提出日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'createdUserName',
+                              label: const CustomColumnLabel('作成者名'),
+                            ),
+                            GridColumn(
+                              columnName: 'title',
+                              label: const CustomColumnLabel('件名'),
+                            ),
+                            GridColumn(
+                              columnName: 'price',
+                              label: const CustomColumnLabel('金額'),
+                            ),
+                            GridColumn(
+                              columnName: 'approval',
+                              label: const CustomColumnLabel('承認状況'),
+                            ),
+                            GridColumn(
+                              columnName: 'approvedAt',
+                              label: const CustomColumnLabel('承認日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'edit',
+                              label: const CustomColumnLabel('操作'),
+                              width: 200,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Tab(
+                    icon: const Icon(FluentIcons.status_error_full),
+                    text: const Text('否決'),
+                    semanticLabel: '否決',
+                    body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      stream: proposalService.streamList(
+                        organizationId: widget.loginProvider.organization?.id,
+                        approval: 9,
                       ),
-                      GridColumn(
-                        columnName: 'title',
-                        label: const CustomColumnLabel('件名'),
-                      ),
-                      GridColumn(
-                        columnName: 'price',
-                        label: const CustomColumnLabel('金額'),
-                      ),
-                      GridColumn(
-                        columnName: 'approval',
-                        label: const CustomColumnLabel('承認状況'),
-                      ),
-                      GridColumn(
-                        columnName: 'approvedAt',
-                        label: const CustomColumnLabel('承認日時'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 200,
-                      ),
-                    ],
-                  );
+                      builder: (context, snapshot) {
+                        List<ApplyProposalModel> proposals = [];
+                        if (snapshot.hasData) {
+                          proposals = proposalService.generateList(
+                            data: snapshot.data,
+                            currentGroup: widget.homeProvider.currentGroup,
+                          );
+                        }
+                        return CustomDataGrid(
+                          source: ApplyProposalSource(
+                            context: context,
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
+                            proposals: proposals,
+                          ),
+                          columns: [
+                            GridColumn(
+                              columnName: 'createdAt',
+                              label: const CustomColumnLabel('提出日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'createdUserName',
+                              label: const CustomColumnLabel('作成者名'),
+                            ),
+                            GridColumn(
+                              columnName: 'title',
+                              label: const CustomColumnLabel('件名'),
+                            ),
+                            GridColumn(
+                              columnName: 'price',
+                              label: const CustomColumnLabel('金額'),
+                            ),
+                            GridColumn(
+                              columnName: 'approval',
+                              label: const CustomColumnLabel('承認状況'),
+                            ),
+                            GridColumn(
+                              columnName: 'approvedAt',
+                              label: const CustomColumnLabel('承認日時'),
+                            ),
+                            GridColumn(
+                              columnName: 'edit',
+                              label: const CustomColumnLabel('操作'),
+                              width: 200,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+                currentIndex: currentIndex,
+                onChanged: (value) {
+                  setState(() {
+                    currentIndex = value;
+                  });
                 },
               ),
             ),
