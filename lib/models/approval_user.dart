@@ -19,6 +19,7 @@ class ApprovalUserModel {
   Map toMap() => {
         'userId': _userId,
         'userName': _userName,
+        'userAdmin': _userAdmin,
         'approvedAt': _approvedAt,
       };
 }
