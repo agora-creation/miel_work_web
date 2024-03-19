@@ -73,13 +73,18 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: const Icon(FluentIcons.chevron_left),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Text(
-                '企画申請詳細',
-                style: TextStyle(fontSize: 16),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(FluentIcons.chevron_left),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text(
+                    '企画申請詳細',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -104,7 +109,12 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                             Navigator.pop(context);
                           },
                         )
-                      : Container(),
+                      : const CustomButtonSm(
+                          icon: FluentIcons.status_error_full,
+                          labelText: '否決する',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreyColor,
+                        ),
                   const SizedBox(width: 4),
                   isApproval
                       ? CustomButtonSm(
@@ -127,7 +137,12 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                             Navigator.pop(context);
                           },
                         )
-                      : Container(),
+                      : const CustomButtonSm(
+                          icon: FluentIcons.completed_solid,
+                          labelText: '承認する',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreyColor,
+                        ),
                   const SizedBox(width: 4),
                   isApply
                       ? CustomButtonSm(
@@ -146,7 +161,12 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                             ),
                           ),
                         )
-                      : Container(),
+                      : const CustomButtonSm(
+                          icon: FluentIcons.add,
+                          labelText: '再申請する',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kGreyColor,
+                        ),
                 ],
               ),
             ],
@@ -163,27 +183,48 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '提出日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.createdAt)}',
-                      style: const TextStyle(color: kGreyColor),
-                    ),
-                    widget.project.approval == 1
-                        ? Text(
-                            '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.approvedAt)}',
-                            style: const TextStyle(color: kGreyColor),
-                          )
-                        : Container(),
-                    Text(
-                      '作成者: ${widget.project.createdUserName}',
-                      style: const TextStyle(color: kGreyColor),
-                    ),
-                  ],
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  LinkText(
+                    label: 'この企画申請を削除する',
+                    color: kRedColor,
+                    onTap: () async {
+                      String? error = await projectProvider.delete(
+                        project: widget.project,
+                      );
+                      if (error != null) {
+                        if (!mounted) return;
+                        showMessage(context, error, false);
+                        return;
+                      }
+                      if (!mounted) return;
+                      showMessage(context, '企画申請を削除しました', true);
+                      Navigator.pop(context);
+                    },
+                    enabled: isDelete,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '提出日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.createdAt)}',
+                        style: const TextStyle(color: kGreyColor),
+                      ),
+                      widget.project.approval == 1
+                          ? Text(
+                              '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.project.approvedAt)}',
+                              style: const TextStyle(color: kGreyColor),
+                            )
+                          : Container(),
+                      Text(
+                        '作成者: ${widget.project.createdUserName}',
+                        style: const TextStyle(color: kGreyColor),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               reApprovalUsers.isNotEmpty
@@ -237,25 +278,41 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                     )
                   : Container(),
               const SizedBox(height: 16),
-              isDelete
-                  ? LinkText(
-                      label: 'この企画申請を削除する',
-                      color: kRedColor,
-                      onTap: () async {
-                        String? error = await projectProvider.delete(
-                          project: widget.project,
-                        );
-                        if (error != null) {
-                          if (!mounted) return;
-                          showMessage(context, error, false);
-                          return;
-                        }
-                        if (!mounted) return;
-                        showMessage(context, '企画申請を削除しました', true);
-                        Navigator.pop(context);
-                      },
-                    )
-                  : Container(),
+              const Text(
+                '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
+                style: TextStyle(
+                  color: kRedColor,
+                  fontSize: 12,
+                ),
+              ),
+              const Text(
+                '※『否決』は、承認状況が「承認待ち」で、管理者権限のスタッフのみ実行できます。',
+                style: TextStyle(
+                  color: kRedColor,
+                  fontSize: 12,
+                ),
+              ),
+              const Text(
+                '※『再申請』は、承認状況が「否決」で、作成者のスタッフのみ実行できます。',
+                style: TextStyle(
+                  color: kRedColor,
+                  fontSize: 12,
+                ),
+              ),
+              const Text(
+                '※『削除』は、承認状況が「承認待ち」で、作成者のスタッフのみ実行できます。',
+                style: TextStyle(
+                  color: kRedColor,
+                  fontSize: 12,
+                ),
+              ),
+              const Text(
+                '※管理者権限のスタッフが承認した場合のみ、承認状況が『承認済み』になります。',
+                style: TextStyle(
+                  color: kRedColor,
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ),

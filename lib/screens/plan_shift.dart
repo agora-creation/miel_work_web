@@ -149,7 +149,7 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                   children: [
                     CustomButtonSm(
                       icon: FluentIcons.search,
-                      labelText: 'カテゴリ検索',
+                      labelText: 'カテゴリから予定検索',
                       labelColor: kWhiteColor,
                       backgroundColor: kLightBlueColor,
                       onPressed: () => showDialog(

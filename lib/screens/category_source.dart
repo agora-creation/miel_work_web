@@ -34,10 +34,6 @@ class CategorySource extends DataGridSource {
           columnName: 'id',
           value: category.id,
         ),
-        DataGridCell(
-          columnName: 'name',
-          value: category.name,
-        ),
       ]);
     }).toList();
   }
@@ -56,7 +52,7 @@ class CategorySource extends DataGridSource {
     CategoryModel category = categories.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
+    cells.add(CustomColumnLabel(category.name));
     cells.add(Row(
       children: [
         CustomButtonSm(

@@ -40,22 +40,6 @@ class UserSource extends DataGridSource {
           columnName: 'id',
           value: user.id,
         ),
-        DataGridCell(
-          columnName: 'name',
-          value: user.name,
-        ),
-        DataGridCell(
-          columnName: 'email',
-          value: user.email,
-        ),
-        DataGridCell(
-          columnName: 'password',
-          value: user.password,
-        ),
-        DataGridCell(
-          columnName: 'uid',
-          value: user.uid,
-        ),
       ]);
     }).toList();
   }
@@ -74,9 +58,9 @@ class UserSource extends DataGridSource {
     UserModel user = users.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
+    cells.add(CustomColumnLabel(user.name));
+    cells.add(CustomColumnLabel(user.email));
+    cells.add(CustomColumnLabel(user.password));
     OrganizationGroupModel? userInGroup;
     if (homeProvider.groups.isNotEmpty) {
       for (OrganizationGroupModel group in homeProvider.groups) {
@@ -86,7 +70,7 @@ class UserSource extends DataGridSource {
       }
     }
     cells.add(CustomColumnLabel(userInGroup?.name ?? ''));
-    if (row.getCells()[4].value != '') {
+    if (user.uid != '') {
       cells.add(CustomColumnLink(
         label: 'ログイン中',
         color: kBlueColor,

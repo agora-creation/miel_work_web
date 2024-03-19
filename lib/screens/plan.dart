@@ -73,7 +73,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   children: [
                     CustomButtonSm(
                       icon: FluentIcons.search,
-                      labelText: 'カテゴリ検索',
+                      labelText: 'カテゴリから予定検索',
                       labelColor: kWhiteColor,
                       backgroundColor: kLightBlueColor,
                       onPressed: () => showDialog(
@@ -172,7 +172,7 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        'カテゴリ検索',
+        'カテゴリから予定検索',
         style: TextStyle(fontSize: 18),
       ),
       content: Container(

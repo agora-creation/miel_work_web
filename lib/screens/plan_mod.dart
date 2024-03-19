@@ -178,6 +178,21 @@ class _PlanModScreenState extends State<PlanModScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  '※『公開グループ』が未選択の場合、全てのスタッフが対象になります。',
+                  style: TextStyle(
+                    color: kRedColor,
+                    fontSize: 12,
+                  ),
+                ),
+                const Text(
+                  '※『公開グループ』を指定した場合、そのグループのスタッフのみ閲覧が可能になります。',
+                  style: TextStyle(
+                    color: kRedColor,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     InfoLabel(

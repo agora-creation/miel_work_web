@@ -66,7 +66,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  '予定を追加する際に、以下のカテゴリを選択することができます。',
+                  '予定を登録する際に、以下のカテゴリを設定することができます。',
                   style: TextStyle(fontSize: 14),
                 ),
                 CustomButtonSm(

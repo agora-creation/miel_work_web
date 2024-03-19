@@ -34,32 +34,6 @@ class ApplyProposalSource extends DataGridSource {
           columnName: 'id',
           value: proposal.id,
         ),
-        DataGridCell(
-          columnName: 'createdAt',
-          value: dateText('yyyy/MM/dd HH:mm', proposal.createdAt),
-        ),
-        DataGridCell(
-          columnName: 'createdUserName',
-          value: proposal.createdUserName,
-        ),
-        DataGridCell(
-          columnName: 'title',
-          value: proposal.title,
-        ),
-        DataGridCell(
-          columnName: 'price',
-          value: '¥ ${proposal.formatPrice()}',
-        ),
-        DataGridCell(
-          columnName: 'approval',
-          value: proposal.approvalText(),
-        ),
-        DataGridCell(
-          columnName: 'approvedAt',
-          value: proposal.approval == 1
-              ? dateText('yyyy/MM/dd HH:mm', proposal.createdAt)
-              : '',
-        ),
       ]);
     }).toList();
   }
@@ -78,12 +52,17 @@ class ApplyProposalSource extends DataGridSource {
     ApplyProposalModel proposal = proposals.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[6].value}'));
+    String createdAtText = dateText('yyyy/MM/dd HH:mm', proposal.createdAt);
+    String approvedAtText = '';
+    if (proposal.approval == 1) {
+      approvedAtText = dateText('yyyy/MM/dd HH:mm', proposal.createdAt);
+    }
+    cells.add(CustomColumnLabel(createdAtText));
+    cells.add(CustomColumnLabel(proposal.createdUserName));
+    cells.add(CustomColumnLabel(proposal.title));
+    cells.add(CustomColumnLabel('¥ ${proposal.formatPrice()}'));
+    cells.add(CustomColumnLabel(proposal.approvalText()));
+    cells.add(CustomColumnLabel(approvedAtText));
     cells.add(Row(
       children: [
         CustomButtonSm(

@@ -34,28 +34,6 @@ class ApplyConferenceSource extends DataGridSource {
           columnName: 'id',
           value: conference.id,
         ),
-        DataGridCell(
-          columnName: 'createdAt',
-          value: dateText('yyyy/MM/dd HH:mm', conference.createdAt),
-        ),
-        DataGridCell(
-          columnName: 'createdUserName',
-          value: conference.createdUserName,
-        ),
-        DataGridCell(
-          columnName: 'title',
-          value: conference.title,
-        ),
-        DataGridCell(
-          columnName: 'approval',
-          value: conference.approvalText(),
-        ),
-        DataGridCell(
-          columnName: 'approvedAt',
-          value: conference.approval == 1
-              ? dateText('yyyy/MM/dd HH:mm', conference.createdAt)
-              : '',
-        ),
       ]);
     }).toList();
   }
@@ -74,11 +52,16 @@ class ApplyConferenceSource extends DataGridSource {
     ApplyConferenceModel conference = conferences.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
+    String createdAtText = dateText('yyyy/MM/dd HH:mm', conference.createdAt);
+    String approvedAtText = '';
+    if (conference.approval == 1) {
+      approvedAtText = dateText('yyyy/MM/dd HH:mm', conference.createdAt);
+    }
+    cells.add(CustomColumnLabel(createdAtText));
+    cells.add(CustomColumnLabel(conference.createdUserName));
+    cells.add(CustomColumnLabel(conference.title));
+    cells.add(CustomColumnLabel(conference.approvalText()));
+    cells.add(CustomColumnLabel(approvedAtText));
     cells.add(Row(
       children: [
         CustomButtonSm(

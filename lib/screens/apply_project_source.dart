@@ -34,28 +34,6 @@ class ApplyProjectSource extends DataGridSource {
           columnName: 'id',
           value: project.id,
         ),
-        DataGridCell(
-          columnName: 'createdAt',
-          value: dateText('yyyy/MM/dd HH:mm', project.createdAt),
-        ),
-        DataGridCell(
-          columnName: 'createdUserName',
-          value: project.createdUserName,
-        ),
-        DataGridCell(
-          columnName: 'title',
-          value: project.title,
-        ),
-        DataGridCell(
-          columnName: 'approval',
-          value: project.approvalText(),
-        ),
-        DataGridCell(
-          columnName: 'approvedAt',
-          value: project.approval == 1
-              ? dateText('yyyy/MM/dd HH:mm', project.createdAt)
-              : '',
-        ),
       ]);
     }).toList();
   }
@@ -74,11 +52,16 @@ class ApplyProjectSource extends DataGridSource {
     ApplyProjectModel project = projects.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[2].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[3].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[4].value}'));
-    cells.add(CustomColumnLabel('${row.getCells()[5].value}'));
+    String createdAtText = dateText('yyyy/MM/dd HH:mm', project.createdAt);
+    String approvedAtText = '';
+    if (project.approval == 1) {
+      approvedAtText = dateText('yyyy/MM/dd HH:mm', project.createdAt);
+    }
+    cells.add(CustomColumnLabel(createdAtText));
+    cells.add(CustomColumnLabel(project.createdUserName));
+    cells.add(CustomColumnLabel(project.title));
+    cells.add(CustomColumnLabel(project.approvalText()));
+    cells.add(CustomColumnLabel(approvedAtText));
     cells.add(Row(
       children: [
         CustomButtonSm(

@@ -39,22 +39,6 @@ class NoticeSource extends DataGridSource {
           columnName: 'id',
           value: notice.id,
         ),
-        DataGridCell(
-          columnName: 'title',
-          value: notice.title,
-        ),
-        DataGridCell(
-          columnName: 'groupId',
-          value: notice.groupId,
-        ),
-        DataGridCell(
-          columnName: 'file',
-          value: notice.file,
-        ),
-        DataGridCell(
-          columnName: 'fileExt',
-          value: notice.fileExt,
-        ),
       ]);
     }).toList();
   }
@@ -73,7 +57,7 @@ class NoticeSource extends DataGridSource {
     NoticeModel notice = notices.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
+    cells.add(CustomColumnLabel(notice.title));
     OrganizationGroupModel? noticeInGroup;
     if (homeProvider.groups.isNotEmpty) {
       for (OrganizationGroupModel group in homeProvider.groups) {
@@ -84,12 +68,12 @@ class NoticeSource extends DataGridSource {
     }
     cells.add(CustomColumnLabel(noticeInGroup?.name ?? ''));
     if (notice.file != '') {
-      File file = File('${row.getCells()[2].value}');
+      File file = File(notice.file);
       cells.add(CustomColumnLink(
-        label: '${row.getCells()[0].value}${row.getCells()[4].value}',
+        label: '${notice.id}${notice.fileExt}',
         color: kBlueColor,
         onTap: () => downloadFile(
-          url: '${row.getCells()[3].value}',
+          url: notice.file,
           name: p.basename(file.path),
         ),
       ));

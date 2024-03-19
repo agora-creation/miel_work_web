@@ -42,18 +42,6 @@ class ManualSource extends DataGridSource {
           columnName: 'id',
           value: manual.id,
         ),
-        DataGridCell(
-          columnName: 'title',
-          value: manual.title,
-        ),
-        DataGridCell(
-          columnName: 'file',
-          value: manual.file,
-        ),
-        DataGridCell(
-          columnName: 'groupId',
-          value: manual.groupId,
-        ),
       ]);
     }).toList();
   }
@@ -72,13 +60,13 @@ class ManualSource extends DataGridSource {
     ManualModel manual = manuals.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel('${row.getCells()[1].value}'));
-    File file = File('${row.getCells()[2].value}');
+    cells.add(CustomColumnLabel(manual.title));
+    File file = File(manual.file);
     cells.add(CustomColumnLink(
-      label: '${row.getCells()[0].value}.pdf',
+      label: '${manual.id}.pdf',
       color: kBlueColor,
       onTap: () => downloadFile(
-        url: '${row.getCells()[2].value}',
+        url: manual.file,
         name: p.basename(file.path),
       ),
     ));
