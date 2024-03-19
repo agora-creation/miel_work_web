@@ -187,7 +187,7 @@ class _ApplyConferenceDetailScreenState
                 ),
               ),
               const SizedBox(height: 4),
-              widget.conference.approvalUsers.isNotEmpty
+              reApprovalUsers.isNotEmpty
                   ? InfoLabel(
                       label: '承認者一覧',
                       child: Container(

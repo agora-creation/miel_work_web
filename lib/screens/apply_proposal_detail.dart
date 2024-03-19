@@ -186,7 +186,7 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                 ),
               ),
               const SizedBox(height: 4),
-              widget.proposal.approvalUsers.isNotEmpty
+              reApprovalUsers.isNotEmpty
                   ? InfoLabel(
                       label: '承認者一覧',
                       child: Container(
