@@ -52,7 +52,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
       0,
       0,
     );
-    endedAt = startedAt.add(const Duration(hours: 1));
+    endedAt = startedAt.add(const Duration(hours: 8));
     setState(() {});
   }
 
@@ -224,7 +224,7 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                     onChanged: (value) {
                       setState(() {
                         startedAt = value;
-                        endedAt = startedAt.add(const Duration(hours: 1));
+                        endedAt = startedAt.add(const Duration(hours: 8));
                       });
                     },
                   ),

@@ -236,7 +236,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                     onChanged: (value) {
                       setState(() {
                         startedAt = value;
-                        endedAt = startedAt.add(const Duration(hours: 1));
+                        endedAt = startedAt.add(const Duration(hours: 8));
                       });
                     },
                   ),
@@ -275,7 +275,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                 ),
                 const SizedBox(height: 16),
                 LinkText(
-                  label: 'この予定を削除',
+                  label: 'この勤務予定を削除',
                   color: kRedColor,
                   onTap: () => showDialog(
                     context: context,
