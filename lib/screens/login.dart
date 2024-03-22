@@ -6,7 +6,9 @@ import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_button_lg.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -109,6 +111,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                   builder: (context) => const HomeScreen(),
                                 ),
                               );
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          LinkText(
+                            label: '操作マニュアル',
+                            color: kBlueColor,
+                            onTap: () async {
+                              Uri url = Uri.parse(
+                                  'https://agora-c.com/miel-work/manual_web.pdf');
+                              if (!await launchUrl(url)) {
+                                throw Exception('Could not launch $url');
+                              }
                             },
                           ),
                         ],
