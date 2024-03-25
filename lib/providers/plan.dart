@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/services/plan.dart';
@@ -9,8 +10,7 @@ class PlanProvider with ChangeNotifier {
   Future<String?> create({
     required OrganizationModel? organization,
     required OrganizationGroupModel? group,
-    required String? category,
-    required String categoryColor,
+    required CategoryModel? category,
     required String subject,
     required DateTime startedAt,
     required DateTime endedAt,
@@ -38,8 +38,8 @@ class PlanProvider with ChangeNotifier {
         'organizationId': organization.id,
         'groupId': group?.id ?? '',
         'userIds': userIds,
-        'category': category,
-        'categoryColor': categoryColor,
+        'category': category.name,
+        'categoryColor': category.color.value.toRadixString(16),
         'subject': subject,
         'startedAt': startedAt,
         'endedAt': endedAt,
@@ -59,8 +59,7 @@ class PlanProvider with ChangeNotifier {
     required String planId,
     required OrganizationModel? organization,
     required OrganizationGroupModel? group,
-    required String? category,
-    required String categoryColor,
+    required CategoryModel? category,
     required String subject,
     required DateTime startedAt,
     required DateTime endedAt,
@@ -87,8 +86,8 @@ class PlanProvider with ChangeNotifier {
         'organizationId': organization.id,
         'groupId': group?.id ?? '',
         'userIds': userIds,
-        'category': category,
-        'categoryColor': categoryColor,
+        'category': category.name,
+        'categoryColor': category.color.value.toRadixString(16),
         'subject': subject,
         'startedAt': startedAt,
         'endedAt': endedAt,

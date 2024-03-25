@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
@@ -107,7 +108,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'name',
-                        label: const CustomColumnLabel('カテゴリ名'),
+                        label: const CustomColumnLabel('カテゴリ'),
                       ),
                       GridColumn(
                         columnName: 'edit',
@@ -142,6 +143,7 @@ class AddCategoryDialog extends StatefulWidget {
 
 class _AddCategoryDialogState extends State<AddCategoryDialog> {
   TextEditingController nameController = TextEditingController();
+  Color color = kBlueColor;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +167,18 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                 maxLines: 1,
               ),
             ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'カテゴリカラー',
+              child: BlockPicker(
+                pickerColor: color,
+                onColorChanged: (value) {
+                  setState(() {
+                    color = value;
+                  });
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -183,6 +197,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
             String? error = await categoryProvider.create(
               organization: widget.loginProvider.organization,
               name: nameController.text,
+              color: color,
             );
             if (error != null) {
               if (!mounted) return;

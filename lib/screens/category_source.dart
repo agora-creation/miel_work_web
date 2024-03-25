@@ -52,9 +52,14 @@ class CategorySource extends DataGridSource {
     CategoryModel category = categories.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    cells.add(CustomColumnLabel(category.name));
+    cells.add(CustomColumnLabel(
+      category.name,
+      labelColor: kWhiteColor,
+      backgroundColor: category.color,
+    ));
     cells.add(Row(
       children: [
+        const SizedBox(width: 8),
         CustomButtonSm(
           labelText: '削除',
           labelColor: kWhiteColor,
@@ -156,12 +161,15 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
             ),
             const SizedBox(height: 8),
             InfoLabel(
-              label: 'カテゴリ名',
+              label: 'カテゴリ',
               child: Container(
-                color: kGrey200Color,
+                color: widget.category.color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.category.name),
+                child: Text(
+                  widget.category.name,
+                  style: const TextStyle(color: kWhiteColor),
+                ),
               ),
             ),
           ],

@@ -37,8 +37,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
   CategoryService categoryService = CategoryService();
   OrganizationGroupModel? selectedGroup;
   List<CategoryModel> categories = [];
-  String? selectedCategory;
-  String categoryColor = kPlanColors.first.value.toRadixString(16);
+  CategoryModel? selectedCategory;
   TextEditingController subjectController = TextEditingController();
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
@@ -62,8 +61,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
     categories = await categoryService.selectList(
       organizationId: widget.loginProvider.organization?.id,
     );
-    selectedCategory = plan.category;
-    categoryColor = plan.categoryColor.value.toRadixString(16);
+    selectedCategory = categories.firstWhere((e) => e.name == plan.category);
     subjectController.text = plan.subject;
     startedAt = plan.startedAt;
     endedAt = plan.endedAt;
@@ -145,7 +143,6 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     organization: widget.loginProvider.organization,
                     group: selectedGroup,
                     category: selectedCategory,
-                    categoryColor: categoryColor,
                     subject: subjectController.text,
                     startedAt: startedAt,
                     endedAt: endedAt,
@@ -211,12 +208,22 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     const SizedBox(width: 8),
                     InfoLabel(
                       label: 'カテゴリ',
-                      child: ComboBox<String>(
+                      child: ComboBox<CategoryModel>(
                         value: selectedCategory,
                         items: categories.map((category) {
                           return ComboBoxItem(
-                            value: category.name,
-                            child: Text(category.name),
+                            value: category,
+                            child: Container(
+                              color: category.color,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                category.name,
+                                style: const TextStyle(color: kWhiteColor),
+                              ),
+                            ),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -268,29 +275,6 @@ class _PlanModScreenState extends State<PlanModScreen> {
                   ),
                   allDay: allDay,
                   allDayOnChanged: _allDayChange,
-                ),
-                const SizedBox(height: 8),
-                InfoLabel(
-                  label: '色',
-                  child: ComboBox<String>(
-                    isExpanded: true,
-                    value: categoryColor,
-                    items: kPlanColors.map((Color value) {
-                      return ComboBoxItem(
-                        value: value.value.toRadixString(16),
-                        child: Container(
-                          color: value,
-                          width: double.infinity,
-                          height: 25,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        categoryColor = value!;
-                      });
-                    },
-                  ),
                 ),
                 const SizedBox(height: 8),
                 InfoLabel(
