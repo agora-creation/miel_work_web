@@ -130,6 +130,7 @@ class ApplyProjectProvider with ChangeNotifier {
 
   Future<String?> reject({
     required ApplyProjectModel project,
+    required String reason,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -137,6 +138,7 @@ class ApplyProjectProvider with ChangeNotifier {
     try {
       _projectService.update({
         'id': project.id,
+        'reason': reason,
         'approval': 9,
       });
       //通知

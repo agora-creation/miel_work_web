@@ -186,6 +186,8 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
             CategoryModel category = categories[index];
             return CustomCheckbox(
               label: category.name,
+              labelColor: kWhiteColor,
+              backgroundColor: category.color,
               checked: searchCategories.contains(category.name),
               onChanged: (value) {
                 if (searchCategories.contains(category.name)) {

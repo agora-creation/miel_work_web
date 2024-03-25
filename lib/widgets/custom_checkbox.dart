@@ -3,11 +3,15 @@ import 'package:miel_work_web/common/style.dart';
 
 class CustomCheckbox extends StatelessWidget {
   final String label;
+  final Color labelColor;
+  final Color backgroundColor;
   final bool checked;
   final void Function(bool?) onChanged;
 
   const CustomCheckbox({
     required this.label,
+    this.labelColor = kBlackColor,
+    this.backgroundColor = Colors.transparent,
     required this.checked,
     required this.onChanged,
     super.key,
@@ -16,14 +20,18 @@ class CustomCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: kGrey300Color)),
+      decoration: BoxDecoration(
+        border: const Border(bottom: BorderSide(color: kGrey300Color)),
+        color: backgroundColor,
       ),
       padding: const EdgeInsets.all(8),
       child: Checkbox(
         checked: checked,
         onChanged: onChanged,
-        content: Text(label),
+        content: Text(
+          label,
+          style: TextStyle(color: labelColor),
+        ),
       ),
     );
   }

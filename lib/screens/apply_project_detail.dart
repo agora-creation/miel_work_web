@@ -11,6 +11,7 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_project_add.dart';
 import 'package:miel_work_web/widgets/custom_approval_user_list.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
@@ -33,6 +34,8 @@ class ApplyProjectDetailScreen extends StatefulWidget {
 }
 
 class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
+  TextEditingController reasonController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final projectProvider = Provider.of<ApplyProjectProvider>(context);
@@ -97,6 +100,7 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                           onPressed: () async {
                             String? error = await projectProvider.reject(
                               project: widget.project,
+                              reason: reasonController.text,
                               loginUser: widget.loginProvider.user,
                             );
                             if (error != null) {
@@ -277,6 +281,23 @@ class _ApplyProjectDetailScreenState extends State<ApplyProjectDetailScreen> {
                       },
                     )
                   : Container(),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: '否決理由',
+                child: isReject
+                    ? CustomTextBox(
+                        controller: reasonController,
+                        placeholder: '',
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 10,
+                      )
+                    : Container(
+                        color: kGrey200Color,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        child: Text(widget.project.reason),
+                      ),
+              ),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
