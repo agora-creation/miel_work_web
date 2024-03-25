@@ -158,6 +158,20 @@ class _CustomHeaderState extends State<CustomHeader> {
                   ),
                 ),
               ),
+              const SizedBox(width: 4),
+              CustomButtonSm(
+                icon: FluentIcons.survey_questions,
+                labelText: '操作マニュアル',
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
+                onPressed: () async {
+                  Uri url =
+                      Uri.parse('https://agora-c.com/miel-work/manual_web.pdf');
+                  if (!await launchUrl(url)) {
+                    throw Exception('Could not launch $url');
+                  }
+                },
+              ),
             ],
           ),
         ],
