@@ -84,7 +84,7 @@ class PlanService {
         startTime: plan.startedAt,
         endTime: plan.endedAt,
         isAllDay: plan.allDay,
-        color: shift ? plan.color.withOpacity(0.3) : plan.color,
+        color: shift ? plan.categoryColor.withOpacity(0.3) : plan.categoryColor,
         notes: 'plan',
       ));
     }

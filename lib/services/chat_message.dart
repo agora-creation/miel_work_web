@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/models/chat_message.dart';
+import 'package:miel_work_web/models/read_user.dart';
 import 'package:miel_work_web/models/user.dart';
 
 class ChatMessageService {
@@ -35,18 +36,33 @@ class ChatMessageService {
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
         ChatMessageModel message = ChatMessageModel.fromSnapshot(map);
-        if (!message.readUserIds.contains(loginUser?.id)) {
+        bool isRead = false;
+        for (ReadUserModel readUser in message.readUsers) {
+          if (readUser.userId == loginUser?.id) {
+            isRead = true;
+          }
+        }
+        if (!isRead) {
           messages.add(message);
         }
       }
     });
     if (messages.isNotEmpty) {
       for (ChatMessageModel message in messages) {
-        List<String> readUserIds = message.readUserIds;
-        readUserIds.add(loginUser?.id ?? '');
+        List<Map> readUsers = [];
+        if (message.readUsers.isNotEmpty) {
+          for (ReadUserModel readUser in message.readUsers) {
+            readUsers.add(readUser.toMap());
+          }
+        }
+        readUsers.add({
+          'userId': loginUser?.id,
+          'userName': loginUser?.name,
+          'createdAt': DateTime.now(),
+        });
         update({
           'id': message.id,
-          'readUserIds': readUserIds,
+          'readUsers': readUsers,
         });
       }
     }
@@ -97,7 +113,13 @@ class ChatMessageService {
     List<ChatMessageModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       ChatMessageModel message = ChatMessageModel.fromSnapshot(doc);
-      if (!message.readUserIds.contains(loginUser?.id)) {
+      bool isRead = false;
+      for (ReadUserModel readUser in message.readUsers) {
+        if (readUser.userId == loginUser?.id) {
+          isRead = true;
+        }
+      }
+      if (!isRead) {
         ret.add(message);
       }
     }

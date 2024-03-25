@@ -53,6 +53,7 @@ class ApplyConferenceProvider with ChangeNotifier {
         'content': content,
         'file': file,
         'fileExt': fileExt,
+        'reason': '',
         'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],

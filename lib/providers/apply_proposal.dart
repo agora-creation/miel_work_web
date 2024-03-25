@@ -55,6 +55,7 @@ class ApplyProposalProvider with ChangeNotifier {
         'price': price,
         'file': file,
         'fileExt': fileExt,
+        'reason': '',
         'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],

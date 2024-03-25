@@ -30,6 +30,12 @@ class ChatMessageProvider with ChangeNotifier {
     if (contentController.text == '') return 'メッセージを入力してください';
     try {
       String id = _messageService.id();
+      List<Map> readUsers = [];
+      readUsers.add({
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
       _messageService.create({
         'id': id,
         'organizationId': chat.organizationId,
@@ -39,7 +45,7 @@ class ChatMessageProvider with ChangeNotifier {
         'image': '',
         'file': '',
         'fileExt': '',
-        'readUserIds': [loginUser.id],
+        'readUsers': readUsers,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
@@ -91,6 +97,12 @@ class ChatMessageProvider with ChangeNotifier {
       UploadTask uploadTask = storageRef.putData(uploadFile);
       TaskSnapshot downloadUrl = await uploadTask;
       String url = (await downloadUrl.ref.getDownloadURL());
+      List<Map> readUsers = [];
+      readUsers.add({
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
       _messageService.create({
         'id': id,
         'organizationId': chat.organizationId,
@@ -100,7 +112,7 @@ class ChatMessageProvider with ChangeNotifier {
         'image': url,
         'file': '',
         'fileExt': '',
-        'readUserIds': [loginUser.id],
+        'readUsers': readUsers,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
@@ -152,6 +164,12 @@ class ChatMessageProvider with ChangeNotifier {
       UploadTask uploadTask = storageRef.putData(uploadFile);
       TaskSnapshot downloadUrl = await uploadTask;
       String url = (await downloadUrl.ref.getDownloadURL());
+      List<Map> readUsers = [];
+      readUsers.add({
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
       _messageService.create({
         'id': id,
         'organizationId': chat.organizationId,
@@ -161,7 +179,7 @@ class ChatMessageProvider with ChangeNotifier {
         'image': '',
         'file': url,
         'fileExt': ext,
-        'readUserIds': [loginUser.id],
+        'readUsers': readUsers,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),

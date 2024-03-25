@@ -34,11 +34,11 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
   OrganizationGroupModel? selectedGroup;
   List<CategoryModel> categories = [];
   String? selectedCategory;
+  String categoryColor = kPlanColors.first.value.toRadixString(16);
   TextEditingController subjectController = TextEditingController();
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
   bool allDay = false;
-  String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
   int alertMinute = kAlertMinutes[1];
 
@@ -123,11 +123,11 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     organization: widget.loginProvider.organization,
                     group: selectedGroup,
                     category: selectedCategory,
+                    categoryColor: categoryColor,
                     subject: subjectController.text,
                     startedAt: startedAt,
                     endedAt: endedAt,
                     allDay: allDay,
-                    color: color,
                     memo: memoController.text,
                     alertMinute: alertMinute,
                   );
@@ -252,7 +252,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   label: '色',
                   child: ComboBox<String>(
                     isExpanded: true,
-                    value: color,
+                    value: categoryColor,
                     items: kPlanColors.map((Color value) {
                       return ComboBoxItem(
                         value: value.value.toRadixString(16),
@@ -265,7 +265,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        color = value!;
+                        categoryColor = value!;
                       });
                     },
                   ),

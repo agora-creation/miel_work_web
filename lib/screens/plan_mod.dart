@@ -38,11 +38,11 @@ class _PlanModScreenState extends State<PlanModScreen> {
   OrganizationGroupModel? selectedGroup;
   List<CategoryModel> categories = [];
   String? selectedCategory;
+  String categoryColor = kPlanColors.first.value.toRadixString(16);
   TextEditingController subjectController = TextEditingController();
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
   bool allDay = false;
-  String color = kPlanColors.first.value.toRadixString(16);
   TextEditingController memoController = TextEditingController();
   int alertMinute = 0;
 
@@ -63,11 +63,11 @@ class _PlanModScreenState extends State<PlanModScreen> {
       organizationId: widget.loginProvider.organization?.id,
     );
     selectedCategory = plan.category;
+    categoryColor = plan.categoryColor.value.toRadixString(16);
     subjectController.text = plan.subject;
     startedAt = plan.startedAt;
     endedAt = plan.endedAt;
     allDay = plan.allDay;
-    color = plan.color.value.toRadixString(16);
     memoController.text = plan.memo;
     alertMinute = plan.alertMinute;
     setState(() {});
@@ -145,11 +145,11 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     organization: widget.loginProvider.organization,
                     group: selectedGroup,
                     category: selectedCategory,
+                    categoryColor: categoryColor,
                     subject: subjectController.text,
                     startedAt: startedAt,
                     endedAt: endedAt,
                     allDay: allDay,
-                    color: color,
                     memo: memoController.text,
                     alertMinute: alertMinute,
                   );
@@ -274,7 +274,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                   label: '色',
                   child: ComboBox<String>(
                     isExpanded: true,
-                    value: color,
+                    value: categoryColor,
                     items: kPlanColors.map((Color value) {
                       return ComboBoxItem(
                         value: value.value.toRadixString(16),
@@ -287,7 +287,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        color = value!;
+                        categoryColor = value!;
                       });
                     },
                   ),
