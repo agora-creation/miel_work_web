@@ -34,11 +34,8 @@ class ApplyProposalDetailScreen extends StatefulWidget {
 }
 
 class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
-  TextEditingController reasonController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    final proposalProvider = Provider.of<ApplyProposalProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     bool isApply = false;
@@ -97,28 +94,16 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                           labelText: '否決する',
                           labelColor: kRedColor,
                           backgroundColor: kRed100Color,
-                          onPressed: () async {
-                            String? error = await proposalProvider.reject(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => RejectApplyProposalDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
                               proposal: widget.proposal,
-                              reason: reasonController.text,
-                              loginUser: widget.loginProvider.user,
-                            );
-                            if (error != null) {
-                              if (!mounted) return;
-                              showMessage(context, error, false);
-                              return;
-                            }
-                            if (!mounted) return;
-                            showMessage(context, '否決しました', true);
-                            Navigator.pop(context);
-                          },
+                            ),
+                          ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.status_error_full,
-                          labelText: '否決する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                   const SizedBox(width: 4),
                   isApproval
                       ? CustomButtonSm(
@@ -126,27 +111,16 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                           labelText: '承認する',
                           labelColor: kWhiteColor,
                           backgroundColor: kRedColor,
-                          onPressed: () async {
-                            String? error = await proposalProvider.approval(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => ApprovalApplyProposalDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
                               proposal: widget.proposal,
-                              loginUser: widget.loginProvider.user,
-                            );
-                            if (error != null) {
-                              if (!mounted) return;
-                              showMessage(context, error, false);
-                              return;
-                            }
-                            if (!mounted) return;
-                            showMessage(context, '承認しました', true);
-                            Navigator.pop(context);
-                          },
+                            ),
+                          ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.completed_solid,
-                          labelText: '承認する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                   const SizedBox(width: 4),
                   isApply
                       ? CustomButtonSm(
@@ -165,12 +139,7 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                             ),
                           ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.add,
-                          labelText: '再申請する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                 ],
               ),
             ],
@@ -191,24 +160,20 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  LinkText(
-                    label: 'この稟議申請を削除する',
-                    color: kRedColor,
-                    onTap: () async {
-                      String? error = await proposalProvider.delete(
-                        proposal: widget.proposal,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, '稟議申請を削除しました', true);
-                      Navigator.pop(context);
-                    },
-                    enabled: isDelete,
-                  ),
+                  isDelete
+                      ? LinkText(
+                          label: 'この稟議申請を削除する',
+                          color: kRedColor,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => DelApplyProposalDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                              proposal: widget.proposal,
+                            ),
+                          ),
+                        )
+                      : Container(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -278,6 +243,18 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8),
+              widget.proposal.reason != ''
+                  ? InfoLabel(
+                      label: '否決理由',
+                      child: Container(
+                        color: kGrey200Color,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        child: Text(widget.proposal.reason),
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
               widget.proposal.file != ''
                   ? LinkText(
                       label: '添付ファイル',
@@ -291,23 +268,6 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
                       },
                     )
                   : Container(),
-              const SizedBox(height: 8),
-              InfoLabel(
-                label: '否決理由',
-                child: isReject
-                    ? CustomTextBox(
-                        controller: reasonController,
-                        placeholder: '',
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 10,
-                      )
-                    : Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text(widget.proposal.reason),
-                      ),
-              ),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
@@ -348,6 +308,219 @@ class _ApplyProposalDetailScreenState extends State<ApplyProposalDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelApplyProposalDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyProposalModel proposal;
+
+  const DelApplyProposalDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.proposal,
+    super.key,
+  });
+
+  @override
+  State<DelApplyProposalDialog> createState() => _DelApplyProposalDialogState();
+}
+
+class _DelApplyProposalDialogState extends State<DelApplyProposalDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final proposalProvider = Provider.of<ApplyProposalProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この稟議申請を削除する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('本当に削除しますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await proposalProvider.delete(
+              proposal: widget.proposal,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '稟議申請を削除しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ApprovalApplyProposalDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyProposalModel proposal;
+
+  const ApprovalApplyProposalDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.proposal,
+    super.key,
+  });
+
+  @override
+  State<ApprovalApplyProposalDialog> createState() =>
+      _ApprovalApplyProposalDialogState();
+}
+
+class _ApprovalApplyProposalDialogState
+    extends State<ApprovalApplyProposalDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final proposalProvider = Provider.of<ApplyProposalProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この稟議申請を承認する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('本当に承認しますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await proposalProvider.approval(
+              proposal: widget.proposal,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '承認しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class RejectApplyProposalDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyProposalModel proposal;
+
+  const RejectApplyProposalDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.proposal,
+    super.key,
+  });
+
+  @override
+  State<RejectApplyProposalDialog> createState() =>
+      _RejectApplyProposalDialogState();
+}
+
+class _RejectApplyProposalDialogState extends State<RejectApplyProposalDialog> {
+  TextEditingController reasonController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final proposalProvider = Provider.of<ApplyProposalProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この稟議申請を否決する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('本当に否決しますか？'),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '否決理由',
+              child: CustomTextBox(
+                controller: reasonController,
+                placeholder: '',
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '否決する',
+          labelColor: kRedColor,
+          backgroundColor: kRed100Color,
+          onPressed: () async {
+            String? error = await proposalProvider.reject(
+              proposal: widget.proposal,
+              reason: reasonController.text,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '否決しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

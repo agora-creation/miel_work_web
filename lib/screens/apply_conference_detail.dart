@@ -35,11 +35,8 @@ class ApplyConferenceDetailScreen extends StatefulWidget {
 
 class _ApplyConferenceDetailScreenState
     extends State<ApplyConferenceDetailScreen> {
-  TextEditingController reasonController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     bool isApply = false;
@@ -98,28 +95,16 @@ class _ApplyConferenceDetailScreenState
                           labelText: '否決する',
                           labelColor: kRedColor,
                           backgroundColor: kRed100Color,
-                          onPressed: () async {
-                            String? error = await conferenceProvider.reject(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => RejectApplyConferenceDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
                               conference: widget.conference,
-                              reason: reasonController.text,
-                              loginUser: widget.loginProvider.user,
-                            );
-                            if (error != null) {
-                              if (!mounted) return;
-                              showMessage(context, error, false);
-                              return;
-                            }
-                            if (!mounted) return;
-                            showMessage(context, '否決しました', true);
-                            Navigator.pop(context);
-                          },
+                            ),
+                          ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.status_error_full,
-                          labelText: '否決する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                   const SizedBox(width: 4),
                   isApproval
                       ? CustomButtonSm(
@@ -127,27 +112,16 @@ class _ApplyConferenceDetailScreenState
                           labelText: '承認する',
                           labelColor: kWhiteColor,
                           backgroundColor: kRedColor,
-                          onPressed: () async {
-                            String? error = await conferenceProvider.approval(
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => ApprovalApplyConferenceDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
                               conference: widget.conference,
-                              loginUser: widget.loginProvider.user,
-                            );
-                            if (error != null) {
-                              if (!mounted) return;
-                              showMessage(context, error, false);
-                              return;
-                            }
-                            if (!mounted) return;
-                            showMessage(context, '承認しました', true);
-                            Navigator.pop(context);
-                          },
+                            ),
+                          ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.completed_solid,
-                          labelText: '承認する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                   const SizedBox(width: 4),
                   isApply
                       ? CustomButtonSm(
@@ -166,12 +140,7 @@ class _ApplyConferenceDetailScreenState
                             ),
                           ),
                         )
-                      : const CustomButtonSm(
-                          icon: FluentIcons.add,
-                          labelText: '再申請する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kGreyColor,
-                        ),
+                      : Container(),
                 ],
               ),
             ],
@@ -192,24 +161,20 @@ class _ApplyConferenceDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  LinkText(
-                    label: 'この協議・報告申請を削除する',
-                    color: kRedColor,
-                    onTap: () async {
-                      String? error = await conferenceProvider.delete(
-                        conference: widget.conference,
-                      );
-                      if (error != null) {
-                        if (!mounted) return;
-                        showMessage(context, error, false);
-                        return;
-                      }
-                      if (!mounted) return;
-                      showMessage(context, '協議・報告申請を削除しました', true);
-                      Navigator.pop(context);
-                    },
-                    enabled: isDelete,
-                  ),
+                  isDelete
+                      ? LinkText(
+                          label: 'この協議・報告申請を削除する',
+                          color: kRedColor,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => DelApplyConferenceDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                              conference: widget.conference,
+                            ),
+                          ),
+                        )
+                      : Container(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -269,6 +234,18 @@ class _ApplyConferenceDetailScreenState
                 ),
               ),
               const SizedBox(height: 8),
+              widget.conference.reason != ''
+                  ? InfoLabel(
+                      label: '否決理由',
+                      child: Container(
+                        color: kGrey200Color,
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        child: Text(widget.conference.reason),
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
               widget.conference.file != ''
                   ? LinkText(
                       label: '添付ファイル',
@@ -282,23 +259,6 @@ class _ApplyConferenceDetailScreenState
                       },
                     )
                   : Container(),
-              const SizedBox(height: 8),
-              InfoLabel(
-                label: '否決理由',
-                child: isReject
-                    ? CustomTextBox(
-                        controller: reasonController,
-                        placeholder: '',
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 10,
-                      )
-                    : Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text(widget.conference.reason),
-                      ),
-              ),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
@@ -339,6 +299,221 @@ class _ApplyConferenceDetailScreenState
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelApplyConferenceDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyConferenceModel conference;
+
+  const DelApplyConferenceDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.conference,
+    super.key,
+  });
+
+  @override
+  State<DelApplyConferenceDialog> createState() =>
+      _DelApplyConferenceDialogState();
+}
+
+class _DelApplyConferenceDialogState extends State<DelApplyConferenceDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この協議・報告申請を削除する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('本当に削除しますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await conferenceProvider.delete(
+              conference: widget.conference,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '協議・報告申請を削除しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ApprovalApplyConferenceDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyConferenceModel conference;
+
+  const ApprovalApplyConferenceDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.conference,
+    super.key,
+  });
+
+  @override
+  State<ApprovalApplyConferenceDialog> createState() =>
+      _ApprovalApplyConferenceDialogState();
+}
+
+class _ApprovalApplyConferenceDialogState
+    extends State<ApprovalApplyConferenceDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この協議・報告申請を承認する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('本当に承認しますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await conferenceProvider.approval(
+              conference: widget.conference,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '承認しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class RejectApplyConferenceDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ApplyConferenceModel conference;
+
+  const RejectApplyConferenceDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.conference,
+    super.key,
+  });
+
+  @override
+  State<RejectApplyConferenceDialog> createState() =>
+      _RejectApplyConferenceDialogState();
+}
+
+class _RejectApplyConferenceDialogState
+    extends State<RejectApplyConferenceDialog> {
+  TextEditingController reasonController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final conferenceProvider = Provider.of<ApplyConferenceProvider>(context);
+    return ContentDialog(
+      title: const Text(
+        'この協議・報告申請を否決する',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('本当に否決しますか？'),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '否決理由',
+              child: CustomTextBox(
+                controller: reasonController,
+                placeholder: '',
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '否決する',
+          labelColor: kRedColor,
+          backgroundColor: kRed100Color,
+          onPressed: () async {
+            String? error = await conferenceProvider.reject(
+              conference: widget.conference,
+              reason: reasonController.text,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '否決しました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

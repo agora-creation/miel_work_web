@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
+import 'package:miel_work_web/models/read_user.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -22,6 +23,7 @@ import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/message_form_field.dart';
 import 'package:miel_work_web/widgets/message_list.dart';
+import 'package:miel_work_web/widgets/read_user_list.dart';
 import 'package:miel_work_web/widgets/user_list.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
@@ -167,6 +169,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                       message: message,
                                       isMe: message.createdUserId ==
                                           widget.loginProvider.user?.id,
+                                      onTapReadUsers: () => showDialog(
+                                        context: context,
+                                        builder: (context) => ReadUsersDialog(
+                                          readUsers: message.readUsers,
+                                        ),
+                                      ),
                                       onTapImage: () {
                                         File file = File(message.image);
                                         downloadFile(
@@ -355,6 +363,51 @@ class _ChatUsersDialogState extends State<ChatUsersDialog> {
           itemBuilder: (context, index) {
             UserModel user = users[index];
             return UserList(user: user);
+          },
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: '閉じる',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
+  }
+}
+
+class ReadUsersDialog extends StatefulWidget {
+  final List<ReadUserModel> readUsers;
+
+  const ReadUsersDialog({
+    required this.readUsers,
+    super.key,
+  });
+
+  @override
+  State<ReadUsersDialog> createState() => _ReadUsersDialogState();
+}
+
+class _ReadUsersDialogState extends State<ReadUsersDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        '既読スタッフ',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: kGrey300Color),
+        ),
+        height: 300,
+        child: ListView.builder(
+          itemCount: widget.readUsers.length,
+          itemBuilder: (context, index) {
+            ReadUserModel readUser = widget.readUsers[index];
+            return ReadUserList(readUser: readUser);
           },
         ),
       ),

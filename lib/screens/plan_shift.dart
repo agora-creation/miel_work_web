@@ -259,15 +259,21 @@ class _PlanDialogState extends State<PlanDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: Text(
-        titleText,
-        style: const TextStyle(fontSize: 18),
-      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              color: color,
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                titleText,
+                style: const TextStyle(color: kWhiteColor),
+              ),
+            ),
+            const SizedBox(height: 8),
             InfoLabel(
               label: '公開グループ',
               child: Container(
@@ -285,14 +291,6 @@ class _PlanDialogState extends State<PlanDialog> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 child: Text(dateTimeText),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '色',
-              child: Container(
-                height: 20,
-                color: color,
               ),
             ),
             const SizedBox(height: 8),
