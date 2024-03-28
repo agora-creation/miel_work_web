@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/organization.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/organization.dart';
+import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
 
 enum AuthStatus {
@@ -22,10 +24,13 @@ class LoginProvider with ChangeNotifier {
 
   final UserService _userService = UserService();
   final OrganizationService _organizationService = OrganizationService();
+  final OrganizationGroupService _groupService = OrganizationGroupService();
   UserModel? _user;
   UserModel? get user => _user;
   OrganizationModel? _organization;
   OrganizationModel? get organization => _organization;
+  OrganizationGroupModel? _group;
+  OrganizationGroupModel? get group => _group;
 
   LoginProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth?.authStateChanges().listen(_onStateChanged);
@@ -50,18 +55,25 @@ class LoginProvider with ChangeNotifier {
       if (tmpUser != null) {
         OrganizationModel? tmpOrganization =
             await _organizationService.selectData(
-          adminUserId: tmpUser.id,
+          userId: tmpUser.id,
         );
         if (tmpOrganization != null) {
           _user = tmpUser;
           _organization = tmpOrganization;
+          OrganizationGroupModel? tmpGroup = await _groupService.selectData(
+            organizationId: tmpOrganization.id,
+            userId: tmpUser.id,
+          );
+          if (tmpGroup != null) {
+            _group = tmpGroup;
+          }
           await setPrefsString('email', email);
           await setPrefsString('password', password);
         } else {
           await _auth?.signOut();
           _status = AuthStatus.unauthenticated;
           notifyListeners();
-          error = 'あなたは管理者ではありません';
+          error = 'メールアドレスまたはパスワードが間違ってます';
         }
       } else {
         await _auth?.signOut();
@@ -73,26 +85,6 @@ class LoginProvider with ChangeNotifier {
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       error = 'ログインに失敗しました';
-    }
-    return error;
-  }
-
-  Future<String?> updateAdminUserIds({
-    required List<UserModel> selectedUsers,
-  }) async {
-    String? error;
-    if (selectedUsers.isEmpty) return 'スタッフを一人以上選択してください';
-    try {
-      List<String> adminUserIds = [];
-      for (UserModel user in selectedUsers) {
-        adminUserIds.add(user.id);
-      }
-      _organizationService.update({
-        'id': _organization?.id,
-        'adminUserIds': adminUserIds,
-      });
-    } catch (e) {
-      error = '管理者の変更に失敗しました';
     }
     return error;
   }
@@ -118,11 +110,18 @@ class LoginProvider with ChangeNotifier {
       if (tmpUser != null) {
         OrganizationModel? tmpOrganization =
             await _organizationService.selectData(
-          adminUserId: tmpUser.id,
+          userId: tmpUser.id,
         );
         if (tmpOrganization != null) {
           _user = tmpUser;
           _organization = tmpOrganization;
+          OrganizationGroupModel? tmpGroup = await _groupService.selectData(
+            organizationId: tmpOrganization.id,
+            userId: tmpUser.id,
+          );
+          if (tmpGroup != null) {
+            _group = tmpGroup;
+          }
         }
       }
     }
@@ -145,11 +144,18 @@ class LoginProvider with ChangeNotifier {
         if (tmpUser != null) {
           OrganizationModel? tmpOrganization =
               await _organizationService.selectData(
-            adminUserId: tmpUser.id,
+            userId: tmpUser.id,
           );
           if (tmpOrganization != null) {
             _user = tmpUser;
             _organization = tmpOrganization;
+            OrganizationGroupModel? tmpGroup = await _groupService.selectData(
+              organizationId: tmpOrganization.id,
+              userId: tmpUser.id,
+            );
+            if (tmpGroup != null) {
+              _group = tmpGroup;
+            }
           } else {
             _authUser = null;
             _status = AuthStatus.unauthenticated;

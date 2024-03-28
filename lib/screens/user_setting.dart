@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -35,8 +34,7 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
       userIds: widget.loginProvider.organization?.userIds ?? [],
       removeGroups: widget.homeProvider.groups,
     );
-    List<String> adminUserIds =
-        widget.loginProvider.organization?.adminUserIds ?? [];
+    List<String> adminUserIds = [];
     for (UserModel user in users) {
       if (adminUserIds.contains(user.id)) {
         if (usersText != '') usersText += ',';
@@ -132,8 +130,7 @@ class _ModAdminDialogState extends State<ModAdminDialog> {
 
   void _init() async {
     for (UserModel user in widget.users) {
-      List<String> adminUserIds =
-          widget.loginProvider.organization?.adminUserIds ?? [];
+      List<String> adminUserIds = [];
       if (adminUserIds.contains(user.id)) {
         selectedUsers.add(user);
       }
@@ -200,18 +197,18 @@ class _ModAdminDialogState extends State<ModAdminDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.loginProvider.updateAdminUserIds(
-              selectedUsers: selectedUsers,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            await widget.loginProvider.reload();
-            if (!mounted) return;
-            showMessage(context, '管理者を変更しました', true);
-            Navigator.pop(context);
+            // String? error = await widget.loginProvider.updateAdminUserIds(
+            //   selectedUsers: selectedUsers,
+            // );
+            // if (error != null) {
+            //   if (!mounted) return;
+            //   showMessage(context, error, false);
+            //   return;
+            // }
+            // await widget.loginProvider.reload();
+            // if (!mounted) return;
+            // showMessage(context, '管理者を変更しました', true);
+            // Navigator.pop(context);
           },
         ),
       ],

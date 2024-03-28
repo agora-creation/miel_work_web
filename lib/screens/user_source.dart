@@ -88,7 +88,7 @@ class UserSource extends DataGridSource {
       cells.add(const CustomColumnLabel(''));
     }
     bool deleteDisabled = false;
-    List<String> adminUserIds = loginProvider.organization?.adminUserIds ?? [];
+    List<String> adminUserIds = [];
     if (adminUserIds.contains(user.id)) {
       deleteDisabled = true;
     }

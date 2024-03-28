@@ -10,12 +10,12 @@ class OrganizationService {
   }
 
   Future<OrganizationModel?> selectData({
-    required String adminUserId,
+    required String userId,
   }) async {
     OrganizationModel? ret;
     await firestore
         .collection(collection)
-        .where('adminUserIds', arrayContains: adminUserId)
+        .where('userIds', arrayContains: userId)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
