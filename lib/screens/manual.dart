@@ -35,12 +35,19 @@ class ManualScreen extends StatefulWidget {
 
 class _ManualScreenState extends State<ManualScreen> {
   ManualService manualService = ManualService();
+  DateTime? searchStart;
+  DateTime? searchEnd;
 
   @override
   Widget build(BuildContext context) {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
+    String searchText = '指定なし';
+    if (searchStart != null && searchEnd != null) {
+      searchText =
+          '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
     return Stack(
       children: [
         const AnimationBackground(),
@@ -50,12 +57,38 @@ class _ManualScreenState extends State<ManualScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  '『$organizationName $groupName』の業務マニュアルを表示しています。',
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '『$organizationName $groupName』の業務マニュアルを表示しています。',
-                      style: const TextStyle(fontSize: 14),
+                    CustomButtonSm(
+                      icon: FluentIcons.calendar,
+                      labelText: '期間検索: $searchText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kLightBlueColor,
+                      onPressed: () async {
+                        var selected = await showDataRangePickerDialog(
+                          context: context,
+                        );
+                        if (selected != null &&
+                            selected.first != null &&
+                            selected.last != null) {
+                          var diff = selected.last!.difference(selected.first!);
+                          int diffDays = diff.inDays;
+                          if (diffDays > 31) {
+                            if (!mounted) return;
+                            showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+                            return;
+                          }
+                          searchStart = selected.first;
+                          searchEnd = selected.last;
+                          setState(() {});
+                        }
+                      },
                     ),
                     CustomButtonSm(
                       icon: FluentIcons.add,
@@ -93,6 +126,10 @@ class _ManualScreenState extends State<ManualScreen> {
                           manuals: manuals,
                         ),
                         columns: [
+                          GridColumn(
+                            columnName: 'createdAt',
+                            label: const CustomColumnLabel('追加日時'),
+                          ),
                           GridColumn(
                             columnName: 'title',
                             label: const CustomColumnLabel('タイトル'),

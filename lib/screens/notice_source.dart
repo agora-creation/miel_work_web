@@ -57,6 +57,9 @@ class NoticeSource extends DataGridSource {
     NoticeModel notice = notices.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
+    cells.add(CustomColumnLabel(
+      dateText('yyyy/MM/dd HH:mm', notice.createdAt),
+    ));
     cells.add(CustomColumnLabel(notice.title));
     OrganizationGroupModel? noticeInGroup;
     if (homeProvider.groups.isNotEmpty) {

@@ -167,8 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ChatMessageModel message = messages[index];
                                     return MessageList(
                                       message: message,
-                                      isMe: message.createdUserId ==
-                                          widget.loginProvider.user?.id,
+                                      loginUser: widget.loginProvider.user,
                                       onTapReadUsers: () => showDialog(
                                         context: context,
                                         builder: (context) => ReadUsersDialog(

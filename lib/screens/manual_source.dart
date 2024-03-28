@@ -60,6 +60,9 @@ class ManualSource extends DataGridSource {
     ManualModel manual = manuals.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
+    cells.add(CustomColumnLabel(
+      dateText('yyyy/MM/dd HH:mm', manual.createdAt),
+    ));
     cells.add(CustomColumnLabel(manual.title));
     File file = File(manual.file);
     cells.add(CustomColumnLink(

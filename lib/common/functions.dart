@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
@@ -83,6 +84,26 @@ String dateText(String format, DateTime? date) {
     ret = DateFormat(format, 'ja').format(date);
   }
   return ret;
+}
+
+Future<List<DateTime?>?> showDataRangePickerDialog({
+  required BuildContext context,
+  DateTime? startValue,
+  DateTime? endValue,
+}) async {
+  List<DateTime?>? results = await showCalendarDatePicker2Dialog(
+    context: context,
+    config: CalendarDatePicker2WithActionButtonsConfig(
+      calendarType: CalendarDatePicker2Type.range,
+      firstDate: kFirstDate,
+      lastDate: kLastDate,
+    ),
+    dialogSize: const Size(325, 400),
+    value: [startValue, endValue],
+    borderRadius: BorderRadius.circular(8),
+    dialogBackgroundColor: kWhiteColor,
+  );
+  return results;
 }
 
 Timestamp convertTimestamp(DateTime date, bool end) {

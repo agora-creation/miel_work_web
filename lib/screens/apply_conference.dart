@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply_conference.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -30,9 +31,16 @@ class ApplyConferenceScreen extends StatefulWidget {
 class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
   ApplyConferenceService conferenceService = ApplyConferenceService();
   int currentIndex = 0;
+  DateTime? searchStart;
+  DateTime? searchEnd;
 
   @override
   Widget build(BuildContext context) {
+    String searchText = '指定なし';
+    if (searchStart != null && searchEnd != null) {
+      searchText =
+          '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -64,7 +72,31 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(),
+                CustomButtonSm(
+                  icon: FluentIcons.calendar,
+                  labelText: '期間検索: $searchText',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kLightBlueColor,
+                  onPressed: () async {
+                    var selected = await showDataRangePickerDialog(
+                      context: context,
+                    );
+                    if (selected != null &&
+                        selected.first != null &&
+                        selected.last != null) {
+                      var diff = selected.last!.difference(selected.first!);
+                      int diffDays = diff.inDays;
+                      if (diffDays > 31) {
+                        if (!mounted) return;
+                        showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+                        return;
+                      }
+                      searchStart = selected.first;
+                      searchEnd = selected.last;
+                      setState(() {});
+                    }
+                  },
+                ),
                 CustomButtonSm(
                   icon: FluentIcons.add,
                   labelText: '新規申請',
