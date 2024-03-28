@@ -80,6 +80,8 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,
+                      startValue: searchStart,
+                      endValue: searchEnd,
                     );
                     if (selected != null &&
                         selected.first != null &&
@@ -126,6 +128,8 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                       stream: proposalService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 0,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyProposalModel> proposals = [];
@@ -185,6 +189,8 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                       stream: proposalService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 1,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyProposalModel> proposals = [];
@@ -244,6 +250,8 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                       stream: proposalService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 9,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyProposalModel> proposals = [];

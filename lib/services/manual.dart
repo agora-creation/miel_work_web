@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/manual.dart';
 
 class ManualService {
@@ -24,13 +25,26 @@ class ManualService {
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
     required String? groupId,
+    required DateTime? searchStart,
+    required DateTime? searchEnd,
   }) {
-    return FirebaseFirestore.instance
-        .collection(collection)
-        .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
-        .orderBy('createdAt', descending: true)
-        .snapshots();
+    if (searchStart != null && searchEnd != null) {
+      Timestamp startAt = convertTimestamp(searchStart, false);
+      Timestamp endAt = convertTimestamp(searchEnd, true);
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .where('organizationId', isEqualTo: organizationId ?? 'error')
+          .where('groupId', isEqualTo: groupId != '' ? groupId : null)
+          .orderBy('createdAt', descending: true)
+          .startAt([endAt]).endAt([startAt]).snapshots();
+    } else {
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .where('organizationId', isEqualTo: organizationId ?? 'error')
+          .where('groupId', isEqualTo: groupId != '' ? groupId : null)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    }
   }
 
   List<ManualModel> generateList({

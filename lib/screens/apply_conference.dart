@@ -80,6 +80,8 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,
+                      startValue: searchStart,
+                      endValue: searchEnd,
                     );
                     if (selected != null &&
                         selected.first != null &&
@@ -126,6 +128,8 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                       stream: conferenceService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 0,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyConferenceModel> conferences = [];
@@ -181,6 +185,8 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                       stream: conferenceService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 1,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyConferenceModel> conferences = [];
@@ -236,6 +242,8 @@ class _ApplyConferenceScreenState extends State<ApplyConferenceScreen> {
                       stream: conferenceService.streamList(
                         organizationId: widget.loginProvider.organization?.id,
                         approval: 9,
+                        searchStart: searchStart,
+                        searchEnd: searchEnd,
                       ),
                       builder: (context, snapshot) {
                         List<ApplyConferenceModel> conferences = [];

@@ -73,6 +73,8 @@ class _ManualScreenState extends State<ManualScreen> {
                       onPressed: () async {
                         var selected = await showDataRangePickerDialog(
                           context: context,
+                          startValue: searchStart,
+                          endValue: searchEnd,
                         );
                         if (selected != null &&
                             selected.first != null &&
@@ -111,6 +113,8 @@ class _ManualScreenState extends State<ManualScreen> {
                     stream: manualService.streamList(
                       organizationId: widget.loginProvider.organization?.id,
                       groupId: group?.id,
+                      searchStart: searchStart,
+                      searchEnd: searchEnd,
                     ),
                     builder: (context, snapshot) {
                       List<ManualModel> manuals = [];
