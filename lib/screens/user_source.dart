@@ -88,9 +88,11 @@ class UserSource extends DataGridSource {
       cells.add(const CustomColumnLabel(''));
     }
     bool deleteDisabled = false;
-    List<String> adminUserIds = [];
-    if (adminUserIds.contains(user.id)) {
+    if (user.admin) {
+      cells.add(const CustomColumnLabel('管理者'));
       deleteDisabled = true;
+    } else {
+      cells.add(const CustomColumnLabel(''));
     }
     cells.add(Row(
       children: [
@@ -110,7 +112,7 @@ class UserSource extends DataGridSource {
           ),
         ),
         const SizedBox(width: 4),
-        !deleteDisabled
+        !deleteDisabled && loginProvider.isAllGroup()
             ? CustomButtonSm(
                 labelText: '削除',
                 labelColor: kWhiteColor,
@@ -215,6 +217,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
+  bool admin = false;
 
   @override
   void initState() {
@@ -223,6 +226,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
     emailController.text = widget.user.email;
     passwordController.text = widget.user.password;
     selectedGroup = widget.userInGroup;
+    admin = widget.user.admin;
   }
 
   @override
@@ -283,18 +287,50 @@ class _ModUserDialogState extends State<ModUserDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
+              child: widget.loginProvider.isAllGroup()
+                  ? ComboBox<OrganizationGroupModel>(
+                      isExpanded: true,
+                      value: selectedGroup,
+                      items: groupItems,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedGroup = value;
+                        });
+                      },
+                      placeholder: const Text('グループ未選択'),
+                    )
+                  : Container(
+                      color: kGrey200Color,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      child: Text('${selectedGroup?.name}'),
+                    ),
             ),
+            const SizedBox(height: 8),
+            widget.loginProvider.isAllGroup()
+                ? InfoLabel(
+                    label: '権限',
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: kGreyColor),
+                          bottom: BorderSide(color: kGreyColor),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      width: double.infinity,
+                      child: Checkbox(
+                        checked: admin,
+                        onChanged: (value) {
+                          setState(() {
+                            admin = value ?? false;
+                          });
+                        },
+                        content: const Text('このスタッフを管理者とする'),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
@@ -317,6 +353,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
               password: passwordController.text,
               befGroup: widget.userInGroup,
               aftGroup: selectedGroup,
+              admin: admin,
             );
             if (error != null) {
               if (!mounted) return;
@@ -481,6 +518,16 @@ class _DelUserDialogState extends State<DelUserDialog> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 child: Text(widget.userInGroup?.name ?? ''),
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '権限',
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.user.admin ? '管理者' : ''),
               ),
             ),
           ],

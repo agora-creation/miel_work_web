@@ -100,29 +100,37 @@ class ApplyProposalProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
-        'userAdmin': true,
+        'userAdmin': loginUser.admin,
         'approvedAt': DateTime.now(),
       });
-      _proposalService.update({
-        'id': proposal.id,
-        'approval': 1,
-        'approvedAt': DateTime.now(),
-        'approvalUsers': approvalUsers,
-      });
-      //通知
-      List<UserModel> sendUsers = [];
-      sendUsers = await _userService.selectList(
-        userIds: [proposal.createdUserId],
-      );
-      if (sendUsers.isNotEmpty) {
-        for (UserModel user in sendUsers) {
-          if (user.id == loginUser.id) continue;
-          _fmService.send(
-            token: user.token,
-            title: proposal.title,
-            body: '稟議申請が承認されました。',
-          );
+      if (loginUser.admin) {
+        _proposalService.update({
+          'id': proposal.id,
+          'approval': 1,
+          'approvedAt': DateTime.now(),
+          'approvalUsers': approvalUsers,
+        });
+        //通知
+        List<UserModel> sendUsers = [];
+        sendUsers = await _userService.selectList(
+          userIds: [proposal.createdUserId],
+        );
+        if (sendUsers.isNotEmpty) {
+          for (UserModel user in sendUsers) {
+            if (user.id == loginUser.id) continue;
+            _fmService.send(
+              token: user.token,
+              title: proposal.title,
+              body: '稟議申請が承認されました。',
+            );
+          }
         }
+      } else {
+        _proposalService.update({
+          'id': proposal.id,
+          'approval': 0,
+          'approvalUsers': approvalUsers,
+        });
       }
     } catch (e) {
       error = '承認に失敗しました';

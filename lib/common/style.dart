@@ -19,6 +19,7 @@ const kOrangeColor = Color(0xFFFF9800);
 const kOrange300Color = Color(0xFFFFB74D);
 const kYellowColor = Color(0xFFFFEB3B);
 const kGreenColor = Color(0xFF4CAF50);
+const kGreen200Color = Color(0xFFA5D6A7);
 
 FluentThemeData customTheme() {
   return FluentThemeData(

@@ -187,16 +187,18 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                   label: '働くスタッフを選択',
                   child: Column(
                     children: [
-                      ComboBox<OrganizationGroupModel>(
-                        isExpanded: true,
-                        value: selectedGroup,
-                        items: groupItems,
-                        onChanged: (value) {
-                          selectedUserIds.clear();
-                          _groupChange(value);
-                        },
-                        placeholder: const Text('グループ未選択'),
-                      ),
+                      widget.loginProvider.isAllGroup()
+                          ? ComboBox<OrganizationGroupModel>(
+                              isExpanded: true,
+                              value: selectedGroup,
+                              items: groupItems,
+                              onChanged: (value) {
+                                selectedUserIds.clear();
+                                _groupChange(value);
+                              },
+                              placeholder: const Text('グループ未選択'),
+                            )
+                          : Container(),
                       const SizedBox(height: 4),
                       Container(
                         height: 200,

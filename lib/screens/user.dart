@@ -122,6 +122,10 @@ class _UserScreenState extends State<UserScreen> {
                         label: const CustomColumnLabel('スマホアプリ'),
                       ),
                       GridColumn(
+                        columnName: 'admin',
+                        label: const CustomColumnLabel('権限'),
+                      ),
+                      GridColumn(
                         columnName: 'edit',
                         label: const CustomColumnLabel('操作'),
                         width: 250,
@@ -159,6 +163,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
+  bool admin = false;
 
   @override
   void initState() {
@@ -224,18 +229,50 @@ class _AddUserDialogState extends State<AddUserDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text('グループ未選択'),
-              ),
+              child: widget.loginProvider.isAllGroup()
+                  ? ComboBox<OrganizationGroupModel>(
+                      isExpanded: true,
+                      value: selectedGroup,
+                      items: groupItems,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedGroup = value;
+                        });
+                      },
+                      placeholder: const Text('グループ未選択'),
+                    )
+                  : Container(
+                      color: kGrey200Color,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      child: Text('${selectedGroup?.name}'),
+                    ),
             ),
+            const SizedBox(height: 8),
+            widget.loginProvider.isAllGroup()
+                ? InfoLabel(
+                    label: '権限',
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: kGreyColor),
+                          bottom: BorderSide(color: kGreyColor),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      width: double.infinity,
+                      child: Checkbox(
+                        checked: admin,
+                        onChanged: (value) {
+                          setState(() {
+                            admin = value ?? false;
+                          });
+                        },
+                        content: const Text('このスタッフを管理者とする'),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
@@ -257,6 +294,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
               email: emailController.text,
               password: passwordController.text,
               group: selectedGroup,
+              admin: admin,
             );
             if (error != null) {
               if (!mounted) return;

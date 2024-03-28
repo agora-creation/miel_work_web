@@ -36,6 +36,14 @@ class LoginProvider with ChangeNotifier {
     _auth?.authStateChanges().listen(_onStateChanged);
   }
 
+  bool isAllGroup() {
+    if (_group == null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<String?> login({
     required String email,
     required String password,

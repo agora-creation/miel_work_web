@@ -89,7 +89,7 @@ class _ApplyConferenceDetailScreenState
               ),
               Row(
                 children: [
-                  isReject
+                  isReject && widget.loginProvider.user?.admin == true
                       ? CustomButtonSm(
                           icon: FluentIcons.status_error_full,
                           labelText: '否決する',
@@ -413,7 +413,7 @@ class _ApprovalApplyConferenceDialogState
           onPressed: () => Navigator.pop(context),
         ),
         CustomButtonSm(
-          labelText: '削除する',
+          labelText: '承認する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
