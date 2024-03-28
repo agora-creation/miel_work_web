@@ -47,12 +47,18 @@ class ChatService {
     await firestore
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .orderBy('updatedAt', descending: true)
         .get()
         .then((value) {
       for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
-        ret.add(ChatModel.fromSnapshot(map));
+        ChatModel chat = ChatModel.fromSnapshot(map);
+        if (groupId != null) {
+          if (chat.groupId == '' || chat.groupId == groupId) {
+            ret.add(chat);
+          }
+        } else {
+          ret.add(chat);
+        }
       }
     });
     return ret;
