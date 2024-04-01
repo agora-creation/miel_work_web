@@ -302,8 +302,8 @@ class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
         ),
         CustomButtonSm(
           labelText: '検索する',
-          labelColor: kWhiteColor,
-          backgroundColor: kLightBlueColor,
+          labelColor: kBlue600Color,
+          backgroundColor: kBlue100Color,
           onPressed: () async {
             await setPrefsString('keyword', keywordController.text);
             widget.getKeyword();

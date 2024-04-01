@@ -63,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
+                          const Text('全てのスタッフがログインできます。'),
+                          const SizedBox(height: 8),
                           InfoLabel(
                             label: 'メールアドレス',
                             child: CustomTextBox(

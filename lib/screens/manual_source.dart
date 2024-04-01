@@ -209,7 +209,10 @@ class _ModManualDialogState extends State<ModManualDialog> {
     if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
-        child: Text('グループ未選択'),
+        child: Text(
+          '全てのグループ',
+          style: TextStyle(color: kGreyColor),
+        ),
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(

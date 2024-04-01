@@ -59,6 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.running),
+            title: const Text('勤怠管理'),
+            body: Container(),
+            enabled: false,
+          ),
+          PaneItemSeparator(),
+          PaneItem(
             icon: const Icon(FluentIcons.office_chat),
             title: const Text('チャット'),
             body: ChatScreen(
@@ -77,12 +84,19 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.documentation),
+            icon: const Icon(FluentIcons.pdf),
             title: const Text('業務マニュアル'),
             body: ManualScreen(
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.document_approval),
+            title: const Text('各種申請'),
+            body: Container(),
+            enabled: false,
           ),
           PaneItemSeparator(),
           PaneItem(

@@ -68,8 +68,8 @@ class _ManualScreenState extends State<ManualScreen> {
                     CustomButtonSm(
                       icon: FluentIcons.calendar,
                       labelText: '期間検索: $searchText',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kLightBlueColor,
+                      labelColor: kBlue600Color,
+                      backgroundColor: kBlue100Color,
                       onPressed: () async {
                         var selected = await showDataRangePickerDialog(
                           context: context,
@@ -197,7 +197,10 @@ class _AddManualDialogState extends State<AddManualDialog> {
     if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
-        child: Text('グループ未選択'),
+        child: Text(
+          '全てのグループ',
+          style: TextStyle(color: kGreyColor),
+        ),
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(

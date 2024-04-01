@@ -75,8 +75,8 @@ class _ApplyProposalScreenState extends State<ApplyProposalScreen> {
                 CustomButtonSm(
                   icon: FluentIcons.calendar,
                   labelText: '期間検索: $searchText',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  labelColor: kBlue600Color,
+                  backgroundColor: kBlue100Color,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,

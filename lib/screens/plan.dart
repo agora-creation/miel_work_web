@@ -74,8 +74,8 @@ class _PlanScreenState extends State<PlanScreen> {
                     CustomButtonSm(
                       icon: FluentIcons.search,
                       labelText: 'カテゴリから予定検索',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kLightBlueColor,
+                      labelColor: kBlue600Color,
+                      backgroundColor: kBlue100Color,
                       onPressed: () => showDialog(
                         context: context,
                         builder: (context) => SearchCategoryDialog(
@@ -210,8 +210,8 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
         ),
         CustomButtonSm(
           labelText: '検索する',
-          labelColor: kWhiteColor,
-          backgroundColor: kLightBlueColor,
+          labelColor: kBlue600Color,
+          backgroundColor: kBlue100Color,
           onPressed: () async {
             await setPrefsList('categories', searchCategories);
             widget.searchCategoriesChange();
