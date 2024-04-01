@@ -60,33 +60,35 @@ class _NoticeScreenState extends State<NoticeScreen> {
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    CustomButtonSm(
-                      icon: FluentIcons.calendar,
-                      labelText: '期間検索: $searchText',
-                      labelColor: kBlue600Color,
-                      backgroundColor: kBlue100Color,
-                      onPressed: () async {
-                        var selected = await showDataRangePickerDialog(
-                          context: context,
-                          startValue: searchStart,
-                          endValue: searchEnd,
-                        );
-                        if (selected != null &&
-                            selected.first != null &&
-                            selected.last != null) {
-                          var diff = selected.last!.difference(selected.first!);
-                          int diffDays = diff.inDays;
-                          if (diffDays > 31) {
-                            if (!mounted) return;
-                            showMessage(context, '1ヵ月以上の範囲が選択されています', false);
-                            return;
+                    InfoLabel(
+                      label: '期間検索',
+                      child: Button(
+                        child: Text(searchText),
+                        onPressed: () async {
+                          var selected = await showDataRangePickerDialog(
+                            context: context,
+                            startValue: searchStart,
+                            endValue: searchEnd,
+                          );
+                          if (selected != null &&
+                              selected.first != null &&
+                              selected.last != null) {
+                            var diff =
+                                selected.last!.difference(selected.first!);
+                            int diffDays = diff.inDays;
+                            if (diffDays > 31) {
+                              if (!mounted) return;
+                              showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+                              return;
+                            }
+                            searchStart = selected.first;
+                            searchEnd = selected.last;
+                            setState(() {});
                           }
-                          searchStart = selected.first;
-                          searchEnd = selected.last;
-                          setState(() {});
-                        }
-                      },
+                        },
+                      ),
                     ),
                     CustomButtonSm(
                       icon: FluentIcons.add,

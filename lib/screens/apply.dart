@@ -3,7 +3,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
-import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_add.dart';
@@ -33,12 +32,11 @@ class _ApplyScreenState extends State<ApplyScreen> {
   ApplyService applyService = ApplyService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  String? searchType;
+  int searchApproval = 0;
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.loginProvider.organization?.name ?? '';
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
-    String groupName = group?.name ?? '';
     String searchText = '指定なし';
     if (searchStart != null && searchEnd != null) {
       searchText =
@@ -53,52 +51,88 @@ class _ApplyScreenState extends State<ApplyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '『$organizationName $groupName』の各種申請一覧を表示しています。',
-                  style: const TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
                       children: [
-                        CustomButtonSm(
-                          icon: FluentIcons.calendar,
-                          labelText: '期間検索: $searchText',
-                          labelColor: kBlue600Color,
-                          backgroundColor: kBlue100Color,
-                          onPressed: () async {
-                            var selected = await showDataRangePickerDialog(
-                              context: context,
-                              startValue: searchStart,
-                              endValue: searchEnd,
-                            );
-                            if (selected != null &&
-                                selected.first != null &&
-                                selected.last != null) {
-                              var diff =
-                                  selected.last!.difference(selected.first!);
-                              int diffDays = diff.inDays;
-                              if (diffDays > 31) {
-                                if (!mounted) return;
-                                showMessage(
-                                    context, '1ヵ月以上の範囲が選択されています', false);
-                                return;
+                        InfoLabel(
+                          label: '期間検索',
+                          child: Button(
+                            child: Text(searchText),
+                            onPressed: () async {
+                              var selected = await showDataRangePickerDialog(
+                                context: context,
+                                startValue: searchStart,
+                                endValue: searchEnd,
+                              );
+                              if (selected != null &&
+                                  selected.first != null &&
+                                  selected.last != null) {
+                                var diff =
+                                    selected.last!.difference(selected.first!);
+                                int diffDays = diff.inDays;
+                                if (diffDays > 31) {
+                                  if (!mounted) return;
+                                  showMessage(
+                                      context, '1ヵ月以上の範囲が選択されています', false);
+                                  return;
+                                }
+                                searchStart = selected.first;
+                                searchEnd = selected.last;
+                                setState(() {});
                               }
-                              searchStart = selected.first;
-                              searchEnd = selected.last;
-                              setState(() {});
-                            }
-                          },
+                            },
+                          ),
                         ),
                         const SizedBox(width: 4),
-                        CustomButtonSm(
-                          icon: FluentIcons.search,
-                          labelText: '承認状況: 承認待ち',
-                          labelColor: kBlue600Color,
-                          backgroundColor: kBlue100Color,
-                          onPressed: () {},
+                        InfoLabel(
+                          label: '申請種別',
+                          child: ComboBox<String?>(
+                            value: searchType,
+                            items: kApplyTypes.map((e) {
+                              return ComboBoxItem(
+                                value: e,
+                                child: Text('$e申請'),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                searchType = value;
+                              });
+                            },
+                            placeholder: const Text(
+                              '指定なし',
+                              style: TextStyle(color: kGreyColor),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        InfoLabel(
+                          label: '承認状況',
+                          child: ComboBox<int>(
+                            value: searchApproval,
+                            items: const [
+                              ComboBoxItem(
+                                value: 0,
+                                child: Text('承認待ち'),
+                              ),
+                              ComboBoxItem(
+                                value: 1,
+                                child: Text('承認済み'),
+                              ),
+                              ComboBoxItem(
+                                value: 9,
+                                child: Text('否決'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                searchApproval = value ?? 0;
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -124,7 +158,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream: applyService.streamList(
                       organizationId: widget.loginProvider.organization?.id,
-                      approval: 0,
+                      searchType: searchType,
+                      searchApproval: searchApproval,
                       searchStart: searchStart,
                       searchEnd: searchEnd,
                     ),

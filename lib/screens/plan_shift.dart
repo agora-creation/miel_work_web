@@ -154,17 +154,18 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    CustomButtonSm(
-                      icon: FluentIcons.search,
-                      labelText: 'カテゴリ検索: $searchText',
-                      labelColor: kBlue600Color,
-                      backgroundColor: kBlue100Color,
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => SearchCategoryDialog(
-                          loginProvider: widget.loginProvider,
-                          searchCategoriesChange: _searchCategoriesChange,
+                    InfoLabel(
+                      label: 'カテゴリ検索',
+                      child: Button(
+                        child: Text(searchText),
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => SearchCategoryDialog(
+                            loginProvider: widget.loginProvider,
+                            searchCategoriesChange: _searchCategoriesChange,
+                          ),
                         ),
                       ),
                     ),

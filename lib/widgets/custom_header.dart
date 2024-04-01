@@ -4,9 +4,6 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply_conference.dart';
-import 'package:miel_work_web/screens/apply_project.dart';
-import 'package:miel_work_web/screens/apply_proposal.dart';
 import 'package:miel_work_web/screens/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
@@ -136,45 +133,6 @@ class _CustomHeaderState extends State<CustomHeader> {
                     throw Exception('Could not launch $url');
                   }
                 },
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
-                labelText: '稟議申請',
-                labelColor: kBlackColor,
-                backgroundColor: kOrange300Color,
-                onPressed: () => showBottomUpScreen(
-                  context,
-                  ApplyProposalScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
-                labelText: '協議・報告申請',
-                labelColor: kBlackColor,
-                backgroundColor: kOrange300Color,
-                onPressed: () => showBottomUpScreen(
-                  context,
-                  ApplyConferenceScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
-                labelText: '企画申請',
-                labelColor: kBlackColor,
-                backgroundColor: kOrange300Color,
-                onPressed: () => showBottomUpScreen(
-                  context,
-                  ApplyProjectScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                  ),
-                ),
               ),
               const SizedBox(width: 4),
               CustomButtonSm(

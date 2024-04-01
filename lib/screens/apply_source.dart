@@ -4,6 +4,8 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply_detail.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -55,7 +57,11 @@ class ApplySource extends DataGridSource {
     cells.add(CustomColumnLabel(apply.createdUserName));
     cells.add(CustomColumnLabel('${apply.type}申請'));
     cells.add(CustomColumnLabel(apply.title));
-    cells.add(CustomColumnLabel('¥ ${apply.formatPrice()}'));
+    if (apply.type == '稟議') {
+      cells.add(CustomColumnLabel('¥ ${apply.formatPrice()}'));
+    } else {
+      cells.add(const CustomColumnLabel(''));
+    }
     cells.add(CustomColumnLabel(apply.approvalText()));
     cells.add(Row(
       children: [
@@ -63,14 +69,25 @@ class ApplySource extends DataGridSource {
           labelText: '詳細',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            FluentPageRoute(
+              builder: (context) => ApplyDetailScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                apply: apply,
+              ),
+            ),
+          ),
         ),
         const SizedBox(width: 4),
         CustomButtonSm(
           labelText: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
-          onPressed: () {},
+          onPressed: () async {
+            await PdfService().applyDownload(apply);
+          },
         ),
       ],
     ));
