@@ -46,7 +46,10 @@ class _CustomHeaderState extends State<CustomHeader> {
     if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const ComboBoxItem(
         value: null,
-        child: Text('グループ未選択'),
+        child: Text(
+          '全グループ表示',
+          style: TextStyle(color: kGreyColor),
+        ),
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
         groupItems.add(ComboBoxItem(
@@ -76,7 +79,10 @@ class _CustomHeaderState extends State<CustomHeader> {
                           onChanged: (value) {
                             widget.homeProvider.currentGroupChange(value);
                           },
-                          placeholder: const Text('グループ未選択'),
+                          placeholder: const Text(
+                            '全てのグループ',
+                            style: TextStyle(color: kGreyColor),
+                          ),
                         ),
                         const SizedBox(width: 2),
                         CustomIconButtonSm(

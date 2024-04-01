@@ -69,7 +69,14 @@ class UserSource extends DataGridSource {
         }
       }
     }
-    cells.add(CustomColumnLabel(userInGroup?.name ?? ''));
+    if (userInGroup != null) {
+      cells.add(CustomColumnLabel(userInGroup.name));
+    } else {
+      cells.add(const CustomColumnLabel(
+        '未所属',
+        labelColor: kGreyColor,
+      ));
+    }
     if (user.uid != '') {
       cells.add(CustomColumnLink(
         label: 'ログイン中',
@@ -85,14 +92,20 @@ class UserSource extends DataGridSource {
         ),
       ));
     } else {
-      cells.add(const CustomColumnLabel(''));
+      cells.add(const CustomColumnLabel(
+        '未ログイン',
+        labelColor: kGreyColor,
+      ));
     }
     bool deleteDisabled = false;
     if (user.admin) {
       cells.add(const CustomColumnLabel('管理者'));
       deleteDisabled = true;
     } else {
-      cells.add(const CustomColumnLabel(''));
+      cells.add(const CustomColumnLabel(
+        '一般',
+        labelColor: kGreyColor,
+      ));
     }
     cells.add(Row(
       children: [
@@ -297,7 +310,10 @@ class _ModUserDialogState extends State<ModUserDialog> {
                           selectedGroup = value;
                         });
                       },
-                      placeholder: const Text('グループ未選択'),
+                      placeholder: const Text(
+                        '未所属',
+                        style: TextStyle(color: kGreyColor),
+                      ),
                     )
                   : Container(
                       color: kGrey200Color,
@@ -517,7 +533,7 @@ class _DelUserDialogState extends State<DelUserDialog> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.userInGroup?.name ?? ''),
+                child: Text(widget.userInGroup?.name ?? '未所属'),
               ),
             ),
             const SizedBox(height: 8),
@@ -527,7 +543,7 @@ class _DelUserDialogState extends State<DelUserDialog> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.user.admin ? '管理者' : ''),
+                child: Text(widget.user.admin ? '管理者' : '一般'),
               ),
             ),
           ],

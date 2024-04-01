@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -7,6 +9,8 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class NoticeDelScreen extends StatefulWidget {
@@ -110,9 +114,23 @@ class _NoticeDelScreenState extends State<NoticeDelScreen> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.noticeInGroup?.name ?? ''),
+                child: Text(widget.noticeInGroup?.name ?? '全てのグループ'),
               ),
             ),
+            const SizedBox(height: 8),
+            widget.notice.file != ''
+                ? LinkText(
+                    label: '添付ファイル',
+                    color: kBlueColor,
+                    onTap: () {
+                      File file = File(widget.notice.file);
+                      downloadFile(
+                        url: widget.notice.file,
+                        name: p.basename(file.path),
+                      );
+                    },
+                  )
+                : Container(),
           ],
         ),
       ),

@@ -184,7 +184,10 @@ class _PlanShiftAddScreenState extends State<PlanShiftAddScreen> {
                                 selectedUserIds.clear();
                                 _groupChange(value);
                               },
-                              placeholder: const Text('グループ未選択'),
+                              placeholder: const Text(
+                                '全てのグループ',
+                                style: TextStyle(color: kGreyColor),
+                              ),
                             )
                           : Container(),
                       const SizedBox(height: 4),

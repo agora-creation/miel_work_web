@@ -81,7 +81,14 @@ class ManualSource extends DataGridSource {
         }
       }
     }
-    cells.add(CustomColumnLabel(manualInGroup?.name ?? ''));
+    if (manualInGroup != null) {
+      cells.add(CustomColumnLabel(manualInGroup.name));
+    } else {
+      cells.add(const CustomColumnLabel(
+        '全てのグループ',
+        labelColor: kGreyColor,
+      ));
+    }
     cells.add(Row(
       children: [
         CustomButtonSm(
@@ -258,7 +265,10 @@ class _ModManualDialogState extends State<ModManualDialog> {
                           selectedGroup = value;
                         });
                       },
-                      placeholder: const Text('グループ未選択'),
+                      placeholder: const Text(
+                        '全てのグループ',
+                        style: TextStyle(color: kGreyColor),
+                      ),
                     )
                   : Container(
                       color: kGrey200Color,
@@ -368,7 +378,7 @@ class _DelManualDialogState extends State<DelManualDialog> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.manualInGroup?.name ?? ''),
+                child: Text(widget.manualInGroup?.name ?? '全てのグループ'),
               ),
             ),
           ],

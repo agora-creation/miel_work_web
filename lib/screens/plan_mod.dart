@@ -203,7 +203,10 @@ class _PlanModScreenState extends State<PlanModScreen> {
                                   selectedGroup = value;
                                 });
                               },
-                              placeholder: const Text('グループ未選択'),
+                              placeholder: const Text(
+                                '全てのグループ',
+                                style: TextStyle(color: kGreyColor),
+                              ),
                             )
                           : Padding(
                               padding: const EdgeInsets.all(8),
@@ -236,7 +239,10 @@ class _PlanModScreenState extends State<PlanModScreen> {
                             selectedCategory = value;
                           });
                         },
-                        placeholder: const Text('カテゴリ未選択'),
+                        placeholder: const Text(
+                          'カテゴリ未選択',
+                          style: TextStyle(color: kGreyColor),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),

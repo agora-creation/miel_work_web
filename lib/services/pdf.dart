@@ -162,7 +162,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 500,
+                    height: 450,
                   ),
                   _generateCell(
                     label: proposal.content,
@@ -171,7 +171,31 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 500,
+                    height: 450,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '否決理由',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 100,
+                  ),
+                  _generateCell(
+                    label: proposal.reason,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 100,
                   ),
                 ],
               ),
@@ -312,7 +336,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 600,
+                    height: 550,
                   ),
                   _generateCell(
                     label: conference.content,
@@ -321,7 +345,31 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 600,
+                    height: 550,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '否決理由',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 100,
+                  ),
+                  _generateCell(
+                    label: conference.reason,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 100,
                   ),
                 ],
               ),
@@ -462,7 +510,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 600,
+                    height: 550,
                   ),
                   _generateCell(
                     label: project.content,
@@ -471,7 +519,31 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 600,
+                    height: 550,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '否決理由',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 100,
+                  ),
+                  _generateCell(
+                    label: project.reason,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 100,
                   ),
                 ],
               ),

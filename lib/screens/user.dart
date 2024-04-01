@@ -239,7 +239,10 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           selectedGroup = value;
                         });
                       },
-                      placeholder: const Text('グループ未選択'),
+                      placeholder: const Text(
+                        '未所属',
+                        style: TextStyle(color: kGreyColor),
+                      ),
                     )
                   : Container(
                       color: kGrey200Color,

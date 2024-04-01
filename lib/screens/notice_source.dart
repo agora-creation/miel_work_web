@@ -69,7 +69,14 @@ class NoticeSource extends DataGridSource {
         }
       }
     }
-    cells.add(CustomColumnLabel(noticeInGroup?.name ?? ''));
+    if (noticeInGroup != null) {
+      cells.add(CustomColumnLabel(noticeInGroup.name));
+    } else {
+      cells.add(const CustomColumnLabel(
+        '全てのグループ',
+        labelColor: kGreyColor,
+      ));
+    }
     if (notice.file != '') {
       File file = File(notice.file);
       cells.add(CustomColumnLink(
@@ -81,7 +88,10 @@ class NoticeSource extends DataGridSource {
         ),
       ));
     } else {
-      cells.add(const CustomColumnLabel(''));
+      cells.add(const CustomColumnLabel(
+        'なし',
+        labelColor: kGreyColor,
+      ));
     }
     cells.add(Row(
       children: [
