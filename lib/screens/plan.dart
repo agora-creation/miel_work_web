@@ -59,6 +59,14 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String searchText = '指定なし';
+    if (searchCategories.isNotEmpty) {
+      searchText = '';
+      for (String category in searchCategories) {
+        if (searchText != '') searchText += ',';
+        searchText += category;
+      }
+    }
     return Stack(
       children: [
         const AnimationBackground(),
@@ -73,7 +81,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   children: [
                     CustomButtonSm(
                       icon: FluentIcons.search,
-                      labelText: 'カテゴリから予定検索',
+                      labelText: 'カテゴリ検索: $searchText',
                       labelColor: kBlue600Color,
                       backgroundColor: kBlue100Color,
                       onPressed: () => showDialog(
@@ -172,7 +180,7 @@ class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text(
-        'カテゴリから予定検索',
+        'カテゴリ検索',
         style: TextStyle(fontSize: 18),
       ),
       content: Container(

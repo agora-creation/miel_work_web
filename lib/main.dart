@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/apply_conference.dart';
 import 'package:miel_work_web/providers/apply_project.dart';
 import 'package:miel_work_web/providers/apply_proposal.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: CategoryProvider()),
         ChangeNotifierProvider.value(value: PlanProvider()),
         ChangeNotifierProvider.value(value: PlanShiftProvider()),
+        ChangeNotifierProvider.value(value: ApplyProvider()),
         ChangeNotifierProvider.value(value: ApplyProposalProvider()),
         ChangeNotifierProvider.value(value: ApplyConferenceProvider()),
         ChangeNotifierProvider.value(value: ApplyProjectProvider()),

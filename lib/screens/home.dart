@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply.dart';
 import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/manual.dart';
@@ -95,8 +96,10 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItem(
             icon: const Icon(FluentIcons.document_approval),
             title: const Text('各種申請'),
-            body: Container(),
-            enabled: false,
+            body: ApplyScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
           PaneItemSeparator(),
           PaneItem(

@@ -126,6 +126,14 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String searchText = '指定なし';
+    if (searchCategories.isNotEmpty) {
+      searchText = '';
+      for (String category in searchCategories) {
+        if (searchText != '') searchText += ',';
+        searchText += category;
+      }
+    }
     var stream1 = planService.streamList(
       organizationId: widget.loginProvider.organization?.id,
       groupId: widget.homeProvider.currentGroup?.id,
@@ -149,7 +157,7 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                   children: [
                     CustomButtonSm(
                       icon: FluentIcons.search,
-                      labelText: 'カテゴリから予定検索',
+                      labelText: 'カテゴリ検索: $searchText',
                       labelColor: kBlue600Color,
                       backgroundColor: kBlue100Color,
                       onPressed: () => showDialog(
