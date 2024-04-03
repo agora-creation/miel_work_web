@@ -73,7 +73,7 @@ class NoticeSource extends DataGridSource {
       cells.add(CustomColumnLabel(noticeInGroup.name));
     } else {
       cells.add(const CustomColumnLabel(
-        '全てのグループ',
+        'グループの指定なし',
         labelColor: kGreyColor,
       ));
     }

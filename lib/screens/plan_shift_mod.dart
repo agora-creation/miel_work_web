@@ -118,7 +118,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全てのグループ',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -200,7 +200,7 @@ class _PlanShiftModScreenState extends State<PlanShiftModScreen> {
                                 _groupChange(value);
                               },
                               placeholder: const Text(
-                                '全てのグループ',
+                                'グループの指定なし',
                                 style: TextStyle(color: kGreyColor),
                               ),
                             )

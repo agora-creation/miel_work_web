@@ -200,7 +200,7 @@ class _AddManualDialogState extends State<AddManualDialog> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全てのグループ',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -259,7 +259,7 @@ class _AddManualDialogState extends State<AddManualDialog> {
                         });
                       },
                       placeholder: const Text(
-                        '全てのグループ',
+                        'グループの指定なし',
                         style: TextStyle(color: kGreyColor),
                       ),
                     )

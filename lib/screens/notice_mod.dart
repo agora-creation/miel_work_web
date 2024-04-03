@@ -52,7 +52,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全てのグループ',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -151,7 +151,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                           });
                         },
                         placeholder: const Text(
-                          '全てのグループ',
+                          'グループの指定なし',
                           style: TextStyle(color: kGreyColor),
                         ),
                       )

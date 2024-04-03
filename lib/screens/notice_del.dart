@@ -114,7 +114,7 @@ class _NoticeDelScreenState extends State<NoticeDelScreen> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.noticeInGroup?.name ?? '全てのグループ'),
+                child: Text(widget.noticeInGroup?.name ?? 'グループの指定なし'),
               ),
             ),
             const SizedBox(height: 8),

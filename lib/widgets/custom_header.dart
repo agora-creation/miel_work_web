@@ -44,7 +44,7 @@ class _CustomHeaderState extends State<CustomHeader> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全グループ表示',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -77,7 +77,7 @@ class _CustomHeaderState extends State<CustomHeader> {
                             widget.homeProvider.currentGroupChange(value);
                           },
                           placeholder: const Text(
-                            '全てのグループ',
+                            'グループの指定なし',
                             style: TextStyle(color: kGreyColor),
                           ),
                         ),
@@ -124,6 +124,7 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
+                icon: FluentIcons.calculated_table,
                 labelText: 'メーター検針',
                 labelColor: kBlackColor,
                 backgroundColor: kYellowColor,
@@ -136,6 +137,7 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
+                icon: FluentIcons.sign_out,
                 labelText: '$userNameでログイン中',
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,

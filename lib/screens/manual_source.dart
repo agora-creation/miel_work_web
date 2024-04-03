@@ -85,7 +85,7 @@ class ManualSource extends DataGridSource {
       cells.add(CustomColumnLabel(manualInGroup.name));
     } else {
       cells.add(const CustomColumnLabel(
-        '全てのグループ',
+        'グループの指定なし',
         labelColor: kGreyColor,
       ));
     }
@@ -210,7 +210,7 @@ class _ModManualDialogState extends State<ModManualDialog> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全てのグループ',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -269,7 +269,7 @@ class _ModManualDialogState extends State<ModManualDialog> {
                         });
                       },
                       placeholder: const Text(
-                        '全てのグループ',
+                        'グループの指定なし',
                         style: TextStyle(color: kGreyColor),
                       ),
                     )
@@ -381,7 +381,7 @@ class _DelManualDialogState extends State<DelManualDialog> {
                 color: kGrey200Color,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
-                child: Text(widget.manualInGroup?.name ?? '全てのグループ'),
+                child: Text(widget.manualInGroup?.name ?? 'グループの指定なし'),
               ),
             ),
           ],

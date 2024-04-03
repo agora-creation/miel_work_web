@@ -108,7 +108,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
       groupItems.add(const ComboBoxItem(
         value: null,
         child: Text(
-          '全てのグループ',
+          'グループの指定なし',
           style: TextStyle(color: kGreyColor),
         ),
       ));
@@ -207,7 +207,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                                 });
                               },
                               placeholder: const Text(
-                                '全てのグループ',
+                                'グループの指定なし',
                                 style: TextStyle(color: kGreyColor),
                               ),
                             )
