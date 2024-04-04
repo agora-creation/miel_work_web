@@ -177,24 +177,19 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   children: [
                     InfoLabel(
                       label: '公開グループ',
-                      child: widget.loginProvider.isAllGroup()
-                          ? ComboBox<OrganizationGroupModel>(
-                              value: selectedGroup,
-                              items: groupItems,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGroup = value;
-                                });
-                              },
-                              placeholder: const Text(
-                                'グループの指定なし',
-                                style: TextStyle(color: kGreyColor),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text('${selectedGroup?.name}'),
-                            ),
+                      child: ComboBox<OrganizationGroupModel>(
+                        value: selectedGroup,
+                        items: groupItems,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedGroup = value;
+                          });
+                        },
+                        placeholder: const Text(
+                          'グループの指定なし',
+                          style: TextStyle(color: kGreyColor),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
                     InfoLabel(

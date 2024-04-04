@@ -64,6 +64,7 @@ class ApplyProvider with ChangeNotifier {
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       //通知
       List<UserModel> sendUsers = [];
@@ -102,10 +103,10 @@ class ApplyProvider with ChangeNotifier {
       approvalUsers.add({
         'userId': loginUser.id,
         'userName': loginUser.name,
-        'userAdmin': loginUser.admin,
+        'userPresident': loginUser.president,
         'approvedAt': DateTime.now(),
       });
-      if (loginUser.admin) {
+      if (loginUser.president) {
         _applyService.update({
           'id': apply.id,
           'approval': 1,

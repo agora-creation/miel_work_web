@@ -140,27 +140,20 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
               const SizedBox(height: 8),
               InfoLabel(
                 label: '送信先グループ',
-                child: widget.loginProvider.isAllGroup()
-                    ? ComboBox<OrganizationGroupModel>(
-                        isExpanded: true,
-                        value: selectedGroup,
-                        items: groupItems,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedGroup = value;
-                          });
-                        },
-                        placeholder: const Text(
-                          'グループの指定なし',
-                          style: TextStyle(color: kGreyColor),
-                        ),
-                      )
-                    : Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text('${selectedGroup?.name}'),
-                      ),
+                child: ComboBox<OrganizationGroupModel>(
+                  isExpanded: true,
+                  value: selectedGroup,
+                  items: groupItems,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGroup = value;
+                    });
+                  },
+                  placeholder: const Text(
+                    'グループの指定なし',
+                    style: TextStyle(color: kGreyColor),
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               CustomFileField(

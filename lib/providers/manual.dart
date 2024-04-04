@@ -46,6 +46,7 @@ class ManualProvider with ChangeNotifier {
         'file': file,
         'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       //通知
       List<UserModel> sendUsers = [];
@@ -103,6 +104,7 @@ class ManualProvider with ChangeNotifier {
         'groupId': group?.id ?? '',
         'title': title,
         'readUserIds': [loginUser.id],
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       //通知
       List<UserModel> sendUsers = [];

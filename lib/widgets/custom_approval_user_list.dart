@@ -20,7 +20,7 @@ class CustomApprovalUserList extends StatelessWidget {
       child: ListTile(
         title: Text(
           approvalUser.userName,
-          style: approvalUser.userAdmin
+          style: approvalUser.userPresident
               ? const TextStyle(
                   color: kRedColor,
                   fontWeight: FontWeight.bold,

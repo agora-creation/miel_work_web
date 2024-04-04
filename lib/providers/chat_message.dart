@@ -49,6 +49,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       _chatService.update({
         'id': chat.id,
@@ -116,6 +117,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       _chatService.update({
         'id': chat.id,
@@ -183,6 +185,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
+        'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       _chatService.update({
         'id': chat.id,

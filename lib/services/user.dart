@@ -41,12 +41,14 @@ class UserService {
   Future<UserModel?> selectData({
     required String email,
     required String password,
+    required bool admin,
   }) async {
     UserModel? ret;
     await firestore
         .collection(collection)
         .where('email', isEqualTo: email)
         .where('password', isEqualTo: password)
+        .where('admin', isEqualTo: admin)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {

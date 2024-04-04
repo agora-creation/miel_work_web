@@ -97,15 +97,15 @@ class UserSource extends DataGridSource {
         labelColor: kGreyColor,
       ));
     }
-    bool deleteDisabled = false;
     if (user.admin) {
       cells.add(const CustomColumnLabel('管理者'));
-      deleteDisabled = true;
     } else {
-      cells.add(const CustomColumnLabel(
-        '一般',
-        labelColor: kGreyColor,
-      ));
+      cells.add(const CustomColumnLabel(''));
+    }
+    if (user.president) {
+      cells.add(const CustomColumnLabel('社長'));
+    } else {
+      cells.add(const CustomColumnLabel(''));
     }
     cells.add(Row(
       children: [
@@ -125,7 +125,7 @@ class UserSource extends DataGridSource {
           ),
         ),
         const SizedBox(width: 4),
-        !deleteDisabled && loginProvider.isAllGroup()
+        !user.admin
             ? CustomButtonSm(
                 labelText: '削除',
                 labelColor: kWhiteColor,
@@ -231,6 +231,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
   TextEditingController passwordController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
   bool admin = false;
+  bool president = false;
 
   @override
   void initState() {
@@ -240,6 +241,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
     passwordController.text = widget.user.password;
     selectedGroup = widget.userInGroup;
     admin = widget.user.admin;
+    president = widget.user.president;
   }
 
   @override
@@ -303,32 +305,25 @@ class _ModUserDialogState extends State<ModUserDialog> {
             const SizedBox(height: 8),
             InfoLabel(
               label: '所属グループ',
-              child: widget.loginProvider.isAllGroup()
-                  ? ComboBox<OrganizationGroupModel>(
-                      isExpanded: true,
-                      value: selectedGroup,
-                      items: groupItems,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedGroup = value;
-                        });
-                      },
-                      placeholder: const Text(
-                        '未所属',
-                        style: TextStyle(color: kGreyColor),
-                      ),
-                    )
-                  : Container(
-                      color: kGrey200Color,
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8),
-                      child: Text('${selectedGroup?.name}'),
-                    ),
+              child: ComboBox<OrganizationGroupModel>(
+                isExpanded: true,
+                value: selectedGroup,
+                items: groupItems,
+                onChanged: (value) {
+                  setState(() {
+                    selectedGroup = value;
+                  });
+                },
+                placeholder: const Text(
+                  '未所属',
+                  style: TextStyle(color: kGreyColor),
+                ),
+              ),
             ),
             const SizedBox(height: 8),
-            widget.loginProvider.isAllGroup()
+            selectedGroup == null
                 ? InfoLabel(
-                    label: '権限',
+                    label: '管理者権限',
                     child: Container(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -345,7 +340,32 @@ class _ModUserDialogState extends State<ModUserDialog> {
                             admin = value ?? false;
                           });
                         },
-                        content: const Text('このスタッフを管理者とする'),
+                        content: const Text('このスタッフを管理者にする'),
+                      ),
+                    ),
+                  )
+                : Container(),
+            const SizedBox(height: 8),
+            selectedGroup == null
+                ? InfoLabel(
+                    label: '社長権限',
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: kGreyColor),
+                          bottom: BorderSide(color: kGreyColor),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      width: double.infinity,
+                      child: Checkbox(
+                        checked: president,
+                        onChanged: (value) {
+                          setState(() {
+                            president = value ?? false;
+                          });
+                        },
+                        content: const Text('このスタッフを社長にする'),
                       ),
                     ),
                   )
@@ -373,6 +393,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
               befGroup: widget.userInGroup,
               aftGroup: selectedGroup,
               admin: admin,
+              president: president,
             );
             if (error != null) {
               if (!mounted) return;

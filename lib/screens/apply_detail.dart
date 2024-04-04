@@ -87,7 +87,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               ),
               Row(
                 children: [
-                  isReject && widget.loginProvider.user?.admin == true
+                  isReject && widget.loginProvider.user?.president == true
                       ? CustomButtonSm(
                           icon: FluentIcons.status_error_full,
                           labelText: '否決する',
