@@ -169,6 +169,13 @@ class _PlanShiftScreenState extends State<PlanShiftScreen> {
                         ),
                       ),
                     ),
+                    CustomButtonSm(
+                      icon: FluentIcons.download,
+                      labelText: 'CSV出力 ',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kGreenColor,
+                      onPressed: () {},
+                    ),
                   ],
                 ),
                 Expanded(
