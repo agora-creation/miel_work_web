@@ -11,6 +11,7 @@ class WorkModel {
   List<WorkBreakModel> workBreaks = [];
   int _status = 0;
   DateTime _createdAt = DateTime.now();
+  DateTime _expirationAt = DateTime.now();
 
   String get id => _id;
   String get organizationId => _organizationId;
@@ -20,6 +21,7 @@ class WorkModel {
   DateTime get endedAt => _endedAt;
   int get status => _status;
   DateTime get createdAt => _createdAt;
+  DateTime get expirationAt => _expirationAt;
 
   WorkModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     Map<String, dynamic>? data = snapshot.data();
@@ -33,6 +35,7 @@ class WorkModel {
     workBreaks = _convertWorkBreaks(data['workBreaks']);
     _status = data['status'] ?? 0;
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
+    _expirationAt = data['expirationAt'].toDate() ?? DateTime.now();
   }
 
   List<WorkBreakModel> _convertWorkBreaks(List list) {

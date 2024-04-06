@@ -45,7 +45,7 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                     value: group?.name ?? '',
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) => ModGroupNameDialog(
+                      builder: (context) => ModNameDialog(
                         loginProvider: widget.loginProvider,
                         homeProvider: widget.homeProvider,
                         group: group,
@@ -53,12 +53,39 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  Text('『${group?.name}』として、タブレットアプリを利用する際、以下のログイン情報が必要になります。'),
+                  CustomSettingList(
+                    label: 'ログインID',
+                    value: group?.loginId ?? '',
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ModLoginIdDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        group: group,
+                      ),
+                    ),
+                  ),
+                  CustomSettingList(
+                    label: 'パスワード',
+                    value: group?.password ?? '',
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => ModPasswordDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        group: group,
+                      ),
+                    ),
+                    isFirst: false,
+                  ),
+                  const SizedBox(height: 16),
                   LinkText(
                     label: 'このグループを削除',
                     color: kRedColor,
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) => DelGroupDialog(
+                      builder: (context) => DelDialog(
                         loginProvider: widget.loginProvider,
                         homeProvider: widget.homeProvider,
                         group: group,
@@ -75,12 +102,12 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
   }
 }
 
-class ModGroupNameDialog extends StatefulWidget {
+class ModNameDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final OrganizationGroupModel? group;
 
-  const ModGroupNameDialog({
+  const ModNameDialog({
     required this.loginProvider,
     required this.homeProvider,
     required this.group,
@@ -88,10 +115,10 @@ class ModGroupNameDialog extends StatefulWidget {
   });
 
   @override
-  State<ModGroupNameDialog> createState() => _ModGroupNameDialogState();
+  State<ModNameDialog> createState() => _ModNameDialogState();
 }
 
-class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
+class _ModNameDialogState extends State<ModNameDialog> {
   OrganizationGroupService groupService = OrganizationGroupService();
   TextEditingController nameController = TextEditingController();
 
@@ -133,7 +160,7 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await widget.homeProvider.groupUpdate(
+            String? error = await widget.homeProvider.groupNameUpdate(
               organization: widget.loginProvider.organization,
               group: widget.group,
               name: nameController.text,
@@ -153,12 +180,12 @@ class _ModGroupNameDialogState extends State<ModGroupNameDialog> {
   }
 }
 
-class DelGroupDialog extends StatefulWidget {
+class ModLoginIdDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final OrganizationGroupModel? group;
 
-  const DelGroupDialog({
+  const ModLoginIdDialog({
     required this.loginProvider,
     required this.homeProvider,
     required this.group,
@@ -166,10 +193,166 @@ class DelGroupDialog extends StatefulWidget {
   });
 
   @override
-  State<DelGroupDialog> createState() => _DelGroupDialogState();
+  State<ModLoginIdDialog> createState() => _ModLoginIdDialogState();
 }
 
-class _DelGroupDialogState extends State<DelGroupDialog> {
+class _ModLoginIdDialogState extends State<ModLoginIdDialog> {
+  OrganizationGroupService groupService = OrganizationGroupService();
+  TextEditingController loginIdController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loginIdController.text = widget.group?.loginId ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: 'ログインID',
+              child: CustomTextBox(
+                controller: loginIdController,
+                placeholder: '',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '入力内容を保存',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error = await widget.homeProvider.groupLoginIdUpdate(
+              organization: widget.loginProvider.organization,
+              group: widget.group,
+              loginId: loginIdController.text,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'ログインIDを変更しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ModPasswordDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final OrganizationGroupModel? group;
+
+  const ModPasswordDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.group,
+    super.key,
+  });
+
+  @override
+  State<ModPasswordDialog> createState() => _ModPasswordDialogState();
+}
+
+class _ModPasswordDialogState extends State<ModPasswordDialog> {
+  OrganizationGroupService groupService = OrganizationGroupService();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    passwordController.text = widget.group?.password ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: 'パスワード',
+              child: CustomTextBox(
+                controller: passwordController,
+                placeholder: '',
+                keyboardType: TextInputType.visiblePassword,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '入力内容を保存',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error = await widget.homeProvider.groupPasswordUpdate(
+              organization: widget.loginProvider.organization,
+              group: widget.group,
+              password: passwordController.text,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'パスワードを変更しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DelDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final OrganizationGroupModel? group;
+
+  const DelDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.group,
+    super.key,
+  });
+
+  @override
+  State<DelDialog> createState() => _DelDialogState();
+}
+
+class _DelDialogState extends State<DelDialog> {
   OrganizationGroupService groupService = OrganizationGroupService();
 
   @override

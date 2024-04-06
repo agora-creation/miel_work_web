@@ -57,6 +57,8 @@ class HomeProvider with ChangeNotifier {
         'organizationId': organization.id,
         'name': name,
         'userIds': [],
+        'loginId': '',
+        'password': '',
         'createdAt': DateTime.now(),
       });
       String chatId = _chatService.id();
@@ -77,7 +79,7 @@ class HomeProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> groupUpdate({
+  Future<String?> groupNameUpdate({
     required OrganizationModel? organization,
     required OrganizationGroupModel? group,
     required String name,
@@ -105,6 +107,50 @@ class HomeProvider with ChangeNotifier {
       setGroups(organizationId: organization.id);
     } catch (e) {
       error = 'グループ名の変更に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> groupLoginIdUpdate({
+    required OrganizationModel? organization,
+    required OrganizationGroupModel? group,
+    required String loginId,
+  }) async {
+    String? error;
+    if (organization == null) return 'ログインIDの変更に失敗しました';
+    if (group == null) return 'ログインIDの変更に失敗しました';
+    if (loginId == '') return 'ログインIDを入力してください';
+    try {
+      _groupService.update({
+        'id': group.id,
+        'organizationId': group.organizationId,
+        'loginId': loginId,
+      });
+      setGroups(organizationId: organization.id);
+    } catch (e) {
+      error = 'ログインIDの変更に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> groupPasswordUpdate({
+    required OrganizationModel? organization,
+    required OrganizationGroupModel? group,
+    required String password,
+  }) async {
+    String? error;
+    if (organization == null) return 'パスワードの変更に失敗しました';
+    if (group == null) return 'パスワードの変更に失敗しました';
+    if (password == '') return 'パスワードを入力してください';
+    try {
+      _groupService.update({
+        'id': group.id,
+        'organizationId': group.organizationId,
+        'password': password,
+      });
+      setGroups(organizationId: organization.id);
+    } catch (e) {
+      error = 'パスワードの変更に失敗しました';
     }
     return error;
   }

@@ -98,6 +98,42 @@ class LoginProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> organizationLoginIdUpdate({
+    required OrganizationModel? organization,
+    required String loginId,
+  }) async {
+    String? error;
+    if (organization == null) return 'ログインIDの変更に失敗しました';
+    if (loginId == '') return 'ログインIDを入力してください';
+    try {
+      _organizationService.update({
+        'id': organization.id,
+        'loginId': loginId,
+      });
+    } catch (e) {
+      error = 'ログインIDの変更に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> organizationPasswordUpdate({
+    required OrganizationModel? organization,
+    required String password,
+  }) async {
+    String? error;
+    if (organization == null) return 'パスワードの変更に失敗しました';
+    if (password == '') return 'パスワードを入力してください';
+    try {
+      _organizationService.update({
+        'id': organization.id,
+        'password': password,
+      });
+    } catch (e) {
+      error = 'パスワードの変更に失敗しました';
+    }
+    return error;
+  }
+
   Future logout() async {
     await _auth?.signOut();
     _status = AuthStatus.unauthenticated;

@@ -5,11 +5,13 @@ class CustomSettingList extends StatelessWidget {
   final String label;
   final String value;
   final Function()? onTap;
+  final bool isFirst;
 
   const CustomSettingList({
     required this.label,
     required this.value,
     this.onTap,
+    this.isFirst = true,
     super.key,
   });
 
@@ -18,10 +20,12 @@ class CustomSettingList extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        decoration: const BoxDecoration(
-          border: Border.symmetric(
-            horizontal: BorderSide(color: kGreyColor),
-          ),
+        decoration: BoxDecoration(
+          border: isFirst
+              ? const Border.symmetric(
+                  horizontal: BorderSide(color: kGreyColor),
+                )
+              : const Border(bottom: BorderSide(color: kGreyColor)),
         ),
         padding: const EdgeInsets.all(8),
         child: Row(
