@@ -6,9 +6,9 @@ import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/manual.dart';
 import 'package:miel_work_web/screens/notice.dart';
-import 'package:miel_work_web/screens/other_setting.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/plan_shift.dart';
+import 'package:miel_work_web/screens/tablet_setting.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_header.dart';
 import 'package:provider/provider.dart';
@@ -124,8 +124,11 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.settings),
-            title: const Text('その他設定'),
-            body: OtherSettingScreen(loginProvider: loginProvider),
+            title: const Text('タブレット設定'),
+            body: TabletSettingScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
         ],
       ),

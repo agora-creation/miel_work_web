@@ -29,6 +29,7 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
   @override
   Widget build(BuildContext context) {
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
+    String groupName = group?.name ?? '';
     return Stack(
       children: [
         const AnimationBackground(),
@@ -42,7 +43,7 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                 children: [
                   CustomSettingList(
                     label: 'グループ名',
-                    value: group?.name ?? '',
+                    value: groupName,
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => ModNameDialog(
@@ -51,33 +52,6 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                         group: group,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('『${group?.name}』として、タブレットアプリを利用する際、以下のログイン情報が必要になります。'),
-                  CustomSettingList(
-                    label: 'ログインID',
-                    value: group?.loginId ?? '',
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => ModLoginIdDialog(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                        group: group,
-                      ),
-                    ),
-                  ),
-                  CustomSettingList(
-                    label: 'パスワード',
-                    value: group?.password ?? '',
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => ModPasswordDialog(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                        group: group,
-                      ),
-                    ),
-                    isFirst: false,
                   ),
                   const SizedBox(height: 16),
                   LinkText(
@@ -172,162 +146,6 @@ class _ModNameDialogState extends State<ModNameDialog> {
             }
             if (!mounted) return;
             showMessage(context, 'グループ名を変更しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ModLoginIdDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final OrganizationGroupModel? group;
-
-  const ModLoginIdDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.group,
-    super.key,
-  });
-
-  @override
-  State<ModLoginIdDialog> createState() => _ModLoginIdDialogState();
-}
-
-class _ModLoginIdDialogState extends State<ModLoginIdDialog> {
-  OrganizationGroupService groupService = OrganizationGroupService();
-  TextEditingController loginIdController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    loginIdController.text = widget.group?.loginId ?? '';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ContentDialog(
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'ログインID',
-              child: CustomTextBox(
-                controller: loginIdController,
-                placeholder: '',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '入力内容を保存',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            String? error = await widget.homeProvider.groupLoginIdUpdate(
-              organization: widget.loginProvider.organization,
-              group: widget.group,
-              loginId: loginIdController.text,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, 'ログインIDを変更しました', true);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ModPasswordDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final OrganizationGroupModel? group;
-
-  const ModPasswordDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.group,
-    super.key,
-  });
-
-  @override
-  State<ModPasswordDialog> createState() => _ModPasswordDialogState();
-}
-
-class _ModPasswordDialogState extends State<ModPasswordDialog> {
-  OrganizationGroupService groupService = OrganizationGroupService();
-  TextEditingController passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    passwordController.text = widget.group?.password ?? '';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ContentDialog(
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'パスワード',
-              child: CustomTextBox(
-                controller: passwordController,
-                placeholder: '',
-                keyboardType: TextInputType.visiblePassword,
-                maxLines: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButtonSm(
-          labelText: '入力内容を保存',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            String? error = await widget.homeProvider.groupPasswordUpdate(
-              organization: widget.loginProvider.organization,
-              group: widget.group,
-              password: passwordController.text,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, 'パスワードを変更しました', true);
             Navigator.pop(context);
           },
         ),
