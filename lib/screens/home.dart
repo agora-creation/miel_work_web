@@ -129,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
+            enabled: false,
           ),
         ],
       ),
