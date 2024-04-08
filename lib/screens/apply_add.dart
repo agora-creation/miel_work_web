@@ -113,16 +113,6 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InfoLabel(
-                label: '申請者名',
-                child: Container(
-                  color: kGrey200Color,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  child: Text(widget.loginProvider.user?.name ?? ''),
-                ),
-              ),
-              const SizedBox(height: 8),
-              InfoLabel(
                 label: '申請種別',
                 child: ComboBox<String>(
                   value: type,

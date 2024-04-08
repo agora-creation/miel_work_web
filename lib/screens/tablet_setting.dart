@@ -199,6 +199,7 @@ class _ModOrganizationLoginIdDialogState
               showMessage(context, error, false);
               return;
             }
+            await widget.loginProvider.reload();
             if (!mounted) return;
             showMessage(context, 'ログインIDを変更しました', true);
             Navigator.pop(context);
@@ -274,6 +275,7 @@ class _ModOrganizationPasswordDialogState
               showMessage(context, error, false);
               return;
             }
+            await widget.loginProvider.reload();
             if (!mounted) return;
             showMessage(context, 'パスワードを変更しました', true);
             Navigator.pop(context);

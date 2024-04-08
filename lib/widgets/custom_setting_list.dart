@@ -34,13 +34,16 @@ class CustomSettingList extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: kGreyColor,
+                    fontSize: 14,
+                  ),
+                ),
                 Text(
                   value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ],
             ),
