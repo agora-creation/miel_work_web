@@ -86,6 +86,7 @@ class PlanService {
         isAllDay: plan.allDay,
         color: shift ? plan.categoryColor.withOpacity(0.3) : plan.categoryColor,
         notes: 'plan',
+        recurrenceRule: plan.getRepeatRule(),
       ));
     }
     return ret;

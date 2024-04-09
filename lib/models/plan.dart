@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 
 class PlanModel {
@@ -77,6 +78,42 @@ class PlanModel {
     List<String> ret = [];
     for (dynamic id in list) {
       ret.add('$id');
+    }
+    return ret;
+  }
+
+  String? getRepeatRule() {
+    String? ret;
+    if (_repeat) {
+      if (_repeatInterval == kRepeatIntervals[0]) {
+        ret = 'FREQ=DAILY;';
+        if (_repeatEvery > 0) {
+          ret += 'INTERVAL=$_repeatEvery;';
+        }
+      } else if (_repeatInterval == kRepeatIntervals[1]) {
+        ret = 'FREQ=WEEKLY;';
+        if (_repeatEvery > 0) {
+          ret += 'INTERVAL=$_repeatEvery;';
+        }
+        if (repeatWeeks.isNotEmpty) {
+          String byday = '';
+          for (String week in repeatWeeks) {
+            if (byday != '') byday += ',';
+            byday += ruleConvertWeek(week);
+          }
+          ret += 'BYDAY=$byday;';
+        }
+      } else if (_repeatInterval == kRepeatIntervals[2]) {
+        ret = 'FREQ=MONTHLY;';
+        if (_repeatEvery > 0) {
+          ret += 'INTERVAL=$_repeatEvery;';
+        }
+      } else if (_repeatInterval == kRepeatIntervals[3]) {
+        ret = 'FREQ=YEARLY;';
+        if (_repeatEvery > 0) {
+          ret += 'INTERVAL=$_repeatEvery;';
+        }
+      }
     }
     return ret;
   }
