@@ -14,7 +14,6 @@ import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:miel_work_web/widgets/repeat_select_form.dart';
 import 'package:provider/provider.dart';
 
 class PlanModScreen extends StatefulWidget {
@@ -302,34 +301,6 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     ),
                     allDay: allDay,
                     allDayOnChanged: _allDayChange,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                InfoLabel(
-                  label: '繰り返し設定',
-                  child: RepeatSelectForm(
-                    repeat: repeat,
-                    repeatOnChanged: (value) {
-                      setState(() {
-                        repeat = value!;
-                      });
-                    },
-                    interval: repeatInterval,
-                    intervalOnChanged: (value) {
-                      setState(() {
-                        repeatInterval = value;
-                      });
-                    },
-                    everyController: repeatEveryController,
-                    weeks: repeatWeeks,
-                    weeksOnChanged: (value) {
-                      if (repeatWeeks.contains(value)) {
-                        repeatWeeks.remove(value);
-                      } else {
-                        repeatWeeks.add(value);
-                      }
-                      setState(() {});
-                    },
                   ),
                 ),
                 const SizedBox(height: 8),
