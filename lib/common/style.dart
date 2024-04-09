@@ -16,6 +16,7 @@ const kBlueColor = Color(0xFF2196F3);
 const kBlue600Color = Color(0xFF1E88E5);
 const kBlue100Color = Color(0xFFBBDEFB);
 const kLightBlueColor = Color(0xFF03A9F4);
+const kLightBlue800Color = Color(0xFF0277BD);
 const kCyanColor = Color(0xFF00BCD4);
 const kOrangeColor = Color(0xFFFF9800);
 const kOrange300Color = Color(0xFFFFB74D);
@@ -56,6 +57,8 @@ const kHeaderDecoration = BoxDecoration(
   border: Border(bottom: BorderSide(color: kGrey300Color)),
 );
 
+List<String> kWeeks = ['月', '火', '水', '木', '金', '土', '日'];
+List<String> kRepeatIntervals = ['毎日', '毎週', '毎月', '毎年'];
 List<int> kAlertMinutes = [0, 10, 30, 60];
 
 DateTime kFirstDate = DateTime.now().subtract(const Duration(days: 1095));

@@ -23,11 +23,20 @@ class DatetimeRangeForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: kGreyColor)),
+      decoration: BoxDecoration(border: Border.all(color: kGrey300Color)),
+      padding: const EdgeInsets.all(8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text(
+            '時間部分をタップすると、日時選択ダイアログが画面下部に表示されます。',
+            style: TextStyle(
+              color: kGrey600Color,
+              fontSize: 12,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -79,9 +88,9 @@ class DatetimeRangeForm extends StatelessWidget {
           ),
           Container(
             decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: kGreyColor)),
+              border: Border(top: BorderSide(color: kGrey300Color)),
             ),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.only(top: 8),
             width: double.infinity,
             child: Checkbox(
               checked: allDay,

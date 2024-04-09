@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/plan_shift.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
@@ -57,15 +58,18 @@ class PlanShiftService {
     List<sfc.Appointment> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       PlanShiftModel planShift = PlanShiftModel.fromSnapshot(doc);
+      String startTimeText = dateText('HH:mm', planShift.startedAt);
+      String endTimeText = dateText('HH:mm', planShift.endedAt);
       ret.add(sfc.Appointment(
         id: planShift.id,
         resourceIds: planShift.userIds,
-        subject: '勤務予定',
+        subject: '勤務予定 $startTimeText～$endTimeText',
         startTime: planShift.startedAt,
         endTime: planShift.endedAt,
         isAllDay: planShift.allDay,
-        color: kBlueColor,
+        color: kLightBlue800Color,
         notes: 'planShift',
+        recurrenceRule: planShift.getRepeatRule(),
       ));
     }
     return ret;

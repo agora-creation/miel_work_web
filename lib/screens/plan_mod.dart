@@ -14,6 +14,7 @@ import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:miel_work_web/widgets/repeat_select_form.dart';
 import 'package:provider/provider.dart';
 
 class PlanModScreen extends StatefulWidget {
@@ -42,6 +43,12 @@ class _PlanModScreenState extends State<PlanModScreen> {
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
   bool allDay = false;
+  bool repeat = false;
+  String repeatInterval = kRepeatIntervals.first;
+  TextEditingController repeatEveryController = TextEditingController(
+    text: '1',
+  );
+  List<String> repeatWeeks = [];
   TextEditingController memoController = TextEditingController();
   int alertMinute = 0;
 
@@ -66,6 +73,10 @@ class _PlanModScreenState extends State<PlanModScreen> {
     startedAt = plan.startedAt;
     endedAt = plan.endedAt;
     allDay = plan.allDay;
+    repeat = plan.repeat;
+    repeatInterval = plan.repeatInterval;
+    repeatEveryController.text = plan.repeatEvery.toString();
+    repeatWeeks = plan.repeatWeeks;
     memoController.text = plan.memo;
     alertMinute = plan.alertMinute;
     setState(() {});
@@ -150,6 +161,10 @@ class _PlanModScreenState extends State<PlanModScreen> {
                     startedAt: startedAt,
                     endedAt: endedAt,
                     allDay: allDay,
+                    repeat: repeat,
+                    repeatInterval: repeatInterval,
+                    repeatEvery: int.parse(repeatEveryController.text),
+                    repeatWeeks: repeatWeeks,
                     memo: memoController.text,
                     alertMinute: alertMinute,
                   );
@@ -258,32 +273,64 @@ class _PlanModScreenState extends State<PlanModScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                DatetimeRangeForm(
-                  startedAt: startedAt,
-                  startedOnTap: () async => await CustomDateTimePicker().picker(
-                    context: context,
-                    init: startedAt,
-                    title: '予定開始日時を選択',
-                    onChanged: (value) {
+                InfoLabel(
+                  label: '予定時間帯を設定',
+                  child: DatetimeRangeForm(
+                    startedAt: startedAt,
+                    startedOnTap: () async =>
+                        await CustomDateTimePicker().picker(
+                      context: context,
+                      init: startedAt,
+                      title: '予定開始日時を選択',
+                      onChanged: (value) {
+                        setState(() {
+                          startedAt = value;
+                          endedAt = startedAt.add(const Duration(hours: 1));
+                        });
+                      },
+                    ),
+                    endedAt: endedAt,
+                    endedOnTap: () async => await CustomDateTimePicker().picker(
+                      context: context,
+                      init: endedAt,
+                      title: '予定終了日時を選択',
+                      onChanged: (value) {
+                        setState(() {
+                          endedAt = value;
+                        });
+                      },
+                    ),
+                    allDay: allDay,
+                    allDayOnChanged: _allDayChange,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                InfoLabel(
+                  label: '繰り返し設定',
+                  child: RepeatSelectForm(
+                    repeat: repeat,
+                    repeatOnChanged: (value) {
                       setState(() {
-                        startedAt = value;
-                        endedAt = startedAt.add(const Duration(hours: 1));
+                        repeat = value!;
                       });
                     },
-                  ),
-                  endedAt: endedAt,
-                  endedOnTap: () async => await CustomDateTimePicker().picker(
-                    context: context,
-                    init: endedAt,
-                    title: '予定終了日時を選択',
-                    onChanged: (value) {
+                    interval: repeatInterval,
+                    intervalOnChanged: (value) {
                       setState(() {
-                        endedAt = value;
+                        repeatInterval = value;
                       });
                     },
+                    everyController: repeatEveryController,
+                    weeks: repeatWeeks,
+                    weeksOnChanged: (value) {
+                      if (repeatWeeks.contains(value)) {
+                        repeatWeeks.remove(value);
+                      } else {
+                        repeatWeeks.add(value);
+                      }
+                      setState(() {});
+                    },
                   ),
-                  allDay: allDay,
-                  allDayOnChanged: _allDayChange,
                 ),
                 const SizedBox(height: 8),
                 InfoLabel(
