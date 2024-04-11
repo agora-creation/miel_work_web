@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/services/config.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,24 +21,9 @@ class ShiftSettingScreen extends StatefulWidget {
 }
 
 class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
-  String loginId = '';
-  String password = '';
-
-  void _getData() async {
-    List<String> data = await ConfigService().getShiftLoginData();
-    loginId = data.first;
-    password = data.last;
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getData();
-  }
-
   @override
   Widget build(BuildContext context) {
+    OrganizationModel? organization = widget.loginProvider.organization;
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       header: Container(
@@ -84,13 +69,13 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
             ),
             CustomSettingList(
               label: 'ログインID',
-              value: loginId,
+              value: organization?.shiftLoginId ?? '',
               onTap: () {},
               isFirst: false,
             ),
             CustomSettingList(
               label: 'パスワード',
-              value: password,
+              value: organization?.shiftPassword ?? '',
               onTap: () {},
               isFirst: false,
             ),
