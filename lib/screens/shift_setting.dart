@@ -1,9 +1,12 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
+import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShiftSettingScreen extends StatefulWidget {
@@ -70,18 +73,182 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
             CustomSettingList(
               label: 'ログインID',
               value: organization?.shiftLoginId ?? '',
-              onTap: () {},
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) => ModOrganizationShiftLoginIdDialog(
+                  loginProvider: widget.loginProvider,
+                ),
+              ),
               isFirst: false,
             ),
             CustomSettingList(
               label: 'パスワード',
               value: organization?.shiftPassword ?? '',
-              onTap: () {},
+              onTap: () => showDialog(
+                context: context,
+                builder: (context) => ModOrganizationShiftPasswordDialog(
+                  loginProvider: widget.loginProvider,
+                ),
+              ),
               isFirst: false,
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ModOrganizationShiftLoginIdDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+
+  const ModOrganizationShiftLoginIdDialog({
+    required this.loginProvider,
+    super.key,
+  });
+
+  @override
+  State<ModOrganizationShiftLoginIdDialog> createState() =>
+      _ModOrganizationShiftLoginIdDialogState();
+}
+
+class _ModOrganizationShiftLoginIdDialogState
+    extends State<ModOrganizationShiftLoginIdDialog> {
+  TextEditingController shiftLoginIdController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    shiftLoginIdController.text =
+        widget.loginProvider.organization?.shiftLoginId ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: 'ログインID',
+              child: CustomTextBox(
+                controller: shiftLoginIdController,
+                placeholder: '',
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '入力内容を保存',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error =
+                await widget.loginProvider.organizationShiftLoginIdUpdate(
+              organization: widget.loginProvider.organization,
+              shiftLoginId: shiftLoginIdController.text,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            await widget.loginProvider.reload();
+            if (!mounted) return;
+            showMessage(context, 'ログインIDを変更しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ModOrganizationShiftPasswordDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+
+  const ModOrganizationShiftPasswordDialog({
+    required this.loginProvider,
+    super.key,
+  });
+
+  @override
+  State<ModOrganizationShiftPasswordDialog> createState() =>
+      _ModOrganizationShiftPasswordDialogState();
+}
+
+class _ModOrganizationShiftPasswordDialogState
+    extends State<ModOrganizationShiftPasswordDialog> {
+  TextEditingController shiftPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    shiftPasswordController.text =
+        widget.loginProvider.organization?.shiftPassword ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoLabel(
+              label: 'パスワード',
+              child: CustomTextBox(
+                controller: shiftPasswordController,
+                placeholder: '',
+                keyboardType: TextInputType.visiblePassword,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '入力内容を保存',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error =
+                await widget.loginProvider.organizationShiftPasswordUpdate(
+              organization: widget.loginProvider.organization,
+              shiftPassword: shiftPasswordController.text,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            await widget.loginProvider.reload();
+            if (!mounted) return;
+            showMessage(context, 'パスワードを変更しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
