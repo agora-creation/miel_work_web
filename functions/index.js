@@ -35,7 +35,6 @@ exports.planAlertMessages = functions.region('asia-northeast1')
         s = s - s % 60
         return new admin.firestore.Timestamp(s, 0)
     })()
-    console.log('now', now.toDate())
 
     //DB取得
     const planRef = firestore.collection('plan')
@@ -82,13 +81,13 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         s = s - s % 60
         return new admin.firestore.Timestamp(s, 0)
     })()
-    console.log('now', now.toDate())
 
     //DB取得
     const planShiftRef = firestore.collection('planShift')
     const userRef = firestore.collection('user')
     const planShiftSnapshot = await planShiftRef.where('alertMinute', '!=', 0)
         .where('alertedAt', '==', now)
+        .where('repeat', '==', false)
         .get()
     if (planShiftSnapshot.empty) {
         console.log('No matching planShiftDocuments.')
@@ -96,6 +95,49 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
     }
     planShiftSnapshot.forEach(async planShiftDoc => {
         const userIds = planShiftDoc.data()['userIds']
+        if (!userIds.empty) {
+            for (i = 0; i < userIds.length; i++) {
+                const userId = userIds[i]
+                const userSnapshot = await userRef.where('id', '==', userId).get()
+                if (!userSnapshot.empty) {
+                    userSnapshot.forEach(async userDoc => {
+                        const token = userDoc.data()['token']
+                        admin.messaging().send(pushMessage(
+                            token,
+                            '勤務予定のお知らせ',
+                            'もうすぐ勤務予定時刻になります。',
+                        ))
+                    })
+                }
+            }
+        }
+    })
+    const planShiftRepeatSnapshot = await planShiftRef.where('alertMinute', '!=', 0)
+        .where('repeat', '==', true)
+        .get()
+    if (planShiftRepeatSnapshot.empty) {
+        console.log('No matching planShiftDocuments.')
+        return
+    }
+    planShiftRepeatSnapshot.forEach(async planShiftRepeatDoc => {
+        const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
+        const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
+        console.log('now', now.toDate())
+        console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'])
+        switch (repeatInterval) {
+            case '毎日':
+                break;
+            case '毎週':
+                const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
+                break;
+            case '毎月':
+                break;
+            case '毎年':
+                break;
+            default:
+                break;
+        }
+        const userIds = planShiftRepeatDoc.data()['userIds']
         if (!userIds.empty) {
             for (i = 0; i < userIds.length; i++) {
                 const userId = userIds[i]
