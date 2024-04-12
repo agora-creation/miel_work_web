@@ -17,6 +17,7 @@
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+const formatWeeks = ["日", "月", "火", "水", "木", "金", "土"];
 
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
@@ -115,35 +116,63 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         planShiftRepeatSnapshot.forEach(async planShiftRepeatDoc => {
             const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
             const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
-            console.log('now', now.toDate())
-            console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'].toDate())
+            const alertedAt = planShiftRepeatDoc.data()['alertedAt'].toDate()
+            var success = false
             switch (repeatInterval) {
                 case '毎日':
-                    break;
+                    var alertedHours = alertedAt.getHours()
+                    var alertedMinutes = alertedAt.getMinutes()
+                    if (nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                        success = true
+                    }
+                    break
                 case '毎週':
                     const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
-                    break;
+                    if (!repeatWeeks) {
+                        for (i = 0; i < repeatWeeks.length; i++) {
+                            const week = repeatWeeks[i]
+                            if (week == formatWeeks[nowDate.getDay()]) {
+                                success = true
+                            }
+                        }
+                    }
+                    break
                 case '毎月':
-                    break;
+                    var alertedDate = alertedAt.getDate()
+                    var alertedHours = alertedAt.getHours()
+                    var alertedMinutes = alertedAt.getMinutes()
+                    if (nowDate.getDate() == alertedDate && nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                        success = true
+                    }
+                    break
                 case '毎年':
-                    break;
+                    var alertedMonth = alertedAt.getMonth()
+                    var alertedDate = alertedAt.getDate()
+                    var alertedHours = alertedAt.getHours()
+                    var alertedMinutes = alertedAt.getMinutes()
+                    if (nowDate.getMonth() == alertedMonth && nowDate.getDate() == alertedDate && nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                        success = true
+                    }
+                    break
                 default:
-                    break;
+                    break
             }
-            const userIds = planShiftRepeatDoc.data()['userIds']
-            if (!userIds.empty) {
-                for (i = 0; i < userIds.length; i++) {
-                    const userId = userIds[i]
-                    const userSnapshot = await userRef.where('id', '==', userId).get()
-                    if (!userSnapshot.empty) {
-                        userSnapshot.forEach(async userDoc => {
-                            const token = userDoc.data()['token']
-                            admin.messaging().send(pushMessage(
-                                token,
-                                '勤務予定のお知らせ',
-                                'もうすぐ勤務予定時刻になります。',
-                            ))
-                        })
+            if (success) {
+                const userIds = planShiftRepeatDoc.data()['userIds']
+                if (!userIds.empty) {
+                    for (i = 0; i < userIds.length; i++) {
+                        const userId = userIds[i]
+                        const userSnapshot = await userRef.where('id', '==', userId).get()
+                        if (!userSnapshot.empty) {
+                            userSnapshot.forEach(async userDoc => {
+                                const token = userDoc.data()['token']
+                                admin.messaging().send(pushMessage(
+                                    token,
+                                    '勤務予定のお知らせ',
+                                    'もうすぐ勤務予定時刻になります。',
+                                ))
+                            })
+                        }
                     }
                 }
             }
