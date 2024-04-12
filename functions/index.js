@@ -123,7 +123,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
         const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
         console.log('now', now.toDate())
-        console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'])
+        console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'].toDate())
         switch (repeatInterval) {
             case '毎日':
                 break;
