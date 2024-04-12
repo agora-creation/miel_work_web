@@ -42,31 +42,29 @@ exports.planAlertMessages = functions.region('asia-northeast1')
     const planSnapshot = await planRef.where('alertMinute', '!=', 0)
         .where('alertedAt', '==', now)
         .get()
-    if (planSnapshot.empty) {
-        console.log('No matching planDocuments.')
-        return
-    }
-    planSnapshot.forEach(async planDoc => {
-        const category = planDoc.data()['category']
-        const subject = planDoc.data()['subject']
-        const userIds = planDoc.data()['userIds']
-        if (!userIds.empty) {
-            for (i = 0; i < userIds.length; i++) {
-                const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId).get()
-                if (!userSnapshot.empty) {
-                    userSnapshot.forEach(async userDoc => {
-                        const token = userDoc.data()['token']
-                        admin.messaging().send(pushMessage(
-                            token,
-                            '[' + category + ']' + subject,
-                            'もうすぐ予定時刻になります。',
-                        ))
-                    })
+    if (!planSnapshot.empty) {
+        planSnapshot.forEach(async planDoc => {
+            const category = planDoc.data()['category']
+            const subject = planDoc.data()['subject']
+            const userIds = planDoc.data()['userIds']
+            if (!userIds.empty) {
+                for (i = 0; i < userIds.length; i++) {
+                    const userId = userIds[i]
+                    const userSnapshot = await userRef.where('id', '==', userId).get()
+                    if (!userSnapshot.empty) {
+                        userSnapshot.forEach(async userDoc => {
+                            const token = userDoc.data()['token']
+                            admin.messaging().send(pushMessage(
+                                token,
+                                '[' + category + ']' + subject,
+                                'もうすぐ予定時刻になります。',
+                            ))
+                        })
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 })
 
 exports.planShiftAlertMessages = functions.region('asia-northeast1')
@@ -89,72 +87,68 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
         .where('alertedAt', '==', now)
         .where('repeat', '==', false)
         .get()
-    if (planShiftSnapshot.empty) {
-        console.log('No matching planShiftDocuments.')
-        return
-    }
-    planShiftSnapshot.forEach(async planShiftDoc => {
-        const userIds = planShiftDoc.data()['userIds']
-        if (!userIds.empty) {
-            for (i = 0; i < userIds.length; i++) {
-                const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId).get()
-                if (!userSnapshot.empty) {
-                    userSnapshot.forEach(async userDoc => {
-                        const token = userDoc.data()['token']
-                        admin.messaging().send(pushMessage(
-                            token,
-                            '勤務予定のお知らせ',
-                            'もうすぐ勤務予定時刻になります。',
-                        ))
-                    })
+    if (!planShiftSnapshot.empty) {
+        planShiftSnapshot.forEach(async planShiftDoc => {
+            const userIds = planShiftDoc.data()['userIds']
+            if (!userIds.empty) {
+                for (i = 0; i < userIds.length; i++) {
+                    const userId = userIds[i]
+                    const userSnapshot = await userRef.where('id', '==', userId).get()
+                    if (!userSnapshot.empty) {
+                        userSnapshot.forEach(async userDoc => {
+                            const token = userDoc.data()['token']
+                            admin.messaging().send(pushMessage(
+                                token,
+                                '勤務予定のお知らせ',
+                                'もうすぐ勤務予定時刻になります。',
+                            ))
+                        })
+                    }
                 }
             }
-        }
-    })
+        })
+    }
     const planShiftRepeatSnapshot = await planShiftRef.where('alertMinute', '!=', 0)
         .where('repeat', '==', true)
         .get()
-    if (planShiftRepeatSnapshot.empty) {
-        console.log('No matching planShiftDocuments.')
-        return
-    }
-    planShiftRepeatSnapshot.forEach(async planShiftRepeatDoc => {
-        const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
-        const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
-        console.log('now', now.toDate())
-        console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'].toDate())
-        switch (repeatInterval) {
-            case '毎日':
-                break;
-            case '毎週':
-                const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
-                break;
-            case '毎月':
-                break;
-            case '毎年':
-                break;
-            default:
-                break;
-        }
-        const userIds = planShiftRepeatDoc.data()['userIds']
-        if (!userIds.empty) {
-            for (i = 0; i < userIds.length; i++) {
-                const userId = userIds[i]
-                const userSnapshot = await userRef.where('id', '==', userId).get()
-                if (!userSnapshot.empty) {
-                    userSnapshot.forEach(async userDoc => {
-                        const token = userDoc.data()['token']
-                        admin.messaging().send(pushMessage(
-                            token,
-                            '勤務予定のお知らせ',
-                            'もうすぐ勤務予定時刻になります。',
-                        ))
-                    })
+    if (!planShiftRepeatSnapshot.empty) {
+        planShiftRepeatSnapshot.forEach(async planShiftRepeatDoc => {
+            const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
+            const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
+            console.log('now', now.toDate())
+            console.log('alertedAt', planShiftRepeatDoc.data()['alertedAt'].toDate())
+            switch (repeatInterval) {
+                case '毎日':
+                    break;
+                case '毎週':
+                    const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
+                    break;
+                case '毎月':
+                    break;
+                case '毎年':
+                    break;
+                default:
+                    break;
+            }
+            const userIds = planShiftRepeatDoc.data()['userIds']
+            if (!userIds.empty) {
+                for (i = 0; i < userIds.length; i++) {
+                    const userId = userIds[i]
+                    const userSnapshot = await userRef.where('id', '==', userId).get()
+                    if (!userSnapshot.empty) {
+                        userSnapshot.forEach(async userDoc => {
+                            const token = userDoc.data()['token']
+                            admin.messaging().send(pushMessage(
+                                token,
+                                '勤務予定のお知らせ',
+                                'もうすぐ勤務予定時刻になります。',
+                            ))
+                        })
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 })
 
 const pushMessage = (token, title, body) => ({
