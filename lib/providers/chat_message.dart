@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/chat.dart';
+import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
@@ -210,6 +211,20 @@ class ChatMessageProvider with ChangeNotifier {
       contentFocusNode.unfocus();
     } catch (e) {
       error = 'メッセージの送信に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> delete({
+    required ChatMessageModel message,
+  }) async {
+    String? error;
+    try {
+      _messageService.delete({
+        'id': message.id,
+      });
+    } catch (e) {
+      error = 'メッセージの削除に失敗しました';
     }
     return error;
   }

@@ -4,6 +4,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/models/read_user.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/widgets/link_text.dart';
 
 class MessageList extends StatelessWidget {
   final ChatMessageModel message;
@@ -11,6 +12,7 @@ class MessageList extends StatelessWidget {
   final Function()? onTapReadUsers;
   final Function()? onTapImage;
   final Function()? onTapFile;
+  final Function()? onTapDelete;
 
   const MessageList({
     required this.message,
@@ -18,6 +20,7 @@ class MessageList extends StatelessWidget {
     required this.onTapReadUsers,
     required this.onTapImage,
     required this.onTapFile,
+    required this.onTapDelete,
     super.key,
   });
 
@@ -114,6 +117,11 @@ class MessageList extends StatelessWidget {
                     ),
                   )
                 : Container(),
+            LinkText(
+              label: '削除する',
+              color: kRedColor,
+              onTap: onTapDelete,
+            ),
           ],
         ),
       );
@@ -207,6 +215,11 @@ class MessageList extends StatelessWidget {
                     ),
                   )
                 : Container(),
+            LinkText(
+              label: '削除する',
+              color: kRedColor,
+              onTap: onTapDelete,
+            ),
           ],
         ),
       );

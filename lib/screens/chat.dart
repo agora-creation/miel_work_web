@@ -188,6 +188,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                           name: p.basename(file.path),
                                         );
                                       },
+                                      onTapDelete: () => showDialog(
+                                        context: context,
+                                        builder: (context) => DelMessageDialog(
+                                          messageProvider: messageProvider,
+                                          message: message,
+                                        ),
+                                      ),
                                     );
                                   },
                                 );
@@ -416,6 +423,87 @@ class _ReadUsersDialogState extends State<ReadUsersDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
+  }
+}
+
+class DelMessageDialog extends StatefulWidget {
+  final ChatMessageProvider messageProvider;
+  final ChatMessageModel message;
+
+  const DelMessageDialog({
+    required this.messageProvider,
+    required this.message,
+    super.key,
+  });
+
+  @override
+  State<DelMessageDialog> createState() => _DelMessageDialogState();
+}
+
+class _DelMessageDialogState extends State<DelMessageDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text(
+        'メッセージを削除',
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('本当に削除しますか？'),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '送信者',
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.message.createdUserName),
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '内容',
+              child: Container(
+                color: kGrey200Color,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                child: Text(widget.message.content),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButtonSm(
+          labelText: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButtonSm(
+          labelText: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await widget.messageProvider.delete(
+              message: widget.message,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'メッセージを削除しました', true);
+            Navigator.pop(context);
+          },
         ),
       ],
     );
