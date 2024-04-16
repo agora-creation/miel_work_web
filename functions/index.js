@@ -122,7 +122,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
                 case '毎日':
                     var alertedHours = alertedAt.getHours()
                     var alertedMinutes = alertedAt.getMinutes()
-                    if (nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                    if (now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
                         success = true
                     }
                     break
@@ -131,7 +131,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
                     if (!repeatWeeks) {
                         for (i = 0; i < repeatWeeks.length; i++) {
                             const week = repeatWeeks[i]
-                            if (week == formatWeeks[nowDate.getDay()]) {
+                            if (week == formatWeeks[now.toDate().getDay()]) {
                                 success = true
                             }
                         }
@@ -141,7 +141,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
                     var alertedDate = alertedAt.getDate()
                     var alertedHours = alertedAt.getHours()
                     var alertedMinutes = alertedAt.getMinutes()
-                    if (nowDate.getDate() == alertedDate && nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                    if (now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
                         success = true
                     }
                     break
@@ -150,7 +150,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
                     var alertedDate = alertedAt.getDate()
                     var alertedHours = alertedAt.getHours()
                     var alertedMinutes = alertedAt.getMinutes()
-                    if (nowDate.getMonth() == alertedMonth && nowDate.getDate() == alertedDate && nowDate.getHours() == alertedHours && nowDate.getMinutes() == alertedMinutes) {
+                    if (now.toDate().getMonth() == alertedMonth && now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
                         success = true
                     }
                     break
