@@ -7,7 +7,6 @@ import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/manual.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
-import 'package:miel_work_web/screens/plan_shift.dart';
 import 'package:miel_work_web/screens/tablet_setting.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_header.dart';
@@ -46,15 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(FluentIcons.calendar),
             title: const Text('スケジュールカレンダー'),
             body: PlanScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.view_list),
-            title: const Text('シフト表'),
-            body: PlanShiftScreen(
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
