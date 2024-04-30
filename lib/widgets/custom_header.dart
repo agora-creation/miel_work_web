@@ -96,6 +96,11 @@ class _CustomHeaderState extends State<CustomHeader> {
                   ),
                 ],
               ),
+              const SizedBox(width: 8),
+              const Text(
+                '管理画面',
+                style: TextStyle(fontSize: 16),
+              ),
             ],
           ),
           Row(
