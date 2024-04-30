@@ -11,7 +11,6 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/providers/plan.dart';
-import 'package:miel_work_web/providers/plan_shift.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/screens/login.dart';
@@ -57,7 +56,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ChatMessageProvider()),
         ChangeNotifierProvider.value(value: CategoryProvider()),
         ChangeNotifierProvider.value(value: PlanProvider()),
-        ChangeNotifierProvider.value(value: PlanShiftProvider()),
         ChangeNotifierProvider.value(value: ApplyProvider()),
       ],
       child: FluentApp(

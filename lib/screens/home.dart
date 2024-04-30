@@ -7,7 +7,6 @@ import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/manual.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
-import 'package:miel_work_web/screens/tablet_setting.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_header.dart';
 import 'package:provider/provider.dart';
@@ -48,13 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.running),
-            title: const Text('勤怠管理'),
-            body: Container(),
-            enabled: false,
           ),
           PaneItemSeparator(),
           PaneItem(
@@ -110,16 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
               homeProvider: homeProvider,
             ),
             enabled: homeProvider.currentGroup != null,
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.settings),
-            title: const Text('タブレット設定'),
-            body: TabletSettingScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-            enabled: false,
           ),
         ],
       ),
