@@ -117,45 +117,52 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
             const repeatInterval = planShiftRepeatDoc.data()['repeatInterval']
             const repeatEvery = planShiftRepeatDoc.data()['repeatEvery']
             const alertedAt = planShiftRepeatDoc.data()['alertedAt'].toDate()
+            var repeatUntil = planShiftRepeatDoc.data()['repeatEvery'];
+            let repeatUntilAt
+            if (repeatUntil != null) {
+                repeatUntilAt = repeatUntil.toDate()
+            }
             var success = false
-            switch (repeatInterval) {
-                case '毎日':
-                    var alertedHours = alertedAt.getHours()
-                    var alertedMinutes = alertedAt.getMinutes()
-                    if (now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
-                        success = true
-                    }
-                    break
-                case '毎週':
-                    const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
-                    if (!repeatWeeks) {
-                        for (i = 0; i < repeatWeeks.length; i++) {
-                            const week = repeatWeeks[i]
-                            if (week == formatWeeks[now.toDate().getDay()]) {
-                                success = true
+            if (repeatUntilAt == null || repeatUntilAt > now.toDate()) {
+                switch (repeatInterval) {
+                    case '毎日':
+                        var alertedHours = alertedAt.getHours()
+                        var alertedMinutes = alertedAt.getMinutes()
+                        if (now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
+                            success = true
+                        }
+                        break
+                    case '毎週':
+                        const repeatWeeks = planShiftRepeatDoc.data()['repeatWeeks']
+                        if (!repeatWeeks) {
+                            for (i = 0; i < repeatWeeks.length; i++) {
+                                const week = repeatWeeks[i]
+                                if (week == formatWeeks[now.toDate().getDay()]) {
+                                    success = true
+                                }
                             }
                         }
-                    }
-                    break
-                case '毎月':
-                    var alertedDate = alertedAt.getDate()
-                    var alertedHours = alertedAt.getHours()
-                    var alertedMinutes = alertedAt.getMinutes()
-                    if (now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
-                        success = true
-                    }
-                    break
-                case '毎年':
-                    var alertedMonth = alertedAt.getMonth()
-                    var alertedDate = alertedAt.getDate()
-                    var alertedHours = alertedAt.getHours()
-                    var alertedMinutes = alertedAt.getMinutes()
-                    if (now.toDate().getMonth() == alertedMonth && now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
-                        success = true
-                    }
-                    break
-                default:
-                    break
+                        break
+                    case '毎月':
+                        var alertedDate = alertedAt.getDate()
+                        var alertedHours = alertedAt.getHours()
+                        var alertedMinutes = alertedAt.getMinutes()
+                        if (now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
+                            success = true
+                        }
+                        break
+                    case '毎年':
+                        var alertedMonth = alertedAt.getMonth()
+                        var alertedDate = alertedAt.getDate()
+                        var alertedHours = alertedAt.getHours()
+                        var alertedMinutes = alertedAt.getMinutes()
+                        if (now.toDate().getMonth() == alertedMonth && now.toDate().getDate() == alertedDate && now.toDate().getHours() == alertedHours && now.toDate().getMinutes() == alertedMinutes) {
+                            success = true
+                        }
+                        break
+                    default:
+                        break
+                }
             }
             if (success) {
                 const userIds = planShiftRepeatDoc.data()['userIds']
