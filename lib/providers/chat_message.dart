@@ -18,17 +18,15 @@ class ChatMessageProvider with ChangeNotifier {
   final UserService _userService = UserService();
   final FmService _fmService = FmService();
 
-  TextEditingController contentController = TextEditingController();
-  FocusNode contentFocusNode = FocusNode();
-
   Future<String?> send({
     required ChatModel? chat,
     required UserModel? loginUser,
+    required String content,
   }) async {
     String? error;
     if (chat == null) return 'メッセージの送信に失敗しました';
     if (loginUser == null) return 'メッセージの送信に失敗しました';
-    if (contentController.text == '') return 'メッセージを入力してください';
+    if (content == '') return 'メッセージを入力してください';
     try {
       String id = _messageService.id();
       List<Map> readUsers = [];
@@ -42,7 +40,7 @@ class ChatMessageProvider with ChangeNotifier {
         'organizationId': chat.organizationId,
         'groupId': chat.groupId,
         'chatId': chat.id,
-        'content': contentController.text,
+        'content': content,
         'image': '',
         'file': '',
         'fileExt': '',
@@ -54,7 +52,7 @@ class ChatMessageProvider with ChangeNotifier {
       });
       _chatService.update({
         'id': chat.id,
-        'lastMessage': contentController.text,
+        'lastMessage': content,
         'updatedAt': DateTime.now(),
       });
       //通知
@@ -67,12 +65,10 @@ class ChatMessageProvider with ChangeNotifier {
           _fmService.send(
             token: user.token,
             title: '[${chat.name}]${loginUser.name}からのメッセージ',
-            body: contentController.text,
+            body: content,
           );
         }
       }
-      contentController.clear();
-      contentFocusNode.unfocus();
     } catch (e) {
       error = 'メッセージの送信に失敗しました';
     }
@@ -139,8 +135,6 @@ class ChatMessageProvider with ChangeNotifier {
           );
         }
       }
-      contentController.clear();
-      contentFocusNode.unfocus();
     } catch (e) {
       error = 'メッセージの送信に失敗しました';
     }
@@ -207,8 +201,6 @@ class ChatMessageProvider with ChangeNotifier {
           );
         }
       }
-      contentController.clear();
-      contentFocusNode.unfocus();
     } catch (e) {
       error = 'メッセージの送信に失敗しました';
     }

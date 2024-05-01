@@ -48,6 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatModel> chats = [];
   ChatModel? currentChat;
   String searchKeyword = '';
+  TextEditingController contentController = TextEditingController();
+  FocusNode contentFocusNode = FocusNode();
 
   void _getKeyword() async {
     searchKeyword = await getPrefsString('keyword') ?? '';
@@ -202,7 +204,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                           MessageFormField(
-                            controller: messageProvider.contentController,
+                            controller: contentController,
+                            focusNode: contentFocusNode,
                             filePressed: () {},
                             galleryPressed: () async {
                               final result =
@@ -224,12 +227,15 @@ class _ChatScreenState extends State<ChatScreen> {
                               String? error = await messageProvider.send(
                                 chat: currentChat,
                                 loginUser: widget.loginProvider.user,
+                                content: contentController.text,
                               );
                               if (error != null) {
                                 if (!mounted) return;
                                 showMessage(context, error, false);
                                 return;
                               }
+                              contentController.clear();
+                              contentFocusNode.unfocus();
                             },
                             enabled: currentChatUserIds
                                 .contains(widget.loginProvider.user?.id),

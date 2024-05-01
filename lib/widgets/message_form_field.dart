@@ -5,6 +5,7 @@ import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 
 class MessageFormField extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
   final Function()? filePressed;
   final Function()? galleryPressed;
   final Function()? sendPressed;
@@ -12,6 +13,7 @@ class MessageFormField extends StatelessWidget {
 
   const MessageFormField({
     required this.controller,
+    required this.focusNode,
     required this.filePressed,
     required this.galleryPressed,
     required this.sendPressed,
@@ -65,6 +67,7 @@ class MessageFormField extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: TextBox(
+                focusNode: focusNode,
                 controller: controller,
                 placeholder: 'メッセージを入力...',
                 keyboardType: TextInputType.multiline,
