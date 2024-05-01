@@ -54,13 +54,27 @@ class MessageList extends StatelessWidget {
                 : Container(),
             message.image != ''
                 ? GestureDetector(
-                    onLongPress: onTapImage,
+                    onTap: onTapImage,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),
                       color: kYellowColor,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
+                        // child: Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     vertical: 8,
+                        //     horizontal: 12,
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       const Icon(Icons.image),
+                        //       const SizedBox(height: 4),
+                        //       Text(message.image),
+                        //     ],
+                        //   ),
+                        // ),
                         child: Image.network(
                           message.image,
                           width: 200,
@@ -73,7 +87,7 @@ class MessageList extends StatelessWidget {
                 : Container(),
             message.file != ''
                 ? GestureDetector(
-                    onLongPress: onTapFile,
+                    onTap: onTapFile,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),
@@ -152,13 +166,27 @@ class MessageList extends StatelessWidget {
                 : Container(),
             message.image != ''
                 ? GestureDetector(
-                    onLongPress: onTapImage,
+                    onTap: onTapImage,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),
                       color: kWhiteColor,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
+                        // child: Padding(
+                        //   padding: const EdgeInsets.symmetric(
+                        //     vertical: 8,
+                        //     horizontal: 12,
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       const Icon(Icons.image),
+                        //       const SizedBox(height: 4),
+                        //       Text(message.image),
+                        //     ],
+                        //   ),
+                        // ),
                         child: Image.network(
                           message.image,
                           width: 200,
@@ -171,7 +199,7 @@ class MessageList extends StatelessWidget {
                 : Container(),
             message.file != ''
                 ? GestureDetector(
-                    onLongPress: onTapFile,
+                    onTap: onTapFile,
                     child: Material(
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),

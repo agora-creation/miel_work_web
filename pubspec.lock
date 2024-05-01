@@ -1074,6 +1074,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  webkul_textfield_with_label:
+    dependency: "direct main"
+    description:
+      name: webkul_textfield_with_label
+      sha256: "3cd2e40eb49e3483bcc942272627f9686e6a9044645041457fc21ac82b8abfa6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   win32:
     dependency: transitive
     description:
