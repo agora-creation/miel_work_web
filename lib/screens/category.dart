@@ -163,7 +163,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
               child: CustomTextBox(
                 controller: nameController,
                 placeholder: '例) 来客',
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.name,
                 maxLines: 1,
               ),
             ),
