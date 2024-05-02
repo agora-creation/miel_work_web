@@ -1,23 +1,18 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 
 class MessageFormField extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final Function()? messagePressed;
   final Function()? filePressed;
   final Function()? galleryPressed;
-  final Function()? sendPressed;
   final bool enabled;
 
   const MessageFormField({
-    required this.controller,
-    required this.focusNode,
+    required this.messagePressed,
     required this.filePressed,
     required this.galleryPressed,
-    required this.sendPressed,
-    this.enabled = false,
+    required this.enabled,
     super.key,
   });
 
@@ -67,30 +62,13 @@ class MessageFormField extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: TextBox(
-                focusNode: focusNode,
-                controller: controller,
                 placeholder: 'メッセージを入力...',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                enabled: enabled,
+                readOnly: true,
+                onTap: messagePressed,
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: enabled
-                ? CustomButtonSm(
-                    labelText: '送信',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
-                    onPressed: sendPressed,
-                  )
-                : const CustomButtonSm(
-                    labelText: '送信',
-                    labelColor: kWhiteColor,
-                    backgroundColor: kGreyColor,
-                  ),
-          ),
+          const SizedBox(width: 8),
         ],
       ),
     );

@@ -12,6 +12,7 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/chat_message.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -48,8 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatModel> chats = [];
   ChatModel? currentChat;
   String searchKeyword = '';
-  TextEditingController contentController = TextEditingController();
-  FocusNode contentFocusNode = FocusNode();
 
   void _getKeyword() async {
     searchKeyword = await getPrefsString('keyword') ?? '';
@@ -204,10 +203,46 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                           MessageFormField(
-                            controller: contentController,
-                            focusNode: contentFocusNode,
-                            filePressed: () {},
+                            messagePressed: () {
+                              if (!currentChatUserIds
+                                  .contains(widget.loginProvider.user?.id)) {
+                                return;
+                              }
+                              Navigator.push(
+                                context,
+                                FluentPageRoute(
+                                  builder: (context) => ChatMessageScreen(
+                                    loginProvider: widget.loginProvider,
+                                    currentChat: currentChat,
+                                  ),
+                                ),
+                              );
+                            },
+                            filePressed: () async {
+                              if (!currentChatUserIds
+                                  .contains(widget.loginProvider.user?.id)) {
+                                return;
+                              }
+                              final result =
+                                  await FilePicker.platform.pickFiles(
+                                type: FileType.any,
+                              );
+                              String? error = await messageProvider.sendFile(
+                                chat: currentChat,
+                                loginUser: widget.loginProvider.user,
+                                result: result,
+                              );
+                              if (error != null) {
+                                if (!mounted) return;
+                                showMessage(context, error, false);
+                                return;
+                              }
+                            },
                             galleryPressed: () async {
+                              if (!currentChatUserIds
+                                  .contains(widget.loginProvider.user?.id)) {
+                                return;
+                              }
                               final result =
                                   await FilePicker.platform.pickFiles(
                                 type: FileType.image,
@@ -222,20 +257,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                 showMessage(context, error, false);
                                 return;
                               }
-                            },
-                            sendPressed: () async {
-                              String? error = await messageProvider.send(
-                                chat: currentChat,
-                                loginUser: widget.loginProvider.user,
-                                content: contentController.text,
-                              );
-                              if (error != null) {
-                                if (!mounted) return;
-                                showMessage(context, error, false);
-                                return;
-                              }
-                              contentController.clear();
-                              contentFocusNode.unfocus();
                             },
                             enabled: currentChatUserIds
                                 .contains(widget.loginProvider.user?.id),
