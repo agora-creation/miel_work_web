@@ -79,7 +79,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                 controller: contentController,
                 placeholder: 'メッセージを入力...',
                 keyboardType: TextInputType.multiline,
-                maxLines: null,
+                maxLines: 30,
               ),
             ],
           ),
