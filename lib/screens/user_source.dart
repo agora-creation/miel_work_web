@@ -386,6 +386,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             String? error = await userProvider.update(
+              organization: widget.loginProvider.organization,
               user: widget.user,
               name: nameController.text,
               email: emailController.text,

@@ -68,7 +68,9 @@ class HomeProvider with ChangeNotifier {
         for (OrganizationGroupModel group in groups) {
           if (group.userIds.isNotEmpty) {
             for (String userId in group.userIds) {
-              userIds.remove(userId);
+              if (userIds.contains(userId)) {
+                userIds.remove(userId);
+              }
             }
           }
         }

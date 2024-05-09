@@ -52,16 +52,6 @@ class UserProvider with ChangeNotifier {
         'id': organization.id,
         'userIds': orgUserIds,
       });
-      ChatModel? orgChat = await _chatService.selectData(
-        organizationId: organization.id,
-        groupId: '',
-      );
-      if (orgChat != null) {
-        _chatService.update({
-          'id': orgChat.id,
-          'userIds': orgUserIds,
-        });
-      }
       if (group != null) {
         List<String> groupUserIds = group.userIds;
         if (!groupUserIds.contains(id)) {
@@ -103,6 +93,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<String?> update({
+    required OrganizationModel? organization,
     required UserModel user,
     required String name,
     required String email,
@@ -113,6 +104,7 @@ class UserProvider with ChangeNotifier {
     required bool president,
   }) async {
     String? error;
+    if (organization == null) return 'スタッフ情報の編集に失敗しました';
     if (name == '') return 'スタッフ名を入力してください';
     if (email == '') return 'メールアドレスを入力してください';
     if (password == '') return 'パスワードを入力してください';
@@ -142,14 +134,18 @@ class UserProvider with ChangeNotifier {
             'organizationId': befGroup.organizationId,
             'userIds': befGroupUserIds,
           });
-          ChatModel? groupChat = await _chatService.selectData(
-            organizationId: befGroup.organizationId,
-            groupId: befGroup.id,
+          List<ChatModel> chats = await _chatService.selectList(
+            organizationId: organization.id,
+            groupId: null,
           );
-          if (groupChat != null) {
+          for (ChatModel chat in chats) {
+            List<String> userIds = chat.userIds;
+            if (!userIds.contains(user.id)) {
+              userIds.add(user.id);
+            }
             _chatService.update({
-              'id': groupChat.id,
-              'userIds': befGroupUserIds,
+              'id': chat.id,
+              'userIds': userIds,
             });
           }
         }
@@ -164,6 +160,20 @@ class UserProvider with ChangeNotifier {
             'organizationId': aftGroup.organizationId,
             'userIds': aftGroupUserIds,
           });
+          List<ChatModel> chats = await _chatService.selectList(
+            organizationId: organization.id,
+            groupId: null,
+          );
+          for (ChatModel chat in chats) {
+            List<String> userIds = chat.userIds;
+            if (userIds.contains(user.id)) {
+              userIds.remove(user.id);
+            }
+            _chatService.update({
+              'id': chat.id,
+              'userIds': userIds,
+            });
+          }
           ChatModel? groupChat = await _chatService.selectData(
             organizationId: aftGroup.organizationId,
             groupId: aftGroup.id,
