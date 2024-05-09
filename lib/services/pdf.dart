@@ -46,6 +46,14 @@ class PdfService {
               crossAxisAlignment: pw.CrossAxisAlignment.end,
               children: [
                 pw.Text(
+                  '申請番号: ${apply.number}',
+                  style: pw.TextStyle(
+                    font: ttf,
+                    color: PdfColors.grey,
+                    fontSize: 10,
+                  ),
+                ),
+                pw.Text(
                   '申請日時: ${dateText('yyyy/MM/dd HH:mm', apply.createdAt)}',
                   style: pw.TextStyle(
                     font: ttf,

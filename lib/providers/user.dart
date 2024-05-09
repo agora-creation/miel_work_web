@@ -82,6 +82,19 @@ class UserProvider with ChangeNotifier {
             'userIds': groupUserIds,
           });
         }
+      } else {
+        List<ChatModel> chats = await _chatService.selectList(
+          organizationId: organization.id,
+          groupId: null,
+        );
+        for (ChatModel chat in chats) {
+          List<String> userIds = chat.userIds;
+          userIds.add(id);
+          _chatService.update({
+            'id': chat.id,
+            'userIds': userIds,
+          });
+        }
       }
     } catch (e) {
       error = 'スタッフの追加に失敗しました';
@@ -118,6 +131,7 @@ class UserProvider with ChangeNotifier {
         'president': president,
       });
       if (befGroup != aftGroup) {
+        //所属→未所属
         if (befGroup != null) {
           List<String> befGroupUserIds = befGroup.userIds;
           if (befGroupUserIds.contains(user.id)) {
@@ -139,6 +153,7 @@ class UserProvider with ChangeNotifier {
             });
           }
         }
+        //未所属→所属
         if (aftGroup != null) {
           List<String> aftGroupUserIds = aftGroup.userIds;
           if (!aftGroupUserIds.contains(user.id)) {
@@ -230,6 +245,19 @@ class UserProvider with ChangeNotifier {
           _chatService.update({
             'id': groupChat.id,
             'userIds': groupUserIds,
+          });
+        }
+      } else {
+        List<ChatModel> chats = await _chatService.selectList(
+          organizationId: organization.id,
+          groupId: null,
+        );
+        for (ChatModel chat in chats) {
+          List<String> userIds = chat.userIds;
+          userIds.remove(user.id);
+          _chatService.update({
+            'id': chat.id,
+            'userIds': userIds,
           });
         }
       }

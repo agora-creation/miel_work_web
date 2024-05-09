@@ -55,6 +55,7 @@ class ApplySource extends DataGridSource {
     String createdAtText = dateText('yyyy/MM/dd HH:mm', apply.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
     cells.add(CustomColumnLabel(apply.createdUserName));
+    cells.add(CustomColumnLabel(apply.number));
     cells.add(CustomColumnLabel('${apply.type}申請'));
     cells.add(CustomColumnLabel(apply.title));
     if (apply.type == '稟議') {

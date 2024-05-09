@@ -28,6 +28,7 @@ class ApplyAddScreen extends StatefulWidget {
 }
 
 class _ApplyAddScreenState extends State<ApplyAddScreen> {
+  TextEditingController numberController = TextEditingController();
   String type = kApplyTypes.first;
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
@@ -36,6 +37,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
 
   void _init() async {
     if (widget.apply == null) return;
+    numberController.text = widget.apply?.number ?? '';
     type = widget.apply?.type ?? kApplyTypes.first;
     titleController.text = widget.apply?.title ?? '';
     contentController.text = widget.apply?.content ?? '';
@@ -81,6 +83,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   String? error = await applyProvider.create(
                     organization: widget.loginProvider.organization,
                     group: null,
+                    number: numberController.text,
                     type: type,
                     title: titleController.text,
                     content: contentController.text,
@@ -112,6 +115,16 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              InfoLabel(
+                label: '申請番号',
+                child: CustomTextBox(
+                  controller: numberController,
+                  placeholder: '',
+                  keyboardType: TextInputType.number,
+                  maxLines: 1,
+                ),
+              ),
+              const SizedBox(height: 8),
               InfoLabel(
                 label: '申請種別',
                 child: ComboBox<String>(

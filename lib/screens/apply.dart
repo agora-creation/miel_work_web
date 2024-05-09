@@ -188,6 +188,10 @@ class _ApplyScreenState extends State<ApplyScreen> {
                             label: const CustomColumnLabel('申請者名'),
                           ),
                           GridColumn(
+                            columnName: 'number',
+                            label: const CustomColumnLabel('申請番号'),
+                          ),
+                          GridColumn(
                             columnName: 'type',
                             label: const CustomColumnLabel('申請種別'),
                           ),
