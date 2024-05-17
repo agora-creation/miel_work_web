@@ -92,6 +92,7 @@ class ApplyProvider with ChangeNotifier {
   Future<String?> approval({
     required ApplyModel apply,
     required UserModel? loginUser,
+    required String approvalNumber,
   }) async {
     String? error;
     if (loginUser == null) return '承認に失敗しました';
@@ -114,6 +115,7 @@ class ApplyProvider with ChangeNotifier {
           'approval': 1,
           'approvedAt': DateTime.now(),
           'approvalUsers': approvalUsers,
+          'approvalNumber': approvalNumber,
         });
         //通知
         List<UserModel> sendUsers = [];
@@ -134,6 +136,7 @@ class ApplyProvider with ChangeNotifier {
         _applyService.update({
           'id': apply.id,
           'approvalUsers': approvalUsers,
+          'approvalNumber': approvalNumber,
         });
       }
     } catch (e) {

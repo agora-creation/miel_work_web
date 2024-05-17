@@ -70,6 +70,15 @@ class PdfService {
                         ),
                       )
                     : pw.Container(),
+                apply.approval == 1
+                    ? pw.Text(
+                        '承認番号: ${apply.approvalNumber}',
+                        style: pw.TextStyle(
+                          font: ttf,
+                          fontSize: 12,
+                        ),
+                      )
+                    : pw.Container(),
                 pw.Text(
                   '申請者: ${apply.createdUserName}',
                   style: pw.TextStyle(

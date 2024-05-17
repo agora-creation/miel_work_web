@@ -190,6 +190,12 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                               style: const TextStyle(color: kGreyColor),
                             )
                           : Container(),
+                      widget.apply.approval == 1
+                          ? Text(
+                              '承認番号: ${widget.apply.approvalNumber}',
+                              style: const TextStyle(color: kGreyColor),
+                            )
+                          : Container(),
                       Text(
                         '申請者: ${widget.apply.createdUserName}',
                         style: const TextStyle(color: kGreyColor),
@@ -399,6 +405,8 @@ class ApprovalApplyDialog extends StatefulWidget {
 }
 
 class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
+  TextEditingController approvalNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
@@ -407,12 +415,22 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
         'この申請を承認する',
         style: TextStyle(fontSize: 18),
       ),
-      content: const SingleChildScrollView(
+      content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('本当に承認しますか？'),
+            const Text('本当に承認しますか？'),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '承認番号',
+              child: CustomTextBox(
+                controller: approvalNumberController,
+                placeholder: '',
+                keyboardType: TextInputType.number,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -431,6 +449,7 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
             String? error = await applyProvider.approval(
               apply: widget.apply,
               loginUser: widget.loginProvider.user,
+              approvalNumber: approvalNumberController.text,
             );
             if (error != null) {
               if (!mounted) return;
