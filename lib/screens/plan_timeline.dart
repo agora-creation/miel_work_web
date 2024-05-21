@@ -102,10 +102,9 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
       content: Container(
         color: kWhiteColor,
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: planService.streamListDate(
+          stream: planService.streamList(
             organizationId: widget.loginProvider.organization?.id,
             groupId: widget.homeProvider.currentGroup?.id,
-            date: widget.date,
             categories: searchCategories,
           ),
           builder: (context, snapshot) {
@@ -113,6 +112,7 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
             if (snapshot.hasData) {
               appointments = planService.generateListAppointment(
                 data: snapshot.data,
+                date: widget.date,
               );
             }
             return CustomCalendarTimeline(

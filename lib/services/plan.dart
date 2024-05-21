@@ -53,41 +53,46 @@ class PlanService {
         .snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>>? streamListDate({
-    required String? organizationId,
-    required String? groupId,
-    required DateTime date,
-    required List<String> categories,
-  }) {
-    Timestamp startAt = convertTimestamp(date, false);
-    Timestamp endAt = convertTimestamp(date, true);
-    return FirebaseFirestore.instance
-        .collection(collection)
-        .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
-        .where('category', whereIn: categories.isNotEmpty ? categories : null)
-        .orderBy('startedAt', descending: false)
-        .startAt([startAt]).endAt([endAt]).snapshots();
-  }
-
   List<sfc.Appointment> generateListAppointment({
     required QuerySnapshot<Map<String, dynamic>>? data,
+    DateTime? date,
     bool shift = false,
   }) {
     List<sfc.Appointment> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       PlanModel plan = PlanModel.fromSnapshot(doc);
-      ret.add(sfc.Appointment(
-        id: plan.id,
-        resourceIds: plan.userIds,
-        subject: '[${plan.category}]${plan.subject}',
-        startTime: plan.startedAt,
-        endTime: plan.endedAt,
-        isAllDay: plan.allDay,
-        color: shift ? plan.categoryColor.withOpacity(0.3) : plan.categoryColor,
-        notes: 'plan',
-        recurrenceRule: plan.getRepeatRule(),
-      ));
+      bool listIn = false;
+      if (date != null) {
+        var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+        var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+        if (plan.startedAt.millisecondsSinceEpoch <=
+            dateS.millisecondsSinceEpoch &&
+            dateS.millisecondsSinceEpoch <=
+                plan.endedAt.millisecondsSinceEpoch) {
+          listIn = true;
+        } else if (dateS.millisecondsSinceEpoch <=
+            plan.startedAt.millisecondsSinceEpoch &&
+            plan.endedAt.millisecondsSinceEpoch <=
+                dateE.millisecondsSinceEpoch) {
+          listIn = true;
+        }
+      } else {
+        listIn = true;
+      }
+      if (listIn) {
+        ret.add(sfc.Appointment(
+          id: plan.id,
+          resourceIds: plan.userIds,
+          subject: '[${plan.category}]${plan.subject}',
+          startTime: plan.startedAt,
+          endTime: plan.endedAt,
+          isAllDay: plan.allDay,
+          color: shift ? plan.categoryColor.withOpacity(0.3) : plan
+              .categoryColor,
+          notes: 'plan',
+          recurrenceRule: plan.getRepeatRule(),
+        ));
+      }
     }
     return ret;
   }
