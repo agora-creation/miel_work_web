@@ -232,7 +232,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              widget.apply.type == '稟議'
+              widget.apply.type == '稟議' || widget.apply.type == '支払伺い'
                   ? InfoLabel(
                       label: '金額',
                       child: Container(

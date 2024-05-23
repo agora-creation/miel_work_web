@@ -58,7 +58,7 @@ class ApplySource extends DataGridSource {
     cells.add(CustomColumnLabel(apply.number));
     cells.add(CustomColumnLabel('${apply.type}申請'));
     cells.add(CustomColumnLabel(apply.title));
-    if (apply.type == '稟議') {
+    if (apply.type == '稟議' || apply.type == '支払伺い') {
       cells.add(CustomColumnLabel('¥ ${apply.formatPrice()}'));
     } else {
       cells.add(const CustomColumnLabel(''));

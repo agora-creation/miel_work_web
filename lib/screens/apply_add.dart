@@ -77,7 +77,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                 backgroundColor: kBlueColor,
                 onPressed: () async {
                   int price = 0;
-                  if (type == '稟議') {
+                  if (type == '稟議' || type == '支払伺い') {
                     price = int.parse(priceController.text);
                   }
                   String? error = await applyProvider.create(
@@ -154,7 +154,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              type == '稟議'
+              type == '稟議' || type == '支払伺い'
                   ? InfoLabel(
                       label: '金額',
                       child: CustomTextBox(
