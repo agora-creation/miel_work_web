@@ -43,13 +43,59 @@ class MessageList extends StatelessWidget {
                     elevation: 4,
                     borderRadius: BorderRadius.circular(8),
                     color: kYellowColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
-                      ),
-                      child: Text(message.content).urlToLink(context),
-                    ),
+                    child: message.replySource != null
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      message.replySource?.createdUserName ??
+                                          '',
+                                      style: const TextStyle(
+                                        color: kGrey600Color,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    Text(
+                                      message.replySource?.content ?? '',
+                                      style: const TextStyle(
+                                        color: kGrey600Color,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(color: kWhiteColor, height: 1),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Text(
+                                  message.content,
+                                ).urlToLink(context),
+                              ),
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            child: Text(
+                              message.content,
+                            ).urlToLink(context),
+                          ),
                   )
                 : Container(),
             message.image != ''
@@ -155,13 +201,59 @@ class MessageList extends StatelessWidget {
                     elevation: 4,
                     borderRadius: BorderRadius.circular(8),
                     color: kWhiteColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
-                      ),
-                      child: Text(message.content).urlToLink(context),
-                    ),
+                    child: message.replySource != null
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      message.replySource?.createdUserName ??
+                                          '',
+                                      style: const TextStyle(
+                                        color: kGrey600Color,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    Text(
+                                      message.replySource?.content ?? '',
+                                      style: const TextStyle(
+                                        color: kGrey600Color,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(color: kGrey200Color, height: 1),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                child: Text(
+                                  message.content,
+                                ).urlToLink(context),
+                              ),
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            child: Text(
+                              message.content,
+                            ).urlToLink(context),
+                          ),
                   )
                 : Container(),
             message.image != ''

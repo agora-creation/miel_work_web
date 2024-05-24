@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
+import 'package:miel_work_web/models/reply_source.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
@@ -22,6 +23,7 @@ class ChatMessageProvider with ChangeNotifier {
     required ChatModel? chat,
     required UserModel? loginUser,
     required String content,
+    required ReplySourceModel? replySource,
   }) async {
     String? error;
     if (chat == null) return 'メッセージの送信に失敗しました';
@@ -49,6 +51,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
+        'replySource': replySource?.toMap(),
       });
       _chatService.update({
         'id': chat.id,
@@ -115,6 +118,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
+        'replySource': null,
       });
       _chatService.update({
         'id': chat.id,
@@ -181,6 +185,7 @@ class ChatMessageProvider with ChangeNotifier {
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
+        'replySource': null,
       });
       _chatService.update({
         'id': chat.id,

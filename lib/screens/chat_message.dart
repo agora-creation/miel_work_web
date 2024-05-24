@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
+import 'package:miel_work_web/models/reply_source.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
@@ -24,6 +25,7 @@ class ChatMessageScreen extends StatefulWidget {
 
 class _ChatMessageScreenState extends State<ChatMessageScreen> {
   TextEditingController contentController = TextEditingController();
+  ReplySourceModel? replySource;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     chat: widget.currentChat,
                     loginUser: widget.loginProvider.user,
                     content: contentController.text,
+                    replySource: replySource,
                   );
                   if (error != null) {
                     if (!mounted) return;
