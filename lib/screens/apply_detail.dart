@@ -279,6 +279,62 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                       },
                     )
                   : Container(),
+              const SizedBox(height: 8),
+              widget.apply.file2 != ''
+                  ? LinkText(
+                      label: '添付ファイル2',
+                      color: kBlueColor,
+                      onTap: () {
+                        File file = File(widget.apply.file2);
+                        downloadFile(
+                          url: widget.apply.file2,
+                          name: p.basename(file.path),
+                        );
+                      },
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              widget.apply.file3 != ''
+                  ? LinkText(
+                      label: '添付ファイル3',
+                      color: kBlueColor,
+                      onTap: () {
+                        File file = File(widget.apply.file3);
+                        downloadFile(
+                          url: widget.apply.file3,
+                          name: p.basename(file.path),
+                        );
+                      },
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              widget.apply.file4 != ''
+                  ? LinkText(
+                      label: '添付ファイル4',
+                      color: kBlueColor,
+                      onTap: () {
+                        File file = File(widget.apply.file4);
+                        downloadFile(
+                          url: widget.apply.file4,
+                          name: p.basename(file.path),
+                        );
+                      },
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              widget.apply.file5 != ''
+                  ? LinkText(
+                      label: '添付ファイル5',
+                      color: kBlueColor,
+                      onTap: () {
+                        File file = File(widget.apply.file5);
+                        downloadFile(
+                          url: widget.apply.file5,
+                          name: p.basename(file.path),
+                        );
+                      },
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
