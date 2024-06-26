@@ -32,13 +32,14 @@ class PlanScreen extends StatefulWidget {
 class _PlanScreenState extends State<PlanScreen> {
   PlanService planService = PlanService();
   List<String> searchCategories = [];
+  sfc.CalendarController calendarController = sfc.CalendarController();
 
   void _searchCategoriesChange() async {
     searchCategories = await getPrefsList('categories') ?? [];
     setState(() {});
   }
 
-  void _calendarTap(sfc.CalendarTapDetails details) {
+  void _calendarTap(sfc.CalendarLongPressDetails details) {
     Navigator.push(
       context,
       FluentPageRoute(
@@ -53,6 +54,7 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   void initState() {
+    calendarController.selectedDate = DateTime.now();
     super.initState();
     _searchCategoriesChange();
   }
@@ -124,7 +126,8 @@ class _PlanScreenState extends State<PlanScreen> {
                       }
                       return CustomCalendar(
                         dataSource: _DataSource(appointments),
-                        onTap: _calendarTap,
+                        onLongPress: _calendarTap,
+                        controller: calendarController,
                       );
                     },
                   ),
