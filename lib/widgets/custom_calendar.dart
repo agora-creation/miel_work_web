@@ -15,6 +15,9 @@ class CustomCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return sfc.SfCalendar(
+      headerStyle: const sfc.CalendarHeaderStyle(
+        backgroundColor: kWhiteColor,
+      ),
       dataSource: dataSource,
       view: sfc.CalendarView.month,
       showNavigationArrow: true,
@@ -22,9 +25,14 @@ class CustomCalendar extends StatelessWidget {
       headerDateFormat: 'yyyy年MM月',
       onTap: onTap,
       monthViewSettings: const sfc.MonthViewSettings(
-        appointmentDisplayMode: sfc.MonthAppointmentDisplayMode.appointment,
+        showAgenda: true,
         monthCellStyle: sfc.MonthCellStyle(
-          textStyle: TextStyle(fontSize: 16),
+          textStyle: TextStyle(fontSize: 20),
+        ),
+        agendaItemHeight: 50,
+        agendaStyle: sfc.AgendaStyle(
+          appointmentTextStyle: TextStyle(fontSize: 16),
+          dayTextStyle: TextStyle(fontSize: 20),
         ),
       ),
       cellBorderColor: kGrey600Color,
