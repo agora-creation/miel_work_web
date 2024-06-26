@@ -4,7 +4,6 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply.dart';
 import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/group_setting.dart';
-import 'package:miel_work_web/screens/manual.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/user.dart';
@@ -66,15 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
               homeProvider: homeProvider,
             ),
           ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.pdf),
-            title: const Text('業務マニュアル'),
-            body: ManualScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
+          // PaneItemSeparator(),
+          // PaneItem(
+          //   icon: const Icon(FluentIcons.pdf),
+          //   title: const Text('業務マニュアル'),
+          //   body: ManualScreen(
+          //     loginProvider: loginProvider,
+          //     homeProvider: homeProvider,
+          //   ),
+          // ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.document_approval),
