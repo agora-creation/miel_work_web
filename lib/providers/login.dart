@@ -59,7 +59,6 @@ class LoginProvider with ChangeNotifier {
       UserModel? tmpUser = await _userService.selectData(
         email: email,
         password: password,
-        admin: true,
       );
       if (tmpUser != null) {
         OrganizationModel? tmpOrganization =
@@ -187,7 +186,6 @@ class LoginProvider with ChangeNotifier {
       UserModel? tmpUser = await _userService.selectData(
         email: email,
         password: password,
-        admin: true,
       );
       if (tmpUser != null) {
         OrganizationModel? tmpOrganization =
@@ -222,7 +220,6 @@ class LoginProvider with ChangeNotifier {
         UserModel? tmpUser = await _userService.selectData(
           email: email,
           password: password,
-          admin: true,
         );
         if (tmpUser != null) {
           OrganizationModel? tmpOrganization =

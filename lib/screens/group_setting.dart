@@ -54,18 +54,20 @@ class _GroupSettingScreenState extends State<GroupSettingScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  LinkText(
-                    label: 'このグループを削除',
-                    color: kRedColor,
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => DelDialog(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                        group: group,
-                      ),
-                    ),
-                  ),
+                  widget.loginProvider.isAllGroup()
+                      ? LinkText(
+                          label: 'このグループを削除',
+                          color: kRedColor,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => DelDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                              group: group,
+                            ),
+                          ),
+                        )
+                      : Container(),
                 ],
               ),
             ),

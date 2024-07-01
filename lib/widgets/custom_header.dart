@@ -68,34 +68,39 @@ class _CustomHeaderState extends State<CustomHeader> {
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 8),
-              Row(
-                children: [
-                  ComboBox<OrganizationGroupModel>(
-                    value: widget.homeProvider.currentGroup,
-                    items: groupItems,
-                    onChanged: (value) {
-                      widget.homeProvider.currentGroupChange(value);
-                    },
-                    placeholder: const Text(
-                      'グループの指定なし',
-                      style: TextStyle(color: kGreyColor),
+              widget.loginProvider.isAllGroup()
+                  ? Row(
+                      children: [
+                        ComboBox<OrganizationGroupModel>(
+                          value: widget.homeProvider.currentGroup,
+                          items: groupItems,
+                          onChanged: (value) {
+                            widget.homeProvider.currentGroupChange(value);
+                          },
+                          placeholder: const Text(
+                            'グループの指定なし',
+                            style: TextStyle(color: kGreyColor),
+                          ),
+                        ),
+                        const SizedBox(width: 2),
+                        CustomIconButtonSm(
+                          icon: FluentIcons.add,
+                          iconColor: kWhiteColor,
+                          backgroundColor: kBlueColor,
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (context) => AddGroupDialog(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      widget.loginProvider.group?.name ?? '',
+                      style: const TextStyle(fontSize: 16),
                     ),
-                  ),
-                  const SizedBox(width: 2),
-                  CustomIconButtonSm(
-                    icon: FluentIcons.add,
-                    iconColor: kWhiteColor,
-                    backgroundColor: kBlueColor,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) => AddGroupDialog(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(width: 8),
               const Text(
                 '管理画面',
