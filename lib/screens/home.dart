@@ -65,15 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
               homeProvider: homeProvider,
             ),
           ),
-          // PaneItemSeparator(),
-          // PaneItem(
-          //   icon: const Icon(FluentIcons.pdf),
-          //   title: const Text('業務マニュアル'),
-          //   body: ManualScreen(
-          //     loginProvider: loginProvider,
-          //     homeProvider: homeProvider,
-          //   ),
-          // ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.document_approval),
@@ -91,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
+            enabled: loginProvider.user?.admin == true
           ),
           PaneItemSeparator(),
           PaneItem(
@@ -100,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
-            enabled: homeProvider.currentGroup != null,
+            enabled: loginProvider.user?.admin == true && homeProvider.currentGroup != null,
           ),
         ],
       ),

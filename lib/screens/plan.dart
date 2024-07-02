@@ -114,7 +114,6 @@ class _PlanScreenState extends State<PlanScreen> {
                   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream: planService.streamList(
                       organizationId: widget.loginProvider.organization?.id,
-                      groupId: widget.homeProvider.currentGroup?.id,
                       categories: searchCategories,
                     ),
                     builder: (context, snapshot) {
@@ -122,6 +121,7 @@ class _PlanScreenState extends State<PlanScreen> {
                       if (snapshot.hasData) {
                         appointments = planService.generateListAppointment(
                           data: snapshot.data,
+                          currentGroup: widget.homeProvider.currentGroup,
                         );
                       }
                       return CustomCalendar(

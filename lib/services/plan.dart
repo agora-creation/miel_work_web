@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miel_work_web/common/functions.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
@@ -41,13 +41,11 @@ class PlanService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
-    required String? groupId,
     required List<String> categories,
   }) {
     return FirebaseFirestore.instance
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('groupId', isEqualTo: groupId != '' ? groupId : null)
         .where('category', whereIn: categories.isNotEmpty ? categories : null)
         .orderBy('startedAt', descending: true)
         .snapshots();
@@ -55,6 +53,7 @@ class PlanService {
 
   List<sfc.Appointment> generateListAppointment({
     required QuerySnapshot<Map<String, dynamic>>? data,
+    required OrganizationGroupModel? currentGroup,
     DateTime? date,
     bool shift = false,
   }) {
@@ -62,22 +61,44 @@ class PlanService {
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       PlanModel plan = PlanModel.fromSnapshot(doc);
       bool listIn = false;
-      if (date != null) {
-        var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
-        var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
-        if (plan.startedAt.millisecondsSinceEpoch <=
-            dateS.millisecondsSinceEpoch &&
-            dateS.millisecondsSinceEpoch <=
-                plan.endedAt.millisecondsSinceEpoch) {
-          listIn = true;
-        } else if (dateS.millisecondsSinceEpoch <=
-            plan.startedAt.millisecondsSinceEpoch &&
-            plan.endedAt.millisecondsSinceEpoch <=
-                dateE.millisecondsSinceEpoch) {
+      if (currentGroup == null) {
+        if (date != null) {
+          var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+          var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+          if (plan.startedAt.millisecondsSinceEpoch <=
+                  dateS.millisecondsSinceEpoch &&
+              dateS.millisecondsSinceEpoch <=
+                  plan.endedAt.millisecondsSinceEpoch) {
+            listIn = true;
+          } else if (dateS.millisecondsSinceEpoch <=
+                  plan.startedAt.millisecondsSinceEpoch &&
+              plan.endedAt.millisecondsSinceEpoch <=
+                  dateE.millisecondsSinceEpoch) {
+            listIn = true;
+          }
+        } else {
           listIn = true;
         }
       } else {
-        listIn = true;
+        if (currentGroup.id == plan.groupId || plan.groupId == '') {
+          if (date != null) {
+            var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+            var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+            if (plan.startedAt.millisecondsSinceEpoch <=
+                    dateS.millisecondsSinceEpoch &&
+                dateS.millisecondsSinceEpoch <=
+                    plan.endedAt.millisecondsSinceEpoch) {
+              listIn = true;
+            } else if (dateS.millisecondsSinceEpoch <=
+                    plan.startedAt.millisecondsSinceEpoch &&
+                plan.endedAt.millisecondsSinceEpoch <=
+                    dateE.millisecondsSinceEpoch) {
+              listIn = true;
+            }
+          } else {
+            listIn = true;
+          }
+        }
       }
       if (listIn) {
         ret.add(sfc.Appointment(
@@ -87,8 +108,8 @@ class PlanService {
           startTime: plan.startedAt,
           endTime: plan.endedAt,
           isAllDay: plan.allDay,
-          color: shift ? plan.categoryColor.withOpacity(0.3) : plan
-              .categoryColor,
+          color:
+              shift ? plan.categoryColor.withOpacity(0.3) : plan.categoryColor,
           notes: 'plan',
           recurrenceRule: plan.getRepeatRule(),
         ));
