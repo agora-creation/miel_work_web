@@ -76,14 +76,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
-            icon: const Icon(FluentIcons.group),
-            title: const Text('スタッフ管理'),
-            body: UserScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-            enabled: loginProvider.user?.admin == true
+            icon: const Icon(FluentIcons.emoji_disappointed),
+            title: const Text('クレーム・要望'),
+            body: Container(),
+            enabled: false,
           ),
+          PaneItemSeparator(),
+          PaneItem(
+              icon: const Icon(FluentIcons.group),
+              title: const Text('スタッフ管理'),
+              body: UserScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+              ),
+              enabled: loginProvider.user?.admin == true),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.settings),
@@ -92,7 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
               loginProvider: loginProvider,
               homeProvider: homeProvider,
             ),
-            enabled: loginProvider.user?.admin == true && homeProvider.currentGroup != null,
+            enabled: loginProvider.user?.admin == true &&
+                homeProvider.currentGroup != null,
           ),
         ],
       ),

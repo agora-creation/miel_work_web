@@ -51,6 +51,62 @@ class PlanService {
         .snapshots();
   }
 
+  List<PlanModel> generateList({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+    required OrganizationGroupModel? currentGroup,
+    DateTime? date,
+    bool shift = false,
+  }) {
+    List<PlanModel> ret = [];
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      PlanModel plan = PlanModel.fromSnapshot(doc);
+      bool listIn = false;
+      if (currentGroup == null) {
+        if (date != null) {
+          var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+          var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+          if (plan.startedAt.millisecondsSinceEpoch <=
+                  dateS.millisecondsSinceEpoch &&
+              dateS.millisecondsSinceEpoch <=
+                  plan.endedAt.millisecondsSinceEpoch) {
+            listIn = true;
+          } else if (dateS.millisecondsSinceEpoch <=
+                  plan.startedAt.millisecondsSinceEpoch &&
+              plan.endedAt.millisecondsSinceEpoch <=
+                  dateE.millisecondsSinceEpoch) {
+            listIn = true;
+          }
+        } else {
+          listIn = true;
+        }
+      } else {
+        if (currentGroup.id == plan.groupId || plan.groupId == '') {
+          if (date != null) {
+            var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+            var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+            if (plan.startedAt.millisecondsSinceEpoch <=
+                    dateS.millisecondsSinceEpoch &&
+                dateS.millisecondsSinceEpoch <=
+                    plan.endedAt.millisecondsSinceEpoch) {
+              listIn = true;
+            } else if (dateS.millisecondsSinceEpoch <=
+                    plan.startedAt.millisecondsSinceEpoch &&
+                plan.endedAt.millisecondsSinceEpoch <=
+                    dateE.millisecondsSinceEpoch) {
+              listIn = true;
+            }
+          } else {
+            listIn = true;
+          }
+        }
+      }
+      if (listIn) {
+        ret.add(plan);
+      }
+    }
+    return ret;
+  }
+
   List<sfc.Appointment> generateListAppointment({
     required QuerySnapshot<Map<String, dynamic>>? data,
     required OrganizationGroupModel? currentGroup,

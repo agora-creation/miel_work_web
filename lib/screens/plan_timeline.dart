@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/plan_add.dart';
 import 'package:miel_work_web/screens/plan_mod.dart';
 import 'package:miel_work_web/services/plan.dart';
-import 'package:miel_work_web/widgets/custom_calendar_timeline.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
+import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/plan_list.dart';
 
 class PlanTimelineScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -33,40 +34,6 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
   void _searchCategoriesChange() async {
     searchCategories = await getPrefsList('categories') ?? [];
     setState(() {});
-  }
-
-  void _calendarTap(sfc.CalendarTapDetails details) {
-    sfc.CalendarElement element = details.targetElement;
-    switch (element) {
-      case sfc.CalendarElement.appointment:
-      case sfc.CalendarElement.agenda:
-        sfc.Appointment appointmentDetails = details.appointments![0];
-        Navigator.push(
-          context,
-          FluentPageRoute(
-            builder: (context) => PlanModScreen(
-              loginProvider: widget.loginProvider,
-              homeProvider: widget.homeProvider,
-              planId: '${appointmentDetails.id}',
-            ),
-          ),
-        );
-        break;
-      case sfc.CalendarElement.calendarCell:
-        Navigator.push(
-          context,
-          FluentPageRoute(
-            builder: (context) => PlanAddScreen(
-              loginProvider: widget.loginProvider,
-              homeProvider: widget.homeProvider,
-              date: details.date ?? DateTime.now(),
-            ),
-          ),
-        );
-        break;
-      default:
-        break;
-    }
   }
 
   @override
@@ -94,7 +61,21 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
                 dateText('yyyy年MM月dd日(E)', widget.date),
                 style: const TextStyle(fontSize: 16),
               ),
-              Container(),
+              CustomButtonSm(
+                labelText: '予定の追加',
+                labelColor: kWhiteColor,
+                backgroundColor: kBlueColor,
+                onPressed: () => Navigator.push(
+                  context,
+                  FluentPageRoute(
+                    builder: (context) => PlanAddScreen(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      date: widget.date,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -107,28 +88,41 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
             categories: searchCategories,
           ),
           builder: (context, snapshot) {
-            List<sfc.Appointment> appointments = [];
+            List<PlanModel> plans = [];
             if (snapshot.hasData) {
-              appointments = planService.generateListAppointment(
+              plans = planService.generateList(
                 data: snapshot.data,
                 currentGroup: widget.homeProvider.currentGroup,
                 date: widget.date,
               );
             }
-            return CustomCalendarTimeline(
-              initialDisplayDate: widget.date,
-              dataSource: _DataSource(appointments),
-              onTap: _calendarTap,
+            if (plans.isEmpty) {
+              return const Center(child: Text('予定はありません'));
+            }
+            return ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: plans.length,
+              itemBuilder: (context, index) {
+                PlanModel plan = plans[index];
+                return PlanList(
+                  plan: plan,
+                  groups: widget.homeProvider.groups,
+                  onTap: () => Navigator.push(
+                    context,
+                    FluentPageRoute(
+                      builder: (context) => PlanModScreen(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        planId: plan.id,
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
       ),
     );
-  }
-}
-
-class _DataSource extends sfc.CalendarDataSource {
-  _DataSource(List<sfc.Appointment> source) {
-    appointments = source;
   }
 }
