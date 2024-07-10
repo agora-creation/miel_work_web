@@ -4,6 +4,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/problem_del.dart';
 import 'package:miel_work_web/screens/problem_mod.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
@@ -87,7 +88,16 @@ class ProblemSource extends DataGridSource {
           labelText: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            FluentPageRoute(
+              builder: (context) => ProblemDelScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                problem: problem,
+              ),
+            ),
+          ),
         ),
       ],
     ));

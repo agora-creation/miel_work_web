@@ -250,7 +250,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 label: '添付写真',
                 child: CustomFileField(
                   value: pickedFile,
-                  defaultValue: '',
+                  defaultValue: widget.problem.image,
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.image,
