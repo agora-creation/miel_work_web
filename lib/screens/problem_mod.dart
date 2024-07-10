@@ -12,21 +12,23 @@ import 'package:miel_work_web/widgets/custom_file_field.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
-class ProblemAddScreen extends StatefulWidget {
+class ProblemModScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final ProblemModel problem;
 
-  const ProblemAddScreen({
+  const ProblemModScreen({
     required this.loginProvider,
     required this.homeProvider,
+    required this.problem,
     super.key,
   });
 
   @override
-  State<ProblemAddScreen> createState() => _ProblemAddScreenState();
+  State<ProblemModScreen> createState() => _ProblemModScreenState();
 }
 
-class _ProblemAddScreenState extends State<ProblemAddScreen> {
+class _ProblemModScreenState extends State<ProblemModScreen> {
   String type = kProblemTypes.first;
   DateTime createdAt = DateTime.now();
   TextEditingController picNameController = TextEditingController();
@@ -37,6 +39,20 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
   TextEditingController detailsController = TextEditingController();
   PlatformFile? pickedFile;
   List<String> states = [];
+
+  @override
+  void initState() {
+    super.initState();
+    type = widget.problem.type;
+    createdAt = widget.problem.createdAt;
+    picNameController.text = widget.problem.picName;
+    targetNameController.text = widget.problem.targetName;
+    targetAgeController.text = widget.problem.targetAge;
+    targetTelController.text = widget.problem.targetTel;
+    targetAddressController.text = widget.problem.targetAddress;
+    detailsController.text = widget.problem.details;
+    states = widget.problem.states;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,16 +71,17 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               const Text(
-                'クレーム／要望を追加',
+                'クレーム／要望を編集',
                 style: TextStyle(fontSize: 16),
               ),
               CustomButtonSm(
-                labelText: '追加する',
+                labelText: '入力内容を保存',
                 labelColor: kWhiteColor,
                 backgroundColor: kBlueColor,
                 onPressed: () async {
-                  String? error = await problemProvider.create(
+                  String? error = await problemProvider.update(
                     organization: widget.loginProvider.organization,
+                    problem: widget.problem,
                     type: type,
                     createdAt: createdAt,
                     picName: picNameController.text,
@@ -82,7 +99,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                     return;
                   }
                   if (!mounted) return;
-                  showMessage(context, 'クレーム／要望を追加しました', true);
+                  showMessage(context, 'クレーム／要望を編集しました', true);
                   Navigator.pop(context);
                 },
               ),
