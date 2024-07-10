@@ -21,14 +21,14 @@ class ProblemProvider with ChangeNotifier {
     required String targetTel,
     required String targetAddress,
     required String details,
-    required String state,
+    required List<String> states,
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (organization == null) return 'クレーム・要望の追加に失敗しました';
-    if (type == '') return '問題項目を選択してください';
+    if (organization == null) return 'クレーム／要望の追加に失敗しました';
+    if (type == '') return '対応項目を選択してください';
     if (picName == '') return '対応者を入力してください';
-    if (loginUser == null) return 'クレーム・要望の追加に失敗しました';
+    if (loginUser == null) return 'クレーム／要望の追加に失敗しました';
     try {
       String id = _problemService.id();
       _problemService.create({
@@ -42,27 +42,27 @@ class ProblemProvider with ChangeNotifier {
         'targetAddress': targetAddress,
         'details': details,
         'image': '',
-        'state': state,
+        'states': states,
         'readUserIds': [loginUser.id],
         'createdAt': createdAt,
         'expirationAt': createdAt.add(const Duration(days: 365)),
       });
       //通知
-      List<UserModel> sendUsers = await _userService.selectList(
-        userIds: organization.userIds,
-      );
-      if (sendUsers.isNotEmpty) {
-        for (UserModel user in sendUsers) {
-          if (user.id == loginUser.id) continue;
-          _fmService.send(
-            token: user.token,
-            title: 'クレーム・要望が報告されました',
-            body: details,
-          );
-        }
-      }
+      // List<UserModel> sendUsers = await _userService.selectList(
+      //   userIds: organization.userIds,
+      // );
+      // if (sendUsers.isNotEmpty) {
+      //   for (UserModel user in sendUsers) {
+      //     if (user.id == loginUser.id) continue;
+      //     _fmService.send(
+      //       token: user.token,
+      //       title: 'クレーム／要望が報告されました',
+      //       body: details,
+      //     );
+      //   }
+      // }
     } catch (e) {
-      error = 'クレーム・要望の追加に失敗しました';
+      error = 'クレーム／要望の追加に失敗しました';
     }
     return error;
   }
@@ -78,14 +78,14 @@ class ProblemProvider with ChangeNotifier {
     required String targetTel,
     required String targetAddress,
     required String details,
-    required String state,
+    required List<String> states,
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (organization == null) return 'クレーム・要望の編集に失敗しました';
-    if (type == '') return '問題項目を選択してください';
+    if (organization == null) return 'クレーム／要望の編集に失敗しました';
+    if (type == '') return '対応項目を選択してください';
     if (picName == '') return '対応者を入力してください';
-    if (loginUser == null) return 'クレーム・要望の編集に失敗しました';
+    if (loginUser == null) return 'クレーム／要望の編集に失敗しました';
     try {
       _problemService.update({
         'id': problem.id,
@@ -97,12 +97,12 @@ class ProblemProvider with ChangeNotifier {
         'targetAddress': targetAddress,
         'details': details,
         'image': '',
-        'state': state,
+        'states': states,
         'createdAt': createdAt,
         'expirationAt': createdAt.add(const Duration(days: 365)),
       });
     } catch (e) {
-      error = 'クレーム・要望の編集に失敗しました';
+      error = 'クレーム／要望の編集に失敗しました';
     }
     return error;
   }
@@ -116,7 +116,7 @@ class ProblemProvider with ChangeNotifier {
         'id': problem.id,
       });
     } catch (e) {
-      error = 'クレーム・要望の削除に失敗しました';
+      error = 'クレーム／要望の削除に失敗しました';
     }
     return error;
   }

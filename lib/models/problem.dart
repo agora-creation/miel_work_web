@@ -19,7 +19,7 @@ class ProblemModel {
   String _targetAddress = '';
   String _details = '';
   String _image = '';
-  String _state = '';
+  List<String> states = [];
   List<String> readUserIds = [];
   DateTime _createdAt = DateTime.now();
   DateTime _expirationAt = DateTime.now();
@@ -34,7 +34,6 @@ class ProblemModel {
   String get targetAddress => _targetAddress;
   String get details => _details;
   String get image => _image;
-  String get state => _state;
   DateTime get createdAt => _createdAt;
   DateTime get expirationAt => _expirationAt;
 
@@ -51,10 +50,18 @@ class ProblemModel {
     _targetAddress = data['targetAddress'] ?? '';
     _details = data['details'] ?? '';
     _image = data['image'] ?? '';
-    _state = data['state'] ?? '';
+    states = _convertStates(data['states']);
     readUserIds = _convertReadUserIds(data['readUserIds']);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
     _expirationAt = data['expirationAt'].toDate() ?? DateTime.now();
+  }
+
+  List<String> _convertStates(List list) {
+    List<String> ret = [];
+    for (dynamic id in list) {
+      ret.add('$id');
+    }
+    return ret;
   }
 
   List<String> _convertReadUserIds(List list) {

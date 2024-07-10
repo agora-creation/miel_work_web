@@ -6,6 +6,7 @@ import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
+import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_header.dart';
 import 'package:provider/provider.dart';
@@ -77,9 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.emoji_disappointed),
-            title: const Text('クレーム・要望'),
-            body: Container(),
-            enabled: false,
+            title: const Text('クレーム／要望'),
+            body: ProblemScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
           PaneItemSeparator(),
           PaneItem(
