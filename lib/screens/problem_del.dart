@@ -188,12 +188,20 @@ class _ProblemDelScreenState extends State<ProblemDelScreen> {
               const SizedBox(height: 8),
               InfoLabel(
                 label: '添付写真',
-                child: Container(
-                  color: kGrey200Color,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  child: Text(widget.problem.image),
-                ),
+                child: widget.problem.image != ''
+                    ? Image.network(
+                        widget.problem.image,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      )
+                    : Container(
+                        color: kGrey300Color,
+                        width: double.infinity,
+                        height: 150,
+                        child: const Center(
+                          child: Text('写真が選択されていません'),
+                        ),
+                      ),
               ),
               const SizedBox(height: 8),
               InfoLabel(
@@ -202,7 +210,17 @@ class _ProblemDelScreenState extends State<ProblemDelScreen> {
                   color: kGrey200Color,
                   width: double.infinity,
                   padding: const EdgeInsets.all(8),
-                  child: Text(widget.problem.states.toString()),
+                  child: Text(widget.problem.stateText()),
+                ),
+              ),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: '同じような注意(対応)をした回数',
+                child: Container(
+                  color: kGrey200Color,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8),
+                  child: Text(widget.problem.count.toString()),
                 ),
               ),
               const SizedBox(height: 40),

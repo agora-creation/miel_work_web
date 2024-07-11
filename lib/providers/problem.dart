@@ -1,3 +1,7 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/problem.dart';
@@ -5,6 +9,7 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/fm.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/services/user.dart';
+import 'package:path/path.dart' as p;
 
 class ProblemProvider with ChangeNotifier {
   final ProblemService _problemService = ProblemService();
@@ -21,7 +26,9 @@ class ProblemProvider with ChangeNotifier {
     required String targetTel,
     required String targetAddress,
     required String details,
+    required FilePickerResult? imageResult,
     required List<String> states,
+    required int count,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -31,6 +38,17 @@ class ProblemProvider with ChangeNotifier {
     if (loginUser == null) return 'クレーム／要望の追加に失敗しました';
     try {
       String id = _problemService.id();
+      String image = '';
+      if (imageResult != null) {
+        Uint8List? uploadFile = imageResult.files.single.bytes;
+        if (uploadFile == null) return '添付写真のアップロードに失敗しました';
+        String fileName = p.basename(imageResult.files.single.name);
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child('problem/$id/$fileName');
+        UploadTask uploadTask = storageRef.putData(uploadFile);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image = (await downloadUrl.ref.getDownloadURL());
+      }
       _problemService.create({
         'id': id,
         'organizationId': organization.id,
@@ -41,8 +59,9 @@ class ProblemProvider with ChangeNotifier {
         'targetTel': targetTel,
         'targetAddress': targetAddress,
         'details': details,
-        'image': '',
+        'image': image,
         'states': states,
+        'count': count,
         'readUserIds': [loginUser.id],
         'createdAt': createdAt,
         'expirationAt': createdAt.add(const Duration(days: 365)),
@@ -78,7 +97,9 @@ class ProblemProvider with ChangeNotifier {
     required String targetTel,
     required String targetAddress,
     required String details,
+    required FilePickerResult? imageResult,
     required List<String> states,
+    required int count,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -87,20 +108,50 @@ class ProblemProvider with ChangeNotifier {
     if (picName == '') return '対応者を入力してください';
     if (loginUser == null) return 'クレーム／要望の編集に失敗しました';
     try {
-      _problemService.update({
-        'id': problem.id,
-        'type': type,
-        'picName': picName,
-        'targetName': targetName,
-        'targetAge': targetAge,
-        'targetTel': targetTel,
-        'targetAddress': targetAddress,
-        'details': details,
-        'image': '',
-        'states': states,
-        'createdAt': createdAt,
-        'expirationAt': createdAt.add(const Duration(days: 365)),
-      });
+      String? image;
+      if (imageResult != null) {
+        Uint8List? uploadFile = imageResult.files.single.bytes;
+        if (uploadFile == null) return '添付写真のアップロードに失敗しました';
+        String fileName = p.basename(imageResult.files.single.name);
+        Reference storageRef = FirebaseStorage.instance
+            .ref()
+            .child('problem/${problem.id}/$fileName');
+        UploadTask uploadTask = storageRef.putData(uploadFile);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image = (await downloadUrl.ref.getDownloadURL());
+      }
+      if (image != null) {
+        _problemService.update({
+          'id': problem.id,
+          'type': type,
+          'picName': picName,
+          'targetName': targetName,
+          'targetAge': targetAge,
+          'targetTel': targetTel,
+          'targetAddress': targetAddress,
+          'details': details,
+          'image': image,
+          'states': states,
+          'count': count,
+          'createdAt': createdAt,
+          'expirationAt': createdAt.add(const Duration(days: 365)),
+        });
+      } else {
+        _problemService.update({
+          'id': problem.id,
+          'type': type,
+          'picName': picName,
+          'targetName': targetName,
+          'targetAge': targetAge,
+          'targetTel': targetTel,
+          'targetAddress': targetAddress,
+          'details': details,
+          'states': states,
+          'count': count,
+          'createdAt': createdAt,
+          'expirationAt': createdAt.add(const Duration(days: 365)),
+        });
+      }
     } catch (e) {
       error = 'クレーム／要望の編集に失敗しました';
     }

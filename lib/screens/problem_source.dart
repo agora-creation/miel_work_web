@@ -58,14 +58,7 @@ class ProblemSource extends DataGridSource {
     cells.add(CustomColumnLabel(problem.type));
     cells.add(CustomColumnLabel(problem.picName));
     cells.add(CustomColumnLabel(problem.targetName));
-    String stateText = '';
-    if (problem.states.isNotEmpty) {
-      for (String state in problem.states) {
-        if (stateText != '') stateText += '／';
-        stateText += state;
-      }
-    }
-    cells.add(CustomColumnLabel(stateText));
+    cells.add(CustomColumnLabel(problem.stateText()));
     cells.add(Row(
       children: [
         CustomButtonSm(

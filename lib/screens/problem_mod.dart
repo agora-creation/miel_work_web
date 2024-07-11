@@ -8,7 +8,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_file_field.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +36,8 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   TextEditingController targetTelController = TextEditingController();
   TextEditingController targetAddressController = TextEditingController();
   TextEditingController detailsController = TextEditingController();
-  PlatformFile? pickedFile;
+  TextEditingController countController = TextEditingController(text: '0');
+  FilePickerResult? imageResult;
   List<String> states = [];
 
   @override
@@ -52,6 +52,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
     targetAddressController.text = widget.problem.targetAddress;
     detailsController.text = widget.problem.details;
     states = widget.problem.states;
+    countController.text = widget.problem.count.toString();
   }
 
   @override
@@ -90,7 +91,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                     targetTel: targetTelController.text,
                     targetAddress: targetAddressController.text,
                     details: detailsController.text,
+                    imageResult: imageResult,
                     states: states,
+                    count: int.parse(countController.text),
                     loginUser: widget.loginProvider.user,
                   );
                   if (error != null) {
@@ -248,18 +251,35 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
               const SizedBox(height: 8),
               InfoLabel(
                 label: '添付写真',
-                child: CustomFileField(
-                  value: pickedFile,
-                  defaultValue: widget.problem.image,
-                  onPressed: () async {
+                child: GestureDetector(
+                  onTap: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.image,
                     );
-                    if (result == null) return;
                     setState(() {
-                      pickedFile = result.files.first;
+                      imageResult = result;
                     });
                   },
+                  child: imageResult != null
+                      ? Image.memory(
+                          imageResult!.files.first.bytes!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        )
+                      : widget.problem.image != ''
+                          ? Image.network(
+                              widget.problem.image,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          : Container(
+                              color: kGrey300Color,
+                              width: double.infinity,
+                              height: 150,
+                              child: const Center(
+                                child: Text('写真が選択されていません'),
+                              ),
+                            ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -283,6 +303,16 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                       ),
                     );
                   }).toList(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: '同じような注意(対応)をした回数',
+                child: CustomTextBox(
+                  controller: countController,
+                  placeholder: '',
+                  keyboardType: TextInputType.number,
+                  maxLines: 1,
                 ),
               ),
               const SizedBox(height: 40),
