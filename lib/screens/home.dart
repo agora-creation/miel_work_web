@@ -86,6 +86,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           PaneItemSeparator(),
           PaneItem(
+            icon: const Icon(FluentIcons.document_approval),
+            title: const Text('業務日報'),
+            body: Container(),
+            enabled: false,
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.list),
+            title: const Text('落とし物'),
+            body: Container(),
+            enabled: false,
+          ),
+          PaneItemSeparator(),
+          PaneItem(
+            icon: const Icon(FluentIcons.list),
+            title: const Text('貸出／返却'),
+            body: Container(),
+            enabled: false,
+          ),
+          PaneItemSeparator(),
+          PaneItem(
               icon: const Icon(FluentIcons.group),
               title: const Text('スタッフ管理'),
               body: UserScreen(

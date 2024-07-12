@@ -7,6 +7,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
 import 'package:miel_work_web/screens/plan_timeline.dart';
+import 'package:miel_work_web/screens/shift_setting.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
@@ -95,18 +96,36 @@ class _PlanScreenState extends State<PlanScreen> {
                         ),
                       ),
                     ),
-                    CustomButtonSm(
-                      icon: FluentIcons.bulleted_list,
-                      labelText: 'カテゴリ管理',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kCyanColor,
-                      onPressed: () => showBottomUpScreen(
-                        context,
-                        CategoryScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
+                    Row(
+                      children: [
+                        CustomButtonSm(
+                          icon: FluentIcons.project_management,
+                          labelText: 'シフト表専用画面設定',
+                          labelColor: kBlackColor,
+                          backgroundColor: kLightGreenColor,
+                          onPressed: () => showBottomUpScreen(
+                            context,
+                            ShiftSettingScreen(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        CustomButtonSm(
+                          icon: FluentIcons.bulleted_list,
+                          labelText: 'カテゴリ管理',
+                          labelColor: kWhiteColor,
+                          backgroundColor: kCyanColor,
+                          onPressed: () => showBottomUpScreen(
+                            context,
+                            CategoryScreen(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

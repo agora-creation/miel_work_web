@@ -5,7 +5,6 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/login.dart';
-import 'package:miel_work_web/screens/shift_setting.dart';
 import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_text_box.dart';
@@ -161,20 +160,6 @@ class _CustomHeaderState extends State<CustomHeader> {
                     throw Exception('Could not launch $url');
                   }
                 },
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
-                icon: FluentIcons.project_management,
-                labelText: 'シフト表専用画面設定',
-                labelColor: kBlackColor,
-                backgroundColor: kLightGreenColor,
-                onPressed: () => showBottomUpScreen(
-                  context,
-                  ShiftSettingScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                  ),
-                ),
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
