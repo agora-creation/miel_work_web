@@ -7,6 +7,7 @@ import 'package:miel_work_web/screens/group_setting.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
+import 'package:miel_work_web/screens/report.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/widgets/custom_header.dart';
 import 'package:provider/provider.dart';
@@ -88,8 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItem(
             icon: const Icon(FluentIcons.document_approval),
             title: const Text('業務日報'),
-            body: Container(),
-            enabled: false,
+            body: ReportScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
           PaneItemSeparator(),
           PaneItem(
