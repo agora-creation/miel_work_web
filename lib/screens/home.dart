@@ -4,6 +4,8 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply.dart';
 import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/group_setting.dart';
+import 'package:miel_work_web/screens/loan.dart';
+import 'package:miel_work_web/screens/lost.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
@@ -98,15 +100,19 @@ class _HomeScreenState extends State<HomeScreen> {
           PaneItem(
             icon: const Icon(FluentIcons.list),
             title: const Text('落とし物'),
-            body: Container(),
-            enabled: false,
+            body: LostScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
           PaneItemSeparator(),
           PaneItem(
             icon: const Icon(FluentIcons.list),
             title: const Text('貸出／返却'),
-            body: Container(),
-            enabled: false,
+            body: LoanScreen(
+              loginProvider: loginProvider,
+              homeProvider: homeProvider,
+            ),
           ),
           PaneItemSeparator(),
           PaneItem(

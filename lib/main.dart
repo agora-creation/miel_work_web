@@ -7,7 +7,9 @@ import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/category.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
+import 'package:miel_work_web/providers/loan.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/providers/lost.dart';
 import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/providers/plan.dart';
@@ -59,6 +61,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: PlanProvider()),
         ChangeNotifierProvider.value(value: ApplyProvider()),
         ChangeNotifierProvider.value(value: ProblemProvider()),
+        ChangeNotifierProvider.value(value: LostProvider()),
+        ChangeNotifierProvider.value(value: LoanProvider()),
       ],
       child: FluentApp(
         debugShowCheckedModeBanner: false,
