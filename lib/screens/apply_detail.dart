@@ -462,6 +462,7 @@ class ApprovalApplyDialog extends StatefulWidget {
 
 class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
   TextEditingController approvalNumberController = TextEditingController();
+  TextEditingController approvalReasonController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -487,6 +488,16 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
                 maxLines: 1,
               ),
             ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: '承認理由',
+              child: CustomTextBox(
+                controller: approvalReasonController,
+                placeholder: '',
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ),
           ],
         ),
       ),
@@ -506,6 +517,7 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
               apply: widget.apply,
               loginUser: widget.loginProvider.user,
               approvalNumber: approvalNumberController.text,
+              approvalReason: approvalReasonController.text,
             );
             if (error != null) {
               if (!mounted) return;

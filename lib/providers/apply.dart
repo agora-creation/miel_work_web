@@ -131,6 +131,8 @@ class ApplyProvider with ChangeNotifier {
         'approval': 0,
         'approvedAt': DateTime.now(),
         'approvalUsers': [],
+        'approvalNumber': '',
+        'approvalReason': '',
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': DateTime.now(),
@@ -161,6 +163,7 @@ class ApplyProvider with ChangeNotifier {
     required ApplyModel apply,
     required UserModel? loginUser,
     required String approvalNumber,
+    required String approvalReason,
   }) async {
     String? error;
     if (loginUser == null) return '承認に失敗しました';
@@ -184,6 +187,7 @@ class ApplyProvider with ChangeNotifier {
           'approvedAt': DateTime.now(),
           'approvalUsers': approvalUsers,
           'approvalNumber': approvalNumber,
+          'approvalReason': approvalReason,
         });
         //通知
         List<UserModel> sendUsers = [];
@@ -205,6 +209,7 @@ class ApplyProvider with ChangeNotifier {
           'id': apply.id,
           'approvalUsers': approvalUsers,
           'approvalNumber': approvalNumber,
+          'approvalReason': approvalReason,
         });
       }
     } catch (e) {
