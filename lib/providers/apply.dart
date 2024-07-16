@@ -41,7 +41,7 @@ class ApplyProvider with ChangeNotifier {
       String file = '';
       String fileExt = '';
       if (pickedFile != null) {
-        String ext = p.extension(pickedFile.path ?? '');
+        String ext = p.extension(pickedFile.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
@@ -55,7 +55,7 @@ class ApplyProvider with ChangeNotifier {
       String file2 = '';
       String file2Ext = '';
       if (pickedFile2 != null) {
-        String ext = p.extension(pickedFile2.path ?? '');
+        String ext = p.extension(pickedFile2.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
@@ -69,7 +69,7 @@ class ApplyProvider with ChangeNotifier {
       String file3 = '';
       String file3Ext = '';
       if (pickedFile3 != null) {
-        String ext = p.extension(pickedFile3.path ?? '');
+        String ext = p.extension(pickedFile3.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
@@ -83,7 +83,7 @@ class ApplyProvider with ChangeNotifier {
       String file4 = '';
       String file4Ext = '';
       if (pickedFile4 != null) {
-        String ext = p.extension(pickedFile4.path ?? '');
+        String ext = p.extension(pickedFile4.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
@@ -97,7 +97,7 @@ class ApplyProvider with ChangeNotifier {
       String file5 = '';
       String file5Ext = '';
       if (pickedFile5 != null) {
-        String ext = p.extension(pickedFile5.path ?? '');
+        String ext = p.extension(pickedFile5.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
