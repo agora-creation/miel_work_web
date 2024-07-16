@@ -32,7 +32,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
   String type = kApplyTypes.first;
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  TextEditingController priceController = TextEditingController(text: '0');
   PlatformFile? pickedFile;
   PlatformFile? pickedFile2;
   PlatformFile? pickedFile3;

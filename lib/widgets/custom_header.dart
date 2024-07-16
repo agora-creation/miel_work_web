@@ -124,32 +124,6 @@ class _CustomHeaderState extends State<CustomHeader> {
               ),
               const SizedBox(width: 4),
               CustomButtonSm(
-                icon: FluentIcons.list,
-                labelText: '貸出物',
-                labelColor: kBlackColor,
-                backgroundColor: kCyanColor,
-                onPressed: () async {
-                  Uri url = Uri.parse('https://hirome.co.jp/loan/');
-                  if (!await launchUrl(url)) {
-                    throw Exception('Could not launch $url');
-                  }
-                },
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
-                icon: FluentIcons.list,
-                labelText: '落とし物',
-                labelColor: kBlackColor,
-                backgroundColor: kCyanColor,
-                onPressed: () async {
-                  Uri url = Uri.parse('https://hirome.co.jp/lost/');
-                  if (!await launchUrl(url)) {
-                    throw Exception('Could not launch $url');
-                  }
-                },
-              ),
-              const SizedBox(width: 4),
-              CustomButtonSm(
                 icon: FluentIcons.calculated_table,
                 labelText: 'メーター検針',
                 labelColor: kBlackColor,

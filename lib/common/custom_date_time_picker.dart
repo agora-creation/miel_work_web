@@ -8,10 +8,12 @@ class CustomDateTimePicker {
     required DateTime init,
     required String title,
     required Function(DateTime) onChanged,
+    bool datetime = true,
   }) async {
     await showBoardDateTimePicker(
       context: context,
-      pickerType: DateTimePickerType.datetime,
+      pickerType:
+          datetime ? DateTimePickerType.datetime : DateTimePickerType.date,
       initialDate: init,
       minimumDate: kFirstDate,
       maximumDate: kLastDate,

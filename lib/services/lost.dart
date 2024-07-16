@@ -26,6 +26,7 @@ class LostService {
     required String? organizationId,
     required DateTime? searchStart,
     required DateTime? searchEnd,
+    required int searchStatus,
   }) {
     if (searchStart != null && searchEnd != null) {
       Timestamp startAt = convertTimestamp(searchStart, false);
@@ -33,12 +34,14 @@ class LostService {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
+          .where('status', isEqualTo: searchStatus)
           .orderBy('createdAt', descending: true)
           .startAt([endAt]).endAt([startAt]).snapshots();
     } else {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
+          .where('status', isEqualTo: searchStatus)
           .orderBy('createdAt', descending: true)
           .snapshots();
     }
