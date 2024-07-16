@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const kBackgroundColor = Color(0xFFFFD54F);
 const kWhiteColor = Color(0xFFFFFFFF);
@@ -25,31 +26,44 @@ const kGreenColor = Color(0xFF4CAF50);
 const kGreen200Color = Color(0xFFA5D6A7);
 const kLightGreenColor = Color(0xFF8BC34A);
 
-FluentThemeData customTheme() {
-  return FluentThemeData(
-    fontFamily: 'SourceHanSansJP-Regular',
-    activeColor: kWhiteColor,
-    cardColor: kWhiteColor,
+ThemeData customTheme() {
+  return ThemeData(
     scaffoldBackgroundColor: kBackgroundColor,
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-    navigationPaneTheme: const NavigationPaneThemeData(
+    fontFamily: 'SourceHanSansJP-Regular',
+    appBarTheme: const AppBarTheme(
+      color: kBackgroundColor,
+      elevation: 0,
+      centerTitle: false,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      titleTextStyle: TextStyle(
+        color: kWhiteColor,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'SourceHanSansJP-Bold',
+      ),
+      iconTheme: IconThemeData(color: kWhiteColor),
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: kBlackColor),
+      bodyMedium: TextStyle(color: kBlackColor),
+      bodySmall: TextStyle(color: kBlackColor),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: kWhiteColor,
-      highlightColor: kBackgroundColor,
+      elevation: 5,
+      selectedItemColor: kBlueColor,
+      unselectedItemColor: kGrey600Color,
     ),
-    checkboxTheme: CheckboxThemeData(
-      checkedDecoration: ButtonState.all<Decoration>(
-        BoxDecoration(
-          color: kBlueColor,
-          border: Border.all(color: kBlueColor),
-        ),
-      ),
-      uncheckedDecoration: ButtonState.all<Decoration>(
-        BoxDecoration(
-          color: kWhiteColor,
-          border: Border.all(color: kGrey600Color),
-        ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: kBlueColor,
+      elevation: 5,
+      extendedTextStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontFamily: 'SourceHanSansJP-Bold',
       ),
     ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    unselectedWidgetColor: kGreyColor,
   );
 }
 

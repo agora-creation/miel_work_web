@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/style.dart';
 
 class LinkText extends StatelessWidget {
@@ -31,6 +31,7 @@ class LinkText extends StatelessWidget {
           label,
           style: TextStyle(
             color: enabled ? color : kGreyColor,
+            fontSize: 14,
             decoration: enabled ? null : TextDecoration.lineThrough,
           ),
         ),

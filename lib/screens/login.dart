@@ -1,12 +1,13 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
-import 'package:miel_work_web/widgets/custom_button_lg.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_form_field.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,13 +21,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
-
-    return ScaffoldPage(
-      content: Stack(
+    return Scaffold(
+      body: Stack(
         children: [
           const AnimationBackground(),
           Center(
@@ -43,15 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: kBlackColor,
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'SourceHanSansJP-Bold',
                           letterSpacing: 4,
                         ),
                       ),
                       Text(
-                        '管理画面',
+                        'WEBアプリ',
                         style: TextStyle(
                           color: kBlackColor,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'SourceHanSansJP-Bold',
                           letterSpacing: 3,
                         ),
                       ),
@@ -60,35 +63,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 40),
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(24),
                       child: Column(
                         children: [
-                          InfoLabel(
+                          CustomTextFormField(
+                            controller: emailController,
+                            textInputType: TextInputType.emailAddress,
+                            maxLines: 1,
                             label: 'メールアドレス',
-                            child: CustomTextBox(
-                              controller: emailController,
-                              placeholder: '',
-                              keyboardType: TextInputType.emailAddress,
-                              maxLines: 1,
-                            ),
+                            color: kBlackColor,
+                            prefix: Icons.email,
                           ),
                           const SizedBox(height: 8),
-                          InfoLabel(
+                          CustomTextFormField(
+                            controller: passwordController,
+                            textInputType: TextInputType.visiblePassword,
+                            maxLines: 1,
                             label: 'パスワード',
-                            child: CustomTextBox(
-                              controller: passwordController,
-                              placeholder: '',
-                              keyboardType: TextInputType.visiblePassword,
-                              maxLines: 1,
-                              obscureText: true,
-                            ),
+                            color: kBlackColor,
+                            prefix: Icons.password,
+                            obscureText: true,
                           ),
-                          const SizedBox(height: 24),
-                          CustomButtonLg(
-                            labelText: 'ログイン',
+                          const SizedBox(height: 16),
+                          CustomButton(
+                            type: ButtonSizeType.lg,
+                            label: 'ログイン',
                             labelColor: kWhiteColor,
                             backgroundColor: kBlueColor,
                             onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
                               String? error = await loginProvider.login(
                                 email: emailController.text,
                                 password: passwordController.text,
@@ -96,17 +101,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (error != null) {
                                 if (!mounted) return;
                                 showMessage(context, error, false);
+                                setState(() {
+                                  isLoading = false;
+                                });
                                 return;
                               }
                               if (!mounted) return;
-                              showMessage(context, 'ログインに成功しました', true);
                               Navigator.pushReplacement(
                                 context,
-                                FluentPageRoute(
-                                  builder: (context) => const HomeScreen(),
+                                PageTransition(
+                                  type: PageTransitionType.topToBottom,
+                                  child: const HomeScreen(),
                                 ),
                               );
                             },
+                            disabled: !isLoading,
                           ),
                           const SizedBox(height: 16),
                           LinkText(
@@ -114,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: kBlueColor,
                             onTap: () async {
                               Uri url = Uri.parse(
-                                  'https://agora-c.com/miel-work/manual_web.pdf');
+                                'https://agora-c.com/miel-work/manual_web.pdf',
+                              );
                               if (!await launchUrl(url)) {
                                 throw Exception('Could not launch $url');
                               }

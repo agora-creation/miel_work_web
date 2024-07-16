@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/apply.dart';
@@ -64,10 +64,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: LostProvider()),
         ChangeNotifierProvider.value(value: LoanProvider()),
       ],
-      child: FluentApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
-          FluentLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -75,7 +74,7 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale('ja')],
         locale: const Locale('ja'),
-        title: 'ひろめWORK - 管理画面',
+        title: 'ひろめWORK - WEBアプリ',
         theme: customTheme(),
         home: const SplashController(),
       ),
