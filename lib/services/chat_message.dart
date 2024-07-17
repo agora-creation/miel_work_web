@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/models/chat_message.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/read_user.dart';
 import 'package:miel_work_web/models/user.dart';
 
@@ -78,6 +79,16 @@ class ChatMessageService {
         .snapshots();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>>? streamListUnread({
+    required String? organizationId,
+  }) {
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
   List<ChatMessageModel> generateList({
     required QuerySnapshot<Map<String, dynamic>>? data,
   }) {
@@ -108,19 +119,32 @@ class ChatMessageService {
 
   List<ChatMessageModel> generateListUnread({
     required QuerySnapshot<Map<String, dynamic>>? data,
+    required OrganizationGroupModel? currentGroup,
     required UserModel? loginUser,
   }) {
     List<ChatMessageModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
       ChatMessageModel message = ChatMessageModel.fromSnapshot(doc);
-      bool isRead = false;
-      for (ReadUserModel readUser in message.readUsers) {
-        if (readUser.userId == loginUser?.id) {
-          isRead = true;
+      if (currentGroup == null) {
+        bool isRead = false;
+        for (ReadUserModel readUser in message.readUsers) {
+          if (readUser.userId == loginUser?.id) {
+            isRead = true;
+          }
         }
-      }
-      if (!isRead) {
-        ret.add(message);
+        if (!isRead) {
+          ret.add(message);
+        }
+      } else if (message.groupId == currentGroup.id || message.groupId == '') {
+        bool isRead = false;
+        for (ReadUserModel readUser in message.readUsers) {
+          if (readUser.userId == loginUser?.id) {
+            isRead = true;
+          }
+        }
+        if (!isRead) {
+          ret.add(message);
+        }
       }
     }
     return ret;

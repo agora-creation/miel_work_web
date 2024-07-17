@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 
@@ -32,8 +33,8 @@ class ChatHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(
-                  FluentIcons.search,
+                icon: const FaIcon(
+                  FontAwesomeIcons.searchengin,
                   color: kBlueColor,
                   size: 18,
                 ),
@@ -41,8 +42,8 @@ class ChatHeader extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               IconButton(
-                icon: const Icon(
-                  FluentIcons.group,
+                icon: const FaIcon(
+                  FontAwesomeIcons.users,
                   color: kBlueColor,
                   size: 18,
                 ),

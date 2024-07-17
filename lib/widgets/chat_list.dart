@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 
@@ -56,12 +57,12 @@ class ChatList extends StatelessWidget {
               ),
             ),
             unreadCount > 0
-                ? InfoBadge(
-                    source: Text(unreadCount.toString()),
-                    color: kRedColor,
+                ? Badge(
+                    label: Text(unreadCount.toString()),
+                    backgroundColor: kRedColor,
                   )
-                : const Icon(
-                    FluentIcons.chevron_right,
+                : const FaIcon(
+                    FontAwesomeIcons.chevronRight,
                     size: 12,
                   ),
           ],

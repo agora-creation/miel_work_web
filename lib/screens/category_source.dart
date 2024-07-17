@@ -9,6 +9,7 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -158,17 +159,10 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
             '本当に削除しますか？',
             style: TextStyle(color: kRedColor),
           ),
+          const SizedBox(height: 8),
           FormLabel(
             'カテゴリ',
-            child: Container(
-              color: kGrey300Color,
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                widget.category.name,
-                style: const TextStyle(color: kBlackColor),
-              ),
-            ),
+            child: FormValue(widget.category.name),
           ),
         ],
       ),

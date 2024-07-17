@@ -13,7 +13,7 @@ import 'package:miel_work_web/widgets/custom_icon_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -113,6 +113,22 @@ class _HomeHeaderState extends State<HomeHeader> {
                     disabled: widget.loginProvider.user?.admin == false ||
                         widget.homeProvider.currentGroup == null,
                   ),
+                  const SizedBox(width: 4),
+                  CustomIconButton(
+                    icon: FontAwesomeIcons.trash,
+                    iconColor: kWhiteColor,
+                    backgroundColor: kRedColor,
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => DelGroupDialog(
+                        loginProvider: widget.loginProvider,
+                        homeProvider: widget.homeProvider,
+                        group: widget.homeProvider.currentGroup,
+                      ),
+                    ),
+                    disabled: widget.loginProvider.user?.admin == false ||
+                        widget.homeProvider.currentGroup == null,
+                  ),
                 ],
               ),
             ],
@@ -149,7 +165,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         Text(
                           '本当にログアウトしますか？',
                           style: TextStyle(
-                            color: kBlackColor,
+                            color: kRedColor,
                             fontSize: 16,
                           ),
                         ),
@@ -347,26 +363,6 @@ class _ModGroupDialogState extends State<ModGroupDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
-          LinkText(
-            label: 'このグループを削除',
-            color: kRedColor,
-            onTap: () async {
-              String? error = await widget.homeProvider.groupDelete(
-                organization: widget.loginProvider.organization,
-                group: widget.group,
-              );
-              if (error != null) {
-                if (!mounted) return;
-                showMessage(context, error, false);
-                return;
-              }
-              widget.homeProvider.currentGroupClear();
-              if (!mounted) return;
-              showMessage(context, 'グループを削除しました', true);
-              Navigator.pop(context);
-            },
-          ),
-          const SizedBox(height: 16),
           FormLabel(
             'グループ名',
             child: CustomTextField(
@@ -403,6 +399,76 @@ class _ModGroupDialogState extends State<ModGroupDialog> {
             }
             if (!mounted) return;
             showMessage(context, 'グループ名を変更しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DelGroupDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final OrganizationGroupModel? group;
+
+  const DelGroupDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.group,
+    super.key,
+  });
+
+  @override
+  State<DelGroupDialog> createState() => _DelGroupDialogState();
+}
+
+class _DelGroupDialogState extends State<DelGroupDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          const Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'グループ名',
+            child: FormValue(widget.group?.name ?? ''),
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await widget.homeProvider.groupDelete(
+              organization: widget.loginProvider.organization,
+              group: widget.group,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            widget.homeProvider.currentGroupClear();
+            if (!mounted) return;
+            showMessage(context, 'グループを削除しました', true);
             Navigator.pop(context);
           },
         ),

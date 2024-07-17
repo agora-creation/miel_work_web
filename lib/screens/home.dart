@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
+import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_home_icon_card.dart';
@@ -23,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   NoticeService noticeService = NoticeService();
+  ChatMessageService messageService = ChatMessageService();
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +95,38 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      CustomHomeIconCard(
-                        icon: FontAwesomeIcons.solidMessage,
-                        label: 'チャット',
-                        color: kBlackColor,
-                        backgroundColor: kWhiteColor,
-                        onTap: () {},
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: messageService.streamListUnread(
+                          organizationId: loginProvider.organization?.id,
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            List<ChatMessageModel> messages =
+                                messageService.generateListUnread(
+                              data: snapshot.data,
+                              currentGroup: homeProvider.currentGroup,
+                              loginUser: loginProvider.user,
+                            );
+                            if (messages.isNotEmpty) {
+                              alert = true;
+                            }
+                          }
+                          return CustomHomeIconCard(
+                            icon: FontAwesomeIcons.solidMessage,
+                            label: 'チャット',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              ChatScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.personCircleQuestion,

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/models/lost.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/user.dart';

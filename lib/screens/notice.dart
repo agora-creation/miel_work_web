@@ -144,7 +144,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'createdAt',
-                        label: const CustomColumnLabel('追加日時'),
+                        label: const CustomColumnLabel('送信日時'),
                       ),
                       GridColumn(
                         columnName: 'title',

@@ -1,6 +1,5 @@
-import 'dart:io';
-
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
@@ -8,9 +7,9 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:path/path.dart' as p;
+import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 
 class NoticeDelScreen extends StatefulWidget {
@@ -35,103 +34,76 @@ class _NoticeDelScreenState extends State<NoticeDelScreen> {
   @override
   Widget build(BuildContext context) {
     final noticeProvider = Provider.of<NoticeProvider>(context);
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(FluentIcons.chevron_left),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Text(
-                'お知らせを削除',
-                style: TextStyle(fontSize: 16),
-              ),
-              CustomButtonSm(
-                labelText: '削除する',
-                labelColor: kWhiteColor,
-                backgroundColor: kRedColor,
-                onPressed: () async {
-                  String? error = await noticeProvider.delete(
-                    notice: widget.notice,
-                  );
-                  if (error != null) {
-                    if (!mounted) return;
-                    showMessage(context, error, false);
-                    return;
-                  }
-                  if (!mounted) return;
-                  showMessage(context, 'お知らせを削除しました', true);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        backgroundColor: kWhiteColor,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.arrowLeft,
+            color: kBlackColor,
+            size: 16,
           ),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          'お知らせを削除',
+          style: TextStyle(color: kBlackColor),
+        ),
+        actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () async {
+              String? error = await noticeProvider.delete(
+                notice: widget.notice,
+              );
+              if (error != null) {
+                if (!mounted) return;
+                showMessage(context, error, false);
+                return;
+              }
+              if (!mounted) return;
+              showMessage(context, 'お知らせを削除しました', true);
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
+      body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 200,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'タイトル',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.notice.title),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FormLabel(
+                'タイトル',
+                child: FormValue(widget.notice.title),
               ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'お知らせ内容',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.notice.content),
+              const SizedBox(height: 8),
+              FormLabel(
+                'お知らせ内容',
+                child: FormValue(widget.notice.content),
               ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '送信先グループ',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.noticeInGroup?.name ?? 'グループの指定なし'),
+              const SizedBox(height: 8),
+              FormLabel(
+                '送信先グループ',
+                child: FormValue(widget.noticeInGroup?.name ?? 'グループの指定なし'),
               ),
-            ),
-            const SizedBox(height: 8),
-            widget.notice.file != ''
-                ? LinkText(
-                    label: '添付ファイル',
-                    color: kBlueColor,
-                    onTap: () {
-                      File file = File(widget.notice.file);
-                      downloadFile(
-                        url: widget.notice.file,
-                        name: p.basename(file.path),
-                      );
-                    },
-                  )
-                : Container(),
-          ],
+              const SizedBox(height: 8),
+              FormLabel(
+                '添付ファイル',
+                child: FormValue(widget.notice.file),
+              ),
+            ],
+          ),
         ),
       ),
     );

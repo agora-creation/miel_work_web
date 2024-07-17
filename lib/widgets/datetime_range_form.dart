@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 
@@ -59,8 +60,8 @@ class DatetimeRangeForm extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
-                  FluentIcons.chevron_right,
+                const FaIcon(
+                  FontAwesomeIcons.chevronRight,
                   color: kGrey600Color,
                   size: 24,
                 ),
@@ -92,10 +93,10 @@ class DatetimeRangeForm extends StatelessWidget {
             ),
             padding: const EdgeInsets.only(top: 8),
             width: double.infinity,
-            child: Checkbox(
-              checked: allDay,
+            child: CheckboxListTile(
+              value: allDay,
               onChanged: allDayOnChanged,
-              content: const Text('終日'),
+              title: const Text('終日'),
             ),
           ),
         ],
