@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -7,9 +8,10 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category_add.dart';
 import 'package:miel_work_web/screens/category_source.dart';
 import 'package:miel_work_web/services/category.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
+import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -31,55 +33,48 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'カテゴリ管理',
-                style: TextStyle(fontSize: 16),
-              ),
-              IconButton(
-                icon: const Icon(FluentIcons.clear),
-                onPressed: () =>
-                    Navigator.of(context, rootNavigator: true).pop(),
-              ),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: kWhiteColor,
+        title: const Text(
+          'カテゴリ管理',
+          style: TextStyle(color: kBlackColor),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close, color: kBlackColor),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          ),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
-        padding: const EdgeInsets.all(16),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Text(
-                  '予定を登録する際に、以下のカテゴリを設定することができます。',
-                  style: TextStyle(fontSize: 14),
-                ),
-                CustomButtonSm(
-                  icon: FluentIcons.add,
-                  labelText: '新規追加',
+                CustomIconTextButton(
+                  label: 'カテゴリ追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
-                  onPressed: () => Navigator.push(
-                    context,
-                    FluentPageRoute(
-                      builder: (context) => CategoryAddScreen(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
+                  leftIcon: FontAwesomeIcons.plus,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: CategoryAddScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/notice.dart';
+import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/user.dart';
 
 class NoticeService {
   String collection = 'notice';
@@ -24,7 +26,6 @@ class NoticeService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
-    required String? groupId,
     required DateTime? searchStart,
     required DateTime? searchEnd,
   }) {
@@ -34,25 +35,49 @@ class NoticeService {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .where('groupId', isEqualTo: groupId != '' ? groupId : null)
           .orderBy('createdAt', descending: true)
           .startAt([endAt]).endAt([startAt]).snapshots();
     } else {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .where('groupId', isEqualTo: groupId != '' ? groupId : null)
           .orderBy('createdAt', descending: true)
           .snapshots();
     }
   }
 
+  bool checkAlert({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+    required OrganizationGroupModel? currentGroup,
+    required UserModel? user,
+  }) {
+    bool ret = false;
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      NoticeModel notice = NoticeModel.fromSnapshot(doc);
+      if (currentGroup == null) {
+        ret = !notice.readUserIds.contains(user?.id);
+      } else if (notice.groupId == currentGroup.id || notice.groupId == '') {
+        ret = !notice.readUserIds.contains(user?.id);
+      }
+      if (ret) {
+        return ret;
+      }
+    }
+    return ret;
+  }
+
   List<NoticeModel> generateList({
     required QuerySnapshot<Map<String, dynamic>>? data,
+    required OrganizationGroupModel? currentGroup,
   }) {
     List<NoticeModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
-      ret.add(NoticeModel.fromSnapshot(doc));
+      NoticeModel notice = NoticeModel.fromSnapshot(doc);
+      if (currentGroup == null) {
+        ret.add(notice);
+      } else if (notice.groupId == currentGroup.id || notice.groupId == '') {
+        ret.add(notice);
+      }
     }
     return ret;
   }

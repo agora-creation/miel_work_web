@@ -1,18 +1,18 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miel_work_web/common/functions.dart';
+import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply.dart';
-import 'package:miel_work_web/screens/chat.dart';
-import 'package:miel_work_web/screens/group_setting.dart';
-import 'package:miel_work_web/screens/loan.dart';
-import 'package:miel_work_web/screens/lost.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
-import 'package:miel_work_web/screens/problem.dart';
-import 'package:miel_work_web/screens/report.dart';
-import 'package:miel_work_web/screens/user.dart';
-import 'package:miel_work_web/widgets/custom_header.dart';
+import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/widgets/animation_background.dart';
+import 'package:miel_work_web/widgets/custom_home_icon_card.dart';
+import 'package:miel_work_web/widgets/home_header.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,118 +22,143 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  NoticeService noticeService = NoticeService();
+
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<LoginProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
-
-    return NavigationView(
-      appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
-        title: CustomHeader(
-          loginProvider: loginProvider,
-          homeProvider: homeProvider,
-        ),
-      ),
-      pane: NavigationPane(
-        selected: homeProvider.currentIndex,
-        onChanged: (index) {
-          homeProvider.currentIndexChange(index);
-        },
-        displayMode: PaneDisplayMode.top,
-        items: [
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.calendar),
-            title: const Text('スケジュールカレンダー'),
-            body: PlanScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
+    return Scaffold(
+      body: Stack(
+        children: [
+          const AnimationBackground(),
+          SafeArea(
+            child: Column(
+              children: [
+                HomeHeader(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: GridView(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    gridDelegate: kHomeGridDelegate,
+                    children: [
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.calendarDay,
+                        label: 'スケジュール',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          PlanScreen(
+                            loginProvider: loginProvider,
+                            homeProvider: homeProvider,
+                          ),
+                        ),
+                      ),
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: noticeService.streamList(
+                          organizationId: loginProvider.organization?.id,
+                          searchStart: null,
+                          searchEnd: null,
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            alert = noticeService.checkAlert(
+                              data: snapshot.data,
+                              currentGroup: homeProvider.currentGroup,
+                              user: loginProvider.user,
+                            );
+                          }
+                          return CustomHomeIconCard(
+                            icon: FontAwesomeIcons.solidBell,
+                            label: 'お知らせ',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              NoticeScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.solidMessage,
+                        label: 'チャット',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.personCircleQuestion,
+                        label: 'クレーム／要望',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.filePen,
+                        label: '申請',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.calendarCheck,
+                        label: '業務日報',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.personCircleQuestion,
+                        label: '落とし物',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.handsHoldingCircle,
+                        label: '貸出／返却',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () {},
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.bolt,
+                        label: 'メーター検針',
+                        color: kBlackColor,
+                        backgroundColor: kWhiteColor,
+                        onTap: () async {
+                          Uri url =
+                              Uri.parse('https://hirome.co.jp/meter/system/');
+                          if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
+                      ),
+                      CustomHomeIconCard(
+                        icon: FontAwesomeIcons.users,
+                        label: 'スタッフ一覧',
+                        color: kWhiteColor,
+                        backgroundColor: kGrey600Color,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.office_chat),
-            title: const Text('チャット'),
-            body: ChatScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.news),
-            title: const Text('お知らせ'),
-            body: NoticeScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.document_approval),
-            title: const Text('各種申請'),
-            body: ApplyScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.emoji_disappointed),
-            title: const Text('クレーム／要望'),
-            body: ProblemScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.document_approval),
-            title: const Text('業務日報'),
-            body: ReportScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.list),
-            title: const Text('落とし物'),
-            body: LostScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.list),
-            title: const Text('貸出／返却'),
-            body: LoanScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-          ),
-          PaneItemSeparator(),
-          PaneItem(
-              icon: const Icon(FluentIcons.group),
-              title: const Text('スタッフ管理'),
-              body: UserScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-              ),
-              enabled: loginProvider.user?.admin == true),
-          PaneItemSeparator(),
-          PaneItem(
-            icon: const Icon(FluentIcons.settings),
-            title: const Text('グループ設定'),
-            body: GroupSettingScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-            ),
-            enabled: loginProvider.user?.admin == true &&
-                homeProvider.currentGroup != null,
-          ),
+          )
         ],
       ),
     );

@@ -1,12 +1,14 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
 import 'package:miel_work_web/providers/category.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -60,8 +62,9 @@ class CategorySource extends DataGridSource {
     cells.add(Row(
       children: [
         const SizedBox(width: 8),
-        CustomButtonSm(
-          labelText: '削除',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () => showDialog(
@@ -145,45 +148,41 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'カテゴリを削除',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'カテゴリ',
-              child: Container(
-                color: widget.category.color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  widget.category.name,
-                  style: const TextStyle(color: kWhiteColor),
-                ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          const Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
+          FormLabel(
+            'カテゴリ',
+            child: Container(
+              color: kGrey300Color,
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                widget.category.name,
+                style: const TextStyle(color: kBlackColor),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '削除する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {

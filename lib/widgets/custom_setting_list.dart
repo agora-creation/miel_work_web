@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 
 class CustomSettingList extends StatelessWidget {
@@ -47,7 +48,10 @@ class CustomSettingList extends StatelessWidget {
                 ),
               ],
             ),
-            const Icon(FluentIcons.edit),
+            const FaIcon(
+              FontAwesomeIcons.pen,
+              size: 16,
+            ),
           ],
         ),
       ),

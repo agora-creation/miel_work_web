@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
@@ -9,9 +9,10 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/notice_del.dart';
 import 'package:miel_work_web/screens/notice_mod.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -95,38 +96,46 @@ class NoticeSource extends DataGridSource {
     }
     cells.add(Row(
       children: [
-        CustomButtonSm(
-          labelText: '編集',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '編集',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () => Navigator.push(
-            context,
-            FluentPageRoute(
-              builder: (context) => NoticeModScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-                notice: notice,
-                noticeInGroup: noticeInGroup,
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: NoticeModScreen(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                  notice: notice,
+                  noticeInGroup: noticeInGroup,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         const SizedBox(width: 4),
-        CustomButtonSm(
-          labelText: '削除',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () => Navigator.push(
-            context,
-            FluentPageRoute(
-              builder: (context) => NoticeDelScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-                notice: notice,
-                noticeInGroup: noticeInGroup,
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: NoticeDelScreen(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                  notice: notice,
+                  noticeInGroup: noticeInGroup,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ],
     ));

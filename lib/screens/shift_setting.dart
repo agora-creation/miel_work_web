@@ -1,12 +1,14 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_setting_list.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShiftSettingScreen extends StatefulWidget {
@@ -27,31 +29,28 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
   @override
   Widget build(BuildContext context) {
     OrganizationModel? organization = widget.loginProvider.organization;
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'シフト表専用画面設定',
-                style: TextStyle(fontSize: 16),
-              ),
-              IconButton(
-                icon: const Icon(FluentIcons.clear),
-                onPressed: () =>
-                    Navigator.of(context, rootNavigator: true).pop(),
-              ),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: kWhiteColor,
+        title: const Text(
+          'シフト表専用画面設定',
+          style: TextStyle(color: kBlackColor),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close, color: kBlackColor),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          ),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
-        padding: const EdgeInsets.all(16),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 200,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,6 +76,7 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
                 context: context,
                 builder: (context) => ModOrganizationShiftLoginIdDialog(
                   loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
                 ),
               ),
               isFirst: false,
@@ -88,6 +88,7 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
                 context: context,
                 builder: (context) => ModOrganizationShiftPasswordDialog(
                   loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
                 ),
               ),
               isFirst: false,
@@ -101,9 +102,11 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
 
 class ModOrganizationShiftLoginIdDialog extends StatefulWidget {
   final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const ModOrganizationShiftLoginIdDialog({
     required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -118,40 +121,40 @@ class _ModOrganizationShiftLoginIdDialogState
 
   @override
   void initState() {
-    super.initState();
     shiftLoginIdController.text =
         widget.loginProvider.organization?.shiftLoginId ?? '';
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ContentDialog(
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'ログインID',
-              child: CustomTextBox(
-                controller: shiftLoginIdController,
-                placeholder: '',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          FormLabel(
+            'ログインID',
+            child: CustomTextField(
+              controller: shiftLoginIdController,
+              textInputType: TextInputType.text,
+              maxLines: 1,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '入力内容を保存',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
@@ -178,9 +181,11 @@ class _ModOrganizationShiftLoginIdDialogState
 
 class ModOrganizationShiftPasswordDialog extends StatefulWidget {
   final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
 
   const ModOrganizationShiftPasswordDialog({
     required this.loginProvider,
+    required this.homeProvider,
     super.key,
   });
 
@@ -195,40 +200,40 @@ class _ModOrganizationShiftPasswordDialogState
 
   @override
   void initState() {
-    super.initState();
     shiftPasswordController.text =
         widget.loginProvider.organization?.shiftPassword ?? '';
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ContentDialog(
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'パスワード',
-              child: CustomTextBox(
-                controller: shiftPasswordController,
-                placeholder: '',
-                keyboardType: TextInputType.visiblePassword,
-                maxLines: 1,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          FormLabel(
+            'パスワード',
+            child: CustomTextField(
+              controller: shiftPasswordController,
+              textInputType: TextInputType.visiblePassword,
+              maxLines: 1,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '入力内容を保存',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {

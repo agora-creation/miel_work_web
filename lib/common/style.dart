@@ -81,6 +81,13 @@ DateTime kLastDate = DateTime.now().add(const Duration(days: 1095));
 
 const kDefaultImageUrl = 'assets/images/default.png';
 
+const kHomeGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount: 5,
+  childAspectRatio: 1,
+  crossAxisSpacing: 8,
+  mainAxisSpacing: 8,
+);
+
 const kDefaultGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
   crossAxisCount: 5,
   childAspectRatio: 1,

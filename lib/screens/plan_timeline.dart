@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/plan.dart';
@@ -8,8 +9,9 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/plan_add.dart';
 import 'package:miel_work_web/screens/plan_mod.dart';
 import 'package:miel_work_web/services/plan.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/plan_list.dart';
+import 'package:page_transition/page_transition.dart';
 
 class PlanTimelineScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -38,50 +40,57 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
 
   @override
   void initState() {
-    super.initState();
     _searchCategoriesChange();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(FluentIcons.chevron_left),
-                onPressed: () => Navigator.pop(context),
-              ),
-              Text(
-                dateText('yyyy年MM月dd日(E)', widget.date),
-                style: const TextStyle(fontSize: 16),
-              ),
-              CustomButtonSm(
-                labelText: '予定の追加',
-                labelColor: kWhiteColor,
-                backgroundColor: kBlueColor,
-                onPressed: () => Navigator.push(
-                  context,
-                  FluentPageRoute(
-                    builder: (context) => PlanAddScreen(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      date: widget.date,
-                    ),
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        backgroundColor: kWhiteColor,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.arrowLeft,
+            color: kBlackColor,
+            size: 16,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          dateText('yyyy年MM月dd日(E)', widget.date),
+          style: const TextStyle(color: kBlackColor),
+        ),
+        actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '予定の追加',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: PlanAddScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    date: widget.date,
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
-        ),
+          const SizedBox(width: 8),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 200,
+        ),
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: planService.streamList(
             organizationId: widget.loginProvider.organization?.id,
@@ -107,16 +116,19 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
                 return PlanList(
                   plan: plan,
                   groups: widget.homeProvider.groups,
-                  onTap: () => Navigator.push(
-                    context,
-                    FluentPageRoute(
-                      builder: (context) => PlanModScreen(
-                        loginProvider: widget.loginProvider,
-                        homeProvider: widget.homeProvider,
-                        planId: plan.id,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: PlanModScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          planId: plan.id,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
             );

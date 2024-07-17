@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miel_work_web/common/style.dart';
+
+class CustomHomeIconCard extends StatelessWidget {
+  final IconData icon;
+  final double iconSize;
+  final String label;
+  final double labelFontSize;
+  final Color color;
+  final Color backgroundColor;
+  final bool alert;
+  final String alertMessage;
+  final Function()? onTap;
+
+  const CustomHomeIconCard({
+    required this.icon,
+    this.iconSize = 60,
+    required this.label,
+    this.labelFontSize = 20,
+    required this.color,
+    required this.backgroundColor,
+    this.alert = false,
+    this.alertMessage = '未読あり',
+    this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: alert ? kRedColor : Colors.transparent,
+            width: 4,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        color: alert ? kRed100Color : backgroundColor,
+        surfaceTintColor: alert ? kRed100Color : backgroundColor,
+        elevation: 8,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            FaIcon(
+              icon,
+              size: iconSize,
+              color: color,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: labelFontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            alert
+                ? Text(
+                    alertMessage,
+                    style: const TextStyle(
+                      color: kRedColor,
+                      fontSize: 14,
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
+}

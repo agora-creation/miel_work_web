@@ -27,9 +27,9 @@ class CustomButton extends StatelessWidget {
       return SizedBox(
         width: double.infinity,
         child: TextButton(
-          onPressed: disabled ? onPressed : null,
+          onPressed: disabled ? null : onPressed,
           style: TextButton.styleFrom(
-            backgroundColor: disabled ? backgroundColor : kGreyColor,
+            backgroundColor: disabled ? kGreyColor : backgroundColor,
             shape: const StadiumBorder(),
             padding: const EdgeInsets.all(24),
           ),
@@ -46,17 +46,21 @@ class CustomButton extends StatelessWidget {
       );
     } else {
       return TextButton(
-        onPressed: onPressed,
+        onPressed: disabled ? null : onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: backgroundColor,
-          shape: const StadiumBorder(),
+          backgroundColor: disabled ? kGreyColor : backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           padding: const EdgeInsets.all(16),
         ),
         child: Text(
           label,
           style: TextStyle(
             color: labelColor,
-            fontSize: 18,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'SourceHanSansJP-Bold',
           ),
         ),
       );

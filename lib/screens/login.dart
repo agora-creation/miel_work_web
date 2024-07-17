@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               );
                             },
-                            disabled: !isLoading,
+                            disabled: isLoading,
                           ),
                           const SizedBox(height: 16),
                           LinkText(
