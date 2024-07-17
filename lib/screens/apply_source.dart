@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
@@ -6,8 +6,9 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_detail.dart';
 import 'package:miel_work_web/services/pdf.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ApplySource extends DataGridSource {
@@ -66,29 +67,32 @@ class ApplySource extends DataGridSource {
     cells.add(CustomColumnLabel(apply.approvalText()));
     cells.add(Row(
       children: [
-        CustomButtonSm(
-          labelText: '詳細',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '詳細',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () => Navigator.push(
-            context,
-            FluentPageRoute(
-              builder: (context) => ApplyDetailScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-                apply: apply,
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: ApplyDetailScreen(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                  apply: apply,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         const SizedBox(width: 4),
-        CustomButtonSm(
-          labelText: 'PDF印刷',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
-          onPressed: () async {
-            await PdfService().applyDownload(apply);
-          },
+          onPressed: () async => await PdfService().applyDownload(apply),
         ),
       ],
     ));

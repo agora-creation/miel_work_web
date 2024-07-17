@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
@@ -8,11 +9,13 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/user_source.dart';
 import 'package:miel_work_web/services/user.dart';
-import 'package:miel_work_web/widgets/animation_background.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -49,8 +52,8 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   void initState() {
-    super.initState();
     _getUses();
+    super.initState();
   }
 
   @override
@@ -58,91 +61,178 @@ class _UserScreenState extends State<UserScreen> {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
-    return Stack(
-      children: [
-        const AnimationBackground(),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: kWhiteColor,
+        title: const Text(
+          'スタッフ一覧',
+          style: TextStyle(color: kBlackColor),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close, color: kBlackColor),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          ),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '『$organizationName $groupName』に所属しているスタッフを表示しています。',
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    CustomButtonSm(
-                      icon: FluentIcons.add,
-                      labelText: '新規追加',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kBlueColor,
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => AddUserDialog(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                          getUsers: _getUses,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: CustomDataGrid(
-                    source: UserSource(
-                      context: context,
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      users: users,
-                      getUsers: _getUses,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'name',
-                        label: const CustomColumnLabel('スタッフ名'),
-                      ),
-                      GridColumn(
-                        columnName: 'email',
-                        label: const CustomColumnLabel('メールアドレス'),
-                      ),
-                      GridColumn(
-                        columnName: 'password',
-                        label: const CustomColumnLabel('パスワード'),
-                      ),
-                      GridColumn(
-                        columnName: 'group',
-                        label: const CustomColumnLabel('所属グループ'),
-                      ),
-                      GridColumn(
-                        columnName: 'uid',
-                        label: const CustomColumnLabel('スマホアプリ'),
-                      ),
-                      GridColumn(
-                        columnName: 'admin',
-                        label: const CustomColumnLabel('管理者権限'),
-                      ),
-                      GridColumn(
-                        columnName: 'president',
-                        label: const CustomColumnLabel('社長権限'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 250,
-                      ),
-                    ],
-                  ),
+                CustomIconTextButton(
+                  label: '新規追加',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  leftIcon: FontAwesomeIcons.plus,
+                  onPressed: () {},
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: CustomDataGrid(
+                source: UserSource(
+                  context: context,
+                  loginProvider: widget.loginProvider,
+                  homeProvider: widget.homeProvider,
+                  users: users,
+                  getUsers: _getUses,
+                ),
+                columns: [
+                  GridColumn(
+                    columnName: 'name',
+                    label: const CustomColumnLabel('スタッフ名'),
+                  ),
+                  GridColumn(
+                    columnName: 'email',
+                    label: const CustomColumnLabel('メールアドレス'),
+                  ),
+                  GridColumn(
+                    columnName: 'password',
+                    label: const CustomColumnLabel('パスワード'),
+                  ),
+                  GridColumn(
+                    columnName: 'group',
+                    label: const CustomColumnLabel('所属グループ'),
+                  ),
+                  GridColumn(
+                    columnName: 'uid',
+                    label: const CustomColumnLabel('スマホアプリ'),
+                  ),
+                  GridColumn(
+                    columnName: 'admin',
+                    label: const CustomColumnLabel('管理者権限'),
+                  ),
+                  GridColumn(
+                    columnName: 'president',
+                    label: const CustomColumnLabel('社長権限'),
+                  ),
+                  GridColumn(
+                    columnName: 'edit',
+                    label: const CustomColumnLabel('操作'),
+                    width: 250,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
+
+    // return Stack(
+    //   children: [
+    //     const AnimationBackground(),
+    //     Padding(
+    //       padding: const EdgeInsets.all(16),
+    //       child: Card(
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: [
+    //                 Text(
+    //                   '『$organizationName $groupName』に所属しているスタッフを表示しています。',
+    //                   style: const TextStyle(fontSize: 14),
+    //                 ),
+    //                 CustomButtonSm(
+    //                   icon: FluentIcons.add,
+    //                   labelText: '新規追加',
+    //                   labelColor: kWhiteColor,
+    //                   backgroundColor: kBlueColor,
+    //                   onPressed: () => showDialog(
+    //                     context: context,
+    //                     builder: (context) => AddUserDialog(
+    //                       loginProvider: widget.loginProvider,
+    //                       homeProvider: widget.homeProvider,
+    //                       getUsers: _getUses,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             const SizedBox(height: 8),
+    //             Expanded(
+    //               child: CustomDataGrid(
+    //                 source: UserSource(
+    //                   context: context,
+    //                   loginProvider: widget.loginProvider,
+    //                   homeProvider: widget.homeProvider,
+    //                   users: users,
+    //                   getUsers: _getUses,
+    //                 ),
+    //                 columns: [
+    //                   GridColumn(
+    //                     columnName: 'name',
+    //                     label: const CustomColumnLabel('スタッフ名'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'email',
+    //                     label: const CustomColumnLabel('メールアドレス'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'password',
+    //                     label: const CustomColumnLabel('パスワード'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'group',
+    //                     label: const CustomColumnLabel('所属グループ'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'uid',
+    //                     label: const CustomColumnLabel('スマホアプリ'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'admin',
+    //                     label: const CustomColumnLabel('管理者権限'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'president',
+    //                     label: const CustomColumnLabel('社長権限'),
+    //                   ),
+    //                   GridColumn(
+    //                     columnName: 'edit',
+    //                     label: const CustomColumnLabel('操作'),
+    //                     width: 250,
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 }
 
@@ -172,16 +262,16 @@ class _AddUserDialogState extends State<AddUserDialog> {
 
   @override
   void initState() {
-    super.initState();
     selectedGroup = widget.homeProvider.currentGroup;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
+    List<DropdownMenuItem<OrganizationGroupModel>> groupItems = [];
     if (widget.homeProvider.groups.isNotEmpty) {
-      groupItems.add(const ComboBoxItem(
+      groupItems.add(const DropdownMenuItem(
         value: null,
         child: Text(
           '未所属',
@@ -189,131 +279,120 @@ class _AddUserDialogState extends State<AddUserDialog> {
         ),
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
-        groupItems.add(ComboBoxItem(
+        groupItems.add(DropdownMenuItem(
           value: group,
           child: Text(group.name),
         ));
       }
     }
-    return ContentDialog(
-      title: const Text(
-        'スタッフを追加',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'スタッフ名',
-              child: CustomTextBox(
-                controller: nameController,
-                placeholder: '例) 山田花子',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FormLabel(
+            'スタッフ名',
+            child: CustomTextField(
+              controller: nameController,
+              textInputType: TextInputType.text,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'メールアドレス',
-              child: CustomTextBox(
-                controller: emailController,
-                placeholder: '例) yamada@example.jp',
-                keyboardType: TextInputType.emailAddress,
-                maxLines: 1,
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'メールアドレス',
+            child: CustomTextField(
+              controller: emailController,
+              textInputType: TextInputType.emailAddress,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'パスワード',
-              child: CustomTextBox(
-                controller: passwordController,
-                placeholder: '',
-                keyboardType: TextInputType.visiblePassword,
-                maxLines: 1,
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'パスワード',
+            child: CustomTextField(
+              controller: passwordController,
+              textInputType: TextInputType.visiblePassword,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '所属グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text(
-                  '未所属',
-                  style: TextStyle(color: kGreyColor),
-                ),
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '所属グループ',
+            child: DropdownButton<OrganizationGroupModel>(
+              isExpanded: true,
+              value: selectedGroup,
+              items: groupItems,
+              onChanged: (value) {
+                setState(() {
+                  selectedGroup = value;
+                });
+              },
             ),
-            const SizedBox(height: 8),
-            selectedGroup == null
-                ? InfoLabel(
-                    label: '管理者権限',
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: kGreyColor),
-                          bottom: BorderSide(color: kGreyColor),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      width: double.infinity,
-                      child: Checkbox(
-                        checked: admin,
-                        onChanged: (value) {
-                          setState(() {
-                            admin = value ?? false;
-                          });
-                        },
-                        content: const Text('このスタッフを管理者にする'),
+          ),
+          const SizedBox(height: 8),
+          selectedGroup == null
+              ? FormLabel(
+                  '管理者権限',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: kGreyColor),
+                        bottom: BorderSide(color: kGreyColor),
                       ),
                     ),
-                  )
-                : Container(),
-            const SizedBox(height: 8),
-            selectedGroup == null
-                ? InfoLabel(
-                    label: '社長権限',
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: kGreyColor),
-                          bottom: BorderSide(color: kGreyColor),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      width: double.infinity,
-                      child: Checkbox(
-                        checked: president,
-                        onChanged: (value) {
-                          setState(() {
-                            president = value ?? false;
-                          });
-                        },
-                        content: const Text('このスタッフを社長にする'),
+                    padding: const EdgeInsets.all(8),
+                    width: double.infinity,
+                    child: CheckboxListTile(
+                      value: admin,
+                      onChanged: (value) {
+                        setState(() {
+                          admin = value ?? false;
+                        });
+                      },
+                      title: const Text('このスタッフを管理者にする'),
+                    ),
+                  ),
+                )
+              : Container(),
+          const SizedBox(height: 8),
+          selectedGroup == null
+              ? FormLabel(
+                  '社長権限',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: kGreyColor),
+                        bottom: BorderSide(color: kGreyColor),
                       ),
                     ),
-                  )
-                : Container(),
-          ],
-        ),
+                    padding: const EdgeInsets.all(8),
+                    width: double.infinity,
+                    child: CheckboxListTile(
+                      value: president,
+                      onChanged: (value) {
+                        setState(() {
+                          president = value ?? false;
+                        });
+                      },
+                      title: const Text('このスタッフを社長にする'),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '追加する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '追加する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {

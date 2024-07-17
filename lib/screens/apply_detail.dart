@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
@@ -9,10 +10,14 @@ import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_add.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_approval_user_list.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
@@ -63,90 +68,83 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
     }
     List<ApprovalUserModel> approvalUsers = widget.apply.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(FluentIcons.chevron_left),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${widget.apply.type}申請詳細',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  isReject && widget.loginProvider.user?.president == true
-                      ? CustomButtonSm(
-                          icon: FluentIcons.status_error_full,
-                          labelText: '否決する',
-                          labelColor: kRedColor,
-                          backgroundColor: kRed100Color,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => RejectApplyDialog(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                              apply: widget.apply,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  const SizedBox(width: 4),
-                  isApproval
-                      ? CustomButtonSm(
-                          icon: FluentIcons.completed_solid,
-                          labelText: '承認する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kRedColor,
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => ApprovalApplyDialog(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                              apply: widget.apply,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  const SizedBox(width: 4),
-                  isApply
-                      ? CustomButtonSm(
-                          icon: FluentIcons.add,
-                          labelText: '再申請する',
-                          labelColor: kWhiteColor,
-                          backgroundColor: kBlueColor,
-                          onPressed: () => Navigator.push(
-                            context,
-                            FluentPageRoute(
-                              builder: (context) => ApplyAddScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                apply: widget.apply,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        backgroundColor: kWhiteColor,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.arrowLeft,
+            color: kBlackColor,
+            size: 16,
           ),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          '申請詳細',
+          style: TextStyle(color: kBlackColor),
+        ),
+        actions: [
+          isReject && widget.loginProvider.user?.president == true
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '否決する',
+                  labelColor: kRedColor,
+                  backgroundColor: kRed100Color,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => RejectApplyDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      apply: widget.apply,
+                    ),
+                  ),
+                )
+              : Container(),
+          const SizedBox(width: 4),
+          isApproval
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '承認する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kRedColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => ApprovalApplyDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      apply: widget.apply,
+                    ),
+                  ),
+                )
+              : Container(),
+          const SizedBox(width: 4),
+          isApply
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '再申請する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ApplyAddScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          apply: widget.apply,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
+          const SizedBox(width: 8),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
+      body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 200,
@@ -206,8 +204,8 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               ),
               const SizedBox(height: 4),
               reApprovalUsers.isNotEmpty
-                  ? InfoLabel(
-                      label: '承認者一覧',
+                  ? FormLabel(
+                      '承認者一覧',
                       child: Container(
                         color: kRed100Color,
                         width: double.infinity,
@@ -222,59 +220,34 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                     )
                   : Container(),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '件名',
-                child: Container(
-                  color: kGrey200Color,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  child: Text(widget.apply.title),
-                ),
+              FormLabel(
+                '件名',
+                child: FormValue(widget.apply.title),
               ),
               const SizedBox(height: 8),
               widget.apply.type == '稟議' || widget.apply.type == '支払伺い'
-                  ? InfoLabel(
-                      label: '金額',
-                      child: Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text('¥ ${widget.apply.formatPrice()}'),
-                      ),
+                  ? FormLabel(
+                      '金額',
+                      child: FormValue('¥ ${widget.apply.formatPrice()}'),
                     )
                   : Container(),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '内容',
-                child: Container(
-                  color: kGrey200Color,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  child: Text(widget.apply.content),
-                ),
+              FormLabel(
+                '内容',
+                child: FormValue(widget.apply.content),
               ),
               const SizedBox(height: 8),
               widget.apply.approvalReason != ''
-                  ? InfoLabel(
-                      label: '承認理由',
-                      child: Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text(widget.apply.approvalReason),
-                      ),
+                  ? FormLabel(
+                      '承認理由',
+                      child: FormValue(widget.apply.approvalReason),
                     )
                   : Container(),
               const SizedBox(height: 8),
               widget.apply.reason != ''
-                  ? InfoLabel(
-                      label: '否決理由',
-                      child: Container(
-                        color: kGrey200Color,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8),
-                        child: Text(widget.apply.reason),
-                      ),
+                  ? FormLabel(
+                      '否決理由',
+                      child: FormValue(widget.apply.reason),
                     )
                   : Container(),
               const SizedBox(height: 8),
@@ -411,29 +384,29 @@ class _DelApplyDialogState extends State<DelApplyDialog> {
   @override
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'この申請を削除する',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: const SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('本当に削除しますか？'),
-          ],
-        ),
+    return CustomAlertDialog(
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 8),
+          Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '削除する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
@@ -479,49 +452,44 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
   @override
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'この申請を承認する',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('本当に承認しますか？'),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '承認番号',
-              child: CustomTextBox(
-                controller: approvalNumberController,
-                placeholder: '',
-                keyboardType: TextInputType.number,
-                maxLines: 1,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          const Text('本当に承認しますか？'),
+          const SizedBox(height: 8),
+          FormLabel(
+            '承認番号',
+            child: CustomTextField(
+              controller: approvalNumberController,
+              textInputType: TextInputType.number,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '承認理由',
-              child: CustomTextBox(
-                controller: approvalReasonController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '承認理由',
+            child: CustomTextField(
+              controller: approvalReasonController,
+              textInputType: TextInputType.multiline,
+              maxLines: 10,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '承認する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '承認する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
@@ -569,39 +537,35 @@ class _RejectApplyDialogState extends State<RejectApplyDialog> {
   @override
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'この申請を否決する',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('本当に否決しますか？'),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '否決理由',
-              child: CustomTextBox(
-                controller: reasonController,
-                placeholder: '',
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          const Text('本当に否決しますか？'),
+          const SizedBox(height: 8),
+          FormLabel(
+            '否決理由',
+            child: CustomTextField(
+              controller: reasonController,
+              textInputType: TextInputType.multiline,
+              maxLines: 10,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '否決する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '否決する',
           labelColor: kRedColor,
           backgroundColor: kRed100Color,
           onPressed: () async {

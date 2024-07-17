@@ -6,10 +6,12 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/apply.dart';
 import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
+import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
@@ -166,7 +168,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         label: '申請',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
-                        onTap: () {},
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          ApplyScreen(
+                            loginProvider: loginProvider,
+                            homeProvider: homeProvider,
+                          ),
+                        ),
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.personCircleQuestion,
@@ -200,7 +208,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         label: 'スタッフ一覧',
                         color: kWhiteColor,
                         backgroundColor: kGrey600Color,
-                        onTap: () {},
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          UserScreen(
+                            loginProvider: loginProvider,
+                            homeProvider: homeProvider,
+                          ),
+                        ),
                       ),
                     ],
                   ),

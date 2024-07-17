@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
@@ -7,10 +7,13 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/services/pdf.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_column_link.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -109,8 +112,9 @@ class UserSource extends DataGridSource {
     }
     cells.add(Row(
       children: [
-        CustomButtonSm(
-          labelText: '編集',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '編集',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () => showDialog(
@@ -126,8 +130,9 @@ class UserSource extends DataGridSource {
         ),
         const SizedBox(width: 4),
         !user.admin
-            ? CustomButtonSm(
-                labelText: '削除',
+            ? CustomButton(
+                type: ButtonSizeType.sm,
+                label: '削除',
                 labelColor: kWhiteColor,
                 backgroundColor: kRedColor,
                 onPressed: () => showDialog(
@@ -141,14 +146,16 @@ class UserSource extends DataGridSource {
                   ),
                 ),
               )
-            : const CustomButtonSm(
-                labelText: '削除',
+            : const CustomButton(
+                type: ButtonSizeType.sm,
+                label: '削除',
                 labelColor: kWhiteColor,
                 backgroundColor: kGreyColor,
               ),
         const SizedBox(width: 4),
-        CustomButtonSm(
-          labelText: 'PDF印刷',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'PDF印刷',
           labelColor: kBlackColor,
           backgroundColor: kRed200Color,
           onPressed: () async => await PdfService().userDownload(user),
@@ -235,21 +242,21 @@ class _ModUserDialogState extends State<ModUserDialog> {
 
   @override
   void initState() {
-    super.initState();
     nameController.text = widget.user.name;
     emailController.text = widget.user.email;
     passwordController.text = widget.user.password;
     selectedGroup = widget.userInGroup;
     admin = widget.user.admin;
     president = widget.user.president;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    List<ComboBoxItem<OrganizationGroupModel>> groupItems = [];
+    List<DropdownMenuItem<OrganizationGroupModel>> groupItems = [];
     if (widget.homeProvider.groups.isNotEmpty) {
-      groupItems.add(const ComboBoxItem(
+      groupItems.add(const DropdownMenuItem(
         value: null,
         child: Text(
           '未所属',
@@ -257,131 +264,120 @@ class _ModUserDialogState extends State<ModUserDialog> {
         ),
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
-        groupItems.add(ComboBoxItem(
+        groupItems.add(DropdownMenuItem(
           value: group,
           child: Text(group.name),
         ));
       }
     }
-    return ContentDialog(
-      title: const Text(
-        'スタッフ情報を編集',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoLabel(
-              label: 'スタッフ名',
-              child: CustomTextBox(
-                controller: nameController,
-                placeholder: '例) 山田花子',
-                keyboardType: TextInputType.text,
-                maxLines: 1,
-              ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FormLabel(
+            'スタッフ名',
+            child: CustomTextField(
+              controller: nameController,
+              textInputType: TextInputType.text,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'メールアドレス',
-              child: CustomTextBox(
-                controller: emailController,
-                placeholder: '例) yamada@example.jp',
-                keyboardType: TextInputType.emailAddress,
-                maxLines: 1,
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'メールアドレス',
+            child: CustomTextField(
+              controller: emailController,
+              textInputType: TextInputType.emailAddress,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'パスワード',
-              child: CustomTextBox(
-                controller: passwordController,
-                placeholder: '',
-                keyboardType: TextInputType.visiblePassword,
-                maxLines: 1,
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'パスワード',
+            child: CustomTextField(
+              controller: passwordController,
+              textInputType: TextInputType.visiblePassword,
+              maxLines: 1,
             ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '所属グループ',
-              child: ComboBox<OrganizationGroupModel>(
-                isExpanded: true,
-                value: selectedGroup,
-                items: groupItems,
-                onChanged: (value) {
-                  setState(() {
-                    selectedGroup = value;
-                  });
-                },
-                placeholder: const Text(
-                  '未所属',
-                  style: TextStyle(color: kGreyColor),
-                ),
-              ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '所属グループ',
+            child: DropdownButton<OrganizationGroupModel>(
+              isExpanded: true,
+              value: selectedGroup,
+              items: groupItems,
+              onChanged: (value) {
+                setState(() {
+                  selectedGroup = value;
+                });
+              },
             ),
-            const SizedBox(height: 8),
-            selectedGroup == null
-                ? InfoLabel(
-                    label: '管理者権限',
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: kGreyColor),
-                          bottom: BorderSide(color: kGreyColor),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      width: double.infinity,
-                      child: Checkbox(
-                        checked: admin,
-                        onChanged: (value) {
-                          setState(() {
-                            admin = value ?? false;
-                          });
-                        },
-                        content: const Text('このスタッフを管理者にする'),
+          ),
+          const SizedBox(height: 8),
+          selectedGroup == null
+              ? FormLabel(
+                  '管理者権限',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: kGreyColor),
+                        bottom: BorderSide(color: kGreyColor),
                       ),
                     ),
-                  )
-                : Container(),
-            const SizedBox(height: 8),
-            selectedGroup == null
-                ? InfoLabel(
-                    label: '社長権限',
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: kGreyColor),
-                          bottom: BorderSide(color: kGreyColor),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      width: double.infinity,
-                      child: Checkbox(
-                        checked: president,
-                        onChanged: (value) {
-                          setState(() {
-                            president = value ?? false;
-                          });
-                        },
-                        content: const Text('このスタッフを社長にする'),
+                    padding: const EdgeInsets.all(8),
+                    width: double.infinity,
+                    child: CheckboxListTile(
+                      value: admin,
+                      onChanged: (value) {
+                        setState(() {
+                          admin = value ?? false;
+                        });
+                      },
+                      title: const Text('このスタッフを管理者にする'),
+                    ),
+                  ),
+                )
+              : Container(),
+          const SizedBox(height: 8),
+          selectedGroup == null
+              ? FormLabel(
+                  '社長権限',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: kGreyColor),
+                        bottom: BorderSide(color: kGreyColor),
                       ),
                     ),
-                  )
-                : Container(),
-          ],
-        ),
+                    padding: const EdgeInsets.all(8),
+                    width: double.infinity,
+                    child: CheckboxListTile(
+                      value: president,
+                      onChanged: (value) {
+                        setState(() {
+                          president = value ?? false;
+                        });
+                      },
+                      title: const Text('このスタッフを社長にする'),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '入力内容を保存',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '入力内容を保存',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
@@ -438,29 +434,28 @@ class _AppLogoutDialogState extends State<AppLogoutDialog> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'スマホアプリからログアウト',
-        style: TextStyle(fontSize: 18),
-      ),
+    return CustomAlertDialog(
       content: const SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 8),
             Text('強制的にログアウトさせますか？'),
           ],
         ),
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: 'ログアウト',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'ログアウト',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
@@ -507,82 +502,54 @@ class _DelUserDialogState extends State<DelUserDialog> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    return ContentDialog(
-      title: const Text(
-        'スタッフを削除',
-        style: TextStyle(fontSize: 18),
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'スタッフ名',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.user.name),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'メールアドレス',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.user.email),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: 'パスワード',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.user.password),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '所属グループ',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.userInGroup?.name ?? '未所属'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            InfoLabel(
-              label: '権限',
-              child: Container(
-                color: kGrey200Color,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(widget.user.admin ? '管理者' : '一般'),
-              ),
-            ),
-          ],
-        ),
+    return CustomAlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          const Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'スタッフ名',
+            child: FormValue(widget.user.name),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'メールアドレス',
+            child: FormValue(widget.user.email),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            'パスワード',
+            child: FormValue(widget.user.password),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '所属グループ',
+            child: FormValue(widget.userInGroup?.name ?? '未所属'),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '権限',
+            child: FormValue(widget.user.admin ? '管理者' : '一般'),
+          ),
+        ],
       ),
       actions: [
-        CustomButtonSm(
-          labelText: 'キャンセル',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
           labelColor: kWhiteColor,
           backgroundColor: kGreyColor,
           onPressed: () => Navigator.pop(context),
         ),
-        CustomButtonSm(
-          labelText: '削除する',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
