@@ -1,6 +1,7 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/widgets/custom_icon_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_icon_button.dart';
 
 class MessageFormField extends StatelessWidget {
   final Function()? messagePressed;
@@ -31,27 +32,27 @@ class MessageFormField extends StatelessWidget {
             child: Row(
               children: [
                 enabled
-                    ? CustomIconButtonSm(
-                        icon: FluentIcons.page_add,
+                    ? CustomIconButton(
+                        icon: FontAwesomeIcons.file,
                         iconColor: kWhiteColor,
                         backgroundColor: kCyanColor,
                         onPressed: filePressed,
                       )
-                    : const CustomIconButtonSm(
-                        icon: FluentIcons.page_add,
+                    : const CustomIconButton(
+                        icon: FontAwesomeIcons.file,
                         iconColor: kWhiteColor,
                         backgroundColor: kGreyColor,
                       ),
                 const SizedBox(width: 4),
                 enabled
-                    ? CustomIconButtonSm(
-                        icon: FluentIcons.photo2_add,
+                    ? CustomIconButton(
+                        icon: FontAwesomeIcons.photoFilm,
                         iconColor: kWhiteColor,
                         backgroundColor: kCyanColor,
                         onPressed: galleryPressed,
                       )
-                    : const CustomIconButtonSm(
-                        icon: FluentIcons.photo2_add,
+                    : const CustomIconButton(
+                        icon: FontAwesomeIcons.photoFilm,
                         iconColor: kWhiteColor,
                         backgroundColor: kGreyColor,
                       ),
@@ -61,10 +62,11 @@ class MessageFormField extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
-              child: TextBox(
-                placeholder: 'メッセージを入力...',
-                readOnly: true,
+              child: GestureDetector(
                 onTap: messagePressed,
+                child: Text(
+                  'メッセージを入力...',
+                ),
               ),
             ),
           ),

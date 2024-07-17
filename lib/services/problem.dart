@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/problem.dart';
+import 'package:miel_work_web/models/user.dart';
 
 class ProblemService {
   String collection = 'problem';
@@ -42,6 +43,21 @@ class ProblemService {
           .orderBy('createdAt', descending: true)
           .snapshots();
     }
+  }
+
+  bool checkAlert({
+    required QuerySnapshot<Map<String, dynamic>>? data,
+    required UserModel? user,
+  }) {
+    bool ret = false;
+    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
+      ProblemModel problem = ProblemModel.fromSnapshot(doc);
+      ret = !problem.readUserIds.contains(user?.id);
+      if (ret) {
+        return ret;
+      }
+    }
+    return ret;
   }
 
   List<ProblemModel> generateList({

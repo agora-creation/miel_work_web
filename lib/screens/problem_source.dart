@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
@@ -6,8 +6,9 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/problem_del.dart';
 import 'package:miel_work_web/screens/problem_mod.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProblemSource extends DataGridSource {
@@ -61,36 +62,44 @@ class ProblemSource extends DataGridSource {
     cells.add(CustomColumnLabel(problem.stateText()));
     cells.add(Row(
       children: [
-        CustomButtonSm(
-          labelText: '編集',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '編集',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
-          onPressed: () => Navigator.push(
-            context,
-            FluentPageRoute(
-              builder: (context) => ProblemModScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-                problem: problem,
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: ProblemModScreen(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                  problem: problem,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         const SizedBox(width: 4),
-        CustomButtonSm(
-          labelText: '削除',
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
-          onPressed: () => Navigator.push(
-            context,
-            FluentPageRoute(
-              builder: (context) => ProblemDelScreen(
-                loginProvider: loginProvider,
-                homeProvider: homeProvider,
-                problem: problem,
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: ProblemDelScreen(
+                  loginProvider: loginProvider,
+                  homeProvider: homeProvider,
+                  problem: problem,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ],
     ));

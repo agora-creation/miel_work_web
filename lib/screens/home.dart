@@ -9,8 +9,10 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/chat.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
+import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_home_icon_card.dart';
 import 'package:miel_work_web/widgets/home_header.dart';
@@ -27,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   NoticeService noticeService = NoticeService();
   ChatMessageService messageService = ChatMessageService();
+  ProblemService problemService = ProblemService();
 
   @override
   Widget build(BuildContext context) {
@@ -128,23 +131,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      CustomHomeIconCard(
-                        icon: FontAwesomeIcons.personCircleQuestion,
-                        label: 'クレーム／要望',
-                        color: kBlackColor,
-                        backgroundColor: kWhiteColor,
-                        onTap: () {},
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: problemService.streamList(
+                          organizationId: loginProvider.organization?.id,
+                          searchStart: null,
+                          searchEnd: null,
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            alert = problemService.checkAlert(
+                              data: snapshot.data,
+                              user: loginProvider.user,
+                            );
+                          }
+                          return CustomHomeIconCard(
+                            icon: FontAwesomeIcons.personCircleQuestion,
+                            label: 'クレーム／要望',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              ProblemScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.filePen,
                         label: '申請',
-                        color: kBlackColor,
-                        backgroundColor: kWhiteColor,
-                        onTap: () {},
-                      ),
-                      CustomHomeIconCard(
-                        icon: FontAwesomeIcons.calendarCheck,
-                        label: '業務日報',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
                         onTap: () {},

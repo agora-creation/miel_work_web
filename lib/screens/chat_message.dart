@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/reply_source.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageScreen extends StatefulWidget {
@@ -30,46 +31,46 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
   @override
   Widget build(BuildContext context) {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(FluentIcons.chevron_left),
-                onPressed: () => Navigator.pop(context),
-              ),
-              CustomButtonSm(
-                labelText: '送信する',
-                labelColor: kWhiteColor,
-                backgroundColor: kBlueColor,
-                onPressed: () async {
-                  String? error = await messageProvider.send(
-                    chat: widget.currentChat,
-                    loginUser: widget.loginProvider.user,
-                    content: contentController.text,
-                    replySource: replySource,
-                  );
-                  if (error != null) {
-                    if (!mounted) return;
-                    showMessage(context, error, false);
-                    return;
-                  }
-                  if (!mounted) return;
-                  showMessage(context, 'メッセージを送信しました', true);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        backgroundColor: kWhiteColor,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.arrowLeft,
+            color: kBlackColor,
+            size: 16,
           ),
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '送信する',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () async {
+              String? error = await messageProvider.send(
+                chat: widget.currentChat,
+                loginUser: widget.loginProvider.user,
+                content: contentController.text,
+                replySource: replySource,
+              );
+              if (error != null) {
+                if (!mounted) return;
+                showMessage(context, error, false);
+                return;
+              }
+              if (!mounted) return;
+              showMessage(context, 'メッセージを送信しました', true);
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
+      body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 200,
@@ -78,11 +79,11 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomTextBox(
+              CustomTextField(
                 controller: contentController,
-                placeholder: 'メッセージを入力...',
-                keyboardType: TextInputType.multiline,
+                textInputType: TextInputType.multiline,
                 maxLines: 30,
+                hintText: 'メッセージを入力...',
               ),
             ],
           ),

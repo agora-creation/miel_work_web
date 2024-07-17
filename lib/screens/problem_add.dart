@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -7,8 +8,10 @@ import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
-import 'package:miel_work_web/widgets/custom_button_sm.dart';
-import 'package:miel_work_web/widgets/custom_text_box.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 
 class ProblemAddScreen extends StatefulWidget {
@@ -41,59 +44,59 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
   @override
   Widget build(BuildContext context) {
     final problemProvider = Provider.of<ProblemProvider>(context);
-    return ScaffoldPage(
-      padding: EdgeInsets.zero,
-      header: Container(
-        decoration: kHeaderDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(FluentIcons.chevron_left),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Text(
-                'クレーム／要望を追加',
-                style: TextStyle(fontSize: 16),
-              ),
-              CustomButtonSm(
-                labelText: '追加する',
-                labelColor: kWhiteColor,
-                backgroundColor: kBlueColor,
-                onPressed: () async {
-                  String? error = await problemProvider.create(
-                    organization: widget.loginProvider.organization,
-                    type: type,
-                    createdAt: createdAt,
-                    picName: picNameController.text,
-                    targetName: targetNameController.text,
-                    targetAge: targetAgeController.text,
-                    targetTel: targetTelController.text,
-                    targetAddress: targetAddressController.text,
-                    details: detailsController.text,
-                    imageResult: imageResult,
-                    states: states,
-                    count: int.parse(countController.text),
-                    loginUser: widget.loginProvider.user,
-                  );
-                  if (error != null) {
-                    if (!mounted) return;
-                    showMessage(context, error, false);
-                    return;
-                  }
-                  if (!mounted) return;
-                  showMessage(context, 'クレーム／要望を追加しました', true);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: kWhiteColor,
+      appBar: AppBar(
+        backgroundColor: kWhiteColor,
+        leading: IconButton(
+          icon: const FaIcon(
+            FontAwesomeIcons.arrowLeft,
+            color: kBlackColor,
+            size: 16,
           ),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          'クレーム／要望を追加',
+          style: TextStyle(color: kBlackColor),
+        ),
+        actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '入力内容を保存',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () async {
+              String? error = await problemProvider.create(
+                organization: widget.loginProvider.organization,
+                type: type,
+                createdAt: createdAt,
+                picName: picNameController.text,
+                targetName: targetNameController.text,
+                targetAge: targetAgeController.text,
+                targetTel: targetTelController.text,
+                targetAddress: targetAddressController.text,
+                details: detailsController.text,
+                imageResult: imageResult,
+                states: states,
+                count: int.parse(countController.text),
+                loginUser: widget.loginProvider.user,
+              );
+              if (error != null) {
+                if (!mounted) return;
+                showMessage(context, error, false);
+                return;
+              }
+              if (!mounted) return;
+              showMessage(context, 'クレーム／要望を追加しました', true);
+              Navigator.pop(context);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
       ),
-      content: Container(
-        color: kWhiteColor,
+      body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 16,
           horizontal: 200,
@@ -105,43 +108,32 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: InfoLabel(
-                      label: '報告日時',
-                      child: Button(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(dateText('yyyy/MM/dd HH:mm', createdAt)),
-                              const Icon(FluentIcons.calendar),
-                            ],
-                          ),
+                    child: FormLabel(
+                      '報告日時',
+                      child: FormValue(
+                        dateText('yyyy/MM/dd HH:mm', createdAt),
+                        onTap: () async => await CustomDateTimePicker().picker(
+                          context: context,
+                          init: createdAt,
+                          title: '報告日時を選択',
+                          onChanged: (value) {
+                            setState(() {
+                              createdAt = value;
+                            });
+                          },
                         ),
-                        onPressed: () async {
-                          await CustomDateTimePicker().picker(
-                            context: context,
-                            init: createdAt,
-                            title: '報告日時を選択',
-                            onChanged: (value) {
-                              setState(() {
-                                createdAt = value;
-                              });
-                            },
-                          );
-                        },
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: InfoLabel(
-                      label: '対応項目',
-                      child: ComboBox<String>(
+                    child: FormLabel(
+                      '対応項目',
+                      child: DropdownButton<String>(
                         isExpanded: true,
                         value: type,
                         items: kProblemTypes.map((e) {
-                          return ComboBoxItem(
+                          return DropdownMenuItem(
                             value: e,
                             child: Text(e),
                           );
@@ -162,12 +154,11 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: InfoLabel(
-                      label: '対応者',
-                      child: CustomTextBox(
+                    child: FormLabel(
+                      '対応者',
+                      child: CustomTextField(
                         controller: picNameController,
-                        placeholder: '',
-                        keyboardType: TextInputType.text,
+                        textInputType: TextInputType.text,
                         maxLines: 1,
                       ),
                     ),
@@ -176,42 +167,38 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        InfoLabel(
-                          label: '相手の名前',
-                          child: CustomTextBox(
+                        FormLabel(
+                          '相手の名前',
+                          child: CustomTextField(
                             controller: targetNameController,
-                            placeholder: '',
-                            keyboardType: TextInputType.text,
+                            textInputType: TextInputType.text,
                             maxLines: 1,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        InfoLabel(
-                          label: '相手の年齢',
-                          child: CustomTextBox(
+                        FormLabel(
+                          '相手の年齢',
+                          child: CustomTextField(
                             controller: targetAgeController,
-                            placeholder: '',
-                            keyboardType: TextInputType.text,
+                            textInputType: TextInputType.text,
                             maxLines: 1,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        InfoLabel(
-                          label: '相手の連絡先',
-                          child: CustomTextBox(
+                        FormLabel(
+                          '相手の連絡先',
+                          child: CustomTextField(
                             controller: targetTelController,
-                            placeholder: '',
-                            keyboardType: TextInputType.text,
+                            textInputType: TextInputType.text,
                             maxLines: 1,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        InfoLabel(
-                          label: '相手の住所',
-                          child: CustomTextBox(
+                        FormLabel(
+                          '相手の住所',
+                          child: CustomTextField(
                             controller: targetAddressController,
-                            placeholder: '',
-                            keyboardType: TextInputType.text,
+                            textInputType: TextInputType.text,
                             maxLines: 1,
                           ),
                         ),
@@ -221,18 +208,17 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '詳細',
-                child: CustomTextBox(
+              FormLabel(
+                '詳細',
+                child: CustomTextField(
                   controller: detailsController,
-                  placeholder: '',
-                  keyboardType: TextInputType.multiline,
+                  textInputType: TextInputType.multiline,
                   maxLines: 20,
                 ),
               ),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '添付写真',
+              FormLabel(
+                '添付写真',
                 child: GestureDetector(
                   onTap: () async {
                     final result = await FilePicker.platform.pickFiles(
@@ -260,39 +246,34 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '対応状態',
-                child: Row(
+              FormLabel(
+                '対応状態',
+                child: Column(
                   children: kProblemStates.map((e) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 24),
-                      child: Checkbox(
-                        checked: states.contains(e),
-                        onChanged: (value) {
-                          if (states.contains(e)) {
-                            states.remove(e);
-                          } else {
-                            states.add(e);
-                          }
-                          setState(() {});
-                        },
-                        content: Text(e),
-                      ),
+                    return CheckboxListTile(
+                      value: states.contains(e),
+                      onChanged: (value) {
+                        if (states.contains(e)) {
+                          states.remove(e);
+                        } else {
+                          states.add(e);
+                        }
+                        setState(() {});
+                      },
+                      title: Text(e),
                     );
                   }).toList(),
                 ),
               ),
               const SizedBox(height: 8),
-              InfoLabel(
-                label: '同じような注意(対応)をした回数',
-                child: CustomTextBox(
+              FormLabel(
+                '同じような注意(対応)をした回数',
+                child: CustomTextField(
                   controller: countController,
-                  placeholder: '',
-                  keyboardType: TextInputType.number,
+                  textInputType: TextInputType.number,
                   maxLines: 1,
                 ),
               ),
-              const SizedBox(height: 40),
             ],
           ),
         ),

@@ -190,7 +190,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                           Navigator.pushReplacement(
                             context,
                             PageTransition(
-                              type: PageTransitionType.bottomToTop,
+                              type: PageTransitionType.topToBottom,
                               child: const LoginScreen(),
                             ),
                           );

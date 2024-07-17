@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 PageTransition(
-                                  type: PageTransitionType.topToBottom,
+                                  type: PageTransitionType.bottomToTop,
                                   child: const HomeScreen(),
                                 ),
                               );
