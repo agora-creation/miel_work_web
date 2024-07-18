@@ -10,7 +10,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/loan.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/lost.dart';
-import 'package:miel_work_web/providers/manual.dart';
 import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/providers/problem.dart';
@@ -54,7 +53,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: LoginProvider.initialize()),
         ChangeNotifierProvider.value(value: HomeProvider()),
         ChangeNotifierProvider.value(value: UserProvider()),
-        ChangeNotifierProvider.value(value: ManualProvider()),
         ChangeNotifierProvider.value(value: NoticeProvider()),
         ChangeNotifierProvider.value(value: ChatMessageProvider()),
         ChangeNotifierProvider.value(value: CategoryProvider()),

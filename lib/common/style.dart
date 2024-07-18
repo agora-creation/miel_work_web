@@ -79,16 +79,7 @@ List<int> kAlertMinutes = [0, 10, 30, 60];
 DateTime kFirstDate = DateTime.now().subtract(const Duration(days: 1095));
 DateTime kLastDate = DateTime.now().add(const Duration(days: 1095));
 
-const kDefaultImageUrl = 'assets/images/default.png';
-
 const kHomeGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
-  crossAxisCount: 5,
-  childAspectRatio: 1,
-  crossAxisSpacing: 8,
-  mainAxisSpacing: 8,
-);
-
-const kDefaultGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
   crossAxisCount: 5,
   childAspectRatio: 1,
   crossAxisSpacing: 8,

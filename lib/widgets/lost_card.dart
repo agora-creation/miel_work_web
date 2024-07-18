@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/lost.dart';
@@ -31,13 +31,6 @@ class LostCard extends StatelessWidget {
                     child: Image.network(
                       lost.itemImage,
                       fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loading) {
-                        if (loading == null) return child;
-                        return Image.asset(
-                          kDefaultImageUrl,
-                          fit: BoxFit.cover,
-                        );
-                      },
                     ),
                   ),
                   Table(

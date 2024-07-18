@@ -17,8 +17,8 @@ import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
-import 'package:miel_work_web/widgets/custom_home_icon_card.dart';
 import 'package:miel_work_web/widgets/home_header.dart';
+import 'package:miel_work_web/widgets/home_icon_card.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     gridDelegate: kHomeGridDelegate,
                     children: [
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.calendarDay,
                         label: 'スケジュール',
                         color: kBlackColor,
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               user: loginProvider.user,
                             );
                           }
-                          return CustomHomeIconCard(
+                          return HomeIconCard(
                             icon: FontAwesomeIcons.solidBell,
                             label: 'お知らせ',
                             color: kBlackColor,
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               alert = true;
                             }
                           }
-                          return CustomHomeIconCard(
+                          return HomeIconCard(
                             icon: FontAwesomeIcons.solidMessage,
                             label: 'チャット',
                             color: kBlackColor,
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               user: loginProvider.user,
                             );
                           }
-                          return CustomHomeIconCard(
+                          return HomeIconCard(
                             icon: FontAwesomeIcons.faceAngry,
                             label: 'クレーム／要望',
                             color: kBlackColor,
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               data: snapshot.data,
                             );
                           }
-                          return CustomHomeIconCard(
+                          return HomeIconCard(
                             icon: FontAwesomeIcons.filePen,
                             label: '申請',
                             color: kBlackColor,
@@ -196,14 +196,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.filePen,
                         label: '業務日報(工事中)',
                         color: kWhiteColor,
                         backgroundColor: kGreyColor,
                         onTap: () {},
                       ),
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.personCircleQuestion,
                         label: '落とし物',
                         color: kBlackColor,
@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.handsHoldingCircle,
                         label: '貸出／返却',
                         color: kBlackColor,
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.bolt,
                         label: 'メーター検針',
                         color: kBlackColor,
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                       ),
-                      CustomHomeIconCard(
+                      HomeIconCard(
                         icon: FontAwesomeIcons.users,
                         label: 'スタッフ一覧',
                         color: kWhiteColor,

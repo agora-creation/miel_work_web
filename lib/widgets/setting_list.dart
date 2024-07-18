@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 
-class CustomSettingList extends StatelessWidget {
+class SettingList extends StatelessWidget {
   final String label;
   final String value;
   final Function()? onTap;
   final bool isFirst;
 
-  const CustomSettingList({
+  const SettingList({
     required this.label,
     required this.value,
     this.onTap,

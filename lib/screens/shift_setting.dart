@@ -6,9 +6,9 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_setting_list.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/setting_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShiftSettingScreen extends StatefulWidget {
@@ -59,7 +59,7 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
               style: TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 8),
-            CustomSettingList(
+            SettingList(
               label: 'URL',
               value: 'https://miel-work-shift.web.app/',
               onTap: () async {
@@ -69,7 +69,7 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
                 }
               },
             ),
-            CustomSettingList(
+            SettingList(
               label: 'ログインID',
               value: organization?.shiftLoginId ?? '',
               onTap: () => showDialog(
@@ -81,7 +81,7 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
               ),
               isFirst: false,
             ),
-            CustomSettingList(
+            SettingList(
               label: 'パスワード',
               value: organization?.shiftPassword ?? '',
               onTap: () => showDialog(

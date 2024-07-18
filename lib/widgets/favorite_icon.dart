@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/style.dart';
 
 class FavoriteIcon extends StatelessWidget {
@@ -16,8 +17,8 @@ class FavoriteIcon extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            FluentIcons.heart_fill,
+          FaIcon(
+            FontAwesomeIcons.heart,
             color: favoriteUserIds.isNotEmpty ? kRedColor : kGreyColor,
             size: 14,
           ),
