@@ -5,9 +5,11 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
+import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -34,16 +36,30 @@ class NoticeModScreen extends StatefulWidget {
 }
 
 class _NoticeModScreenState extends State<NoticeModScreen> {
+  NoticeService noticeService = NoticeService();
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
   PlatformFile? pickedFile;
+
+  void _init() async {
+    UserModel? user = widget.loginProvider.user;
+    List<String> readUserIds = widget.notice.readUserIds;
+    if (!readUserIds.contains(user?.id)) {
+      readUserIds.add(user?.id ?? '');
+      noticeService.update({
+        'id': widget.notice.id,
+        'readUserIds': readUserIds,
+      });
+    }
+  }
 
   @override
   void initState() {
     titleController.text = widget.notice.title;
     contentController.text = widget.notice.content;
     selectedGroup = widget.noticeInGroup;
+    _init();
     super.initState();
   }
 
@@ -85,7 +101,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: 'このお知らせを削除',
+            label: '削除する',
             labelColor: kWhiteColor,
             backgroundColor: kRedColor,
             onPressed: () => showDialog(
@@ -100,7 +116,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

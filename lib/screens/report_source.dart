@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/lost.dart';
-import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_column_link.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class LostHistorySource extends DataGridSource {
+class ReportSource extends DataGridSource {
   final BuildContext context;
-  final List<LostModel> losts;
+  final List<ReportModel> reports;
 
-  LostHistorySource({
+  ReportSource({
     required this.context,
-    required this.losts,
+    required this.reports,
   }) {
     buildDataGridRows();
   }
@@ -22,11 +20,11 @@ class LostHistorySource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
   void buildDataGridRows() {
-    dataGridRows = losts.map<DataGridRow>((lost) {
+    dataGridRows = reports.map<DataGridRow>((report) {
       return DataGridRow(cells: [
         DataGridCell(
           columnName: 'id',
-          value: lost.id,
+          value: report.id,
         ),
       ]);
     }).toList();
@@ -43,42 +41,33 @@ class LostHistorySource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    LostModel lost = losts.singleWhere(
+    ReportModel report = reports.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
     cells.add(CustomColumnLabel(
-      dateText('yyyy/MM/dd', lost.returnAt),
+      dateText('yyyy/MM/dd', report.createdAt),
     ));
-    cells.add(CustomColumnLabel(lost.returnUser));
-    cells.add(CustomColumnLink(
-      label: '署名を確認',
-      color: kBlueColor,
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) => CustomAlertDialog(
-          content: Image.network(
-            lost.signImage,
-            fit: BoxFit.cover,
-          ),
-          actions: [
-            CustomButton(
-              type: ButtonSizeType.sm,
-              label: '閉じる',
-              labelColor: kWhiteColor,
-              backgroundColor: kGreyColor,
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+    cells.add(CustomColumnLabel(report.createdUserName));
+    cells.add(Row(
+      children: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '編集',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () {},
         ),
-      ),
+        const SizedBox(width: 4),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'PDF印刷',
+          labelColor: kBlackColor,
+          backgroundColor: kRed200Color,
+          onPressed: () {},
+        ),
+      ],
     ));
-    cells.add(CustomColumnLabel(lost.itemName));
-    cells.add(CustomColumnLabel(
-      dateText('yyyy/MM/dd', lost.discoveryAt),
-    ));
-    cells.add(CustomColumnLabel(lost.discoveryPlace));
-    cells.add(CustomColumnLabel(lost.discoveryUser));
-    cells.add(CustomColumnLabel(lost.remarks));
+
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

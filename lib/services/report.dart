@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/common/functions.dart';
-import 'package:miel_work_web/models/lost.dart';
+import 'package:miel_work_web/models/report.dart';
 
-class LostService {
-  String collection = 'lost';
+class ReportService {
+  String collection = 'report';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String id() {
@@ -26,7 +26,6 @@ class LostService {
     required String? organizationId,
     required DateTime? searchStart,
     required DateTime? searchEnd,
-    required List<int> searchStatus,
   }) {
     if (searchStart != null && searchEnd != null) {
       Timestamp startAt = convertTimestamp(searchStart, false);
@@ -34,38 +33,23 @@ class LostService {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .where('status', whereIn: searchStatus)
           .orderBy('createdAt', descending: true)
           .startAt([endAt]).endAt([startAt]).snapshots();
     } else {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .where('status', whereIn: searchStatus)
           .orderBy('createdAt', descending: true)
           .snapshots();
     }
   }
 
-  bool checkAlert({
+  List<ReportModel> generateList({
     required QuerySnapshot<Map<String, dynamic>>? data,
   }) {
-    bool ret = false;
+    List<ReportModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
-      LostModel lost = LostModel.fromSnapshot(doc);
-      if (lost.status == 0) {
-        ret = true;
-      }
-    }
-    return ret;
-  }
-
-  List<LostModel> generateList({
-    required QuerySnapshot<Map<String, dynamic>>? data,
-  }) {
-    List<LostModel> ret = [];
-    for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
-      ret.add(LostModel.fromSnapshot(doc));
+      ret.add(ReportModel.fromSnapshot(doc));
     }
     return ret;
   }

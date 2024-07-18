@@ -150,7 +150,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: 'この予定を削除',
+            label: '削除する',
             labelColor: kWhiteColor,
             backgroundColor: kRedColor,
             onPressed: () => showDialog(
@@ -165,7 +165,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

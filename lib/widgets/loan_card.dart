@@ -18,23 +18,33 @@ class LoanCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        color: kWhiteColor,
+        elevation: 8,
         child: Container(
-          height: 500,
-          margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.all(4),
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Stack(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Image.network(
-                      loan.itemImage,
-                      fit: BoxFit.cover,
-                    ),
+                    child: loan.itemImage != ''
+                        ? Image.network(
+                            loan.itemImage,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            color: kGrey300Color,
+                            width: double.infinity,
+                            height: 150,
+                            child: const Center(
+                              child: Text('写真なし'),
+                            ),
+                          ),
                   ),
                   Table(
-                    border: TableBorder.all(color: kBlackColor),
+                    border: TableBorder.all(color: kGreyColor),
                     columnWidths: const {
                       0: IntrinsicColumnWidth(),
                       1: FlexColumnWidth(2),
@@ -48,7 +58,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(loan.itemName),
+                            child: Text(
+                              loan.itemName,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -60,7 +75,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(dateText('yyyy/MM/dd', loan.loanAt)),
+                            child: Text(
+                              dateText('yyyy/MM/dd', loan.loanAt),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -72,7 +92,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(loan.loanUser),
+                            child: Text(
+                              loan.loanUser,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -84,7 +109,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(loan.loanCompany),
+                            child: Text(
+                              loan.loanCompany,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -96,7 +126,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(loan.loanStaff),
+                            child: Text(
+                              loan.loanStaff,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -108,8 +143,12 @@ class LoanCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child:
-                                Text(dateText('yyyy/MM/dd', loan.returnPlanAt)),
+                            child: Text(
+                              dateText('yyyy/MM/dd', loan.returnPlanAt),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),

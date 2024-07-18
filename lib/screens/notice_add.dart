@@ -71,13 +71,13 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'お知らせを追加',
+          'お知らせ追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

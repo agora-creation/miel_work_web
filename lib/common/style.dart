@@ -85,3 +85,17 @@ const kHomeGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
   crossAxisSpacing: 8,
   mainAxisSpacing: 8,
 );
+
+const kLostGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount: 4,
+  childAspectRatio: 1,
+  crossAxisSpacing: 8,
+  mainAxisSpacing: 8,
+);
+
+const kLoanGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount: 4,
+  childAspectRatio: 1,
+  crossAxisSpacing: 8,
+  mainAxisSpacing: 8,
+);

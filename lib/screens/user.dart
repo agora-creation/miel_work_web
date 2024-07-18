@@ -37,7 +37,7 @@ class _UserScreenState extends State<UserScreen> {
   UserService userService = UserService();
   List<UserModel> users = [];
 
-  void _getUses() async {
+  void _getUsers() async {
     if (widget.homeProvider.currentGroup == null) {
       users = await userService.selectList(
         userIds: widget.loginProvider.organization?.userIds ?? [],
@@ -52,7 +52,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   void initState() {
-    _getUses();
+    _getUsers();
     super.initState();
   }
 
@@ -84,15 +84,21 @@ class _UserScreenState extends State<UserScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomIconTextButton(
                   label: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,
-                  onPressed: () {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AddUserDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      getUsers: _getUsers,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -104,7 +110,7 @@ class _UserScreenState extends State<UserScreen> {
                   loginProvider: widget.loginProvider,
                   homeProvider: widget.homeProvider,
                   users: users,
-                  getUsers: _getUses,
+                  getUsers: _getUsers,
                 ),
                 columns: [
                   GridColumn(

@@ -32,7 +32,7 @@ class ApplyList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Chip(
-                  label: Text(apply.type),
+                  label: Text('${apply.type}申請'),
                   backgroundColor: apply.typeColor(),
                 ),
                 Text(

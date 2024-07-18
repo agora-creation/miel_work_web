@@ -377,7 +377,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '入力内容を保存',
+          label: '保存する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {

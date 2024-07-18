@@ -3,41 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/notice.dart';
-import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/notice_add.dart';
-import 'package:miel_work_web/screens/notice_mod.dart';
-import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/screens/report_add.dart';
+import 'package:miel_work_web/screens/report_source.dart';
+import 'package:miel_work_web/services/report.dart';
+import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/notice_list.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class NoticeScreen extends StatefulWidget {
+class ReportScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const NoticeScreen({
+  const ReportScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<NoticeScreen> createState() => _NoticeScreenState();
+  State<ReportScreen> createState() => _ReportScreenState();
 }
 
-class _NoticeScreenState extends State<NoticeScreen> {
-  NoticeService noticeService = NoticeService();
+class _ReportScreenState extends State<ReportScreen> {
+  ReportService reportService = ReportService();
   DateTime? searchStart;
   DateTime? searchEnd;
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.loginProvider.organization?.name ?? '';
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
-    String groupName = group?.name ?? '';
     String searchText = '指定なし';
     if (searchStart != null && searchEnd != null) {
       searchText =
@@ -49,7 +47,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          'お知らせ',
+          '業務日報',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -106,7 +104,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       context,
                       PageTransition(
                         type: PageTransitionType.rightToLeft,
-                        child: NoticeAddScreen(
+                        child: ReportAddScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
                         ),
@@ -119,51 +117,38 @@ class _NoticeScreenState extends State<NoticeScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: noticeService.streamList(
+                stream: reportService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
                   searchStart: searchStart,
                   searchEnd: searchEnd,
                 ),
                 builder: (context, snapshot) {
-                  List<NoticeModel> notices = [];
+                  List<ReportModel> reports = [];
                   if (snapshot.hasData) {
-                    notices = noticeService.generateList(
+                    reports = reportService.generateList(
                       data: snapshot.data,
-                      currentGroup: widget.homeProvider.currentGroup,
                     );
                   }
-                  return ListView.builder(
-                    itemCount: notices.length,
-                    itemBuilder: (context, index) {
-                      NoticeModel notice = notices[index];
-                      OrganizationGroupModel? noticeInGroup;
-                      if (widget.homeProvider.groups.isNotEmpty) {
-                        for (OrganizationGroupModel group
-                            in widget.homeProvider.groups) {
-                          if (group.id == notice.groupId) {
-                            noticeInGroup = group;
-                          }
-                        }
-                      }
-                      return NoticeList(
-                        notice: notice,
-                        user: widget.loginProvider.user,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: NoticeModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                notice: notice,
-                                noticeInGroup: noticeInGroup,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                  return CustomDataGrid(
+                    source: ReportSource(
+                      context: context,
+                      reports: reports,
+                    ),
+                    columns: [
+                      GridColumn(
+                        columnName: 'createdAt',
+                        label: const CustomColumnLabel('作成日'),
+                      ),
+                      GridColumn(
+                        columnName: 'createdUserName',
+                        label: const CustomColumnLabel('作成者'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                        width: 200,
+                      ),
+                    ],
                   );
                 },
               ),

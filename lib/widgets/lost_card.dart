@@ -18,23 +18,33 @@ class LostCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        color: kWhiteColor,
+        elevation: 8,
         child: Container(
-          height: 500,
-          margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.all(4),
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Stack(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Image.network(
-                      lost.itemImage,
-                      fit: BoxFit.cover,
-                    ),
+                    child: lost.itemImage != ''
+                        ? Image.network(
+                            lost.itemImage,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(
+                            color: kGrey300Color,
+                            width: double.infinity,
+                            height: 150,
+                            child: const Center(
+                              child: Text('写真なし'),
+                            ),
+                          ),
                   ),
                   Table(
-                    border: TableBorder.all(color: kBlackColor),
+                    border: TableBorder.all(color: kGreyColor),
                     columnWidths: const {
                       0: IntrinsicColumnWidth(),
                       1: FlexColumnWidth(2),
@@ -48,7 +58,12 @@ class LostCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(lost.itemName),
+                            child: Text(
+                              lost.itemName,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -60,8 +75,12 @@ class LostCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child:
-                                Text(dateText('yyyy/MM/dd', lost.discoveryAt)),
+                            child: Text(
+                              dateText('yyyy/MM/dd', lost.discoveryAt),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -73,7 +92,12 @@ class LostCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(lost.discoveryPlace),
+                            child: Text(
+                              lost.discoveryPlace,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -85,7 +109,12 @@ class LostCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(lost.discoveryUser),
+                            child: Text(
+                              lost.discoveryUser,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),
@@ -97,7 +126,12 @@ class LostCard extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(4),
-                            child: Text(lost.remarks),
+                            child: Text(
+                              lost.remarks,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ],
                       ),

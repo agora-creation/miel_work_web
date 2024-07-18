@@ -65,7 +65,7 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '予定の追加',
+            label: '新規追加',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () {

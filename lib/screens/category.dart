@@ -59,7 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomIconTextButton(
-                  label: 'カテゴリ追加',
+                  label: '新規追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,

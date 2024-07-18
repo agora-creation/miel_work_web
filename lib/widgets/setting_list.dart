@@ -50,6 +50,7 @@ class SettingList extends StatelessWidget {
             ),
             const FaIcon(
               FontAwesomeIcons.pen,
+              color: kGrey600Color,
               size: 16,
             ),
           ],

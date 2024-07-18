@@ -67,19 +67,19 @@ class LoanProvider with ChangeNotifier {
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
       });
       //通知
-      // List<UserModel> sendUsers = await _userService.selectList(
-      //   userIds: organization.userIds,
-      // );
-      // if (sendUsers.isNotEmpty) {
-      //   for (UserModel user in sendUsers) {
-      //     if (user.id == loginUser.id) continue;
-      //     _fmService.send(
-      //       token: user.token,
-      //       title: '貸出が追加されました',
-      //       body: itemName,
-      //     );
-      //   }
-      // }
+      List<UserModel> sendUsers = await _userService.selectList(
+        userIds: organization.userIds,
+      );
+      if (sendUsers.isNotEmpty) {
+        for (UserModel user in sendUsers) {
+          if (user.id == loginUser.id) continue;
+          _fmService.send(
+            token: user.token,
+            title: '貸出が追加されました',
+            body: itemName,
+          );
+        }
+      }
     } catch (e) {
       error = '貸出の追加に失敗しました';
     }

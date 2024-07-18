@@ -8,12 +8,17 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply.dart';
 import 'package:miel_work_web/screens/chat.dart';
+import 'package:miel_work_web/screens/loan.dart';
+import 'package:miel_work_web/screens/lost.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
+import 'package:miel_work_web/screens/report.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/services/chat_message.dart';
+import 'package:miel_work_web/services/loan.dart';
+import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
@@ -34,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ChatMessageService messageService = ChatMessageService();
   ProblemService problemService = ProblemService();
   ApplyService applyService = ApplyService();
+  LostService lostService = LostService();
+  LoanService loanService = LoanService();
 
   @override
   Widget build(BuildContext context) {
@@ -181,11 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                           return HomeIconCard(
                             icon: FontAwesomeIcons.filePen,
-                            label: '申請',
+                            label: '各種申請',
                             color: kBlackColor,
                             backgroundColor: kWhiteColor,
                             alert: alert,
-                            alertMessage: '未承認あり',
+                            alertMessage: '承認待ちあり',
                             onTap: () => showBottomUpScreen(
                               context,
                               ApplyScreen(
@@ -197,34 +204,78 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       HomeIconCard(
-                        icon: FontAwesomeIcons.filePen,
-                        label: '業務日報(工事中)',
-                        color: kWhiteColor,
-                        backgroundColor: kGreyColor,
-                        onTap: () {},
-                      ),
-                      HomeIconCard(
-                        icon: FontAwesomeIcons.personCircleQuestion,
-                        label: '落とし物',
+                        icon: FontAwesomeIcons.book,
+                        label: '業務日報',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
-                        onTap: () async {
-                          Uri url = Uri.parse('https://hirome.co.jp/lost/');
-                          if (!await launchUrl(url)) {
-                            throw Exception('Could not launch $url');
+                        onTap: () => showBottomUpScreen(
+                          context,
+                          ReportScreen(
+                            loginProvider: loginProvider,
+                            homeProvider: homeProvider,
+                          ),
+                        ),
+                      ),
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: lostService.streamList(
+                          organizationId: loginProvider.organization?.id,
+                          searchStart: null,
+                          searchEnd: null,
+                          searchStatus: [0],
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            alert = lostService.checkAlert(
+                              data: snapshot.data,
+                            );
                           }
+                          return HomeIconCard(
+                            icon: FontAwesomeIcons.personCircleQuestion,
+                            label: '落とし物',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            alertMessage: '保管中',
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              LostScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
                         },
                       ),
-                      HomeIconCard(
-                        icon: FontAwesomeIcons.handsHoldingCircle,
-                        label: '貸出／返却',
-                        color: kBlackColor,
-                        backgroundColor: kWhiteColor,
-                        onTap: () async {
-                          Uri url = Uri.parse('https://hirome.co.jp/loan/');
-                          if (!await launchUrl(url)) {
-                            throw Exception('Could not launch $url');
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: loanService.streamList(
+                          organizationId: loginProvider.organization?.id,
+                          searchStart: null,
+                          searchEnd: null,
+                          searchStatus: [0],
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            alert = loanService.checkAlert(
+                              data: snapshot.data,
+                            );
                           }
+                          return HomeIconCard(
+                            icon: FontAwesomeIcons.handsHoldingCircle,
+                            label: '貸出／返却',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            alertMessage: '貸出中',
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              LoanScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       HomeIconCard(

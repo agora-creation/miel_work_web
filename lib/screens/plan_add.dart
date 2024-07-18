@@ -121,13 +121,13 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '予定を新しく追加',
+          '予定新規追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

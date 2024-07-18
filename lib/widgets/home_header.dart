@@ -139,7 +139,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 type: ButtonSizeType.sm,
                 label: 'マニュアル',
                 labelColor: kBlackColor,
-                backgroundColor: kGreen200Color,
+                backgroundColor: kRed200Color,
                 onPressed: () async {
                   Uri url =
                       Uri.parse('https://agora-c.com/miel-work/manual_web.pdf');
@@ -383,7 +383,7 @@ class _ModGroupDialogState extends State<ModGroupDialog> {
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '入力内容を保存',
+          label: '保存する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {

@@ -9,6 +9,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
 import 'package:miel_work_web/widgets/checkbox_list.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
@@ -81,7 +82,22 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelProblemDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                problem: widget.problem,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -303,6 +319,73 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelProblemDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ProblemModel problem;
+
+  const DelProblemDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.problem,
+    super.key,
+  });
+
+  @override
+  State<DelProblemDialog> createState() => _DelProblemDialogState();
+}
+
+class _DelProblemDialogState extends State<DelProblemDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final problemProvider = Provider.of<ProblemProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await problemProvider.delete(
+              problem: widget.problem,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'クレーム／要望を削除しました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }
