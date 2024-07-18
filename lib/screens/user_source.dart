@@ -335,7 +335,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
                           admin = value ?? false;
                         });
                       },
-                      title: const Text('このスタッフを管理者にする'),
+                      title: const Text('管理者にする'),
                     ),
                   ),
                 )
@@ -360,7 +360,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
                           president = value ?? false;
                         });
                       },
-                      title: const Text('このスタッフを社長にする'),
+                      title: const Text('社長にする'),
                     ),
                   ),
                 )

@@ -1,23 +1,24 @@
+import 'package:alert_banner/exports.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:miel_work_web/common/date_machine_util.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/widgets/custom_alert_banner.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as uhtml;
 import 'package:url_launcher/url_launcher.dart';
 
 void showMessage(BuildContext context, String msg, bool success) {
-  displayInfoBar(context, builder: (context, close) {
-    return InfoBar(
-      title: Text(msg),
-      severity:
-          success == true ? InfoBarSeverity.success : InfoBarSeverity.error,
-    );
-  });
+  showAlertBanner(
+    context,
+    () {},
+    CustomAlertBanner(msg: msg, success: success),
+    alertBannerLocation: AlertBannerLocation.top,
+  );
 }
 
 void showBottomUpScreen(BuildContext context, Widget widget) {

@@ -4,20 +4,20 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply_detail.dart';
+import 'package:miel_work_web/screens/apply_history_detail.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class ApplySource extends DataGridSource {
+class ApplyHistorySource extends DataGridSource {
   final BuildContext context;
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final List<ApplyModel> applies;
 
-  ApplySource({
+  ApplyHistorySource({
     required this.context,
     required this.loginProvider,
     required this.homeProvider,
@@ -53,17 +53,15 @@ class ApplySource extends DataGridSource {
     ApplyModel apply = applies.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
+    String approvedAtText = dateText('yyyy/MM/dd HH:mm', apply.approvedAt);
+    cells.add(CustomColumnLabel(approvedAtText));
+    cells.add(CustomColumnLabel(apply.approvalNumber));
     String createdAtText = dateText('yyyy/MM/dd HH:mm', apply.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(apply.createdUserName));
     cells.add(CustomColumnLabel(apply.number));
     cells.add(CustomColumnLabel('${apply.type}申請'));
     cells.add(CustomColumnLabel(apply.title));
-    if (apply.type == '稟議' || apply.type == '支払伺い') {
-      cells.add(CustomColumnLabel('¥ ${apply.formatPrice()}'));
-    } else {
-      cells.add(const CustomColumnLabel(''));
-    }
+    cells.add(CustomColumnLabel(apply.createdUserName));
     cells.add(CustomColumnLabel(apply.approvalText()));
     cells.add(Row(
       children: [
@@ -77,7 +75,7 @@ class ApplySource extends DataGridSource {
               context,
               PageTransition(
                 type: PageTransitionType.rightToLeft,
-                child: ApplyDetailScreen(
+                child: ApplyHistoryDetailScreen(
                   loginProvider: loginProvider,
                   homeProvider: homeProvider,
                   apply: apply,

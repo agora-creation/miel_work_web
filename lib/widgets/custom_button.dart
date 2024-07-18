@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: labelColor,
+              color: disabled ? kWhiteColor : labelColor,
               fontSize: 20,
               fontWeight: FontWeight.bold,
               fontFamily: 'SourceHanSansJP-Bold',
@@ -57,7 +57,7 @@ class CustomButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: labelColor,
+            color: disabled ? kWhiteColor : labelColor,
             fontSize: 16,
             fontWeight: FontWeight.bold,
             fontFamily: 'SourceHanSansJP-Bold',

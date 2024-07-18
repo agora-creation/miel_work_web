@@ -147,92 +147,6 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ),
     );
-
-    // return Stack(
-    //   children: [
-    //     const AnimationBackground(),
-    //     Padding(
-    //       padding: const EdgeInsets.all(16),
-    //       child: Card(
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Text(
-    //                   '『$organizationName $groupName』に所属しているスタッフを表示しています。',
-    //                   style: const TextStyle(fontSize: 14),
-    //                 ),
-    //                 CustomButtonSm(
-    //                   icon: FluentIcons.add,
-    //                   labelText: '新規追加',
-    //                   labelColor: kWhiteColor,
-    //                   backgroundColor: kBlueColor,
-    //                   onPressed: () => showDialog(
-    //                     context: context,
-    //                     builder: (context) => AddUserDialog(
-    //                       loginProvider: widget.loginProvider,
-    //                       homeProvider: widget.homeProvider,
-    //                       getUsers: _getUses,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //             const SizedBox(height: 8),
-    //             Expanded(
-    //               child: CustomDataGrid(
-    //                 source: UserSource(
-    //                   context: context,
-    //                   loginProvider: widget.loginProvider,
-    //                   homeProvider: widget.homeProvider,
-    //                   users: users,
-    //                   getUsers: _getUses,
-    //                 ),
-    //                 columns: [
-    //                   GridColumn(
-    //                     columnName: 'name',
-    //                     label: const CustomColumnLabel('スタッフ名'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'email',
-    //                     label: const CustomColumnLabel('メールアドレス'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'password',
-    //                     label: const CustomColumnLabel('パスワード'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'group',
-    //                     label: const CustomColumnLabel('所属グループ'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'uid',
-    //                     label: const CustomColumnLabel('スマホアプリ'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'admin',
-    //                     label: const CustomColumnLabel('管理者権限'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'president',
-    //                     label: const CustomColumnLabel('社長権限'),
-    //                   ),
-    //                   GridColumn(
-    //                     columnName: 'edit',
-    //                     label: const CustomColumnLabel('操作'),
-    //                     width: 250,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 }
 
@@ -350,7 +264,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           admin = value ?? false;
                         });
                       },
-                      title: const Text('このスタッフを管理者にする'),
+                      title: const Text('管理者にする'),
                     ),
                   ),
                 )
@@ -375,7 +289,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                           president = value ?? false;
                         });
                       },
-                      title: const Text('このスタッフを社長にする'),
+                      title: const Text('社長にする'),
                     ),
                   ),
                 )

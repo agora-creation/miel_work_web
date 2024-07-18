@@ -3,41 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/notice.dart';
-import 'package:miel_work_web/models/organization_group.dart';
+import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/notice_add.dart';
-import 'package:miel_work_web/screens/notice_mod.dart';
-import 'package:miel_work_web/services/notice.dart';
+import 'package:miel_work_web/screens/apply_history_source.dart';
+import 'package:miel_work_web/services/apply.dart';
+import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/notice_list.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class NoticeScreen extends StatefulWidget {
+class ApplyHistoryScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const NoticeScreen({
+  const ApplyHistoryScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<NoticeScreen> createState() => _NoticeScreenState();
+  State<ApplyHistoryScreen> createState() => _ApplyHistoryScreenState();
 }
 
-class _NoticeScreenState extends State<NoticeScreen> {
-  NoticeService noticeService = NoticeService();
+class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
+  ApplyService applyService = ApplyService();
   DateTime? searchStart;
   DateTime? searchEnd;
 
   @override
   Widget build(BuildContext context) {
-    String organizationName = widget.loginProvider.organization?.name ?? '';
-    OrganizationGroupModel? group = widget.homeProvider.currentGroup;
-    String groupName = group?.name ?? '';
     String searchText = '指定なし';
     if (searchStart != null && searchEnd != null) {
       searchText =
@@ -49,7 +45,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          'お知らせ',
+          '過去の申請履歴',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -67,7 +63,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
@@ -96,74 +92,71 @@ class _NoticeScreenState extends State<NoticeScreen> {
                     }
                   },
                 ),
-                CustomIconTextButton(
-                  label: 'お知らせ追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  leftIcon: FontAwesomeIcons.plus,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: NoticeAddScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                        ),
-                      ),
-                    );
-                  },
-                ),
               ],
             ),
             const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: noticeService.streamList(
+                stream: applyService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
+                  searchApproval: [1, 9],
                   searchStart: searchStart,
                   searchEnd: searchEnd,
                 ),
                 builder: (context, snapshot) {
-                  List<NoticeModel> notices = [];
+                  List<ApplyModel> applies = [];
                   if (snapshot.hasData) {
-                    notices = noticeService.generateList(
+                    applies = applyService.generateList(
                       data: snapshot.data,
                       currentGroup: widget.homeProvider.currentGroup,
                     );
                   }
-                  return ListView.builder(
-                    itemCount: notices.length,
-                    itemBuilder: (context, index) {
-                      NoticeModel notice = notices[index];
-                      OrganizationGroupModel? noticeInGroup;
-                      if (widget.homeProvider.groups.isNotEmpty) {
-                        for (OrganizationGroupModel group
-                            in widget.homeProvider.groups) {
-                          if (group.id == notice.groupId) {
-                            noticeInGroup = group;
-                          }
-                        }
-                      }
-                      return NoticeList(
-                        notice: notice,
-                        user: widget.loginProvider.user,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: NoticeModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                notice: notice,
-                                noticeInGroup: noticeInGroup,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                  return CustomDataGrid(
+                    source: ApplyHistorySource(
+                      context: context,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      applies: applies,
+                    ),
+                    columns: [
+                      GridColumn(
+                        columnName: 'approvedAt',
+                        label: const CustomColumnLabel('承認日時'),
+                      ),
+                      GridColumn(
+                        columnName: 'approvalNumber',
+                        label: const CustomColumnLabel('承認番号'),
+                      ),
+                      GridColumn(
+                        columnName: 'createdAt',
+                        label: const CustomColumnLabel('申請日時'),
+                      ),
+                      GridColumn(
+                        columnName: 'number',
+                        label: const CustomColumnLabel('申請番号'),
+                      ),
+                      GridColumn(
+                        columnName: 'type',
+                        label: const CustomColumnLabel('申請種別'),
+                      ),
+                      GridColumn(
+                        columnName: 'title',
+                        label: const CustomColumnLabel('件名'),
+                      ),
+                      GridColumn(
+                        columnName: 'createdUserName',
+                        label: const CustomColumnLabel('申請者'),
+                      ),
+                      GridColumn(
+                        columnName: 'approval',
+                        label: const CustomColumnLabel('ステータス'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                        width: 200,
+                      ),
+                    ],
                   );
                 },
               ),

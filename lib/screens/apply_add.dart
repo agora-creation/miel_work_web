@@ -53,8 +53,8 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
 
   @override
   void initState() {
-    super.initState();
     _init();
+    super.initState();
   }
 
   @override

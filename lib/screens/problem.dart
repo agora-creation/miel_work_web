@@ -7,13 +7,11 @@ import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/problem_add.dart';
-import 'package:miel_work_web/screens/problem_source.dart';
+import 'package:miel_work_web/screens/problem_mod.dart';
 import 'package:miel_work_web/services/problem.dart';
-import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/problem_list.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProblemScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -127,40 +125,28 @@ class _ProblemScreenState extends State<ProblemScreen> {
                   if (snapshot.hasData) {
                     problems = problemService.generateList(data: snapshot.data);
                   }
-                  return CustomDataGrid(
-                    source: ProblemSource(
-                      context: context,
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      problems: problems,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'createdAt',
-                        label: const CustomColumnLabel('報告日時'),
-                      ),
-                      GridColumn(
-                        columnName: 'type',
-                        label: const CustomColumnLabel('対応項目'),
-                      ),
-                      GridColumn(
-                        columnName: 'picName',
-                        label: const CustomColumnLabel('対応者'),
-                      ),
-                      GridColumn(
-                        columnName: 'targetName',
-                        label: const CustomColumnLabel('相手の名前'),
-                      ),
-                      GridColumn(
-                        columnName: 'states',
-                        label: const CustomColumnLabel('対応状態'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 200,
-                      ),
-                    ],
+                  return ListView.builder(
+                    itemCount: problems.length,
+                    itemBuilder: (context, index) {
+                      ProblemModel problem = problems[index];
+                      return ProblemList(
+                        problem: problem,
+                        user: widget.loginProvider.user,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              child: ProblemModScreen(
+                                loginProvider: widget.loginProvider,
+                                homeProvider: widget.homeProvider,
+                                problem: problem,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),

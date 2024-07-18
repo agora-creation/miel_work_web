@@ -9,24 +9,21 @@ import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/apply_add.dart';
+import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
-import 'package:miel_work_web/widgets/custom_approval_user_list.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
-class ApplyDetailScreen extends StatefulWidget {
+class ApplyModScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final ApplyModel apply;
 
-  const ApplyDetailScreen({
+  const ApplyModScreen({
     required this.loginProvider,
     required this.homeProvider,
     required this.apply,
@@ -34,22 +31,40 @@ class ApplyDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<ApplyDetailScreen> createState() => _ApplyDetailScreenState();
+  State<ApplyModScreen> createState() => _ApplyModScreenState();
 }
 
-class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
+class _ApplyModScreenState extends State<ApplyModScreen> {
+  TextEditingController numberController = TextEditingController();
+  String type = kApplyTypes.first;
+  TextEditingController titleController = TextEditingController();
+  TextEditingController contentController = TextEditingController();
+  TextEditingController priceController = TextEditingController(text: '0');
+
+  void _init() async {
+    numberController.text = widget.apply.number;
+    type = widget.apply.type;
+    titleController.text = widget.apply.title;
+    contentController.text = widget.apply.content;
+    priceController.text = widget.apply.price.toString();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final applyProvider = Provider.of<ApplyProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    bool isApply = false;
     bool isDelete = true;
     if (widget.apply.createdUserId == widget.loginProvider.user?.id) {
       isApproval = false;
       isReject = false;
-      if (widget.apply.approval == 9) {
-        isApply = true;
-      }
     } else {
       isDelete = false;
     }
@@ -81,65 +96,87 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請詳細',
+          '申請を編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
-          isReject && widget.loginProvider.user?.president == true
-              ? CustomButton(
-                  type: ButtonSizeType.sm,
-                  label: '否決する',
-                  labelColor: kRedColor,
-                  backgroundColor: kRed100Color,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => RejectApplyDialog(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      apply: widget.apply,
-                    ),
-                  ),
-                )
-              : Container(),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '否決する',
+            labelColor: kRedColor,
+            backgroundColor: kRed100Color,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => RejectApplyDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                apply: widget.apply,
+              ),
+            ),
+            disabled: !isReject || widget.loginProvider.user?.president != true,
+          ),
           const SizedBox(width: 4),
-          isApproval
-              ? CustomButton(
-                  type: ButtonSizeType.sm,
-                  label: '承認する',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kRedColor,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => ApprovalApplyDialog(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      apply: widget.apply,
-                    ),
-                  ),
-                )
-              : Container(),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '承認する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ApprovalApplyDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                apply: widget.apply,
+              ),
+            ),
+            disabled: !isApproval,
+          ),
           const SizedBox(width: 4),
-          isApply
-              ? CustomButton(
-                  type: ButtonSizeType.sm,
-                  label: '再申請する',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: ApplyAddScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                          apply: widget.apply,
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : Container(),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: 'この申請を削除',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelApplyDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                apply: widget.apply,
+              ),
+            ),
+            disabled: !isDelete,
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '入力内容を保存',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () async {
+              int price = 0;
+              if (type == '稟議' || type == '支払伺い') {
+                price = int.parse(priceController.text);
+              }
+              String? error = await applyProvider.update(
+                apply: widget.apply,
+                number: numberController.text,
+                type: type,
+                title: titleController.text,
+                content: contentController.text,
+                price: price,
+                loginUser: widget.loginProvider.user,
+              );
+              if (error != null) {
+                if (!mounted) return;
+                showMessage(context, error, false);
+                return;
+              }
+              if (!mounted) return;
+              showMessage(context, '申請を編集しました', true);
+              Navigator.pop(context);
+            },
+          ),
           const SizedBox(width: 8),
         ],
         shape: const Border(bottom: BorderSide(color: kGrey300Color)),
@@ -153,173 +190,178 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  isDelete
-                      ? LinkText(
-                          label: 'この申請を削除する',
-                          color: kRedColor,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => DelApplyDialog(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                              apply: widget.apply,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.createdAt)}',
-                        style: const TextStyle(color: kGreyColor),
-                      ),
-                      Text(
-                        '申請番号: ${widget.apply.number}',
-                        style: const TextStyle(color: kGreyColor),
-                      ),
-                      widget.apply.approval == 1
-                          ? Text(
-                              '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.approvedAt)}',
-                              style: const TextStyle(color: kGreyColor),
-                            )
-                          : Container(),
-                      widget.apply.approval == 1
-                          ? Text(
-                              '承認番号: ${widget.apply.approvalNumber}',
-                              style: const TextStyle(color: kGreyColor),
-                            )
-                          : Container(),
-                      Text(
-                        '申請者: ${widget.apply.createdUserName}',
-                        style: const TextStyle(color: kGreyColor),
-                      ),
-                    ],
+                  Text(
+                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.createdAt)}',
+                    style: const TextStyle(color: kGreyColor),
+                  ),
+                  Text(
+                    '申請番号: ${widget.apply.number}',
+                    style: const TextStyle(color: kGreyColor),
+                  ),
+                  Text(
+                    '申請者: ${widget.apply.createdUserName}',
+                    style: const TextStyle(color: kGreyColor),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
-              reApprovalUsers.isNotEmpty
-                  ? FormLabel(
-                      '承認者一覧',
-                      child: Container(
-                        color: kRed100Color,
-                        width: double.infinity,
-                        child: Column(
-                          children: reApprovalUsers.map((approvalUser) {
-                            return CustomApprovalUserList(
-                              approvalUser: approvalUser,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    )
-                  : Container(),
+              const SizedBox(height: 8),
+              FormLabel(
+                '承認者一覧',
+                child: Container(
+                  color: kRed100Color,
+                  width: double.infinity,
+                  child: Column(
+                    children: reApprovalUsers.map((approvalUser) {
+                      return ApprovalUserList(approvalUser: approvalUser);
+                    }).toList(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              FormLabel(
+                '申請番号',
+                child: CustomTextField(
+                  controller: numberController,
+                  textInputType: TextInputType.number,
+                  maxLines: 1,
+                ),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '申請種別',
+                child: DropdownButton<String>(
+                  value: type,
+                  items: kApplyTypes.map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text('$e申請'),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      type = value ?? kApplyTypes.first;
+                    });
+                  },
+                  isExpanded: true,
+                ),
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '件名',
-                child: FormValue(widget.apply.title),
+                child: CustomTextField(
+                  controller: titleController,
+                  textInputType: TextInputType.text,
+                  maxLines: 1,
+                ),
               ),
               const SizedBox(height: 8),
-              widget.apply.type == '稟議' || widget.apply.type == '支払伺い'
+              type == '稟議' || type == '支払伺い'
                   ? FormLabel(
                       '金額',
-                      child: FormValue('¥ ${widget.apply.formatPrice()}'),
+                      child: CustomTextField(
+                        controller: priceController,
+                        textInputType: TextInputType.number,
+                        maxLines: 1,
+                      ),
                     )
                   : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '内容',
-                child: FormValue(widget.apply.content),
+                child: CustomTextField(
+                  controller: contentController,
+                  textInputType: TextInputType.multiline,
+                  maxLines: 30,
+                ),
               ),
               const SizedBox(height: 8),
-              widget.apply.approvalReason != ''
-                  ? FormLabel(
-                      '承認理由',
-                      child: FormValue(widget.apply.approvalReason),
-                    )
-                  : Container(),
+              FormLabel(
+                '添付ファイル',
+                child: widget.apply.file != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.apply.file);
+                          downloadFile(
+                            url: widget.apply.file,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
+              ),
               const SizedBox(height: 8),
-              widget.apply.reason != ''
-                  ? FormLabel(
-                      '否決理由',
-                      child: FormValue(widget.apply.reason),
-                    )
-                  : Container(),
+              FormLabel(
+                '添付ファイル2',
+                child: widget.apply.file2 != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.apply.file2);
+                          downloadFile(
+                            url: widget.apply.file2,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
+              ),
               const SizedBox(height: 8),
-              widget.apply.file != ''
-                  ? LinkText(
-                      label: '添付ファイル',
-                      color: kBlueColor,
-                      onTap: () {
-                        File file = File(widget.apply.file);
-                        downloadFile(
-                          url: widget.apply.file,
-                          name: p.basename(file.path),
-                        );
-                      },
-                    )
-                  : Container(),
+              FormLabel(
+                '添付ファイル3',
+                child: widget.apply.file3 != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.apply.file3);
+                          downloadFile(
+                            url: widget.apply.file3,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
+              ),
               const SizedBox(height: 8),
-              widget.apply.file2 != ''
-                  ? LinkText(
-                      label: '添付ファイル2',
-                      color: kBlueColor,
-                      onTap: () {
-                        File file = File(widget.apply.file2);
-                        downloadFile(
-                          url: widget.apply.file2,
-                          name: p.basename(file.path),
-                        );
-                      },
-                    )
-                  : Container(),
+              FormLabel(
+                '添付ファイル4',
+                child: widget.apply.file4 != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.apply.file4);
+                          downloadFile(
+                            url: widget.apply.file4,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
+              ),
               const SizedBox(height: 8),
-              widget.apply.file3 != ''
-                  ? LinkText(
-                      label: '添付ファイル3',
-                      color: kBlueColor,
-                      onTap: () {
-                        File file = File(widget.apply.file3);
-                        downloadFile(
-                          url: widget.apply.file3,
-                          name: p.basename(file.path),
-                        );
-                      },
-                    )
-                  : Container(),
-              const SizedBox(height: 8),
-              widget.apply.file4 != ''
-                  ? LinkText(
-                      label: '添付ファイル4',
-                      color: kBlueColor,
-                      onTap: () {
-                        File file = File(widget.apply.file4);
-                        downloadFile(
-                          url: widget.apply.file4,
-                          name: p.basename(file.path),
-                        );
-                      },
-                    )
-                  : Container(),
-              const SizedBox(height: 8),
-              widget.apply.file5 != ''
-                  ? LinkText(
-                      label: '添付ファイル5',
-                      color: kBlueColor,
-                      onTap: () {
-                        File file = File(widget.apply.file5);
-                        downloadFile(
-                          url: widget.apply.file5,
-                          name: p.basename(file.path),
-                        );
-                      },
-                    )
-                  : Container(),
+              FormLabel(
+                '添付ファイル5',
+                child: widget.apply.file5 != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.apply.file5);
+                          downloadFile(
+                            url: widget.apply.file5,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
+              ),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
@@ -385,16 +427,18 @@ class _DelApplyDialogState extends State<DelApplyDialog> {
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
     return CustomAlertDialog(
-      content: const Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 8),
-          Text(
-            '本当に削除しますか？',
-            style: TextStyle(color: kRedColor),
-          ),
-        ],
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
       ),
       actions: [
         CustomButton(
@@ -421,7 +465,7 @@ class _DelApplyDialogState extends State<DelApplyDialog> {
             if (!mounted) return;
             showMessage(context, '申請を削除しました', true);
             Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
         ),
       ],

@@ -8,6 +8,7 @@ import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
+import 'package:miel_work_web/widgets/checkbox_list.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
@@ -274,7 +275,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 '対応状態',
                 child: Column(
                   children: kProblemStates.map((e) {
-                    return CheckboxListTile(
+                    return CheckboxList(
                       value: states.contains(e),
                       onChanged: (value) {
                         if (states.contains(e)) {
@@ -284,7 +285,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                         }
                         setState(() {});
                       },
-                      title: Text(e),
+                      label: e,
                     );
                   }).toList(),
                 ),

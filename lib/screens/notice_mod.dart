@@ -8,6 +8,7 @@ import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/file_picker_button.dart';
@@ -82,6 +83,21 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: 'このお知らせを削除',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelNoticeDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                notice: widget.notice,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '入力内容を保存',
@@ -172,6 +188,73 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelNoticeDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final NoticeModel notice;
+
+  const DelNoticeDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.notice,
+    super.key,
+  });
+
+  @override
+  State<DelNoticeDialog> createState() => _DelNoticeDialogState();
+}
+
+class _DelNoticeDialogState extends State<DelNoticeDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final noticeProvider = Provider.of<NoticeProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await noticeProvider.delete(
+              notice: widget.notice,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'お知らせを削除しました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }

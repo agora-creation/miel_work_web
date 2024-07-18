@@ -8,12 +8,12 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/login.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_group_radio.dart';
 import 'package:miel_work_web/widgets/custom_icon_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
+import 'package:miel_work_web/widgets/group_radio.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -227,7 +227,7 @@ class _GroupSelectDialogState extends State<GroupSelectDialog> {
   Widget build(BuildContext context) {
     List<Widget> groupChildren = [];
     if (widget.homeProvider.groups.isNotEmpty) {
-      groupChildren.add(CustomGroupRadio(
+      groupChildren.add(GroupRadio(
         group: null,
         value: widget.homeProvider.currentGroup,
         onChanged: (value) {
@@ -236,7 +236,7 @@ class _GroupSelectDialogState extends State<GroupSelectDialog> {
         },
       ));
       for (OrganizationGroupModel group in widget.homeProvider.groups) {
-        groupChildren.add(CustomGroupRadio(
+        groupChildren.add(GroupRadio(
           group: group,
           value: widget.homeProvider.currentGroup,
           onChanged: (value) {

@@ -23,6 +23,7 @@ dependencies:
   shared_preferences: ^2.2.3
   page_transition: ^2.1.0
   modal_bottom_sheet: ^3.0.0
+  alert_banner: ^1.0.1
   http: ^1.2.1
   flutter_spinkit: ^5.2.1
   syncfusion_flutter_datagrid_export: ^26.1.39

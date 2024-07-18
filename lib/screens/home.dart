@@ -12,6 +12,7 @@ import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/user.dart';
+import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   NoticeService noticeService = NoticeService();
   ChatMessageService messageService = ChatMessageService();
   ProblemService problemService = ProblemService();
+  ApplyService applyService = ApplyService();
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           return CustomHomeIconCard(
-                            icon: FontAwesomeIcons.personCircleQuestion,
+                            icon: FontAwesomeIcons.faceAngry,
                             label: 'クレーム／要望',
                             color: kBlackColor,
                             backgroundColor: kWhiteColor,
@@ -163,32 +165,67 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: applyService.streamList(
+                          organizationId: loginProvider.organization?.id,
+                          searchApproval: [0],
+                          searchStart: null,
+                          searchEnd: null,
+                        ),
+                        builder: (context, snapshot) {
+                          bool alert = false;
+                          if (snapshot.hasData) {
+                            alert = applyService.checkAlert(
+                              data: snapshot.data,
+                            );
+                          }
+                          return CustomHomeIconCard(
+                            icon: FontAwesomeIcons.filePen,
+                            label: '申請',
+                            color: kBlackColor,
+                            backgroundColor: kWhiteColor,
+                            alert: alert,
+                            alertMessage: '未承認あり',
+                            onTap: () => showBottomUpScreen(
+                              context,
+                              ApplyScreen(
+                                loginProvider: loginProvider,
+                                homeProvider: homeProvider,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.filePen,
-                        label: '申請',
-                        color: kBlackColor,
-                        backgroundColor: kWhiteColor,
-                        onTap: () => showBottomUpScreen(
-                          context,
-                          ApplyScreen(
-                            loginProvider: loginProvider,
-                            homeProvider: homeProvider,
-                          ),
-                        ),
+                        label: '業務日報(工事中)',
+                        color: kWhiteColor,
+                        backgroundColor: kGreyColor,
+                        onTap: () {},
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.personCircleQuestion,
                         label: '落とし物',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
-                        onTap: () {},
+                        onTap: () async {
+                          Uri url = Uri.parse('https://hirome.co.jp/lost/');
+                          if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.handsHoldingCircle,
                         label: '貸出／返却',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
-                        onTap: () {},
+                        onTap: () async {
+                          Uri url = Uri.parse('https://hirome.co.jp/loan/');
+                          if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
                       ),
                       CustomHomeIconCard(
                         icon: FontAwesomeIcons.bolt,

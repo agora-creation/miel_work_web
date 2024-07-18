@@ -23,9 +23,11 @@ class FormValue extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              value,
-              style: const TextStyle(color: kBlackColor),
+            Expanded(
+              child: Text(
+                value,
+                style: const TextStyle(color: kBlackColor),
+              ),
             ),
             onTap != null
                 ? const FaIcon(

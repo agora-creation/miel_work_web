@@ -159,6 +159,36 @@ class ApplyProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> update({
+    required ApplyModel apply,
+    required String number,
+    required String type,
+    required String title,
+    required String content,
+    required int price,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (title == '') return '件名を入力してください';
+    if (content == '') return '内容を入力してください';
+    if (loginUser == null) return '申請の編集に失敗しました';
+    try {
+      _applyService.update({
+        'id': apply.id,
+        'number': number,
+        'type': type,
+        'title': title,
+        'content': content,
+        'price': price,
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+      });
+    } catch (e) {
+      error = '申請の編集に失敗しました';
+    }
+    return error;
+  }
+
   Future<String?> approval({
     required ApplyModel apply,
     required UserModel? loginUser,

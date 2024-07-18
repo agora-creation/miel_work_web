@@ -3,10 +3,10 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 
-class CustomApprovalUserList extends StatelessWidget {
+class ApprovalUserList extends StatelessWidget {
   final ApprovalUserModel approvalUser;
 
-  const CustomApprovalUserList({
+  const ApprovalUserList({
     required this.approvalUser,
     super.key,
   });
