@@ -58,7 +58,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'クレーム／要望追加',
+          'クレーム／要望の追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -89,7 +89,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'クレーム／要望を追加しました', true);
+              showMessage(context, 'クレーム／要望が追加されました', true);
               Navigator.pop(context);
             },
           ),

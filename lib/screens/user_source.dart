@@ -403,7 +403,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
             );
             widget.getUsers();
             if (!mounted) return;
-            showMessage(context, 'スタッフ情報を編集しました', true);
+            showMessage(context, 'スタッフ情報が変更されました', true);
             Navigator.pop(context);
           },
         ),

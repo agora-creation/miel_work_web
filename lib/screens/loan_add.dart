@@ -52,7 +52,7 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '貸出追加',
+          '貸出物の追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -79,7 +79,7 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '貸出を追加しました', true);
+              showMessage(context, '貸出物を追加しました', true);
               Navigator.pop(context);
             },
           ),

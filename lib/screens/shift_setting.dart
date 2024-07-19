@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization.dart';
@@ -40,7 +41,10 @@ class _ShiftSettingScreenState extends State<ShiftSettingScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -154,7 +158,7 @@ class _ModOrganizationShiftLoginIdDialogState
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '入力内容を保存',
+          label: '保存する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
@@ -170,7 +174,7 @@ class _ModOrganizationShiftLoginIdDialogState
             }
             await widget.loginProvider.reload();
             if (!mounted) return;
-            showMessage(context, 'ログインIDを変更しました', true);
+            showMessage(context, 'ログインIDが変更されました', true);
             Navigator.pop(context);
           },
         ),
@@ -233,7 +237,7 @@ class _ModOrganizationShiftPasswordDialogState
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '入力内容を保存',
+          label: '保存する',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
@@ -249,7 +253,7 @@ class _ModOrganizationShiftPasswordDialogState
             }
             await widget.loginProvider.reload();
             if (!mounted) return;
-            showMessage(context, 'パスワードを変更しました', true);
+            showMessage(context, 'パスワードが変更されました', true);
             Navigator.pop(context);
           },
         ),

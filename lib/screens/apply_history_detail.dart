@@ -49,7 +49,7 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請詳細',
+          '申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         shape: const Border(bottom: BorderSide(color: kGrey300Color)),
@@ -104,7 +104,10 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
               const SizedBox(height: 16),
               FormLabel(
                 '申請種別',
-                child: FormValue(widget.apply.type),
+                child: Chip(
+                  label: Text('${widget.apply.type}申請'),
+                  backgroundColor: widget.apply.typeColor(),
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(

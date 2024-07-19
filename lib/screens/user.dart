@@ -72,7 +72,10 @@ class _UserScreenState extends State<UserScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -336,7 +339,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
             );
             widget.getUsers();
             if (!mounted) return;
-            showMessage(context, 'スタッフを追加しました', true);
+            showMessage(context, 'スタッフが追加されました', true);
             Navigator.pop(context);
           },
         ),

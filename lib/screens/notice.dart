@@ -54,7 +54,10 @@ class _NoticeScreenState extends State<NoticeScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -73,7 +76,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
                   backgroundColor: kLightBlueColor,
-                  leftIcon: FontAwesomeIcons.searchengin,
+                  leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,

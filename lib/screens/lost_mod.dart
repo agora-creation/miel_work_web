@@ -72,7 +72,7 @@ class _LostModScreenState extends State<LostModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '落とし物を編集',
+          '落とし物情報の編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -114,7 +114,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '落とし物を編集しました', true);
+              showMessage(context, '落とし物情報が変更されました', true);
               Navigator.pop(context);
             },
           ),
@@ -309,7 +309,7 @@ class _LostModScreenState extends State<LostModScreen> {
                     return;
                   }
                   if (!mounted) return;
-                  showMessage(context, '返却しました', true);
+                  showMessage(context, '返却されました', true);
                   Navigator.pop(context);
                 },
               ),
@@ -378,7 +378,7 @@ class _DelLostDialogState extends State<DelLostDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '落とし物を削除しました', true);
+            showMessage(context, '落とし物情報が削除されました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
           },

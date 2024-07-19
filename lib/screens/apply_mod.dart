@@ -96,7 +96,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請を編集',
+          '申請情報を編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -173,7 +173,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '申請を編集しました', true);
+              showMessage(context, '申請情報が変更されました', true);
               Navigator.pop(context);
             },
           ),
@@ -463,7 +463,7 @@ class _DelApplyDialogState extends State<DelApplyDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '申請を削除しました', true);
+            showMessage(context, '申請情報が削除されました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
           },
@@ -549,7 +549,7 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '承認しました', true);
+            showMessage(context, '申請が承認されました', true);
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -624,7 +624,7 @@ class _RejectApplyDialogState extends State<RejectApplyDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '否決しました', true);
+            showMessage(context, '申請が否決されました', true);
             Navigator.pop(context);
             Navigator.pop(context);
           },

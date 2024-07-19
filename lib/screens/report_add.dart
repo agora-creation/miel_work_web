@@ -39,7 +39,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '業務日報追加',
+          '業務日報の追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -59,7 +59,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '日報を追加しました', true);
+              showMessage(context, '日報が追加されました', true);
               Navigator.pop(context);
             },
           ),

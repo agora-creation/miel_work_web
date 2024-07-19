@@ -59,13 +59,13 @@ class _PlanTimelineScreenState extends State<PlanTimelineScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          dateText('yyyy年MM月dd日(E)', widget.date),
+          '${dateText('yyyy年MM月dd日(E)', widget.date)}の予定',
           style: const TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '新規追加',
+            label: '予定の追加',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () {

@@ -71,7 +71,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                   CustomIconTextButton(
                     label:
                         widget.homeProvider.currentGroup?.name ?? 'グループの指定なし',
-                    labelColor: kBlackColor,
+                    labelColor: widget.homeProvider.currentGroup != null
+                        ? kBlackColor
+                        : kGreyColor,
                     backgroundColor: kWhiteColor,
                     rightIcon: FontAwesomeIcons.caretDown,
                     onPressed: () => showDialog(
@@ -321,7 +323,7 @@ class _AddGroupDialogState extends State<AddGroupDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'グループを追加しました', true);
+            showMessage(context, '新しいグループが追加されました', true);
             Navigator.pop(context);
           },
         ),
@@ -398,7 +400,7 @@ class _ModGroupDialogState extends State<ModGroupDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'グループ名を変更しました', true);
+            showMessage(context, 'グループ名が変更されました', true);
             Navigator.pop(context);
           },
         ),
@@ -468,7 +470,7 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
             }
             widget.homeProvider.currentGroupClear();
             if (!mounted) return;
-            showMessage(context, 'グループを削除しました', true);
+            showMessage(context, 'グループが削除されました', true);
             Navigator.pop(context);
           },
         ),

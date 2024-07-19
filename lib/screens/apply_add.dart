@@ -79,7 +79,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '入力内容を保存',
+            label: '申請する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -108,7 +108,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '新規申請を送信しました', true);
+              showMessage(context, '新規申請が完了しました', true);
               Navigator.pop(context);
             },
           ),

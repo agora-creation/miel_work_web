@@ -28,7 +28,7 @@ class ChatMessageProvider with ChangeNotifier {
     String? error;
     if (chat == null) return 'メッセージの送信に失敗しました';
     if (loginUser == null) return 'メッセージの送信に失敗しました';
-    if (content == '') return 'メッセージを入力してください';
+    if (content == '') return 'メッセージは必須入力です';
     try {
       String id = _messageService.id();
       List<Map> readUsers = [];

@@ -59,7 +59,13 @@ class ApplyHistorySource extends DataGridSource {
     String createdAtText = dateText('yyyy/MM/dd HH:mm', apply.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
     cells.add(CustomColumnLabel(apply.number));
-    cells.add(CustomColumnLabel('${apply.type}申請'));
+    cells.add(Align(
+      alignment: Alignment.centerLeft,
+      child: Chip(
+        label: Text('${apply.type}申請'),
+        backgroundColor: apply.typeColor(),
+      ),
+    ));
     cells.add(CustomColumnLabel(apply.title));
     cells.add(CustomColumnLabel(apply.createdUserName));
     cells.add(CustomColumnLabel(apply.approvalText()));

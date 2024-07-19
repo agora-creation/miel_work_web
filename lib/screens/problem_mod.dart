@@ -76,7 +76,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'クレーム／要望を編集',
+          'クレーム／要望情報の編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -123,7 +123,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'クレーム／要望を編集しました', true);
+              showMessage(context, 'クレーム／要望情報が編集されました', true);
               Navigator.pop(context);
             },
           ),

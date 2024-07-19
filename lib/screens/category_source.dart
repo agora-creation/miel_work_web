@@ -189,7 +189,7 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'カテゴリを削除しました', true);
+            showMessage(context, 'カテゴリが削除されました', true);
             Navigator.pop(context);
           },
         ),

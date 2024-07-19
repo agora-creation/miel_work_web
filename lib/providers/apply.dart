@@ -32,10 +32,10 @@ class ApplyProvider with ChangeNotifier {
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (organization == null) return '申請に失敗しました';
-    if (title == '') return '件名を入力してください';
-    if (content == '') return '内容を入力してください';
-    if (loginUser == null) return '申請に失敗しました';
+    if (organization == null) return '新規申請に失敗しました';
+    if (title == '') return '件名は必須入力です';
+    if (content == '') return '内容を必須入力です';
+    if (loginUser == null) return '新規申請に失敗しました';
     try {
       String id = _applyService.id();
       String file = '';
@@ -149,12 +149,12 @@ class ApplyProvider with ChangeNotifier {
           _fmService.send(
             token: user.token,
             title: title,
-            body: '申請が提出されました。',
+            body: '申請が提出されました',
           );
         }
       }
     } catch (e) {
-      error = '申請に失敗しました';
+      error = '新規申請に失敗しました';
     }
     return error;
   }
@@ -169,9 +169,9 @@ class ApplyProvider with ChangeNotifier {
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (title == '') return '件名を入力してください';
-    if (content == '') return '内容を入力してください';
-    if (loginUser == null) return '申請の編集に失敗しました';
+    if (title == '') return '件名は必須入力です';
+    if (content == '') return '内容を必須入力です';
+    if (loginUser == null) return '申請情報の編集に失敗しました';
     try {
       _applyService.update({
         'id': apply.id,
@@ -184,7 +184,7 @@ class ApplyProvider with ChangeNotifier {
         'createdUserName': loginUser.name,
       });
     } catch (e) {
-      error = '申請の編集に失敗しました';
+      error = '申請情報の編集に失敗しました';
     }
     return error;
   }
@@ -196,7 +196,7 @@ class ApplyProvider with ChangeNotifier {
     required String approvalReason,
   }) async {
     String? error;
-    if (loginUser == null) return '承認に失敗しました';
+    if (loginUser == null) return '申請の承認に失敗しました';
     try {
       List<Map> approvalUsers = [];
       if (apply.approvalUsers.isNotEmpty) {
@@ -230,7 +230,7 @@ class ApplyProvider with ChangeNotifier {
             _fmService.send(
               token: user.token,
               title: apply.title,
-              body: '申請が承認されました。',
+              body: '申請が承認されました',
             );
           }
         }
@@ -243,7 +243,7 @@ class ApplyProvider with ChangeNotifier {
         });
       }
     } catch (e) {
-      error = '承認に失敗しました';
+      error = '申請の承認に失敗しました';
     }
     return error;
   }
@@ -254,7 +254,7 @@ class ApplyProvider with ChangeNotifier {
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (loginUser == null) return '否決に失敗しました';
+    if (loginUser == null) return '申請の否決に失敗しました';
     try {
       _applyService.update({
         'id': apply.id,
@@ -277,7 +277,7 @@ class ApplyProvider with ChangeNotifier {
         }
       }
     } catch (e) {
-      error = '否決に失敗しました';
+      error = '申請の否決に失敗しました';
     }
     return error;
   }
@@ -326,7 +326,7 @@ class ApplyProvider with ChangeNotifier {
             .delete();
       }
     } catch (e) {
-      error = '申請の削除に失敗しました';
+      error = '申請情報の削除に失敗しました';
     }
     return error;
   }

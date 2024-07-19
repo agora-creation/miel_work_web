@@ -49,8 +49,8 @@ class LoginProvider with ChangeNotifier {
     required String password,
   }) async {
     String? error;
-    if (email == '') return 'メールアドレスを入力してください';
-    if (password == '') return 'パスワードを入力してください';
+    if (email == '') return 'メールアドレスは必須入力です';
+    if (password == '') return 'パスワードは必須入力です';
     try {
       _status = AuthStatus.authenticating;
       notifyListeners();
@@ -103,7 +103,7 @@ class LoginProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return 'ログインIDの変更に失敗しました';
-    if (loginId == '') return 'ログインIDを入力してください';
+    if (loginId == '') return 'ログインIDは必須入力です';
     try {
       _organizationService.update({
         'id': organization.id,
@@ -121,7 +121,7 @@ class LoginProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return 'パスワードの変更に失敗しました';
-    if (password == '') return 'パスワードを入力してください';
+    if (password == '') return 'パスワードは必須入力です';
     try {
       _organizationService.update({
         'id': organization.id,
@@ -139,7 +139,7 @@ class LoginProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return 'ログインIDの変更に失敗しました';
-    if (shiftLoginId == '') return 'ログインIDを入力してください';
+    if (shiftLoginId == '') return 'ログインIDは必須入力です';
     try {
       _organizationService.update({
         'id': organization.id,
@@ -157,7 +157,7 @@ class LoginProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return 'パスワードの変更に失敗しました';
-    if (shiftPassword == '') return 'パスワードを入力してください';
+    if (shiftPassword == '') return 'パスワードは必須入力です';
     try {
       _organizationService.update({
         'id': organization.id,

@@ -29,9 +29,9 @@ class LostProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return '落とし物の追加に失敗しました';
-    if (discoveryPlace == '') return '発見場所を入力してください';
-    if (discoveryUser == '') return '発見者を入力してください';
-    if (itemName == '') return '品名を入力してください';
+    if (discoveryPlace == '') return '発見場所は必須入力です';
+    if (discoveryUser == '') return '発見者は必須入力です';
+    if (itemName == '') return '品名は必須入力です';
     if (loginUser == null) return '落とし物の追加に失敗しました';
     try {
       String id = _lostService.id();
@@ -72,7 +72,7 @@ class LostProvider with ChangeNotifier {
           if (user.id == loginUser.id) continue;
           _fmService.send(
             token: user.token,
-            title: '落とし物が追加されました',
+            title: '落とし物がありました',
             body: itemName,
           );
         }
@@ -95,10 +95,10 @@ class LostProvider with ChangeNotifier {
     required UserModel? loginUser,
   }) async {
     String? error;
-    if (organization == null) return '落とし物の編集に失敗しました';
-    if (discoveryPlace == '') return '発見場所を入力してください';
-    if (discoveryUser == '') return '発見者を入力してください';
-    if (itemName == '') return '品名を入力してください';
+    if (organization == null) return '落とし物情報の編集に失敗しました';
+    if (discoveryPlace == '') return '発見場所は必須入力です';
+    if (discoveryUser == '') return '発見者は必須入力です';
+    if (itemName == '') return '品名は必須入力です';
     if (loginUser == null) return '落とし物の編集に失敗しました';
     try {
       String? itemImage;
@@ -148,7 +148,7 @@ class LostProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return '落とし物の返却に失敗しました';
-    if (returnUser == '') return '返却スタッフを入力してください';
+    if (returnUser == '') return '返却スタッフは必須入力です';
     if (loginUser == null) return '落とし物の返却に失敗しました';
     try {
       Uint8List? uploadFile = await signImageController.toPngBytes();
@@ -181,7 +181,7 @@ class LostProvider with ChangeNotifier {
         'id': lost.id,
       });
     } catch (e) {
-      error = '落とし物の削除に失敗しました';
+      error = '落とし物情報の削除に失敗しました';
     }
     return error;
   }

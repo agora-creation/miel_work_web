@@ -52,7 +52,10 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -71,7 +74,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
                   backgroundColor: kLightBlueColor,
-                  leftIcon: FontAwesomeIcons.searchengin,
+                  leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,

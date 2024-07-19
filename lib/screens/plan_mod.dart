@@ -144,7 +144,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '予定を編集',
+          '予定の編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -191,7 +191,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '予定を編集しました', true);
+              showMessage(context, '予定が変更されました', true);
               Navigator.pop(context);
             },
           ),

@@ -135,7 +135,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'お知らせを編集しました', true);
+              showMessage(context, 'お知らせが編集されました', true);
               Navigator.pop(context);
             },
           ),
@@ -265,7 +265,7 @@ class _DelNoticeDialogState extends State<DelNoticeDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, 'お知らせを削除しました', true);
+            showMessage(context, 'お知らせが削除されました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
           },

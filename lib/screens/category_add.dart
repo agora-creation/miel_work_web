@@ -45,7 +45,7 @@ class _CategoryAddScreenState extends State<CategoryAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'カテゴリ新規追加',
+          'カテゴリの追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -66,7 +66,7 @@ class _CategoryAddScreenState extends State<CategoryAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'カテゴリを追加しました', true);
+              showMessage(context, '新しいカテゴリが追加されました', true);
               Navigator.pop(context);
             },
           ),

@@ -46,12 +46,15 @@ class _ApplyScreenState extends State<ApplyScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '申請',
+          '各種申請',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -70,7 +73,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
                   backgroundColor: kLightBlueColor,
-                  leftIcon: FontAwesomeIcons.searchengin,
+                  leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
                       context: context,

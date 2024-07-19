@@ -74,7 +74,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '貸出を編集',
+          '貸出情報の編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -117,7 +117,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '貸出を編集しました', true);
+              showMessage(context, '貸出情報が変更されました', true);
               Navigator.pop(context);
             },
           ),
@@ -339,7 +339,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                     return;
                   }
                   if (!mounted) return;
-                  showMessage(context, '返却しました', true);
+                  showMessage(context, '返却されました', true);
                   Navigator.pop(context);
                 },
               ),
@@ -408,7 +408,7 @@ class _DelLoanDialogState extends State<DelLoanDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '貸出を削除しました', true);
+            showMessage(context, '貸出情報が削除されました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
           },

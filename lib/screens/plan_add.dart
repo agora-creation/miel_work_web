@@ -121,7 +121,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '予定新規追加',
+          '予定の追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -152,7 +152,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '予定を追加しました', true);
+              showMessage(context, '新しい予定が追加されました', true);
               Navigator.pop(context);
             },
           ),

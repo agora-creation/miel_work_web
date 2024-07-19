@@ -62,7 +62,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'メッセージを送信しました', true);
+              showMessage(context, 'メッセージが送信されました', true);
               Navigator.pop(context);
             },
           ),

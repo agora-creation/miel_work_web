@@ -49,7 +49,7 @@ class HomeProvider with ChangeNotifier {
   }) async {
     String? error;
     if (organization == null) return 'グループの追加に失敗しました';
-    if (name == '') return 'グループ名を入力してください';
+    if (name == '') return 'グループ名は必須入力です';
     try {
       String groupId = _groupService.id(organizationId: organization.id);
       _groupService.create({
@@ -100,7 +100,7 @@ class HomeProvider with ChangeNotifier {
     String? error;
     if (organization == null) return 'グループ名の変更に失敗しました';
     if (group == null) return 'グループ名の変更に失敗しました';
-    if (name == '') return 'グループ名を入力してください';
+    if (name == '') return 'グループ名は必須入力です';
     try {
       _groupService.update({
         'id': group.id,
@@ -132,7 +132,7 @@ class HomeProvider with ChangeNotifier {
     String? error;
     if (organization == null) return 'ログインIDの変更に失敗しました';
     if (group == null) return 'ログインIDの変更に失敗しました';
-    if (loginId == '') return 'ログインIDを入力してください';
+    if (loginId == '') return 'ログインIDは必須入力です';
     try {
       _groupService.update({
         'id': group.id,
@@ -154,7 +154,7 @@ class HomeProvider with ChangeNotifier {
     String? error;
     if (organization == null) return 'パスワードの変更に失敗しました';
     if (group == null) return 'パスワードの変更に失敗しました';
-    if (password == '') return 'パスワードを入力してください';
+    if (password == '') return 'パスワードは必須入力です';
     try {
       _groupService.update({
         'id': group.id,

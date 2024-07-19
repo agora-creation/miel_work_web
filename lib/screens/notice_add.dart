@@ -95,7 +95,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, 'お知らせを追加しました', true);
+              showMessage(context, '新しいお知らせが追加されました', true);
               Navigator.pop(context);
             },
           ),

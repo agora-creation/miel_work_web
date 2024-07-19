@@ -85,7 +85,10 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.close, color: kBlackColor),
+            icon: const FaIcon(
+              FontAwesomeIcons.xmark,
+              color: kBlackColor,
+            ),
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
@@ -104,7 +107,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   label: 'カテゴリ検索: $searchText',
                   labelColor: kWhiteColor,
                   backgroundColor: kLightBlueColor,
-                  leftIcon: FontAwesomeIcons.searchengin,
+                  leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () => showDialog(
                     context: context,
                     builder: (context) => SearchCategoryDialog(
