@@ -164,21 +164,26 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                   Expanded(
                     child: FormLabel(
                       '対応項目',
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: type,
-                        items: kProblemTypes.map((e) {
-                          return DropdownMenuItem(
+                      child: Column(
+                        children: kProblemTypes.map((e) {
+                          return RadioListTile(
+                            title: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Chip(
+                                label: Text(e),
+                                backgroundColor: generateProblemColor(e),
+                              ),
+                            ),
                             value: e,
-                            child: Text(e),
+                            groupValue: type,
+                            onChanged: (value) {
+                              if (value == null) return;
+                              setState(() {
+                                type = value;
+                              });
+                            },
                           );
                         }).toList(),
-                        onChanged: (value) {
-                          if (value == null) return;
-                          setState(() {
-                            type = value;
-                          });
-                        },
                       ),
                     ),
                   ),

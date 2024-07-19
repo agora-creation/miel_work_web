@@ -135,6 +135,9 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       currentGroup: widget.homeProvider.currentGroup,
                     );
                   }
+                  if (notices.isEmpty) {
+                    return const Center(child: Text('お知らせはありません'));
+                  }
                   return ListView.builder(
                     itemCount: notices.length,
                     itemBuilder: (context, index) {

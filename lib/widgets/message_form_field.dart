@@ -64,9 +64,7 @@ class MessageFormField extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: GestureDetector(
                 onTap: messagePressed,
-                child: Text(
-                  'メッセージを入力...',
-                ),
+                child: const Text('メッセージを入力...'),
               ),
             ),
           ),

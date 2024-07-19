@@ -136,20 +136,26 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '申請種別',
-                child: DropdownButton<String>(
-                  value: type,
-                  items: kApplyTypes.map((e) {
-                    return DropdownMenuItem(
+                child: Column(
+                  children: kApplyTypes.map((e) {
+                    return RadioListTile(
+                      title: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Chip(
+                          label: Text(e),
+                          backgroundColor: generateApplyColor(e),
+                        ),
+                      ),
                       value: e,
-                      child: Text('$e申請'),
+                      groupValue: type,
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setState(() {
+                          type = value;
+                        });
+                      },
                     );
                   }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      type = value ?? kApplyTypes.first;
-                    });
-                  },
-                  isExpanded: true,
                 ),
               ),
               const SizedBox(height: 8),

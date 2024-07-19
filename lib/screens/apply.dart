@@ -151,6 +151,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                       currentGroup: widget.homeProvider.currentGroup,
                     );
                   }
+                  if (applies.isEmpty) {
+                    return const Center(child: Text('承認待ちの申請はありません'));
+                  }
                   return ListView.builder(
                     itemCount: applies.length,
                     itemBuilder: (context, index) {

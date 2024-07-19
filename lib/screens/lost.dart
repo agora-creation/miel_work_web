@@ -148,6 +148,9 @@ class _LostScreenState extends State<LostScreen> {
                   if (snapshot.hasData) {
                     losts = lostService.generateList(data: snapshot.data);
                   }
+                  if (losts.isEmpty) {
+                    return const Center(child: Text('落とし物はありません'));
+                  }
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

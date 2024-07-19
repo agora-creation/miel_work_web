@@ -148,6 +148,9 @@ class _LoanScreenState extends State<LoanScreen> {
                   if (snapshot.hasData) {
                     loans = loanService.generateList(data: snapshot.data);
                   }
+                  if (loans.isEmpty) {
+                    return const Center(child: Text('貸出物はありません'));
+                  }
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

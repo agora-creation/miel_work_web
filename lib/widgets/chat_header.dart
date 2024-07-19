@@ -34,7 +34,7 @@ class ChatHeader extends StatelessWidget {
             children: [
               IconButton(
                 icon: const FaIcon(
-                  FontAwesomeIcons.searchengin,
+                  FontAwesomeIcons.magnifyingGlass,
                   color: kBlueColor,
                   size: 18,
                 ),
