@@ -56,9 +56,12 @@ class LoanHistorySource extends DataGridSource {
       onTap: () => showDialog(
         context: context,
         builder: (context) => CustomAlertDialog(
-          content: Image.network(
-            loan.signImage,
-            fit: BoxFit.cover,
+          content: SizedBox(
+            width: 600,
+            child: Image.network(
+              loan.signImage,
+              fit: BoxFit.cover,
+            ),
           ),
           actions: [
             CustomButton(

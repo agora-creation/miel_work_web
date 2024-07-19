@@ -56,9 +56,12 @@ class LostHistorySource extends DataGridSource {
       onTap: () => showDialog(
         context: context,
         builder: (context) => CustomAlertDialog(
-          content: Image.network(
-            lost.signImage,
-            fit: BoxFit.cover,
+          content: SizedBox(
+            width: 600,
+            child: Image.network(
+              lost.signImage,
+              fit: BoxFit.cover,
+            ),
           ),
           actions: [
             CustomButton(
