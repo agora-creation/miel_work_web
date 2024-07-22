@@ -21,6 +21,7 @@ const kLightBlue800Color = Color(0xFF0277BD);
 const kCyanColor = Color(0xFF00BCD4);
 const kOrangeColor = Color(0xFFFF9800);
 const kOrange300Color = Color(0xFFFFB74D);
+const kDeepOrangeColor = Color(0xFFFF5722);
 const kYellowColor = Color(0xFFFFEB3B);
 const kGreenColor = Color(0xFF4CAF50);
 const kGreen200Color = Color(0xFFA5D6A7);

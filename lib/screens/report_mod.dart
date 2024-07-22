@@ -2,39 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 
-class ReportAddScreen extends StatefulWidget {
+class ReportModScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final DateTime day;
+  final ReportModel report;
 
-  const ReportAddScreen({
+  const ReportModScreen({
     required this.loginProvider,
     required this.homeProvider,
-    required this.day,
+    required this.report,
     super.key,
   });
 
   @override
-  State<ReportAddScreen> createState() => _ReportAddScreenState();
+  State<ReportModScreen> createState() => _ReportModScreenState();
 }
 
-class _ReportAddScreenState extends State<ReportAddScreen> {
-  DateTime createdAt = DateTime.now();
-
-  @override
-  void initState() {
-    createdAt = widget.day;
-    super.initState();
-  }
-
+class _ReportModScreenState extends State<ReportModScreen> {
   @override
   Widget build(BuildContext context) {
     final reportProvider = Provider.of<ReportProvider>(context);
@@ -51,19 +45,33 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          '${dateText('MM月dd日(E)', widget.day)}の日報',
+          '${dateText('MM月dd日(E)', widget.report.createdAt)}の日報',
           style: const TextStyle(color: kBlackColor),
         ),
         actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelReportDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                report: widget.report,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
-              String? error = await reportProvider.create(
-                organization: widget.loginProvider.organization,
-                createdAt: createdAt,
+              String? error = await reportProvider.update(
+                report: widget.report,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -1003,6 +1011,73 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelReportDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ReportModel report;
+
+  const DelReportDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.report,
+    super.key,
+  });
+
+  @override
+  State<DelReportDialog> createState() => _DelReportDialogState();
+}
+
+class _DelReportDialogState extends State<DelReportDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final reportProvider = Provider.of<ReportProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await reportProvider.delete(
+              report: widget.report,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '日報が削除されました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }

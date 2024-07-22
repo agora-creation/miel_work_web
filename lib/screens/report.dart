@@ -7,13 +7,12 @@ import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/report_add.dart';
-import 'package:miel_work_web/screens/report_source.dart';
+import 'package:miel_work_web/screens/report_mod.dart';
 import 'package:miel_work_web/services/report.dart';
-import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/report_list.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ReportScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -31,16 +30,28 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   ReportService reportService = ReportService();
-  DateTime? searchStart;
-  DateTime? searchEnd;
+  DateTime searchMonth = DateTime.now();
+  List<DateTime> days = [];
+
+  void _changeMonth(DateTime value) {
+    searchMonth = value;
+    days = generateDays(value);
+    setState(() {});
+  }
+
+  void _init() {
+    days = generateDays(searchMonth);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String searchText = '指定なし';
-    if (searchStart != null && searchEnd != null) {
-      searchText =
-          '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
-    }
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -71,50 +82,21 @@ class _ReportScreenState extends State<ReportScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomIconTextButton(
-                  label: '期間検索: $searchText',
+                  label: '年月検索: ${dateText('yyyy年MM月', searchMonth)}',
                   labelColor: kWhiteColor,
                   backgroundColor: kLightBlueColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
-                    var selected = await showDataRangePickerDialog(
+                    DateTime? selected = await showMonthPicker(
                       context: context,
-                      startValue: searchStart,
-                      endValue: searchEnd,
+                      initialDate: searchMonth,
+                      locale: const Locale('ja'),
                     );
-                    if (selected != null &&
-                        selected.first != null &&
-                        selected.last != null) {
-                      var diff = selected.last!.difference(selected.first!);
-                      int diffDays = diff.inDays;
-                      if (diffDays > 31) {
-                        if (!mounted) return;
-                        showMessage(context, '1ヵ月以上の範囲が選択されています', false);
-                        return;
-                      }
-                      searchStart = selected.first;
-                      searchEnd = selected.last;
-                      setState(() {});
-                    }
+                    if (selected == null) return;
+                    _changeMonth(selected);
                   },
                 ),
-                CustomIconTextButton(
-                  label: '新規追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  leftIcon: FontAwesomeIcons.plus,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.rightToLeft,
-                        child: ReportAddScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                Container(),
               ],
             ),
             const SizedBox(height: 8),
@@ -122,8 +104,7 @@ class _ReportScreenState extends State<ReportScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: reportService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  searchStart: searchStart,
-                  searchEnd: searchEnd,
+                  searchMonth: searchMonth,
                 ),
                 builder: (context, snapshot) {
                   List<ReportModel> reports = [];
@@ -132,26 +113,54 @@ class _ReportScreenState extends State<ReportScreen> {
                       data: snapshot.data,
                     );
                   }
-                  return CustomDataGrid(
-                    source: ReportSource(
-                      context: context,
-                      reports: reports,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'createdAt',
-                        label: const CustomColumnLabel('作成日'),
-                      ),
-                      GridColumn(
-                        columnName: 'createdUserName',
-                        label: const CustomColumnLabel('作成者'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 200,
-                      ),
-                    ],
+                  return ListView.builder(
+                    itemCount: days.length,
+                    itemBuilder: (context, index) {
+                      DateTime day = days[index];
+                      ReportModel? report;
+                      if (reports.isNotEmpty) {
+                        for (ReportModel tmpReport in reports) {
+                          String dayKey = dateText(
+                            'yyyy-MM-dd',
+                            tmpReport.createdAt,
+                          );
+                          if (day == DateTime.parse(dayKey)) {
+                            report = tmpReport;
+                          }
+                        }
+                      }
+                      return ReportList(
+                        day: day,
+                        isReport: report != null,
+                        onTap: () {
+                          if (report != null) {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: ReportModScreen(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  report: report,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: ReportAddScreen(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  day: day,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
                   );
                 },
               ),
