@@ -5,7 +5,9 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,38 @@ class ReportAddScreen extends StatefulWidget {
 
 class _ReportAddScreenState extends State<ReportAddScreen> {
   DateTime createdAt = DateTime.now();
+  String workUser1Name = '';
+  String workUser1Time = '';
+  String workUser2Name = '';
+  String workUser2Time = '';
+  String workUser3Name = '';
+  String workUser3Time = '';
+  String workUser4Name = '';
+  String workUser4Time = '';
+  String workUser5Name = '';
+  String workUser5Time = '';
+  String workUser6Name = '';
+  String workUser6Time = '';
+  String workUser7Name = '';
+  String workUser7Time = '';
+  String workUser8Name = '';
+  String workUser8Time = '';
+  String workUser9Name = '';
+  String workUser9Time = '';
+  String workUser10Name = '';
+  String workUser10Time = '';
+  String workUser11Name = '';
+  String workUser11Time = '';
+  String workUser12Name = '';
+  String workUser12Time = '';
+  String workUser13Name = '';
+  String workUser13Time = '';
+  String workUser14Name = '';
+  String workUser14Time = '';
+  String workUser15Name = '';
+  String workUser15Time = '';
+  String workUser16Name = '';
+  String workUser16Time = '';
 
   @override
   void initState() {
@@ -119,12 +153,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('①'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser1Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser1Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser1Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser1Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser1Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser1Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -135,12 +211,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('②'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser2Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser2Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser2Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser2Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser2Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser2Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -151,12 +269,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('③'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser3Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser3Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser3Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser3Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser3Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser3Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -167,12 +327,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('④'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser4Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser4Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser4Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser4Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser4Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser4Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -183,12 +385,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('⑤'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser5Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser5Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser5Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser5Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser5Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser5Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -199,12 +443,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('⑥'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser6Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser6Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser6Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser6Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser6Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser6Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -215,12 +501,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('⑦'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser7Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser7Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser7Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser7Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser7Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser7Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -231,12 +559,54 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   child: Text('⑧'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser8Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser8Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser8Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser8Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser8Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser8Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -255,15 +625,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('①'),
+                                  child: Text('⑨'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser9Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser9Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser9Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser9Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser9Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser9Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -271,15 +683,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('②'),
+                                  child: Text('⑩'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser10Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser10Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser10Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser10Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser10Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser10Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -287,15 +741,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('③'),
+                                  child: Text('⑪'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser11Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser11Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser11Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser11Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser11Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser11Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -314,15 +810,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('①'),
+                                  child: Text('⑫'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser12Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser12Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser12Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser12Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser12Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser12Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -330,15 +868,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('②'),
+                                  child: Text('⑬'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser13Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser13Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser13Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser13Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser13Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser13Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -346,15 +926,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('③'),
+                                  child: Text('⑭'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser14Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser14Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser14Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser14Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser14Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser14Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -373,15 +995,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('①'),
+                                  child: Text('⑮'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser15Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser15Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser15Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser15Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser15Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser15Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -389,31 +1053,57 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('②'),
+                                  child: Text('⑯'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser16Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser16Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser16Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
-                            TableRow(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text('③'),
-                                ),
-                                FormValue(
-                                  '',
-                                  onTap: () {},
-                                ),
-                                FormValue(
-                                  '',
-                                  onTap: () {},
+                                  workUser16Time,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: workUser16Time,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              workUser16Time = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

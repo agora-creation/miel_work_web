@@ -10,6 +10,12 @@ class ReportProvider with ChangeNotifier {
   Future<String?> create({
     required OrganizationModel? organization,
     required DateTime createdAt,
+    required String workUser1Name,
+    required String workUser1Time,
+    required String workUser2Name,
+    required String workUser2Time,
+    required String workUser3Name,
+    required String workUser3Time,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -20,6 +26,7 @@ class ReportProvider with ChangeNotifier {
       _reportService.create({
         'id': id,
         'organizationId': organization.id,
+        'approval': 0,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
         'createdAt': createdAt,
@@ -45,6 +52,23 @@ class ReportProvider with ChangeNotifier {
       });
     } catch (e) {
       error = '日報の保存に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> approval({
+    required ReportModel report,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (loginUser == null) return '日報の承認に失敗しました';
+    try {
+      _reportService.update({
+        'id': report.id,
+        'approval': 1,
+      });
+    } catch (e) {
+      error = '日報の承認に失敗しました';
     }
     return error;
   }

@@ -50,6 +50,22 @@ class _ReportModScreenState extends State<ReportModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: '承認する',
+            labelColor: kWhiteColor,
+            backgroundColor: kDeepOrangeColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ApprovalReportDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                report: widget.report,
+              ),
+            ),
+            disabled: widget.loginProvider.user?.president == false,
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '削除する',
             labelColor: kWhiteColor,
             backgroundColor: kRedColor,
@@ -1926,6 +1942,69 @@ class _DelReportDialogState extends State<DelReportDialog> {
             showMessage(context, '日報が削除されました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ApprovalReportDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ReportModel report;
+
+  const ApprovalReportDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.report,
+    super.key,
+  });
+
+  @override
+  State<ApprovalReportDialog> createState() => _ApprovalReportDialogState();
+}
+
+class _ApprovalReportDialogState extends State<ApprovalReportDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final reportProvider = Provider.of<ReportProvider>(context);
+    return CustomAlertDialog(
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 8),
+          Text('本当に承認しますか？'),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '承認する',
+          labelColor: kWhiteColor,
+          backgroundColor: kDeepOrangeColor,
+          onPressed: () async {
+            String? error = await reportProvider.approval(
+              report: widget.report,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '日報が承認されました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
       ],

@@ -131,7 +131,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       }
                       return ReportList(
                         day: day,
-                        isReport: report != null,
+                        report: report,
                         onTap: () {
                           if (report != null) {
                             Navigator.push(
