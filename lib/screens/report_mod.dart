@@ -215,6 +215,125 @@ class _ReportModScreenState extends State<ReportModScreen> {
     workUser15Time = widget.report.workUser15Time;
     workUser16Name = widget.report.workUser16Name;
     workUser16Time = widget.report.workUser16Time;
+    visitCount1_12 = widget.report.visitCount1_12;
+    visitCount1_20 = widget.report.visitCount1_20;
+    visitCount1_22 = widget.report.visitCount1_22;
+    visitCount2_12 = widget.report.visitCount2_12;
+    visitCount2_20 = widget.report.visitCount2_20;
+    visitCount2_22 = widget.report.visitCount2_22;
+    visitCount3_12 = widget.report.visitCount3_12;
+    visitCount3_20 = widget.report.visitCount3_20;
+    visitCount3_22 = widget.report.visitCount3_22;
+    visitCount4_12 = widget.report.visitCount4_12;
+    visitCount4_20 = widget.report.visitCount4_20;
+    visitCount4_22 = widget.report.visitCount4_22;
+    visitCount5_12 = widget.report.visitCount5_12;
+    visitCount5_20 = widget.report.visitCount5_20;
+    visitCount5_22 = widget.report.visitCount5_22;
+    visitCount6_12 = widget.report.visitCount6_12;
+    visitCount6_20 = widget.report.visitCount6_20;
+    visitCount6_22 = widget.report.visitCount6_22;
+    lockerUse = widget.report.lockerUse;
+    lockerLost = widget.report.lockerLost;
+    lockerRecovery = widget.report.lockerRecovery;
+    event1 = widget.report.event1;
+    event2 = widget.report.event2;
+    marketing = widget.report.marketing;
+    interview = widget.report.interview;
+    openSquare = widget.report.openSquare;
+    openSquareFee = widget.report.openSquareFee;
+    openSquareStatus = widget.report.openSquareStatus;
+    meeting = widget.report.meeting;
+    mailCheck10Name = widget.report.mailCheck10Name;
+    mailCheck10Status = widget.report.mailCheck10Status;
+    mailCheck12Name = widget.report.mailCheck12Name;
+    mailCheck12Status = widget.report.mailCheck12Status;
+    mailCheck18Name = widget.report.mailCheck18Name;
+    mailCheck18Status = widget.report.mailCheck18Status;
+    mailCheck22Name = widget.report.mailCheck22Name;
+    mailCheck22Status = widget.report.mailCheck22Status;
+    warning19Status = widget.report.warning19Status;
+    warning19Deal = widget.report.warning19Deal;
+    warning23Status = widget.report.warning23Status;
+    warning23Deal = widget.report.warning23Deal;
+    advance1 = widget.report.advance1;
+    advance2 = widget.report.advance2;
+    advance3 = widget.report.advance3;
+    repair = widget.report.repair;
+    repairStatus = widget.report.repairStatus;
+    repairDeal = widget.report.repairDeal;
+    problem = widget.report.problem;
+    problemDeal = widget.report.problemDeal;
+    pamphlet1Status = widget.report.pamphlet1Status;
+    pamphlet1Name = widget.report.pamphlet1Name;
+    pamphlet1Fee = widget.report.pamphlet1Fee;
+    pamphlet2Status = widget.report.pamphlet2Status;
+    pamphlet2Name = widget.report.pamphlet2Name;
+    pamphlet2Fee = widget.report.pamphlet2Fee;
+    pamphlet3Status = widget.report.pamphlet3Status;
+    pamphlet3Name = widget.report.pamphlet3Name;
+    pamphlet3Fee = widget.report.pamphlet3Fee;
+    pamphlet4Status = widget.report.pamphlet4Status;
+    pamphlet4Name = widget.report.pamphlet4Name;
+    pamphlet4Fee = widget.report.pamphlet4Fee;
+    pamphlet5Status = widget.report.pamphlet5Status;
+    pamphlet5Name = widget.report.pamphlet5Name;
+    pamphlet5Fee = widget.report.pamphlet5Fee;
+    pamphlet6Status = widget.report.pamphlet6Status;
+    pamphlet6Name = widget.report.pamphlet6Name;
+    pamphlet6Fee = widget.report.pamphlet6Fee;
+    pamphlet7Status = widget.report.pamphlet7Status;
+    pamphlet7Name = widget.report.pamphlet7Name;
+    pamphlet7Fee = widget.report.pamphlet7Fee;
+    equipment1Type = widget.report.equipment1Type;
+    equipment1Name = widget.report.equipment1Name;
+    equipment1Vendor = widget.report.equipment1Vendor;
+    equipment1Delivery = widget.report.equipment1Delivery;
+    equipment1Client = widget.report.equipment1Client;
+    equipment2Type = widget.report.equipment2Type;
+    equipment2Name = widget.report.equipment2Name;
+    equipment2Vendor = widget.report.equipment2Vendor;
+    equipment2Delivery = widget.report.equipment2Delivery;
+    equipment2Client = widget.report.equipment2Client;
+    equipment3Type = widget.report.equipment3Type;
+    equipment3Name = widget.report.equipment3Name;
+    equipment3Vendor = widget.report.equipment3Vendor;
+    equipment3Delivery = widget.report.equipment3Delivery;
+    equipment3Client = widget.report.equipment3Client;
+    equipment4Type = widget.report.equipment4Type;
+    equipment4Name = widget.report.equipment4Name;
+    equipment4Vendor = widget.report.equipment4Vendor;
+    equipment4Delivery = widget.report.equipment4Delivery;
+    equipment4Client = widget.report.equipment4Client;
+    equipment5Type = widget.report.equipment5Type;
+    equipment5Name = widget.report.equipment5Name;
+    equipment5Vendor = widget.report.equipment5Vendor;
+    equipment5Delivery = widget.report.equipment5Delivery;
+    equipment5Client = widget.report.equipment5Client;
+    equipment6Type = widget.report.equipment6Type;
+    equipment6Name = widget.report.equipment6Name;
+    equipment6Vendor = widget.report.equipment6Vendor;
+    equipment6Delivery = widget.report.equipment6Delivery;
+    equipment6Client = widget.report.equipment6Client;
+    contact = widget.report.contact;
+    lastConfirm = widget.report.lastConfirm;
+    agenda = widget.report.agenda;
+    confirm1 = widget.report.confirm1;
+    confirm2 = widget.report.confirm2;
+    confirm3 = widget.report.confirm3;
+    confirm4 = widget.report.confirm4;
+    confirm5 = widget.report.confirm5;
+    confirm6 = widget.report.confirm6;
+    confirm7 = widget.report.confirm7;
+    confirm8 = widget.report.confirm8;
+    confirm9 = widget.report.confirm9;
+    confirm10 = widget.report.confirm10;
+    confirm11 = widget.report.confirm11;
+    confirm12 = widget.report.confirm12;
+    passport = widget.report.passport;
+    passportCount1 = widget.report.passportCount1;
+    passportCount2 = widget.report.passportCount2;
+    passportCount3 = widget.report.passportCount3;
     super.initState();
   }
 
@@ -309,6 +428,125 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 workUser15Time: workUser15Time,
                 workUser16Name: workUser16Name,
                 workUser16Time: workUser16Time,
+                visitCount1_12: visitCount1_12,
+                visitCount1_20: visitCount1_20,
+                visitCount1_22: visitCount1_22,
+                visitCount2_12: visitCount2_12,
+                visitCount2_20: visitCount2_20,
+                visitCount2_22: visitCount2_22,
+                visitCount3_12: visitCount3_12,
+                visitCount3_20: visitCount3_20,
+                visitCount3_22: visitCount3_22,
+                visitCount4_12: visitCount4_12,
+                visitCount4_20: visitCount4_20,
+                visitCount4_22: visitCount4_22,
+                visitCount5_12: visitCount5_12,
+                visitCount5_20: visitCount5_20,
+                visitCount5_22: visitCount5_22,
+                visitCount6_12: visitCount6_12,
+                visitCount6_20: visitCount6_20,
+                visitCount6_22: visitCount6_22,
+                lockerUse: lockerUse,
+                lockerLost: lockerLost,
+                lockerRecovery: lockerRecovery,
+                event1: event1,
+                event2: event2,
+                marketing: marketing,
+                interview: interview,
+                openSquare: openSquare,
+                openSquareFee: openSquareFee,
+                openSquareStatus: openSquareStatus,
+                meeting: meeting,
+                mailCheck10Name: mailCheck10Name,
+                mailCheck10Status: mailCheck10Status,
+                mailCheck12Name: mailCheck12Name,
+                mailCheck12Status: mailCheck12Status,
+                mailCheck18Name: mailCheck18Name,
+                mailCheck18Status: mailCheck18Status,
+                mailCheck22Name: mailCheck22Name,
+                mailCheck22Status: mailCheck22Status,
+                warning19Status: warning19Status,
+                warning19Deal: warning19Deal,
+                warning23Status: warning23Status,
+                warning23Deal: warning23Deal,
+                advance1: advance1,
+                advance2: advance2,
+                advance3: advance3,
+                repair: repair,
+                repairStatus: repairStatus,
+                repairDeal: repairDeal,
+                problem: problem,
+                problemDeal: problemDeal,
+                pamphlet1Status: pamphlet1Status,
+                pamphlet1Name: pamphlet1Name,
+                pamphlet1Fee: pamphlet1Fee,
+                pamphlet2Status: pamphlet2Status,
+                pamphlet2Name: pamphlet2Name,
+                pamphlet2Fee: pamphlet2Fee,
+                pamphlet3Status: pamphlet3Status,
+                pamphlet3Name: pamphlet3Name,
+                pamphlet3Fee: pamphlet3Fee,
+                pamphlet4Status: pamphlet4Status,
+                pamphlet4Name: pamphlet4Name,
+                pamphlet4Fee: pamphlet4Fee,
+                pamphlet5Status: pamphlet5Status,
+                pamphlet5Name: pamphlet5Name,
+                pamphlet5Fee: pamphlet5Fee,
+                pamphlet6Status: pamphlet6Status,
+                pamphlet6Name: pamphlet6Name,
+                pamphlet6Fee: pamphlet6Fee,
+                pamphlet7Status: pamphlet7Status,
+                pamphlet7Name: pamphlet7Name,
+                pamphlet7Fee: pamphlet7Fee,
+                equipment1Type: equipment1Type,
+                equipment1Name: equipment1Name,
+                equipment1Vendor: equipment1Vendor,
+                equipment1Delivery: equipment1Delivery,
+                equipment1Client: equipment1Client,
+                equipment2Type: equipment2Type,
+                equipment2Name: equipment2Name,
+                equipment2Vendor: equipment2Vendor,
+                equipment2Delivery: equipment2Delivery,
+                equipment2Client: equipment2Client,
+                equipment3Type: equipment3Type,
+                equipment3Name: equipment3Name,
+                equipment3Vendor: equipment3Vendor,
+                equipment3Delivery: equipment3Delivery,
+                equipment3Client: equipment3Client,
+                equipment4Type: equipment4Type,
+                equipment4Name: equipment4Name,
+                equipment4Vendor: equipment4Vendor,
+                equipment4Delivery: equipment4Delivery,
+                equipment4Client: equipment4Client,
+                equipment5Type: equipment5Type,
+                equipment5Name: equipment5Name,
+                equipment5Vendor: equipment5Vendor,
+                equipment5Delivery: equipment5Delivery,
+                equipment5Client: equipment5Client,
+                equipment6Type: equipment6Type,
+                equipment6Name: equipment6Name,
+                equipment6Vendor: equipment6Vendor,
+                equipment6Delivery: equipment6Delivery,
+                equipment6Client: equipment6Client,
+                contact: contact,
+                lastConfirm: lastConfirm,
+                agenda: agenda,
+                confirm1: confirm1,
+                confirm2: confirm2,
+                confirm3: confirm3,
+                confirm4: confirm4,
+                confirm5: confirm5,
+                confirm6: confirm6,
+                confirm7: confirm7,
+                confirm8: confirm8,
+                confirm9: confirm9,
+                confirm10: confirm10,
+                confirm11: confirm11,
+                confirm12: confirm12,
+                passport: passport,
+                passportCount1: passportCount1,
+                passportCount2: passportCount2,
+                passportCount3: passportCount3,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -1994,7 +2232,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: lockerRecovery,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               lockerRecovery = value;
@@ -2046,7 +2284,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: event1,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               event1 = value;
@@ -2084,7 +2322,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: event2,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               event2 = value;
@@ -2128,7 +2366,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: marketing,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               marketing = value;
@@ -2172,7 +2410,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: interview,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               interview = value;
@@ -2216,7 +2454,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: openSquare,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               openSquare = value;
@@ -2337,7 +2575,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: meeting,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               meeting = value;
@@ -2677,7 +2915,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: warning19Status,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               warning19Status = value;
@@ -2711,7 +2949,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: warning19Deal,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               warning19Deal = value;
@@ -2756,7 +2994,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: warning23Status,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               warning23Status = value;
@@ -2790,7 +3028,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: warning23Deal,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               warning23Deal = value;
@@ -2963,7 +3201,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: repair,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               repair = value;
@@ -3007,7 +3245,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: repairStatus,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               repairStatus = value;
@@ -3051,7 +3289,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: repairDeal,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               repairDeal = value;
@@ -3102,7 +3340,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: problem,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               problem = value;
@@ -3146,7 +3384,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                               text: problemDeal,
                                             ),
                                             textInputType:
-                                            TextInputType.multiline,
+                                                TextInputType.multiline,
                                             maxLines: null,
                                             onChanged: (value) {
                                               problemDeal = value;
