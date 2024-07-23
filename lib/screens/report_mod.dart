@@ -61,6 +61,125 @@ class _ReportModScreenState extends State<ReportModScreen> {
   String workUser15Time = '';
   String workUser16Name = '';
   String workUser16Time = '';
+  String visitCount1_12 = '';
+  String visitCount1_20 = '';
+  String visitCount1_22 = '';
+  String visitCount2_12 = '';
+  String visitCount2_20 = '';
+  String visitCount2_22 = '';
+  String visitCount3_12 = '';
+  String visitCount3_20 = '';
+  String visitCount3_22 = '';
+  String visitCount4_12 = '';
+  String visitCount4_20 = '';
+  String visitCount4_22 = '';
+  String visitCount5_12 = '';
+  String visitCount5_20 = '';
+  String visitCount5_22 = '';
+  String visitCount6_12 = '';
+  String visitCount6_20 = '';
+  String visitCount6_22 = '';
+  String lockerUse = '';
+  String lockerLost = '';
+  String lockerRecovery = '';
+  String event1 = '';
+  String event2 = '';
+  String marketing = '';
+  String interview = '';
+  String openSquare = '';
+  String openSquareFee = '';
+  String openSquareStatus = '';
+  String meeting = '';
+  String mailCheck10Name = '';
+  String mailCheck10Status = '';
+  String mailCheck12Name = '';
+  String mailCheck12Status = '';
+  String mailCheck18Name = '';
+  String mailCheck18Status = '';
+  String mailCheck22Name = '';
+  String mailCheck22Status = '';
+  String warning19Status = '';
+  String warning19Deal = '';
+  String warning23Status = '';
+  String warning23Deal = '';
+  String advance1 = '';
+  String advance2 = '';
+  String advance3 = '';
+  String repair = '';
+  String repairStatus = '';
+  String repairDeal = '';
+  String problem = '';
+  String problemDeal = '';
+  String pamphlet1Status = '';
+  String pamphlet1Name = '';
+  String pamphlet1Fee = '';
+  String pamphlet2Status = '';
+  String pamphlet2Name = '';
+  String pamphlet2Fee = '';
+  String pamphlet3Status = '';
+  String pamphlet3Name = '';
+  String pamphlet3Fee = '';
+  String pamphlet4Status = '';
+  String pamphlet4Name = '';
+  String pamphlet4Fee = '';
+  String pamphlet5Status = '';
+  String pamphlet5Name = '';
+  String pamphlet5Fee = '';
+  String pamphlet6Status = '';
+  String pamphlet6Name = '';
+  String pamphlet6Fee = '';
+  String pamphlet7Status = '';
+  String pamphlet7Name = '';
+  String pamphlet7Fee = '';
+  String equipment1Type = '';
+  String equipment1Name = '';
+  String equipment1Vendor = '';
+  String equipment1Delivery = '';
+  String equipment1Client = '';
+  String equipment2Type = '';
+  String equipment2Name = '';
+  String equipment2Vendor = '';
+  String equipment2Delivery = '';
+  String equipment2Client = '';
+  String equipment3Type = '';
+  String equipment3Name = '';
+  String equipment3Vendor = '';
+  String equipment3Delivery = '';
+  String equipment3Client = '';
+  String equipment4Type = '';
+  String equipment4Name = '';
+  String equipment4Vendor = '';
+  String equipment4Delivery = '';
+  String equipment4Client = '';
+  String equipment5Type = '';
+  String equipment5Name = '';
+  String equipment5Vendor = '';
+  String equipment5Delivery = '';
+  String equipment5Client = '';
+  String equipment6Type = '';
+  String equipment6Name = '';
+  String equipment6Vendor = '';
+  String equipment6Delivery = '';
+  String equipment6Client = '';
+  String contact = '';
+  String lastConfirm = '';
+  String agenda = '';
+  String confirm1 = '';
+  String confirm2 = '';
+  String confirm3 = '';
+  String confirm4 = '';
+  String confirm5 = '';
+  String confirm6 = '';
+  String confirm7 = '';
+  String confirm8 = '';
+  String confirm9 = '';
+  String confirm10 = '';
+  String confirm11 = '';
+  String confirm12 = '';
+  String passport = '';
+  String passportCount1 = '';
+  String passportCount2 = '';
+  String passportCount3 = '';
 
   @override
   void initState() {
@@ -1254,16 +1373,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('お城下広場'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount1_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount1_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount1_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount1_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount1_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount1_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount1_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount1_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount1_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1274,16 +1456,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('いごっそう'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount2_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount2_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount2_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount2_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount2_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount2_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount2_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount2_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount2_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1294,16 +1539,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('自由広場'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount3_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount3_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount3_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount3_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount3_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount3_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount3_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount3_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount3_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1314,16 +1622,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('東通路(バル)'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount4_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount4_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount4_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount4_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount4_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount4_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount4_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount4_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount4_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1334,16 +1705,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('計'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount5_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount5_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount5_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount5_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount5_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount5_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount5_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount5_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount5_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1354,16 +1788,79 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('前年同曜日'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount6_12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount6_12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount6_12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount6_20,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount6_20,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount6_20 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  visitCount6_22,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: visitCount6_22,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              visitCount6_22 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1394,16 +1891,76 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('連続使用'),
                                 ),
                                 FormValue(
-                                  '無',
-                                  onTap: () {},
+                                  lockerUse,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('無'),
+                                            value: '無',
+                                            groupValue: lockerUse,
+                                            onChanged: (value) {
+                                              lockerUse = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('有'),
+                                            value: '有',
+                                            groupValue: lockerUse,
+                                            onChanged: (value) {
+                                              lockerUse = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Text('忘れ物'),
                                 ),
                                 FormValue(
-                                  '無',
-                                  onTap: () {},
+                                  lockerLost,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('無'),
+                                            value: '無',
+                                            groupValue: lockerLost,
+                                            onChanged: (value) {
+                                              lockerLost = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('有'),
+                                            value: '有',
+                                            groupValue: lockerLost,
+                                            onChanged: (value) {
+                                              lockerLost = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1424,8 +1981,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('回収'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  lockerRecovery,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: lockerRecovery,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              lockerRecovery = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1454,8 +2033,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  event1,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: event1,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              event1 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1470,8 +2071,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  event2,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: event2,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              event2 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1492,8 +2115,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  marketing,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: marketing,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              marketing = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1514,8 +2159,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  interview,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: interview,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              interview = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1536,8 +2203,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  openSquare,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: openSquare,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              openSquare = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1554,16 +2243,67 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('使用料'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  openSquareFee,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: openSquareFee,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              openSquareFee = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Text('入金状況'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  openSquareStatus,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('未入金'),
+                                            value: '未入金',
+                                            groupValue: openSquareStatus,
+                                            onChanged: (value) {
+                                              openSquareStatus = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('入金済'),
+                                            value: '入金済',
+                                            groupValue: openSquareStatus,
+                                            onChanged: (value) {
+                                              openSquareStatus = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1584,8 +2324,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  meeting,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: meeting,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              meeting = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1615,12 +2377,63 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('10:30'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck10Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: mailCheck10Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              mailCheck10Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck10Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('未対応'),
+                                            value: '未対応',
+                                            groupValue: mailCheck10Status,
+                                            onChanged: (value) {
+                                              mailCheck10Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('対応済'),
+                                            value: '対応済',
+                                            groupValue: mailCheck10Status,
+                                            onChanged: (value) {
+                                              mailCheck10Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1631,12 +2444,63 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('12:00'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck12Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: mailCheck12Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              mailCheck12Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck12Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('未対応'),
+                                            value: '未対応',
+                                            groupValue: mailCheck12Status,
+                                            onChanged: (value) {
+                                              mailCheck12Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('対応済'),
+                                            value: '対応済',
+                                            groupValue: mailCheck12Status,
+                                            onChanged: (value) {
+                                              mailCheck12Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1647,12 +2511,63 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('18:00'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck18Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: mailCheck18Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              mailCheck18Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck18Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('未対応'),
+                                            value: '未対応',
+                                            groupValue: mailCheck18Status,
+                                            onChanged: (value) {
+                                              mailCheck18Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('対応済'),
+                                            value: '対応済',
+                                            groupValue: mailCheck18Status,
+                                            onChanged: (value) {
+                                              mailCheck18Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1663,12 +2578,63 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('22:00'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck22Name,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: mailCheck22Name,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              mailCheck22Name = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  mailCheck22Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          RadioListTile(
+                                            title: const Text('未対応'),
+                                            value: '未対応',
+                                            groupValue: mailCheck22Status,
+                                            onChanged: (value) {
+                                              mailCheck22Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          RadioListTile(
+                                            title: const Text('対応済'),
+                                            value: '対応済',
+                                            groupValue: mailCheck22Status,
+                                            onChanged: (value) {
+                                              mailCheck22Status = value ?? '';
+                                              setState(() {});
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1698,8 +2664,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('状態'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  warning19Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: warning19Status,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              warning19Status = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1710,8 +2698,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('対処'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  warning19Deal,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: warning19Deal,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              warning19Deal = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1733,8 +2743,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('状態'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  warning23Status,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: warning23Status,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              warning23Status = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1745,8 +2777,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('対処'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  warning23Deal,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: warning23Deal,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              warning23Deal = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1775,8 +2829,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('立替'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  advance1,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: advance1,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              advance1 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1787,8 +2862,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('現金'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  advance2,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: advance2,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              advance2 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1799,8 +2895,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('合計'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  advance3,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: advance3,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              advance3 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1833,8 +2950,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  repair,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: repair,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              repair = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1855,8 +2994,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  repairStatus,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: repairStatus,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              repairStatus = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1877,8 +3038,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  repairDeal,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: repairDeal,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              repairDeal = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1906,8 +3089,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  problem,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: problem,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              problem = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1928,8 +3133,30 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  problemDeal,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: problemDeal,
+                                            ),
+                                            textInputType:
+                                            TextInputType.multiline,
+                                            maxLines: null,
+                                            onChanged: (value) {
+                                              problemDeal = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1965,16 +3192,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('①'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet1Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet1Status,
+                                  onChanged: (value) {
+                                    pamphlet1Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet1Status,
+                                  onChanged: (value) {
+                                    pamphlet1Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet1Status,
+                                  onChanged: (value) {
+                                    pamphlet1Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet1Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet1Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet1Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet1Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet1Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet1Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -1985,16 +3294,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('②'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet2Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet2Status,
+                                  onChanged: (value) {
+                                    pamphlet2Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet2Status,
+                                  onChanged: (value) {
+                                    pamphlet2Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet2Status,
+                                  onChanged: (value) {
+                                    pamphlet2Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet2Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet2Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet2Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet2Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet2Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet2Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2005,16 +3396,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('③'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet3Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet3Status,
+                                  onChanged: (value) {
+                                    pamphlet3Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet3Status,
+                                  onChanged: (value) {
+                                    pamphlet3Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet3Status,
+                                  onChanged: (value) {
+                                    pamphlet3Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet3Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet3Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet3Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet3Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet3Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet3Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2025,16 +3498,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('④'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet4Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet4Status,
+                                  onChanged: (value) {
+                                    pamphlet4Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet4Status,
+                                  onChanged: (value) {
+                                    pamphlet4Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet4Status,
+                                  onChanged: (value) {
+                                    pamphlet4Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet4Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet4Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet4Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet4Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet4Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet4Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2045,16 +3600,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('⑤'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet5Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet5Status,
+                                  onChanged: (value) {
+                                    pamphlet5Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet5Status,
+                                  onChanged: (value) {
+                                    pamphlet5Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet5Status,
+                                  onChanged: (value) {
+                                    pamphlet5Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet5Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet5Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet5Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet5Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet5Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet5Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2065,16 +3702,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('⑥'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet6Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet6Status,
+                                  onChanged: (value) {
+                                    pamphlet6Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet6Status,
+                                  onChanged: (value) {
+                                    pamphlet6Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet6Status,
+                                  onChanged: (value) {
+                                    pamphlet6Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet6Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet6Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet6Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet6Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet6Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet6Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2085,16 +3804,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('⑦'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet7Status,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('出'),
+                                  value: '出',
+                                  groupValue: pamphlet7Status,
+                                  onChanged: (value) {
+                                    pamphlet7Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入'),
+                                  value: '入',
+                                  groupValue: pamphlet7Status,
+                                  onChanged: (value) {
+                                    pamphlet7Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('注'),
+                                  value: '注',
+                                  groupValue: pamphlet7Status,
+                                  onChanged: (value) {
+                                    pamphlet7Status = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet7Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet7Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet7Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        pamphlet7Fee,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: pamphlet7Fee,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    pamphlet7Fee = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2155,24 +3956,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('①'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment1Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment1Type,
+                                  onChanged: (value) {
+                                    equipment1Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment1Type,
+                                  onChanged: (value) {
+                                    equipment1Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment1Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment1Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment1Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment1Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment1Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment1Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment1Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment1Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment1Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment1Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment1Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment1Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2183,24 +4098,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('②'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment2Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment2Type,
+                                  onChanged: (value) {
+                                    equipment2Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment2Type,
+                                  onChanged: (value) {
+                                    equipment2Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment2Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment2Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment2Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment2Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment2Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment2Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment2Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment2Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment2Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment2Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment2Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment2Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2211,24 +4240,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('③'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment3Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment3Type,
+                                  onChanged: (value) {
+                                    equipment3Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment3Type,
+                                  onChanged: (value) {
+                                    equipment3Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment3Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment3Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment3Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment3Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment3Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment3Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment3Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment3Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment3Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment3Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment3Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment3Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2239,24 +4382,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('④'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment4Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment4Type,
+                                  onChanged: (value) {
+                                    equipment4Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment4Type,
+                                  onChanged: (value) {
+                                    equipment4Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment4Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment4Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment4Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment4Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment4Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment4Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment4Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment4Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment4Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment4Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment4Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment4Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2267,24 +4524,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('⑤'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment5Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment5Type,
+                                  onChanged: (value) {
+                                    equipment5Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment5Type,
+                                  onChanged: (value) {
+                                    equipment5Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment5Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment5Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment5Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment5Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment5Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment5Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment5Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment5Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment5Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment5Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment5Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment5Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2295,24 +4666,138 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('⑥'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment6Type,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RadioListTile(
+                                  title: const Text('発注'),
+                                  value: '発注',
+                                  groupValue: equipment6Type,
+                                  onChanged: (value) {
+                                    equipment6Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                RadioListTile(
+                                  title: const Text('入荷'),
+                                  value: '入荷',
+                                  groupValue: equipment6Type,
+                                  onChanged: (value) {
+                                    equipment6Type = value ?? '';
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment6Name,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment6Name,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment6Name = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment6Vendor,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment6Vendor,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment6Vendor = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment6Delivery,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment6Delivery,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment6Delivery = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        equipment6Client,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: equipment6Client,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    equipment6Client = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2333,8 +4818,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   TableRow(
                     children: [
                       FormValue(
-                        '',
-                        onTap: () {},
+                        contact,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: contact,
+                                  ),
+                                  textInputType: TextInputType.multiline,
+                                  maxLines: null,
+                                  onChanged: (value) {
+                                    contact = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2355,8 +4861,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         child: Text('日報最終確認'),
                       ),
                       FormValue(
-                        '',
-                        onTap: () {},
+                        lastConfirm,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: lastConfirm,
+                                  ),
+                                  textInputType: TextInputType.text,
+                                  maxLines: 1,
+                                  onChanged: (value) {
+                                    lastConfirm = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2377,8 +4904,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   TableRow(
                     children: [
                       FormValue(
-                        '',
-                        onTap: () {},
+                        agenda,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => CustomAlertDialog(
+                            contentPadding: const EdgeInsets.all(16),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomTextField(
+                                  controller: TextEditingController(
+                                    text: agenda,
+                                  ),
+                                  textInputType: TextInputType.multiline,
+                                  maxLines: null,
+                                  onChanged: (value) {
+                                    agenda = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -2414,8 +4962,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('最終店舗最終終了時刻'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm1,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm1,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm1 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2426,8 +4995,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('食器センター終了'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm2,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm2,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm2 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2438,8 +5028,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('排気'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm3,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm3,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm3 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2450,8 +5061,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('天井扇SW'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm4,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm4,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm4 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2462,8 +5094,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('空調SW'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm5,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm5,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm5 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2474,8 +5127,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('トイレ確認'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm6,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm6,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm6 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2486,8 +5160,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('ベビーコーナー'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm7,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm7,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm7 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2498,8 +5193,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('PC・ゴミ'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm8,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm8,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm8 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2510,8 +5226,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('留守電'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm9,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm9,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm9 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2522,8 +5259,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('クーポン券確認'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm10,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm10,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm10 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2534,8 +5292,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('日付確認'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm11,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm11,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm11 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2546,8 +5325,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('両替確認'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  confirm12,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: confirm12,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              confirm12 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2575,8 +5375,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             TableRow(
                               children: [
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  passport,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: passport,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              passport = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2597,8 +5418,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('昨日計'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  passportCount1,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: passportCount1,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              passportCount1 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2609,8 +5451,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('本日計'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  passportCount2,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: passportCount2,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              passportCount2 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -2621,8 +5484,29 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   child: Text('合計'),
                                 ),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  passportCount3,
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => CustomAlertDialog(
+                                      contentPadding: const EdgeInsets.all(16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomTextField(
+                                            controller: TextEditingController(
+                                              text: passportCount3,
+                                            ),
+                                            textInputType: TextInputType.text,
+                                            maxLines: 1,
+                                            onChanged: (value) {
+                                              passportCount3 = value;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
