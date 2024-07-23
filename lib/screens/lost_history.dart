@@ -130,6 +130,10 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                         label: const CustomColumnLabel('署名'),
                       ),
                       GridColumn(
+                        columnName: 'itemNumber',
+                        label: const CustomColumnLabel('落とし物No'),
+                      ),
+                      GridColumn(
                         columnName: 'itemName',
                         label: const CustomColumnLabel('品名'),
                       ),

@@ -31,6 +31,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
   DateTime discoveryAt = DateTime.now();
   TextEditingController discoveryPlaceController = TextEditingController();
   TextEditingController discoveryUserController = TextEditingController();
+  TextEditingController itemNumberController = TextEditingController();
   TextEditingController itemNameController = TextEditingController();
   FilePickerResult? itemImageResult;
   TextEditingController remarksController = TextEditingController();
@@ -66,6 +67,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
                 discoveryAt: discoveryAt,
                 discoveryPlace: discoveryPlaceController.text,
                 discoveryUser: discoveryUserController.text,
+                itemNumber: itemNumberController.text,
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
                 remarks: remarksController.text,
@@ -145,6 +147,15 @@ class _LostAddScreenState extends State<LostAddScreen> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '落とし物No',
+                child: CustomTextField(
+                  controller: itemNumberController,
+                  textInputType: TextInputType.text,
+                  maxLines: 1,
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(

@@ -32,6 +32,7 @@ class ProblemAddScreen extends StatefulWidget {
 class _ProblemAddScreenState extends State<ProblemAddScreen> {
   String type = kProblemTypes.first;
   DateTime createdAt = DateTime.now();
+  TextEditingController titleController = TextEditingController();
   TextEditingController picNameController = TextEditingController();
   TextEditingController targetNameController = TextEditingController();
   TextEditingController targetAgeController = TextEditingController();
@@ -71,6 +72,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
               String? error = await problemProvider.create(
                 organization: widget.loginProvider.organization,
                 type: type,
+                title: titleController.text,
                 createdAt: createdAt,
                 picName: picNameController.text,
                 targetName: targetNameController.text,
@@ -151,6 +153,17 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                             },
                           );
                         }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: FormLabel(
+                      'タイトル',
+                      child: CustomTextField(
+                        controller: titleController,
+                        textInputType: TextInputType.text,
+                        maxLines: 1,
                       ),
                     ),
                   ),

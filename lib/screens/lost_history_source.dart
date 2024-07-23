@@ -75,6 +75,7 @@ class LostHistorySource extends DataGridSource {
         ),
       ),
     ));
+    cells.add(CustomColumnLabel(lost.itemNumber));
     cells.add(CustomColumnLabel(lost.itemName));
     cells.add(CustomColumnLabel(
       dateText('yyyy/MM/dd', lost.discoveryAt),

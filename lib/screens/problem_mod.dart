@@ -35,6 +35,7 @@ class ProblemModScreen extends StatefulWidget {
 class _ProblemModScreenState extends State<ProblemModScreen> {
   String type = kProblemTypes.first;
   DateTime createdAt = DateTime.now();
+  TextEditingController titleController = TextEditingController();
   TextEditingController picNameController = TextEditingController();
   TextEditingController targetNameController = TextEditingController();
   TextEditingController targetAgeController = TextEditingController();
@@ -49,6 +50,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   void initState() {
     type = widget.problem.type;
     createdAt = widget.problem.createdAt;
+    titleController.text = widget.problem.title;
     picNameController.text = widget.problem.picName;
     targetNameController.text = widget.problem.targetName;
     targetAgeController.text = widget.problem.targetAge;
@@ -105,6 +107,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 organization: widget.loginProvider.organization,
                 problem: widget.problem,
                 type: type,
+                title: titleController.text,
                 createdAt: createdAt,
                 picName: picNameController.text,
                 targetName: targetNameController.text,
@@ -184,6 +187,17 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                             },
                           );
                         }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: FormLabel(
+                      'タイトル',
+                      child: CustomTextField(
+                        controller: titleController,
+                        textInputType: TextInputType.text,
+                        maxLines: 1,
                       ),
                     ),
                   ),
