@@ -190,17 +190,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: FormLabel(
-                      'タイトル',
-                      child: CustomTextField(
-                        controller: titleController,
-                        textInputType: TextInputType.text,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
+
                 ],
               ),
               const SizedBox(height: 8),
@@ -208,13 +198,26 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: FormLabel(
-                      '対応者',
-                      child: CustomTextField(
-                        controller: picNameController,
-                        textInputType: TextInputType.text,
-                        maxLines: 1,
-                      ),
+                    child: Column(
+                      children: [
+                        FormLabel(
+                          'タイトル',
+                          child: CustomTextField(
+                            controller: titleController,
+                            textInputType: TextInputType.text,
+                            maxLines: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        FormLabel(
+                          '対応者',
+                          child: CustomTextField(
+                            controller: picNameController,
+                            textInputType: TextInputType.text,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 8),

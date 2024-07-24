@@ -100,3 +100,9 @@ const kLoanGridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
   crossAxisSpacing: 8,
   mainAxisSpacing: 8,
 );
+
+const kReportHeaderStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'SourceHanSansJP-Bold',
+);
