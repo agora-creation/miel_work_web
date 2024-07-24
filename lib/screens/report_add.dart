@@ -42,16 +42,22 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
   PlanService planService = PlanService();
   DateTime createdAt = DateTime.now();
   List<ReportWorkerModel> reportWorkers = [];
+  List<TableRow> reportWorkerRows = [];
   ReportVisitorModel reportVisitor = ReportVisitorModel.fromMap({});
   ReportLockerModel reportLocker = ReportLockerModel.fromMap({});
   List<ReportPlanModel> reportPlans = [];
+  List<TableRow> reportPlanRows = [];
   ReportCheckModel reportCheck = ReportCheckModel.fromMap({});
   int advancePayment1 = 0;
   int advancePayment2 = 0;
   List<ReportRepairModel> reportRepairs = [];
+  List<TableRow> reportRepairRows = [];
   List<ReportProblemModel> reportProblems = [];
+  List<TableRow> reportProblemRows = [];
   List<ReportPamphletModel> reportPamphlets = [];
+  List<TableRow> reportPamphletRows = [];
   List<ReportEquipmentModel> reportEquipments = [];
+  List<TableRow> reportEquipmentRows = [];
   String passport = '';
   int passportCount = 0;
   String remarks = '';
@@ -59,8 +65,74 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
 
   void _init() async {
     createdAt = widget.day;
-    for (int i = 0; i < 10; i++) {
-      reportWorkers.add(ReportWorkerModel.fromMap({}));
+    reportWorkers.add(ReportWorkerModel.fromMap({}));
+    reportWorkerRows.add(const TableRow(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Text('名前'),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Text('時間帯'),
+        ),
+      ],
+    ));
+    for (ReportWorkerModel reportWorker in reportWorkers) {
+      reportWorkerRows.add(TableRow(
+        children: [
+          FormValue(
+            reportWorker.name,
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) => CustomAlertDialog(
+                contentPadding: const EdgeInsets.all(16),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomTextField(
+                      controller: TextEditingController(
+                        text: reportWorker.name,
+                      ),
+                      textInputType: TextInputType.text,
+                      maxLines: 1,
+                      onChanged: (value) {
+                        reportWorker.name = value;
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          FormValue(
+            reportWorker.time,
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) => CustomAlertDialog(
+                contentPadding: const EdgeInsets.all(16),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomTextField(
+                      controller: TextEditingController(
+                        text: reportWorker.time,
+                      ),
+                      textInputType: TextInputType.text,
+                      maxLines: 1,
+                      onChanged: (value) {
+                        reportWorker.time = value;
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ));
     }
     List<PlanModel> plans = await planService.selectList(
       organizationId: widget.loginProvider.organization?.id,
@@ -75,6 +147,33 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
         }));
       }
     }
+    reportPlanRows.add(const TableRow(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Text('時間帯'),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: Text('件名'),
+        ),
+      ],
+    ));
+    for (ReportPlanModel reportPlan in reportPlans) {
+      reportPlanRows.add(TableRow(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(reportPlan.time),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(reportPlan.title),
+          ),
+        ],
+      ));
+    }
+
     for (int i = 0; i < 3; i++) {
       reportRepairs.add(ReportRepairModel.fromMap({}));
     }
@@ -318,62 +417,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             0: FlexColumnWidth(1),
                             1: FlexColumnWidth(2),
                           },
-                          children: reportWorkers.map((reportWorker) {
-                            return TableRow(
-                              children: [
-                                FormValue(
-                                  reportWorker.name,
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) => CustomAlertDialog(
-                                      contentPadding: const EdgeInsets.all(16),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CustomTextField(
-                                            controller: TextEditingController(
-                                              text: reportWorker.name,
-                                            ),
-                                            textInputType: TextInputType.text,
-                                            maxLines: 1,
-                                            onChanged: (value) {
-                                              reportWorker.name = value;
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                FormValue(
-                                  reportWorker.time,
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) => CustomAlertDialog(
-                                      contentPadding: const EdgeInsets.all(16),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CustomTextField(
-                                            controller: TextEditingController(
-                                              text: reportWorker.time,
-                                            ),
-                                            textInputType: TextInputType.text,
-                                            maxLines: 1,
-                                            onChanged: (value) {
-                                              reportWorker.time = value;
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
+                          children: reportWorkerRows,
                         ),
                         const SizedBox(height: 16),
                         const Text(
@@ -948,20 +992,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             0: IntrinsicColumnWidth(),
                             1: FlexColumnWidth(1),
                           },
-                          children: reportPlans.map((reportPlan) {
-                            return TableRow(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(reportPlan.time),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(reportPlan.title),
-                                ),
-                              ],
-                            );
-                          }).toList(),
+                          children: reportPlanRows,
                         ),
                         const SizedBox(height: 16),
                         const Text(

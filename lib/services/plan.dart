@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
@@ -45,22 +44,34 @@ class PlanService {
     required DateTime date,
   }) async {
     List<PlanModel> ret = [];
-    DateTime dayS = DateTime(date.year, date.month, date.day, 0, 0, 0);
-    DateTime dayE = DateTime(date.year, date.month, date.day, 23, 59, 59);
-    Timestamp startAt = convertTimestamp(dayS, false);
-    Timestamp endAt = convertTimestamp(dayE, true);
     await firestore
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
         .orderBy('startedAt', descending: false)
-        .startAt([startAt])
-        .endAt([endAt])
         .get()
         .then((value) {
-          for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
-            ret.add(PlanModel.fromSnapshot(map));
-          }
-        });
+      for (DocumentSnapshot<Map<String, dynamic>> map in value.docs) {
+        PlanModel plan = PlanModel.fromSnapshot(map);
+        bool listIn = false;
+        var dateS = DateTime(date.year, date.month, date.day, 0, 0, 0);
+        var dateE = DateTime(date.year, date.month, date.day, 23, 59, 59);
+        if (plan.startedAt.millisecondsSinceEpoch <=
+                dateS.millisecondsSinceEpoch &&
+            dateS.millisecondsSinceEpoch <=
+                plan.endedAt.millisecondsSinceEpoch) {
+          listIn = true;
+        } else if (dateS.millisecondsSinceEpoch <=
+                plan.startedAt.millisecondsSinceEpoch &&
+            plan.endedAt.millisecondsSinceEpoch <=
+                dateE.millisecondsSinceEpoch) {
+          listIn = true;
+        }
+
+        if (listIn) {
+          ret.add(plan);
+        }
+      }
+    });
     return ret;
   }
 
