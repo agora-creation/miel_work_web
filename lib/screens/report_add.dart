@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/plan.dart';
+import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/models/report_check.dart';
 import 'package:miel_work_web/models/report_equipment.dart';
 import 'package:miel_work_web/models/report_locker.dart';
@@ -16,6 +17,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
 import 'package:miel_work_web/services/plan.dart';
+import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -43,6 +45,7 @@ class ReportAddScreen extends StatefulWidget {
 
 class _ReportAddScreenState extends State<ReportAddScreen> {
   PlanService planService = PlanService();
+  ProblemService problemService = ProblemService();
   DateTime createdAt = DateTime.now();
   List<ReportWorkerModel> reportWorkers = [];
   ReportVisitorModel reportVisitor = ReportVisitorModel.fromMap({});
@@ -187,6 +190,19 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
     }
     reportRepairs.add(ReportRepairModel.fromMap({}));
     reportProblems.add(ReportProblemModel.fromMap({}));
+    List<ProblemModel> problems = await problemService.selectList(
+      organizationId: widget.loginProvider.organization?.id,
+      date: widget.day,
+    );
+    if (problems.isNotEmpty) {
+      reportProblems.clear();
+      for (ProblemModel problem in problems) {
+        reportProblems.add(ReportProblemModel.fromMap({
+          'title': '[${problem.type}]${problem.type}',
+          'deal': '',
+        }));
+      }
+    }
     reportPamphlets.add(ReportPamphletModel.fromMap({}));
     reportEquipments.add(ReportEquipmentModel.fromMap({}));
     setState(() {});
