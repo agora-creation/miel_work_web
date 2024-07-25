@@ -14,9 +14,9 @@ class ReportModel {
   String _organizationId = '';
   List<ReportWorkerModel> reportWorkers = [];
   ReportVisitorModel reportVisitor = ReportVisitorModel.fromMap({});
-  ReportLockerModel? reportLocker;
+  ReportLockerModel reportLocker = ReportLockerModel.fromMap({});
   List<ReportPlanModel> reportPlans = [];
-  ReportCheckModel? reportCheck;
+  ReportCheckModel reportCheck = ReportCheckModel.fromMap({});
   int _advancePayment1 = 0;
   int _advancePayment2 = 0;
   List<ReportRepairModel> reportRepairs = [];
@@ -52,6 +52,8 @@ class ReportModel {
   DateTime _lastConfirmCalendarAt = DateTime.now();
   bool _lastConfirmMoney = false;
   DateTime _lastConfirmMoneyAt = DateTime.now();
+  bool _lastConfirmLock = false;
+  DateTime _lastConfirmLockAt = DateTime.now();
   bool _lastConfirmUser = false;
   DateTime _lastConfirmUserAt = DateTime.now();
   String _lastConfirmUserName = '';
@@ -69,19 +71,36 @@ class ReportModel {
   int get passportCount => _passportCount;
   String get remarks => _remarks;
   String get agenda => _agenda;
+  bool get lastConfirmShop => _lastConfirmShop;
   DateTime get lastConfirmShopAt => _lastConfirmShopAt;
   String get lastConfirmShopName => _lastConfirmShopName;
+  bool get lastConfirmCenter => _lastConfirmCenter;
   DateTime get lastConfirmCenterAt => _lastConfirmCenterAt;
+  bool get lastConfirmExhaust => _lastConfirmExhaust;
   DateTime get lastConfirmExhaustAt => _lastConfirmExhaustAt;
+  bool get lastConfirmRoof => _lastConfirmRoof;
   DateTime get lastConfirmRoofAt => _lastConfirmRoofAt;
+  bool get lastConfirmAirCon => _lastConfirmAirCon;
   DateTime get lastConfirmAirConAt => _lastConfirmAirConAt;
+  bool get lastConfirmToilet => _lastConfirmToilet;
   DateTime get lastConfirmToiletAt => _lastConfirmToiletAt;
+  bool get lastConfirmBaby => _lastConfirmBaby;
   DateTime get lastConfirmBabyAt => _lastConfirmBabyAt;
+  bool get lastConfirmPC => _lastConfirmPC;
   DateTime get lastConfirmPCAt => _lastConfirmPCAt;
+  bool get lastConfirmTel => _lastConfirmTel;
   DateTime get lastConfirmTelAt => _lastConfirmTelAt;
+  bool get lastConfirmCoupon => _lastConfirmCoupon;
   DateTime get lastConfirmCouponAt => _lastConfirmCouponAt;
+  bool get lastConfirmCalendar => _lastConfirmCalendar;
   DateTime get lastConfirmCalendarAt => _lastConfirmCalendarAt;
+  bool get lastConfirmMoney => _lastConfirmMoney;
   DateTime get lastConfirmMoneyAt => _lastConfirmMoneyAt;
+  bool get lastConfirmLock => _lastConfirmLock;
+  DateTime get lastConfirmLockAt => _lastConfirmLockAt;
+  bool get lastConfirmUser => _lastConfirmUser;
+  DateTime get lastConfirmUserAt => _lastConfirmUserAt;
+  String get lastConfirmUserName => _lastConfirmUserName;
   int get approval => _approval;
   String get createdUserId => _createdUserId;
   String get createdUserName => _createdUserName;
@@ -93,42 +112,57 @@ class ReportModel {
     if (data == null) return;
     _id = data['id'] ?? '';
     _organizationId = data['organizationId'] ?? '';
-    // reportWorkers = _convertReportWorkers(data['reportWorkers'] ?? ['']);
-    // reportVisitor = ReportVisitorModel.fromMap(data['reportVisitor'] ?? ['']);
-    // reportLocker = ReportLockerModel.fromMap(data['reportLocker'] ?? ['']);
-    // reportPlans = _convertReportPlans(data['reportPlans'] ?? ['']);
-    // reportCheck = ReportCheckModel.fromMap(data['reportCheck'] ?? ['']);
-    // _advancePayment1 = data['advancePayment1'] ?? 0;
-    // _advancePayment2 = data['advancePayment2'] ?? 0;
-    // reportRepairs = _convertReportRepairs(data['reportRepairs'] ?? ['']);
-    // reportProblems = _convertReportProblems(data['reportProblems'] ?? ['']);
-    // reportPamphlets = _convertReportPamphlets(data['reportPamphlets'] ?? ['']);
-    // reportEquipments =
-    //     _convertReportEquipments(data['reportEquipments'] ?? ['']);
-    // _passport = data['passport'] ?? '';
-    // _passportCount = data['passportCount'] ?? 0;
-    // _remarks = data['remarks'] ?? '';
-    // _lastConfirmUser = data['lastConfirmUser'] ?? '';
-    // _agenda = data['agenda'] ?? '';
-    // _lastConfirmShopAt = data['lastConfirmShopAt'].toDate() ?? DateTime.now();
-    // _lastConfirmShopName = data['lastConfirmShopName'] ?? '';
-    // _lastConfirmCenterAt =
-    //     data['lastConfirmCenterAt'].toDate() ?? DateTime.now();
-    // _lastConfirmExhaustAt =
-    //     data['lastConfirmExhaustAt'].toDate() ?? DateTime.now();
-    // _lastConfirmRoofAt = data['lastConfirmRoofAt'].toDate() ?? DateTime.now();
-    // _lastConfirmAirConAt =
-    //     data['lastConfirmAirConAt'].toDate() ?? DateTime.now();
-    // _lastConfirmToiletAt =
-    //     data['lastConfirmToiletAt'].toDate() ?? DateTime.now();
-    // _lastConfirmBabyAt = data['lastConfirmBabyAt'].toDate() ?? DateTime.now();
-    // _lastConfirmPCAt = data['lastConfirmPCAt'].toDate() ?? DateTime.now();
-    // _lastConfirmTelAt = data['lastConfirmTelAt'].toDate() ?? DateTime.now();
-    // _lastConfirmCouponAt =
-    //     data['lastConfirmCouponAt'].toDate() ?? DateTime.now();
-    // _lastConfirmCalendarAt =
-    //     data['lastConfirmCalendarAt'].toDate() ?? DateTime.now();
-    // _lastConfirmMoneyAt = data['lastConfirmMoneyAt'].toDate() ?? DateTime.now();
+    reportWorkers = _convertReportWorkers(data['reportWorkers']);
+    reportVisitor = ReportVisitorModel.fromMap(data['reportVisitor']);
+    reportLocker = ReportLockerModel.fromMap(data['reportLocker']);
+    reportPlans = _convertReportPlans(data['reportPlans']);
+    reportCheck = ReportCheckModel.fromMap(data['reportCheck']);
+    _advancePayment1 = data['advancePayment1'] ?? 0;
+    _advancePayment2 = data['advancePayment2'] ?? 0;
+    reportRepairs = _convertReportRepairs(data['reportRepairs']);
+    reportProblems = _convertReportProblems(data['reportProblems']);
+    reportPamphlets = _convertReportPamphlets(data['reportPamphlets']);
+    reportEquipments = _convertReportEquipments(data['reportEquipments']);
+    _passport = data['passport'] ?? '';
+    _passportCount = data['passportCount'] ?? 0;
+    _remarks = data['remarks'] ?? '';
+    _agenda = data['agenda'] ?? '';
+    _lastConfirmShop = data['_lastConfirmShop'] ?? false;
+    _lastConfirmShopAt = data['lastConfirmShopAt'].toDate() ?? DateTime.now();
+    _lastConfirmShopName = data['lastConfirmShopName'] ?? '';
+    _lastConfirmCenter = data['lastConfirmCenter'] ?? false;
+    _lastConfirmCenterAt =
+        data['lastConfirmCenterAt'].toDate() ?? DateTime.now();
+    _lastConfirmExhaust = data['lastConfirmExhaust'] ?? false;
+    _lastConfirmExhaustAt =
+        data['lastConfirmExhaustAt'].toDate() ?? DateTime.now();
+    _lastConfirmRoof = data['lastConfirmRoof'] ?? false;
+    _lastConfirmRoofAt = data['lastConfirmRoofAt'].toDate() ?? DateTime.now();
+    _lastConfirmAirCon = data['lastConfirmAirCon'] ?? false;
+    _lastConfirmAirConAt =
+        data['lastConfirmAirConAt'].toDate() ?? DateTime.now();
+    _lastConfirmToilet = data['lastConfirmToilet'] ?? false;
+    _lastConfirmToiletAt =
+        data['lastConfirmToiletAt'].toDate() ?? DateTime.now();
+    _lastConfirmBaby = data['lastConfirmBaby'] ?? false;
+    _lastConfirmBabyAt = data['lastConfirmBabyAt'].toDate() ?? DateTime.now();
+    _lastConfirmPC = data['lastConfirmPC'] ?? false;
+    _lastConfirmPCAt = data['lastConfirmPCAt'].toDate() ?? DateTime.now();
+    _lastConfirmTel = data['lastConfirmTel'] ?? false;
+    _lastConfirmTelAt = data['lastConfirmTelAt'].toDate() ?? DateTime.now();
+    _lastConfirmCoupon = data['lastConfirmCoupon'] ?? false;
+    _lastConfirmCouponAt =
+        data['lastConfirmCouponAt'].toDate() ?? DateTime.now();
+    _lastConfirmCalendar = data['lastConfirmCalendar'] ?? false;
+    _lastConfirmCalendarAt =
+        data['lastConfirmCalendarAt'].toDate() ?? DateTime.now();
+    _lastConfirmMoney = data['lastConfirmMoney'] ?? false;
+    _lastConfirmMoneyAt = data['lastConfirmMoneyAt'].toDate() ?? DateTime.now();
+    _lastConfirmLock = data['lastConfirmLock'] ?? false;
+    _lastConfirmLockAt = data['lastConfirmLockAt'].toDate() ?? DateTime.now();
+    _lastConfirmUser = data['lastConfirmUser'] ?? false;
+    _lastConfirmUserAt = data['lastConfirmUserAt'].toDate() ?? DateTime.now();
+    _lastConfirmUserName = data['lastConfirmUserName'] ?? '';
     _approval = data['approval'] ?? 0;
     _createdUserId = data['createdUserId'] ?? '';
     _createdUserName = data['createdUserName'] ?? '';
