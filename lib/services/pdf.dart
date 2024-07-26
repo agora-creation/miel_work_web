@@ -40,55 +40,52 @@ class PdfService {
             ),
           ),
           pw.SizedBox(height: 4),
-          pw.Align(
-            alignment: pw.Alignment.centerRight,
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.end,
-              children: [
-                pw.Text(
-                  '申請番号: ${apply.number}',
-                  style: pw.TextStyle(
-                    font: ttf,
-                    color: PdfColors.grey,
-                    fontSize: 10,
-                  ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請日時: ${dateText('yyyy/MM/dd HH:mm', apply.createdAt)}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 10,
                 ),
-                pw.Text(
-                  '申請日時: ${dateText('yyyy/MM/dd HH:mm', apply.createdAt)}',
-                  style: pw.TextStyle(
-                    font: ttf,
-                    color: PdfColors.grey,
-                    fontSize: 10,
-                  ),
+              ),
+              pw.Text(
+                '申請番号: ${apply.number}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 10,
                 ),
-                apply.approval == 1
-                    ? pw.Text(
-                        '承認日時: ${dateText('yyyy/MM/dd HH:mm', apply.approvedAt)}',
-                        style: pw.TextStyle(
-                          font: ttf,
-                          fontSize: 12,
-                        ),
-                      )
-                    : pw.Container(),
-                apply.approval == 1
-                    ? pw.Text(
-                        '承認番号: ${apply.approvalNumber}',
-                        style: pw.TextStyle(
-                          font: ttf,
-                          fontSize: 12,
-                        ),
-                      )
-                    : pw.Container(),
-                pw.Text(
-                  '申請者: ${apply.createdUserName}',
-                  style: pw.TextStyle(
-                    font: ttf,
-                    color: PdfColors.grey,
-                    fontSize: 10,
-                  ),
+              ),
+              pw.Text(
+                '申請者: ${apply.createdUserName}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 10,
                 ),
-              ],
-            ),
+              ),
+              apply.approval == 1
+                  ? pw.Text(
+                      '承認日時: ${dateText('yyyy/MM/dd HH:mm', apply.approvedAt)}',
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 12,
+                      ),
+                    )
+                  : pw.Container(),
+              apply.approval == 1
+                  ? pw.Text(
+                      '承認番号: ${apply.approvalNumber}',
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 12,
+                      ),
+                    )
+                  : pw.Container(),
+            ],
           ),
           pw.SizedBox(height: 4),
           pw.Table(
@@ -197,12 +194,36 @@ class PdfService {
                 ),
                 children: [
                   _generateCell(
+                    label: '承認理由',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    height: 50,
+                  ),
+                  _generateCell(
+                    label: apply.approvalReason,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 10,
+                    ),
+                    color: PdfColors.white,
+                    height: 50,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
                     label: '否決理由',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 10,
                     ),
-                    height: 100,
+                    height: 50,
                   ),
                   _generateCell(
                     label: apply.reason,
@@ -211,7 +232,7 @@ class PdfService {
                       fontSize: 10,
                     ),
                     color: PdfColors.white,
-                    height: 100,
+                    height: 50,
                   ),
                 ],
               ),

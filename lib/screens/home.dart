@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     gridDelegate: kHomeGridDelegate,
                     children: [
                       HomeIconCard(
-                        icon: FontAwesomeIcons.calendarDay,
+                        icon: FontAwesomeIcons.solidCalendar,
                         label: 'スケジュール',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           }
                           return HomeIconCard(
-                            icon: FontAwesomeIcons.solidMessage,
+                            icon: FontAwesomeIcons.solidComments,
                             label: 'チャット',
                             color: kBlackColor,
                             backgroundColor: kWhiteColor,
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           return HomeIconCard(
-                            icon: FontAwesomeIcons.faceAngry,
+                            icon: FontAwesomeIcons.triangleExclamation,
                             label: 'クレーム／要望',
                             color: kBlackColor,
                             backgroundColor: kWhiteColor,
@@ -206,12 +206,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       HomeIconCard(
                         icon: FontAwesomeIcons.businessTime,
                         label: '勤怠打刻',
-                        color: kBlackColor,
+                        color: kGrey600Color,
                         backgroundColor: kGrey300Color,
                         onTap: () {},
                       ),
                       HomeIconCard(
-                        icon: FontAwesomeIcons.book,
+                        icon: FontAwesomeIcons.clipboardCheck,
                         label: '業務日報',
                         color: kBlackColor,
                         backgroundColor: kWhiteColor,
