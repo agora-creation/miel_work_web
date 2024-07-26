@@ -152,7 +152,11 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     );
                   }
                   if (applies.isEmpty) {
-                    return const Center(child: Text('承認待ちの申請はありません'));
+                    return const Center(
+                        child: Text(
+                      '承認待ちの申請はありません',
+                      style: TextStyle(fontSize: 24),
+                    ));
                   }
                   return ListView.builder(
                     itemCount: applies.length,

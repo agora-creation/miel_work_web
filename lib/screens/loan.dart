@@ -136,47 +136,53 @@ class _LoanScreenState extends State<LoanScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: loanService.streamList(
-                  organizationId: widget.loginProvider.organization?.id,
-                  searchStart: searchStart,
-                  searchEnd: searchEnd,
-                  searchStatus: [0],
-                ),
-                builder: (context, snapshot) {
-                  List<LoanModel> loans = [];
-                  if (snapshot.hasData) {
-                    loans = loanService.generateList(data: snapshot.data);
-                  }
-                  if (loans.isEmpty) {
-                    return const Center(child: Text('貸出物はありません'));
-                  }
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: kLoanGridDelegate,
-                    itemCount: loans.length,
-                    itemBuilder: (context, index) {
-                      LoanModel loan = loans[index];
-                      return LoanCard(
-                        loan: loan,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: LoanModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                loan: loan,
+              child: SingleChildScrollView(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: loanService.streamList(
+                    organizationId: widget.loginProvider.organization?.id,
+                    searchStart: searchStart,
+                    searchEnd: searchEnd,
+                    searchStatus: [0],
+                  ),
+                  builder: (context, snapshot) {
+                    List<LoanModel> loans = [];
+                    if (snapshot.hasData) {
+                      loans = loanService.generateList(data: snapshot.data);
+                    }
+                    if (loans.isEmpty) {
+                      return const Center(
+                          child: Text(
+                        '貸出物はありません',
+                        style: TextStyle(fontSize: 24),
+                      ));
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: kLoanGridDelegate,
+                      itemCount: loans.length,
+                      itemBuilder: (context, index) {
+                        LoanModel loan = loans[index];
+                        return LoanCard(
+                          loan: loan,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: LoanModScreen(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  loan: loan,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],

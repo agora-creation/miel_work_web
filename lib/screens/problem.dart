@@ -129,7 +129,11 @@ class _ProblemScreenState extends State<ProblemScreen> {
                     problems = problemService.generateList(data: snapshot.data);
                   }
                   if (problems.isEmpty) {
-                    return const Center(child: Text('クレーム／要望はありません'));
+                    return const Center(
+                        child: Text(
+                      'クレーム／要望はありません',
+                      style: TextStyle(fontSize: 24),
+                    ));
                   }
                   return ListView.builder(
                     itemCount: problems.length,

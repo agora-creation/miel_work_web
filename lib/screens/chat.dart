@@ -285,7 +285,10 @@ class _ChatScreenState extends State<ChatScreen> {
               : Container(
                   color: kGrey200Color,
                   child: const Center(
-                    child: Text('左側のチャットルームを選択してください'),
+                    child: Text(
+                      '左側のチャットルームを選択してください',
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
                 ),
         ),

@@ -136,7 +136,11 @@ class _NoticeScreenState extends State<NoticeScreen> {
                     );
                   }
                   if (notices.isEmpty) {
-                    return const Center(child: Text('お知らせはありません'));
+                    return const Center(
+                        child: Text(
+                      'お知らせはありません',
+                      style: TextStyle(fontSize: 24),
+                    ));
                   }
                   return ListView.builder(
                     itemCount: notices.length,

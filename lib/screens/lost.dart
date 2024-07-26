@@ -136,47 +136,53 @@ class _LostScreenState extends State<LostScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: lostService.streamList(
-                  organizationId: widget.loginProvider.organization?.id,
-                  searchStart: searchStart,
-                  searchEnd: searchEnd,
-                  searchStatus: [0],
-                ),
-                builder: (context, snapshot) {
-                  List<LostModel> losts = [];
-                  if (snapshot.hasData) {
-                    losts = lostService.generateList(data: snapshot.data);
-                  }
-                  if (losts.isEmpty) {
-                    return const Center(child: Text('落とし物はありません'));
-                  }
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: kLostGridDelegate,
-                    itemCount: losts.length,
-                    itemBuilder: (context, index) {
-                      LostModel lost = losts[index];
-                      return LostCard(
-                        lost: lost,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: LostModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                lost: lost,
+              child: SingleChildScrollView(
+                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: lostService.streamList(
+                    organizationId: widget.loginProvider.organization?.id,
+                    searchStart: searchStart,
+                    searchEnd: searchEnd,
+                    searchStatus: [0],
+                  ),
+                  builder: (context, snapshot) {
+                    List<LostModel> losts = [];
+                    if (snapshot.hasData) {
+                      losts = lostService.generateList(data: snapshot.data);
+                    }
+                    if (losts.isEmpty) {
+                      return const Center(
+                          child: Text(
+                        '落とし物はありません',
+                        style: TextStyle(fontSize: 24),
+                      ));
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: kLostGridDelegate,
+                      itemCount: losts.length,
+                      itemBuilder: (context, index) {
+                        LostModel lost = losts[index];
+                        return LostCard(
+                          lost: lost,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: LostModScreen(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  lost: lost,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],
