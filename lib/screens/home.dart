@@ -204,6 +204,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       HomeIconCard(
+                        icon: FontAwesomeIcons.businessTime,
+                        label: '勤怠打刻',
+                        color: kBlackColor,
+                        backgroundColor: kGrey300Color,
+                        onTap: () {},
+                      ),
+                      HomeIconCard(
                         icon: FontAwesomeIcons.book,
                         label: '業務日報',
                         color: kBlackColor,
@@ -262,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                           return HomeIconCard(
-                            icon: FontAwesomeIcons.handsHoldingCircle,
+                            icon: FontAwesomeIcons.rightLeft,
                             label: '貸出／返却',
                             color: kBlackColor,
                             backgroundColor: kWhiteColor,
