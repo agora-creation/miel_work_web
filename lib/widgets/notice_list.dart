@@ -45,6 +45,12 @@ class NoticeList extends StatelessWidget {
                   dateText('yyyy/MM/dd HH:mm', notice.createdAt),
                   style: const TextStyle(fontSize: 14),
                 ),
+                notice.file != ''
+                    ? const Chip(
+                        label: Text('添付あり'),
+                        backgroundColor: kBlue100Color,
+                      )
+                    : Container(),
               ],
             ),
             const FaIcon(
