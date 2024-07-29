@@ -15,6 +15,7 @@ import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/report.dart';
 import 'package:miel_work_web/screens/user.dart';
+import 'package:miel_work_web/screens/work.dart';
 import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/loan.dart';
@@ -210,7 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: '勤怠打刻',
                           color: kGrey600Color,
                           backgroundColor: kGrey300Color,
-                          onTap: () {},
+                          onTap: () => showBottomUpScreen(
+                            context,
+                            WorkScreen(
+                              loginProvider: loginProvider,
+                              homeProvider: homeProvider,
+                            ),
+                          ),
                         ),
                         HomeIconCard(
                           icon: FontAwesomeIcons.clipboardCheck,
