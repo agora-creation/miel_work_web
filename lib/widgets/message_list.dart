@@ -116,20 +116,6 @@ class MessageList extends StatelessWidget {
                       color: kYellowColor,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        // child: Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     vertical: 8,
-                        //     horizontal: 12,
-                        //   ),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       const Icon(Icons.image),
-                        //       const SizedBox(height: 4),
-                        //       Text(message.image),
-                        //     ],
-                        //   ),
-                        // ),
                         child: Image.network(
                           message.image,
                           width: 200,
@@ -283,20 +269,6 @@ class MessageList extends StatelessWidget {
                       color: kWhiteColor,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        // child: Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     vertical: 8,
-                        //     horizontal: 12,
-                        //   ),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       const Icon(Icons.image),
-                        //       const SizedBox(height: 4),
-                        //       Text(message.image),
-                        //     ],
-                        //   ),
-                        // ),
                         child: Image.network(
                           message.image,
                           width: 200,
@@ -353,11 +325,6 @@ class MessageList extends StatelessWidget {
                     ),
                   )
                 : Container(),
-            LinkText(
-              label: '削除する',
-              color: kRedColor,
-              onTap: onTapDelete,
-            ),
           ],
         ),
       );

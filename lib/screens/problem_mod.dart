@@ -5,9 +5,11 @@ import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
+import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/checkbox_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
@@ -33,6 +35,7 @@ class ProblemModScreen extends StatefulWidget {
 }
 
 class _ProblemModScreenState extends State<ProblemModScreen> {
+  ProblemService problemService = ProblemService();
   String type = kProblemTypes.first;
   DateTime createdAt = DateTime.now();
   TextEditingController titleController = TextEditingController();
@@ -45,6 +48,18 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   TextEditingController countController = TextEditingController(text: '0');
   FilePickerResult? imageResult;
   List<String> states = [];
+
+  void _init() async {
+    UserModel? user = widget.loginProvider.user;
+    List<String> readUserIds = widget.problem.readUserIds;
+    if (!readUserIds.contains(user?.id)) {
+      readUserIds.add(user?.id ?? '');
+      problemService.update({
+        'id': widget.problem.id,
+        'readUserIds': readUserIds,
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -59,6 +74,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
     detailsController.text = widget.problem.details;
     states = widget.problem.states;
     countController.text = widget.problem.count.toString();
+    _init();
     super.initState();
   }
 
@@ -82,6 +98,21 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '処理済にする',
+            labelColor: kWhiteColor,
+            backgroundColor: kGreenColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => ProcessProblemDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                problem: widget.problem,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '削除する',
@@ -144,6 +175,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: FormLabel(
@@ -190,7 +222,6 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                       ),
                     ),
                   ),
-
                 ],
               ),
               const SizedBox(height: 8),
@@ -403,6 +434,73 @@ class _DelProblemDialogState extends State<DelProblemDialog> {
             }
             if (!mounted) return;
             showMessage(context, 'クレーム／要望を削除しました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ProcessProblemDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final ProblemModel problem;
+
+  const ProcessProblemDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.problem,
+    super.key,
+  });
+
+  @override
+  State<ProcessProblemDialog> createState() => _ProcessProblemDialogState();
+}
+
+class _ProcessProblemDialogState extends State<ProcessProblemDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final problemProvider = Provider.of<ProblemProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に処理済にしますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '処理済にする',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreenColor,
+          onPressed: () async {
+            String? error = await problemProvider.process(
+              problem: widget.problem,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, 'クレーム／要望の処理済にしました', true);
             Navigator.pop(context);
             Navigator.of(context, rootNavigator: true).pop();
           },

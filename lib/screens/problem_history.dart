@@ -6,29 +6,28 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/problem_add.dart';
-import 'package:miel_work_web/screens/problem_history.dart';
-import 'package:miel_work_web/screens/problem_mod.dart';
+import 'package:miel_work_web/screens/problem_history_source.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/widgets/custom_column_label.dart';
+import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/problem_list.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class ProblemScreen extends StatefulWidget {
+class ProblemHistoryScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const ProblemScreen({
+  const ProblemHistoryScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<ProblemScreen> createState() => _ProblemScreenState();
+  State<ProblemHistoryScreen> createState() => _ProblemHistoryScreenState();
 }
 
-class _ProblemScreenState extends State<ProblemScreen> {
+class _ProblemHistoryScreenState extends State<ProblemHistoryScreen> {
   ProblemService problemService = ProblemService();
   DateTime? searchStart;
   DateTime? searchEnd;
@@ -46,7 +45,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          'クレーム／要望',
+          '処理済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -67,7 +66,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
@@ -96,42 +95,6 @@ class _ProblemScreenState extends State<ProblemScreen> {
                     }
                   },
                 ),
-                Row(
-                  children: [
-                    CustomIconTextButton(
-                      label: '処理済一覧',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kGreyColor,
-                      leftIcon: FontAwesomeIcons.list,
-                      onPressed: () => showBottomUpScreen(
-                        context,
-                        ProblemHistoryScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: '新規追加',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kBlueColor,
-                      leftIcon: FontAwesomeIcons.plus,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: ProblemAddScreen(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -141,42 +104,51 @@ class _ProblemScreenState extends State<ProblemScreen> {
                   organizationId: widget.loginProvider.organization?.id,
                   searchStart: searchStart,
                   searchEnd: searchEnd,
-                  processed: false,
+                  processed: true,
                 ),
                 builder: (context, snapshot) {
                   List<ProblemModel> problems = [];
                   if (snapshot.hasData) {
                     problems = problemService.generateList(data: snapshot.data);
                   }
-                  if (problems.isEmpty) {
-                    return const Center(
-                        child: Text(
-                      'クレーム／要望はありません',
-                      style: TextStyle(fontSize: 24),
-                    ));
-                  }
-                  return ListView.builder(
-                    itemCount: problems.length,
-                    itemBuilder: (context, index) {
-                      ProblemModel problem = problems[index];
-                      return ProblemList(
-                        problem: problem,
-                        user: widget.loginProvider.user,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: ProblemModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                problem: problem,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                  return CustomDataGrid(
+                    source: ProblemHistorySource(
+                      context: context,
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      problems: problems,
+                    ),
+                    columns: [
+                      GridColumn(
+                        columnName: 'createdAt',
+                        label: const CustomColumnLabel('報告日時'),
+                      ),
+                      GridColumn(
+                        columnName: 'type',
+                        label: const CustomColumnLabel('対応項目'),
+                      ),
+                      GridColumn(
+                        columnName: 'title',
+                        label: const CustomColumnLabel('タイトル'),
+                      ),
+                      GridColumn(
+                        columnName: 'picName',
+                        label: const CustomColumnLabel('対応者'),
+                      ),
+                      GridColumn(
+                        columnName: 'targetName',
+                        label: const CustomColumnLabel('相手の名前'),
+                      ),
+                      GridColumn(
+                        columnName: 'state',
+                        label: const CustomColumnLabel('対応状況'),
+                      ),
+                      GridColumn(
+                        columnName: 'edit',
+                        label: const CustomColumnLabel('操作'),
+                        width: 100,
+                      ),
+                    ],
                   );
                 },
               ),
