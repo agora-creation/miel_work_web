@@ -59,13 +59,13 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'クレーム／要望の追加',
+          'クレーム／要望を追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下の内容で追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -97,7 +97,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -258,7 +258,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                           width: double.infinity,
                         )
                       : Container(
-                          color: kGrey300Color,
+                          color: kGreyColor.withOpacity(0.3),
                           width: double.infinity,
                           height: 150,
                           child: const Center(
@@ -296,6 +296,7 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                   maxLines: 1,
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

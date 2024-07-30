@@ -46,7 +46,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '送信する',
+            label: '以下の内容で送信する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -68,7 +68,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

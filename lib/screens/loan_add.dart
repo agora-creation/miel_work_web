@@ -58,7 +58,7 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '以下内容を追加する',
+            label: '以下の内容で追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

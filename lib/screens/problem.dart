@@ -58,7 +58,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -72,7 +72,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
@@ -113,7 +113,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
-                      label: '新規追加',
+                      label: 'クレーム／要望を追加',
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       leftIcon: FontAwesomeIcons.plus,

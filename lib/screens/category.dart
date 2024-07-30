@@ -39,7 +39,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          'カテゴリ管理',
+          'カテゴリ一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -51,7 +51,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -62,7 +62,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomIconTextButton(
-                  label: '新規追加',
+                  label: 'カテゴリを追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,

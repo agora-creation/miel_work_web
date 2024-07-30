@@ -45,7 +45,7 @@ class _ProblemHistoryDetailScreenState
           'クレーム／要望情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -141,7 +141,7 @@ class _ProblemHistoryDetailScreenState
                         width: double.infinity,
                       )
                     : Container(
-                        color: kGrey300Color,
+                        color: kGreyColor.withOpacity(0.3),
                         width: double.infinity,
                         height: 150,
                         child: const Center(
@@ -159,6 +159,7 @@ class _ProblemHistoryDetailScreenState
                 '同じような注意(対応)をした回数',
                 child: FormValue(widget.problem.count.toString()),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

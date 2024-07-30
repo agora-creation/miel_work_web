@@ -23,10 +23,8 @@ class ChatList extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: selected ? kGrey200Color : null,
-          border: const Border(
-            bottom: BorderSide(color: kGreyColor),
-          ),
+          color: selected ? kGreyColor.withOpacity(0.3) : null,
+          border: Border(bottom: BorderSide(color: kBorderColor)),
         ),
         padding: const EdgeInsets.symmetric(
           vertical: 8,
@@ -46,7 +44,7 @@ class ChatList extends StatelessWidget {
                   Text(
                     chat.lastMessage,
                     style: const TextStyle(
-                      color: kGreyColor,
+                      color: kBlackColor,
                       fontSize: 12,
                     ),
                     softWrap: false,
@@ -62,6 +60,7 @@ class ChatList extends StatelessWidget {
                     backgroundColor: kRedColor,
                   )
                 : const FaIcon(
+                    color: kDisabledColor,
                     FontAwesomeIcons.chevronRight,
                     size: 12,
                   ),

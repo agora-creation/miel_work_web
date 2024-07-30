@@ -71,13 +71,13 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'お知らせ追加',
+          'お知らせを追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下の内容で追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -101,7 +101,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

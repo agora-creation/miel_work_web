@@ -105,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -139,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
               : const Center(child: Text('チャットルームはありません')),
           messageView: currentChat != null
               ? Container(
-                  color: kGrey200Color,
+                  color: kGreyColor.withOpacity(0.3),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -283,7 +283,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 )
               : Container(
-                  color: kGrey200Color,
+                  color: kGreyColor.withOpacity(0.3),
                   child: const Center(
                     child: Text(
                       '左側のチャットルームを選択してください',
@@ -355,9 +355,9 @@ class _SearchKeywordDialogState extends State<SearchKeywordDialog> {
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '検索実行',
-          labelColor: kBlue600Color,
-          backgroundColor: kBlue100Color,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
           onPressed: () async {
             await setPrefsString('keyword', keywordController.text);
             widget.getKeyword();

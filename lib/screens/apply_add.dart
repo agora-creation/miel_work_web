@@ -79,7 +79,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '以下内容で申請する',
+            label: '以下の内容で申請する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

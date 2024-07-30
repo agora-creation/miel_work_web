@@ -61,7 +61,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -75,7 +75,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
@@ -100,7 +100,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   },
                 ),
                 CustomIconTextButton(
-                  label: '新規追加',
+                  label: 'お知らせを追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,
@@ -142,38 +142,43 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       style: TextStyle(fontSize: 24),
                     ));
                   }
-                  return ListView.builder(
-                    itemCount: notices.length,
-                    itemBuilder: (context, index) {
-                      NoticeModel notice = notices[index];
-                      OrganizationGroupModel? noticeInGroup;
-                      if (widget.homeProvider.groups.isNotEmpty) {
-                        for (OrganizationGroupModel group
-                            in widget.homeProvider.groups) {
-                          if (group.id == notice.groupId) {
-                            noticeInGroup = group;
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kBorderColor),
+                    ),
+                    child: ListView.builder(
+                      itemCount: notices.length,
+                      itemBuilder: (context, index) {
+                        NoticeModel notice = notices[index];
+                        OrganizationGroupModel? noticeInGroup;
+                        if (widget.homeProvider.groups.isNotEmpty) {
+                          for (OrganizationGroupModel group
+                              in widget.homeProvider.groups) {
+                            if (group.id == notice.groupId) {
+                              noticeInGroup = group;
+                            }
                           }
                         }
-                      }
-                      return NoticeList(
-                        notice: notice,
-                        user: widget.loginProvider.user,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: NoticeModScreen(
-                                loginProvider: widget.loginProvider,
-                                homeProvider: widget.homeProvider,
-                                notice: notice,
-                                noticeInGroup: noticeInGroup,
+                        return NoticeList(
+                          notice: notice,
+                          user: widget.loginProvider.user,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: NoticeModScreen(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  notice: notice,
+                                  noticeInGroup: noticeInGroup,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   );
                 },
               ),

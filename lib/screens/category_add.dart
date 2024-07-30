@@ -45,13 +45,13 @@ class _CategoryAddScreenState extends State<CategoryAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'カテゴリの追加',
+          'カテゴリを追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下の内容で追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -72,7 +72,7 @@ class _CategoryAddScreenState extends State<CategoryAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

@@ -103,8 +103,8 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           CustomButton(
             type: ButtonSizeType.sm,
             label: '否決する',
-            labelColor: kRedColor,
-            backgroundColor: kRed100Color,
+            labelColor: kWhiteColor,
+            backgroundColor: kRejectColor,
             onPressed: () => showDialog(
               context: context,
               builder: (context) => RejectApplyDialog(
@@ -120,7 +120,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
             type: ButtonSizeType.sm,
             label: '承認する',
             labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
+            backgroundColor: kApprovalColor,
             onPressed: () => showDialog(
               context: context,
               builder: (context) => ApprovalApplyDialog(
@@ -542,7 +542,7 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
           type: ButtonSizeType.sm,
           label: '承認する',
           labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
+          backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await applyProvider.approval(
               apply: widget.apply,
@@ -617,8 +617,8 @@ class _RejectApplyDialogState extends State<RejectApplyDialog> {
         CustomButton(
           type: ButtonSizeType.sm,
           label: '否決する',
-          labelColor: kRedColor,
-          backgroundColor: kRed100Color,
+          labelColor: kWhiteColor,
+          backgroundColor: kRejectColor,
           onPressed: () async {
             String? error = await applyProvider.reject(
               apply: widget.apply,

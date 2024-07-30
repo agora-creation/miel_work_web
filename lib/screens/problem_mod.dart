@@ -102,7 +102,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
             type: ButtonSizeType.sm,
             label: '処理済にする',
             labelColor: kWhiteColor,
-            backgroundColor: kGreenColor,
+            backgroundColor: kCheckColor,
             onPressed: () => showDialog(
               context: context,
               builder: (context) => ProcessProblemDialog(
@@ -163,7 +163,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -330,7 +330,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                               width: double.infinity,
                             )
                           : Container(
-                              color: kGrey300Color,
+                              color: kGreyColor.withOpacity(0.3),
                               width: double.infinity,
                               height: 150,
                               child: const Center(
@@ -368,6 +368,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                   maxLines: 1,
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),
@@ -489,7 +490,7 @@ class _ProcessProblemDialogState extends State<ProcessProblemDialog> {
           type: ButtonSizeType.sm,
           label: '処理済にする',
           labelColor: kWhiteColor,
-          backgroundColor: kGreenColor,
+          backgroundColor: kCheckColor,
           onPressed: () async {
             String? error = await problemProvider.process(
               problem: widget.problem,

@@ -237,7 +237,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '保存',
+            label: '以下の内容で保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {

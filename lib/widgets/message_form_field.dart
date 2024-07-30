@@ -20,9 +20,9 @@ class MessageFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: kWhiteColor,
-        border: Border(top: BorderSide(color: kGreyColor)),
+        border: Border(top: BorderSide(color: kBorderColor)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
