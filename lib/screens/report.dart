@@ -10,6 +10,7 @@ import 'package:miel_work_web/screens/report_add.dart';
 import 'package:miel_work_web/screens/report_mod.dart';
 import 'package:miel_work_web/services/report.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/day_list.dart';
 import 'package:miel_work_web/widgets/report_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
@@ -70,7 +71,7 @@ class _ReportScreenState extends State<ReportScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -84,7 +85,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 CustomIconTextButton(
                   label: '年月検索: ${dateText('yyyy年MM月', searchMonth)}',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     DateTime? selected = await showMonthPicker(
@@ -96,7 +97,25 @@ class _ReportScreenState extends State<ReportScreen> {
                     _changeMonth(selected);
                   },
                 ),
-                Container(),
+                CustomIconTextButton(
+                  label: '日報を作成',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  leftIcon: FontAwesomeIcons.plus,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ReportAddScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          day: DateTime.now(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -113,54 +132,48 @@ class _ReportScreenState extends State<ReportScreen> {
                       data: snapshot.data,
                     );
                   }
-                  return ListView.builder(
-                    itemCount: days.length,
-                    itemBuilder: (context, index) {
-                      DateTime day = days[index];
-                      ReportModel? report;
-                      if (reports.isNotEmpty) {
-                        for (ReportModel tmpReport in reports) {
-                          String dayKey = dateText(
-                            'yyyy-MM-dd',
-                            tmpReport.createdAt,
-                          );
-                          if (day == DateTime.parse(dayKey)) {
-                            report = tmpReport;
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kBorderColor),
+                    ),
+                    child: ListView.builder(
+                      itemCount: days.length,
+                      itemBuilder: (context, index) {
+                        DateTime day = days[index];
+                        ReportModel? report;
+                        if (reports.isNotEmpty) {
+                          for (ReportModel tmpReport in reports) {
+                            String dayKey = dateText(
+                              'yyyy-MM-dd',
+                              tmpReport.createdAt,
+                            );
+                            if (day == DateTime.parse(dayKey)) {
+                              report = tmpReport;
+                            }
                           }
                         }
-                      }
-                      return ReportList(
-                        day: day,
-                        report: report,
-                        onTap: () {
-                          if (report != null) {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.rightToLeft,
-                                child: ReportModScreen(
-                                  loginProvider: widget.loginProvider,
-                                  homeProvider: widget.homeProvider,
-                                  report: report,
+                        return DayList(
+                          day,
+                          child: ReportList(
+                            report: report,
+                            onTap: () {
+                              if (report == null) return;
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  type: PageTransitionType.rightToLeft,
+                                  child: ReportModScreen(
+                                    loginProvider: widget.loginProvider,
+                                    homeProvider: widget.homeProvider,
+                                    report: report,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.rightToLeft,
-                                child: ReportAddScreen(
-                                  loginProvider: widget.loginProvider,
-                                  homeProvider: widget.homeProvider,
-                                  day: day,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   );
                 },
               ),

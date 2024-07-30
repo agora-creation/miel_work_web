@@ -209,8 +209,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         HomeIconCard(
                           icon: FontAwesomeIcons.businessTime,
                           label: '勤怠打刻',
-                          color: kGrey600Color,
-                          backgroundColor: kGrey300Color,
+                          color: kBlackColor,
+                          backgroundColor: kWhiteColor,
                           onTap: () => showBottomUpScreen(
                             context,
                             WorkScreen(
@@ -311,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: FontAwesomeIcons.users,
                           label: 'スタッフ一覧',
                           color: kWhiteColor,
-                          backgroundColor: kGrey600Color,
+                          backgroundColor: kDisabledColor,
                           onTap: () => showBottomUpScreen(
                             context,
                             UserScreen(

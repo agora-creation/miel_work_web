@@ -45,7 +45,7 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '過去の落とし物履歴',
+          '落とし物：返却済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -57,7 +57,7 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -71,7 +71,7 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(

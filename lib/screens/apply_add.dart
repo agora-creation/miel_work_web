@@ -79,7 +79,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '申請する',
+            label: '以下内容で申請する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -114,7 +114,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -272,6 +272,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

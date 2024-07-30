@@ -27,6 +27,16 @@ const kGreenColor = Color(0xFF4CAF50);
 const kGreen200Color = Color(0xFFA5D6A7);
 const kLightGreenColor = Color(0xFF8BC34A);
 
+const kSearchColor = Color(0xFF4FC3F7);
+const kSaturdayColor = Color(0xFF03A9F4);
+const kSundayColor = Color(0xFFFF5722);
+const kDisabledColor = Color(0xFF757575);
+const kCheckColor = Color(0xFF8BC34A);
+const kApprovalColor = Color(0xFF009688);
+const kReturnColor = Color(0xFF00ACC1);
+const kPdfColor = Color(0xFFFF5252);
+Color kBorderColor = const Color(0xFF9E9E9E).withOpacity(0.5);
+
 ThemeData customTheme() {
   return ThemeData(
     scaffoldBackgroundColor: kBackgroundColor,

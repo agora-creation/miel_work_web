@@ -245,7 +245,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
             type: ButtonSizeType.sm,
             label: '承認する',
             labelColor: kWhiteColor,
-            backgroundColor: kDeepOrangeColor,
+            backgroundColor: kApprovalColor,
             onPressed: () => showDialog(
               context: context,
               builder: (context) => ApprovalReportDialog(
@@ -339,7 +339,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -407,7 +407,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                           children: [
                             ReportTableButton(
                               label: '削除',
-                              color: kRed100Color,
+                              color: kRedColor.withOpacity(0.3),
                               onPressed: () {
                                 reportWorkers.removeLast();
                                 setState(() {});
@@ -416,7 +416,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             const SizedBox(width: 4),
                             ReportTableButton(
                               label: '追加',
-                              color: kBlue100Color,
+                              color: kBlueColor.withOpacity(0.3),
                               onPressed: () {
                                 reportWorkers
                                     .add(ReportWorkerModel.fromMap({}));
@@ -649,7 +649,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   },
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
-                                  tileColor: kGrey300Color,
+                                  tileColor: kGreyColor.withOpacity(0.3),
                                 ),
                                 const ReportTableTh('忘れ物'),
                                 CheckboxListTile(
@@ -661,7 +661,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                   },
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
-                                  tileColor: kGrey300Color,
+                                  tileColor: kGreyColor.withOpacity(0.3),
                                 ),
                               ],
                             ),
@@ -685,7 +685,6 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                     textInputType: TextInputType.multiline,
                                     onChanged: (value) {
                                       reportLocker.recovery = value;
-
                                       setState(() {});
                                     },
                                   ),
@@ -997,7 +996,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportRepairs.removeLast();
                       setState(() {});
@@ -1006,7 +1005,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportRepairs.add(ReportRepairModel.fromMap({}));
                       setState(() {});
@@ -1063,7 +1062,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportProblems.removeLast();
                       setState(() {});
@@ -1072,7 +1071,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportProblems.add(ReportProblemModel.fromMap({}));
                       setState(() {});
@@ -1138,7 +1137,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportPamphlets.removeLast();
                       setState(() {});
@@ -1147,7 +1146,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportPamphlets.add(ReportPamphletModel.fromMap({}));
                       setState(() {});
@@ -1246,7 +1245,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportEquipments.removeLast();
                       setState(() {});
@@ -1255,7 +1254,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportEquipments.add(ReportEquipmentModel.fromMap({}));
                       setState(() {});
@@ -1731,7 +1730,7 @@ class _ApprovalReportDialogState extends State<ApprovalReportDialog> {
           type: ButtonSizeType.sm,
           label: '承認する',
           labelColor: kWhiteColor,
-          backgroundColor: kDeepOrangeColor,
+          backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await reportProvider.approval(
               report: widget.report,

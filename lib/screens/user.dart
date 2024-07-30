@@ -79,7 +79,7 @@ class _UserScreenState extends State<UserScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -90,7 +90,7 @@ class _UserScreenState extends State<UserScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CustomIconTextButton(
-                  label: '新規追加',
+                  label: 'スタッフを追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,
@@ -147,7 +147,7 @@ class _UserScreenState extends State<UserScreen> {
                   GridColumn(
                     columnName: 'edit',
                     label: const CustomColumnLabel('操作'),
-                    width: 250,
+                    width: 300,
                   ),
                 ],
               ),

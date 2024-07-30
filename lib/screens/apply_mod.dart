@@ -179,7 +179,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -211,7 +211,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
               FormLabel(
                 '承認者一覧',
                 child: Container(
-                  color: kRed100Color,
+                  color: kRedColor.withOpacity(0.3),
                   width: double.infinity,
                   child: Column(
                     children: reApprovalUsers.map((approvalUser) {
@@ -404,6 +404,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                   fontSize: 12,
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

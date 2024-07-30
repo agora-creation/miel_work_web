@@ -45,7 +45,7 @@ class _LoanHistoryScreenState extends State<LoanHistoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '過去の貸出／返却履歴',
+          '貸出／返却：返却済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -57,7 +57,7 @@ class _LoanHistoryScreenState extends State<LoanHistoryScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -71,7 +71,7 @@ class _LoanHistoryScreenState extends State<LoanHistoryScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(

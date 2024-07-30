@@ -58,7 +58,7 @@ class _LoanScreenState extends State<LoanScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -72,7 +72,7 @@ class _LoanScreenState extends State<LoanScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
@@ -99,7 +99,7 @@ class _LoanScreenState extends State<LoanScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
-                      label: '過去の貸出／返却履歴',
+                      label: '返却済一覧',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
                       leftIcon: FontAwesomeIcons.list,
@@ -113,7 +113,7 @@ class _LoanScreenState extends State<LoanScreen> {
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
-                      label: '新規追加',
+                      label: '貸出を追加',
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       leftIcon: FontAwesomeIcons.plus,
@@ -152,7 +152,7 @@ class _LoanScreenState extends State<LoanScreen> {
                     if (loans.isEmpty) {
                       return const Center(
                           child: Text(
-                        '貸出物はありません',
+                        '貸出はありません',
                         style: TextStyle(fontSize: 24),
                       ));
                     }

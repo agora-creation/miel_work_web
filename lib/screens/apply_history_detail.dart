@@ -52,7 +52,7 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
           '申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -92,7 +92,7 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
               FormLabel(
                 '承認者一覧',
                 child: Container(
-                  color: kRed100Color,
+                  color: kRedColor.withOpacity(0.3),
                   width: double.infinity,
                   child: Column(
                     children: reApprovalUsers.map((approvalUser) {
@@ -225,6 +225,7 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
                       )
                     : Container(),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

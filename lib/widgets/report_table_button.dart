@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/style.dart';
 
 class ReportTableButton extends StatelessWidget {
   final String label;
@@ -22,7 +23,10 @@ class ReportTableButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(0),
         ),
       ),
-      child: Text(label),
+      child: Text(
+        label,
+        style: const TextStyle(color: kBlackColor),
+      ),
     );
   }
 }

@@ -74,7 +74,7 @@ class _LostModScreenState extends State<LostModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '落とし物情報の編集',
+          '落とし物情報を編集',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -123,7 +123,7 @@ class _LostModScreenState extends State<LostModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -230,7 +230,7 @@ class _LostModScreenState extends State<LostModScreen> {
                               width: double.infinity,
                             )
                           : Container(
-                              color: kGrey300Color,
+                              color: kGreyColor.withOpacity(0.3),
                               width: double.infinity,
                               height: 150,
                               child: const Center(
@@ -305,7 +305,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 type: ButtonSizeType.lg,
                 label: '返却処理をする',
                 labelColor: kWhiteColor,
-                backgroundColor: kOrangeColor,
+                backgroundColor: kReturnColor,
                 onPressed: () async {
                   String? error = await lostProvider.updateReturn(
                     organization: widget.loginProvider.organization,
@@ -325,6 +325,7 @@ class _LostModScreenState extends State<LostModScreen> {
                   Navigator.pop(context);
                 },
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

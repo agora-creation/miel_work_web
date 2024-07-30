@@ -123,7 +123,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -257,7 +257,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                               width: double.infinity,
                             )
                           : Container(
-                              color: kGrey300Color,
+                              color: kGreyColor.withOpacity(0.3),
                               width: double.infinity,
                               height: 150,
                               child: const Center(
@@ -323,7 +323,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 type: ButtonSizeType.lg,
                 label: '返却処理をする',
                 labelColor: kWhiteColor,
-                backgroundColor: kOrangeColor,
+                backgroundColor: kReturnColor,
                 onPressed: () async {
                   String? error = await loanProvider.updateReturn(
                     organization: widget.loginProvider.organization,
@@ -343,6 +343,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                   Navigator.pop(context);
                 },
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

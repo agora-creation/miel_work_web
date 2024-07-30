@@ -45,7 +45,7 @@ class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '過去の申請履歴',
+          '各種申請：承認済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -57,7 +57,7 @@ class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -71,7 +71,7 @@ class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(

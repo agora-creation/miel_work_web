@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/plan.dart';
@@ -229,14 +230,14 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          '${dateText('MM月dd日(E)', widget.day)}の日報',
-          style: const TextStyle(color: kBlackColor),
+        title: const Text(
+          '日報を作成',
+          style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '保存する',
+            label: '保存',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -302,7 +303,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -313,6 +314,49 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '作成日',
+                          style: kReportHeaderStyle,
+                        ),
+                        Table(
+                          border: TableBorder.all(color: kGreyColor),
+                          children: [
+                            TableRow(
+                              children: [
+                                FormValue(
+                                  dateText('yyyy/MM/dd', createdAt),
+                                  onTap: () async =>
+                                      await CustomDateTimePicker().picker(
+                                    context: context,
+                                    init: createdAt,
+                                    title: '作成日を選択',
+                                    onChanged: (value) {
+                                      setState(() {
+                                        createdAt = value;
+                                      });
+                                    },
+                                    datetime: false,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(child: Container()),
+                ],
+              ),
+              const SizedBox(height: 16),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -370,7 +414,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                           children: [
                             ReportTableButton(
                               label: '削除',
-                              color: kRed100Color,
+                              color: kRedColor.withOpacity(0.3),
                               onPressed: () {
                                 reportWorkers.removeLast();
                                 setState(() {});
@@ -379,7 +423,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             const SizedBox(width: 4),
                             ReportTableButton(
                               label: '追加',
-                              color: kBlue100Color,
+                              color: kBlueColor.withOpacity(0.3),
                               onPressed: () {
                                 reportWorkers
                                     .add(ReportWorkerModel.fromMap({}));
@@ -612,7 +656,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   },
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
-                                  tileColor: kGrey300Color,
+                                  tileColor: kGreyColor.withOpacity(0.3),
                                 ),
                                 const ReportTableTh('忘れ物'),
                                 CheckboxListTile(
@@ -624,7 +668,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   },
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
-                                  tileColor: kGrey300Color,
+                                  tileColor: kGreyColor.withOpacity(0.3),
                                 ),
                               ],
                             ),
@@ -648,7 +692,6 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                     textInputType: TextInputType.multiline,
                                     onChanged: (value) {
                                       reportLocker.recovery = value;
-
                                       setState(() {});
                                     },
                                   ),
@@ -960,7 +1003,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportRepairs.removeLast();
                       setState(() {});
@@ -969,7 +1012,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportRepairs.add(ReportRepairModel.fromMap({}));
                       setState(() {});
@@ -1026,7 +1069,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportProblems.removeLast();
                       setState(() {});
@@ -1035,7 +1078,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportProblems.add(ReportProblemModel.fromMap({}));
                       setState(() {});
@@ -1101,7 +1144,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportPamphlets.removeLast();
                       setState(() {});
@@ -1110,7 +1153,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportPamphlets.add(ReportPamphletModel.fromMap({}));
                       setState(() {});
@@ -1209,7 +1252,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 children: [
                   ReportTableButton(
                     label: '削除',
-                    color: kRed100Color,
+                    color: kRedColor.withOpacity(0.3),
                     onPressed: () {
                       reportEquipments.removeLast();
                       setState(() {});
@@ -1218,7 +1261,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                   const SizedBox(width: 4),
                   ReportTableButton(
                     label: '追加',
-                    color: kBlue100Color,
+                    color: kBlueColor.withOpacity(0.3),
                     onPressed: () {
                       reportEquipments.add(ReportEquipmentModel.fromMap({}));
                       setState(() {});

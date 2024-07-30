@@ -58,7 +58,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           ),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
@@ -72,7 +72,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 CustomIconTextButton(
                   label: '期間検索: $searchText',
                   labelColor: kWhiteColor,
-                  backgroundColor: kLightBlueColor,
+                  backgroundColor: kSearchColor,
                   leftIcon: FontAwesomeIcons.magnifyingGlass,
                   onPressed: () async {
                     var selected = await showDataRangePickerDialog(
@@ -99,7 +99,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
-                      label: '過去の申請履歴',
+                      label: '承認済一覧',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
                       leftIcon: FontAwesomeIcons.list,

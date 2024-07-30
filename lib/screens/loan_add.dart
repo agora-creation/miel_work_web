@@ -52,13 +52,13 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '貸出物の追加',
+          '貸出を追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下内容を追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -79,13 +79,13 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '貸出物を追加しました', true);
+              showMessage(context, '貸出を追加しました', true);
               Navigator.pop(context);
             },
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -213,7 +213,7 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
                           width: double.infinity,
                         )
                       : Container(
-                          color: kGrey300Color,
+                          color: kGreyColor.withOpacity(0.3),
                           width: double.infinity,
                           height: 150,
                           child: const Center(
@@ -222,6 +222,7 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
                         ),
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

@@ -19,8 +19,8 @@ class FormLabel extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            color: kGrey600Color,
-            fontSize: 14,
+            color: kBlackColor,
+            fontSize: 16,
           ),
         ),
         const SizedBox(height: 2),

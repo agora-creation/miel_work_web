@@ -17,7 +17,7 @@ class FormValue extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: kGrey300Color,
+        color: kGreyColor.withOpacity(0.3),
         width: double.infinity,
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -33,7 +33,7 @@ class FormValue extends StatelessWidget {
                 ? const FaIcon(
                     FontAwesomeIcons.pen,
                     size: 14,
-                    color: kGrey600Color,
+                    color: kDisabledColor,
                   )
                 : Container(),
           ],

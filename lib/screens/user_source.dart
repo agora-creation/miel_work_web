@@ -155,9 +155,9 @@ class UserSource extends DataGridSource {
         const SizedBox(width: 4),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: 'PDF印刷',
-          labelColor: kBlackColor,
-          backgroundColor: kRed200Color,
+          label: '初期設定PDF',
+          labelColor: kWhiteColor,
+          backgroundColor: kPdfColor,
           onPressed: () async => await PdfService().userDownload(user),
         ),
       ],

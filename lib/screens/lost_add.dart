@@ -52,13 +52,13 @@ class _LostAddScreenState extends State<LostAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '落とし物の追加',
+          '落とし物を追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下の内容で追加する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -79,13 +79,13 @@ class _LostAddScreenState extends State<LostAddScreen> {
                 return;
               }
               if (!mounted) return;
-              showMessage(context, '落とし物が追加されました', true);
+              showMessage(context, '落とし物情報が追加されました', true);
               Navigator.pop(context);
             },
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -186,7 +186,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
                           width: double.infinity,
                         )
                       : Container(
-                          color: kGrey300Color,
+                          color: kGreyColor.withOpacity(0.3),
                           width: double.infinity,
                           height: 150,
                           child: const Center(
@@ -204,6 +204,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
                   maxLines: 10,
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

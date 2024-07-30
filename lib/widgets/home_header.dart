@@ -139,9 +139,9 @@ class _HomeHeaderState extends State<HomeHeader> {
             children: [
               CustomButton(
                 type: ButtonSizeType.sm,
-                label: 'マニュアル',
-                labelColor: kBlackColor,
-                backgroundColor: kRed200Color,
+                label: 'マニュアルPDF',
+                labelColor: kWhiteColor,
+                backgroundColor: kPdfColor,
                 onPressed: () async {
                   Uri url =
                       Uri.parse('https://agora-c.com/miel-work/manual_web.pdf');
