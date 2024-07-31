@@ -123,7 +123,18 @@ class _ReportScreenState extends State<ReportScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: reportService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  searchMonth: searchMonth,
+                  searchStart: DateTime(
+                    searchMonth.year,
+                    searchMonth.month,
+                    1,
+                  ),
+                  searchEnd: DateTime(
+                    searchMonth.year,
+                    searchMonth.month + 1,
+                    1,
+                  ).add(
+                    const Duration(days: -1),
+                  ),
                 ),
                 builder: (context, snapshot) {
                   List<ReportModel> reports = [];

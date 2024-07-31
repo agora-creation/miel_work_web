@@ -102,9 +102,9 @@ class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: applyService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  searchApproval: [1, 9],
                   searchStart: searchStart,
                   searchEnd: searchEnd,
+                  approval: [1, 9],
                 ),
                 builder: (context, snapshot) {
                   List<ApplyModel> applies = [];

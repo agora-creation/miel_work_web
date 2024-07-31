@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/category.dart';
+import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
-import 'package:miel_work_web/screens/plan_timeline.dart';
+import 'package:miel_work_web/screens/plan_add.dart';
+import 'package:miel_work_web/screens/plan_mod.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/category_checkbox_list.dart';
@@ -14,9 +17,9 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/day_list.dart';
+import 'package:miel_work_web/widgets/plan_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart' as sfc;
 
 class PlanScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -37,7 +40,6 @@ class _PlanScreenState extends State<PlanScreen> {
   List<String> searchCategories = [];
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
-  sfc.CalendarController calendarController = sfc.CalendarController();
 
   void _changeMonth(DateTime value) {
     searchMonth = value;
@@ -55,23 +57,8 @@ class _PlanScreenState extends State<PlanScreen> {
     setState(() {});
   }
 
-  void _calendarTap(sfc.CalendarLongPressDetails details) {
-    Navigator.push(
-      context,
-      PageTransition(
-        type: PageTransitionType.rightToLeft,
-        child: PlanTimelineScreen(
-          loginProvider: widget.loginProvider,
-          homeProvider: widget.homeProvider,
-          date: details.date ?? DateTime.now(),
-        ),
-      ),
-    );
-  }
-
   @override
   void initState() {
-    calendarController.selectedDate = DateTime.now();
     _searchCategoriesChange();
     _init();
     super.initState();
@@ -171,7 +158,19 @@ class _PlanScreenState extends State<PlanScreen> {
                       labelColor: kWhiteColor,
                       backgroundColor: kBlueColor,
                       leftIcon: FontAwesomeIcons.plus,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: PlanAddScreen(
+                              loginProvider: widget.loginProvider,
+                              homeProvider: widget.homeProvider,
+                              date: DateTime.now(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -179,54 +178,88 @@ class _PlanScreenState extends State<PlanScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: kBorderColor),
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: planService.streamList(
+                  organizationId: widget.loginProvider.organization?.id,
+                  searchCategories: searchCategories,
                 ),
-                child: ListView.builder(
-                  itemCount: days.length,
-                  itemBuilder: (context, index) {
-                    DateTime day = days[index];
-                    return DayList(
-                      day,
-                      child: Container(),
+                builder: (context, snapshot) {
+                  List<PlanModel> plans = [];
+                  if (snapshot.hasData) {
+                    plans = planService.generateList(
+                      data: snapshot.data,
+                      currentGroup: widget.homeProvider.currentGroup,
+                      searchStart: DateTime(
+                        searchMonth.year,
+                        searchMonth.month,
+                        1,
+                      ),
+                      searchEnd: DateTime(
+                        searchMonth.year,
+                        searchMonth.month + 1,
+                        1,
+                      ).add(
+                        const Duration(days: -1),
+                      ),
                     );
-                  },
-                ),
+                  }
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kBorderColor),
+                    ),
+                    child: ListView.builder(
+                      itemCount: days.length,
+                      itemBuilder: (context, index) {
+                        DateTime day = days[index];
+                        List<PlanModel> dayPlans = [];
+                        if (plans.isNotEmpty) {
+                          for (PlanModel plan in plans) {
+                            String dayKey = dateText(
+                              'yyyy-MM-dd',
+                              plan.startedAt,
+                            );
+                            if (day == DateTime.parse(dayKey)) {
+                              dayPlans.add(plan);
+                            }
+                          }
+                        }
+                        return DayList(
+                          day,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: dayPlans.map((dayPlan) {
+                                return PlanList(
+                                  plan: dayPlan,
+                                  groups: widget.homeProvider.groups,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: PlanModScreen(
+                                          loginProvider: widget.loginProvider,
+                                          homeProvider: widget.homeProvider,
+                                          plan: dayPlan,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
             ),
-            // Expanded(
-            //   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            //     stream: planService.streamList(
-            //       organizationId: widget.loginProvider.organization?.id,
-            //       categories: searchCategories,
-            //     ),
-            //     builder: (context, snapshot) {
-            //       List<sfc.Appointment> appointments = [];
-            //       if (snapshot.hasData) {
-            //         appointments = planService.generateListAppointment(
-            //           data: snapshot.data,
-            //           currentGroup: widget.homeProvider.currentGroup,
-            //         );
-            //       }
-            //       return CustomCalendar(
-            //         dataSource: _DataSource(appointments),
-            //         onLongPress: _calendarTap,
-            //         controller: calendarController,
-            //       );
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
     );
-  }
-}
-
-class _DataSource extends sfc.CalendarDataSource {
-  _DataSource(List<sfc.Appointment> source) {
-    appointments = source;
   }
 }
 

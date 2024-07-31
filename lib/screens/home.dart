@@ -178,9 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                           stream: applyService.streamList(
                             organizationId: loginProvider.organization?.id,
-                            searchApproval: [0],
                             searchStart: null,
                             searchEnd: null,
+                            approval: [0],
                           ),
                           builder: (context, snapshot) {
                             bool alert = false;

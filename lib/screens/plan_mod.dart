@@ -10,7 +10,6 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/services/category.dart';
-import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -21,12 +20,12 @@ import 'package:provider/provider.dart';
 class PlanModScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final String planId;
+  final PlanModel plan;
 
   const PlanModScreen({
     required this.loginProvider,
     required this.homeProvider,
-    required this.planId,
+    required this.plan,
     super.key,
   });
 
@@ -35,7 +34,6 @@ class PlanModScreen extends StatefulWidget {
 }
 
 class _PlanModScreenState extends State<PlanModScreen> {
-  PlanService planService = PlanService();
   CategoryService categoryService = CategoryService();
   OrganizationGroupModel? selectedGroup;
   List<CategoryModel> categories = [];
@@ -54,32 +52,26 @@ class _PlanModScreenState extends State<PlanModScreen> {
   int alertMinute = 0;
 
   void _init() async {
-    PlanModel? plan = await planService.selectData(id: widget.planId);
-    if (plan == null) {
-      if (!mounted) return;
-      showMessage(context, '予定データの取得に失敗しました', false);
-      Navigator.of(context, rootNavigator: true).pop();
-      return;
-    }
     for (OrganizationGroupModel group in widget.homeProvider.groups) {
-      if (group.id == plan.groupId) {
+      if (group.id == widget.plan.groupId) {
         selectedGroup = group;
       }
     }
     categories = await categoryService.selectList(
       organizationId: widget.loginProvider.organization?.id,
     );
-    selectedCategory = categories.firstWhere((e) => e.name == plan.category);
-    subjectController.text = plan.subject;
-    startedAt = plan.startedAt;
-    endedAt = plan.endedAt;
-    allDay = plan.allDay;
-    repeat = plan.repeat;
-    repeatInterval = plan.repeatInterval;
-    repeatEveryController.text = plan.repeatEvery.toString();
-    repeatWeeks = plan.repeatWeeks;
-    memoController.text = plan.memo;
-    alertMinute = plan.alertMinute;
+    selectedCategory =
+        categories.firstWhere((e) => e.name == widget.plan.category);
+    subjectController.text = widget.plan.subject;
+    startedAt = widget.plan.startedAt;
+    endedAt = widget.plan.endedAt;
+    allDay = widget.plan.allDay;
+    repeat = widget.plan.repeat;
+    repeatInterval = widget.plan.repeatInterval;
+    repeatEveryController.text = widget.plan.repeatEvery.toString();
+    repeatWeeks = widget.plan.repeatWeeks;
+    memoController.text = widget.plan.memo;
+    alertMinute = widget.plan.alertMinute;
     setState(() {});
   }
 
@@ -158,7 +150,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
               builder: (context) => DelPlanDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                planId: widget.planId,
+                plan: widget.plan,
               ),
             ),
           ),
@@ -170,7 +162,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
             backgroundColor: kBlueColor,
             onPressed: () async {
               String? error = await planProvider.update(
-                planId: widget.planId,
+                plan: widget.plan,
                 organization: widget.loginProvider.organization,
                 group: selectedGroup,
                 category: selectedCategory,
@@ -197,7 +189,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -340,6 +332,7 @@ class _PlanModScreenState extends State<PlanModScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),
@@ -351,12 +344,12 @@ class _PlanModScreenState extends State<PlanModScreen> {
 class DelPlanDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final String planId;
+  final PlanModel plan;
 
   const DelPlanDialog({
     required this.loginProvider,
     required this.homeProvider,
-    required this.planId,
+    required this.plan,
     super.key,
   });
 
@@ -397,7 +390,7 @@ class _DelPlanDialogState extends State<DelPlanDialog> {
           backgroundColor: kRedColor,
           onPressed: () async {
             String? error = await planProvider.delete(
-              planId: widget.planId,
+              plan: widget.plan,
             );
             if (error != null) {
               if (!mounted) return;

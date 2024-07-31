@@ -139,9 +139,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: applyService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  searchApproval: [0],
                   searchStart: searchStart,
                   searchEnd: searchEnd,
+                  approval: [0],
                 ),
                 builder: (context, snapshot) {
                   List<ApplyModel> applies = [];

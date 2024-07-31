@@ -178,7 +178,22 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
     reportWorkers.add(ReportWorkerModel.fromMap({}));
     List<PlanModel> plans = await planService.selectList(
       organizationId: widget.loginProvider.organization?.id,
-      date: widget.day,
+      searchStart: DateTime(
+        widget.day.year,
+        widget.day.month,
+        widget.day.day,
+        0,
+        0,
+        0,
+      ),
+      searchEnd: DateTime(
+        widget.day.year,
+        widget.day.month,
+        widget.day.day,
+        23,
+        59,
+        59,
+      ),
     );
     if (plans.isNotEmpty) {
       for (PlanModel plan in plans) {
@@ -193,7 +208,10 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
     reportProblems.add(ReportProblemModel.fromMap({}));
     List<ProblemModel> problems = await problemService.selectList(
       organizationId: widget.loginProvider.organization?.id,
-      date: widget.day,
+      searchStart:
+          DateTime(widget.day.year, widget.day.month, widget.day.day, 0, 0, 0),
+      searchEnd: DateTime(
+          widget.day.year, widget.day.month, widget.day.day, 23, 59, 59),
     );
     if (problems.isNotEmpty) {
       reportProblems.clear();

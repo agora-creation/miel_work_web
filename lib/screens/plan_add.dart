@@ -121,13 +121,13 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '予定の追加',
+          '予定を追加',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '追加する',
+            label: '以下の内容で保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
             onPressed: () async {
@@ -158,7 +158,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        shape: const Border(bottom: BorderSide(color: kGrey300Color)),
+        shape: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -301,6 +301,7 @@ class _PlanAddScreenState extends State<PlanAddScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),
