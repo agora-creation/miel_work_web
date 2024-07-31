@@ -249,7 +249,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Divider(color: kGrey600Color),
+              Divider(color: kBorderColor),
               const SizedBox(height: 16),
               FormLabel(
                 '返却日',
@@ -282,7 +282,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 '署名',
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: kGrey600Color),
+                    border: Border.all(color: kBorderColor),
                   ),
                   child: Signature(
                     controller: signImageController,
@@ -297,7 +297,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 type: ButtonSizeType.sm,
                 label: '書き直す',
                 labelColor: kBlackColor,
-                backgroundColor: kGrey300Color,
+                backgroundColor: kGreyColor.withOpacity(0.3),
                 onPressed: () => signImageController.clear(),
               ),
               const SizedBox(height: 8),

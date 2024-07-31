@@ -24,7 +24,7 @@ class DatetimeRangeForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: kGrey300Color)),
+      decoration: BoxDecoration(border: Border.all(color: kBorderColor)),
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +32,7 @@ class DatetimeRangeForm extends StatelessWidget {
           const Text(
             '時間部分をタップすると、日時選択ダイアログが画面下部に表示されます。',
             style: TextStyle(
-              color: kGrey600Color,
+              color: kGreyColor,
               fontSize: 12,
             ),
           ),
@@ -62,7 +62,7 @@ class DatetimeRangeForm extends StatelessWidget {
                 ),
                 const FaIcon(
                   FontAwesomeIcons.chevronRight,
-                  color: kGrey600Color,
+                  color: kDisabledColor,
                   size: 24,
                 ),
                 GestureDetector(
@@ -88,8 +88,8 @@ class DatetimeRangeForm extends StatelessWidget {
             ),
           ),
           Container(
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: kGrey300Color)),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: kBorderColor)),
             ),
             padding: const EdgeInsets.only(top: 8),
             width: double.infinity,

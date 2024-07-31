@@ -53,7 +53,7 @@ ThemeData customTheme() {
       backgroundColor: kWhiteColor,
       elevation: 5,
       selectedItemColor: kBlueColor,
-      unselectedItemColor: kGrey600Color,
+      unselectedItemColor: kDisabledColor,
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: kBlueColor,
@@ -68,9 +68,9 @@ ThemeData customTheme() {
   );
 }
 
-const kHeaderDecoration = BoxDecoration(
+BoxDecoration kHeaderDecoration = BoxDecoration(
   color: kWhiteColor,
-  border: Border(bottom: BorderSide(color: kGrey300Color)),
+  border: Border(bottom: BorderSide(color: kBorderColor)),
 );
 
 List<String> kWeeks = ['月', '火', '水', '木', '金', '土', '日'];

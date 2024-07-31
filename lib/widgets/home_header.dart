@@ -251,7 +251,7 @@ class _GroupSelectDialogState extends State<GroupSelectDialog> {
     return CustomAlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Container(
-        decoration: BoxDecoration(border: Border.all(color: kGrey600Color)),
+        decoration: BoxDecoration(border: Border.all(color: kBorderColor)),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,

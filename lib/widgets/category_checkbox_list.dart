@@ -19,7 +19,7 @@ class CategoryCheckboxList extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: category.color,
-        border: const Border(bottom: BorderSide(color: kGrey300Color)),
+        border: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       child: CheckboxListTile(
         title: Text(

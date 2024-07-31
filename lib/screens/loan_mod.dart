@@ -267,7 +267,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Divider(color: kGrey600Color),
+              Divider(color: kBorderColor),
               const SizedBox(height: 16),
               FormLabel(
                 '返却日',
@@ -300,7 +300,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 '署名',
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: kGrey600Color),
+                    border: Border.all(color: kBorderColor),
                   ),
                   child: Signature(
                     controller: signImageController,
@@ -315,7 +315,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 type: ButtonSizeType.sm,
                 label: '書き直す',
                 labelColor: kBlackColor,
-                backgroundColor: kGrey300Color,
+                backgroundColor: kGreyColor.withOpacity(0.3),
                 onPressed: () => signImageController.clear(),
               ),
               const SizedBox(height: 8),

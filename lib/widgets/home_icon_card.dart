@@ -38,7 +38,7 @@ class HomeIconCard extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        color: alert ? kRed100Color : backgroundColor,
+        color: alert ? kRedColor.withOpacity(0.3) : backgroundColor,
         surfaceTintColor: alert ? kRedColor.withOpacity(0.3) : backgroundColor,
         elevation: 8,
         child: Column(
