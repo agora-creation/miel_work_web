@@ -38,8 +38,8 @@ class HomeIconCard extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        color: alert ? kRedColor.withOpacity(0.3) : backgroundColor,
-        surfaceTintColor: alert ? kRedColor.withOpacity(0.3) : backgroundColor,
+        color: alert ? Colors.red.shade100 : backgroundColor,
+        surfaceTintColor: alert ? Colors.red.shade300 : backgroundColor,
         elevation: 8,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +64,7 @@ class HomeIconCard extends StatelessWidget {
                     alertMessage,
                     style: const TextStyle(
                       color: kRedColor,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   )
                 : Container(),
