@@ -15,14 +15,14 @@ class ChatArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: kGreyColor),
+        border: Border.all(color: kBorderColor),
       ),
       child: Row(
         children: [
           Container(
             width: 300,
-            decoration: const BoxDecoration(
-              border: Border(right: BorderSide(color: kGreyColor)),
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(color: kBorderColor)),
             ),
             child: chatsView,
           ),

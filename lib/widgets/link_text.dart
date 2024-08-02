@@ -22,15 +22,13 @@ class LinkText extends StatelessWidget {
       child: Container(
         decoration: enabled
             ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: color),
-                ),
+                border: Border(bottom: BorderSide(color: color)),
               )
             : null,
         child: Text(
           label,
           style: TextStyle(
-            color: enabled ? color : kGreyColor,
+            color: enabled ? color : kDisabledColor,
             fontSize: 14,
             decoration: enabled ? null : TextDecoration.lineThrough,
           ),

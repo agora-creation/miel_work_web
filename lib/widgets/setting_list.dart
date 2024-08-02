@@ -23,10 +23,8 @@ class SettingList extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: isFirst
-              ? const Border.symmetric(
-                  horizontal: BorderSide(color: kGreyColor),
-                )
-              : const Border(bottom: BorderSide(color: kGreyColor)),
+              ? Border.symmetric(horizontal: BorderSide(color: kBorderColor))
+              : Border(bottom: BorderSide(color: kBorderColor)),
         ),
         padding: const EdgeInsets.all(8),
         child: Row(
@@ -38,7 +36,7 @@ class SettingList extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    color: kGreyColor,
+                    color: kDisabledColor,
                     fontSize: 14,
                   ),
                 ),

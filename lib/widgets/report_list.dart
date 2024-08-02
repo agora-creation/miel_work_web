@@ -40,7 +40,7 @@ class ReportList extends StatelessWidget {
                   ),
             trailing: const FaIcon(
               FontAwesomeIcons.chevronRight,
-              color: kGreyColor,
+              color: kDisabledColor,
               size: 18,
             ),
           )

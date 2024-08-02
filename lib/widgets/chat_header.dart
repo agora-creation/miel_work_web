@@ -22,9 +22,9 @@ class ChatHeader extends StatelessWidget {
         vertical: 4,
         horizontal: 8,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: kWhiteColor,
-        border: Border(bottom: BorderSide(color: kGreyColor)),
+        border: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

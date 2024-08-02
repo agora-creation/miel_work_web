@@ -46,7 +46,6 @@ class _HomeHeaderState extends State<HomeHeader> {
   Widget build(BuildContext context) {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     String userName = widget.loginProvider.user?.name ?? '';
-
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 8,

@@ -21,9 +21,7 @@ class CustomColumnLink extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Container(
           decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: color),
-            ),
+            border: Border(bottom: BorderSide(color: color)),
           ),
           child: Text(
             label,

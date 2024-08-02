@@ -16,9 +16,7 @@ class DayList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: kBorderColor),
-        ),
+        border: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

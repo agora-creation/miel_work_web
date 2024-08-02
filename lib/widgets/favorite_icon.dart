@@ -19,14 +19,14 @@ class FavoriteIcon extends StatelessWidget {
         children: [
           FaIcon(
             FontAwesomeIcons.heart,
-            color: favoriteUserIds.isNotEmpty ? kRedColor : kGreyColor,
+            color: favoriteUserIds.isNotEmpty ? kRedColor : kDisabledColor,
             size: 14,
           ),
           const SizedBox(width: 4),
           Text(
             '${favoriteUserIds.length}',
             style: TextStyle(
-              color: favoriteUserIds.isNotEmpty ? kRedColor : kGreyColor,
+              color: favoriteUserIds.isNotEmpty ? kRedColor : kDisabledColor,
               fontSize: 14,
             ),
           ),
