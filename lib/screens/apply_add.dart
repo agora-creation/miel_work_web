@@ -40,6 +40,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
   PlatformFile? pickedFile3;
   PlatformFile? pickedFile4;
   PlatformFile? pickedFile5;
+  TextEditingController memoController = TextEditingController();
 
   void _init() async {
     if (widget.apply == null) return;
@@ -48,6 +49,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
     titleController.text = widget.apply?.title ?? '';
     contentController.text = widget.apply?.content ?? '';
     priceController.text = widget.apply?.price.toString() ?? '';
+    memoController.text = widget.apply?.memo ?? '';
     setState(() {});
   }
 
@@ -100,6 +102,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                 pickedFile3: pickedFile3,
                 pickedFile4: pickedFile4,
                 pickedFile5: pickedFile5,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -270,6 +273,15 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                       pickedFile5 = result.files.first;
                     });
                   },
+                ),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                'メモ',
+                child: CustomTextField(
+                  controller: memoController,
+                  textInputType: TextInputType.multiline,
+                  maxLines: 10,
                 ),
               ),
               const SizedBox(height: 80),

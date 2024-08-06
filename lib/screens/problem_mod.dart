@@ -5,7 +5,6 @@ import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
-import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
@@ -49,18 +48,6 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   FilePickerResult? imageResult;
   List<String> states = [];
 
-  void _init() async {
-    UserModel? user = widget.loginProvider.user;
-    List<String> readUserIds = widget.problem.readUserIds;
-    if (!readUserIds.contains(user?.id)) {
-      readUserIds.add(user?.id ?? '');
-      problemService.update({
-        'id': widget.problem.id,
-        'readUserIds': readUserIds,
-      });
-    }
-  }
-
   @override
   void initState() {
     type = widget.problem.type;
@@ -74,7 +61,6 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
     detailsController.text = widget.problem.details;
     states = widget.problem.states;
     countController.text = widget.problem.count.toString();
-    _init();
     super.initState();
   }
 

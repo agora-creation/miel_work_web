@@ -31,6 +31,7 @@ class ApplyModel {
   List<ApprovalUserModel> approvalUsers = [];
   String _approvalNumber = '';
   String _approvalReason = '';
+  String memo = '';
   String _createdUserId = '';
   String _createdUserName = '';
   DateTime _createdAt = DateTime.now();
@@ -91,6 +92,7 @@ class ApplyModel {
     approvalUsers = _convertApprovalUsers(data['approvalUsers']);
     _approvalNumber = data['approvalNumber'] ?? '';
     _approvalReason = data['approvalReason'] ?? '';
+    memo = data['memo'] ?? '';
     _createdUserId = data['createdUserId'] ?? '';
     _createdUserName = data['createdUserName'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();

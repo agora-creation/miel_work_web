@@ -40,6 +40,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   TextEditingController priceController = TextEditingController(text: '0');
+  TextEditingController memoController = TextEditingController();
 
   void _init() async {
     numberController.text = widget.apply.number;
@@ -47,6 +48,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
     titleController.text = widget.apply.title;
     contentController.text = widget.apply.content;
     priceController.text = widget.apply.price.toString();
+    memoController.text = widget.apply.memo;
     setState(() {});
   }
 
@@ -165,6 +167,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                 title: titleController.text,
                 content: contentController.text,
                 price: price,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -367,6 +370,15 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                         },
                       )
                     : Container(),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                'メモ',
+                child: CustomTextField(
+                  controller: memoController,
+                  textInputType: TextInputType.multiline,
+                  maxLines: 10,
+                ),
               ),
               const SizedBox(height: 16),
               const Text(

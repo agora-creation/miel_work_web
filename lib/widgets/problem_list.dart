@@ -32,49 +32,51 @@ class ProblemList extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Chip(
-                      label: Text(problem.type),
-                      backgroundColor: problem.typeColor(),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      problem.title,
-                      style: const TextStyle(fontSize: 16),
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-                Text(
-                  problem.details,
-                  style: const TextStyle(fontSize: 16),
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-                Text(
-                  dateText('yyyy/MM/dd HH:mm', problem.createdAt),
-                  style: const TextStyle(fontSize: 14),
-                ),
-                problem.stateText() != ''
-                    ? Text(
-                        problem.stateText(),
-                        style: const TextStyle(
-                          color: kRedColor,
-                          fontSize: 16,
-                        ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Chip(
+                        label: Text(problem.type),
+                        backgroundColor: problem.typeColor(),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        problem.title,
+                        style: const TextStyle(fontSize: 16),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                      )
-                    : Container(),
-              ],
+                      ),
+                    ],
+                  ),
+                  Text(
+                    problem.details,
+                    style: const TextStyle(fontSize: 16),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  Text(
+                    dateText('yyyy/MM/dd HH:mm', problem.createdAt),
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  problem.stateText() != ''
+                      ? Text(
+                          problem.stateText(),
+                          style: const TextStyle(
+                            color: kRedColor,
+                            fontSize: 16,
+                          ),
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        )
+                      : Container(),
+                ],
+              ),
             ),
             const FaIcon(
               FontAwesomeIcons.chevronRight,
