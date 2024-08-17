@@ -67,6 +67,10 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
     if (widget.apply.createdUserId == widget.loginProvider.user?.id) {
       isApproval = false;
       isReject = false;
+      if (widget.loginProvider.user?.president == true) {
+        isApproval = true;
+        isReject = true;
+      }
     } else {
       isDelete = false;
     }
