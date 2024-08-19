@@ -81,6 +81,8 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 targetAddress: targetAddressController.text,
                 details: detailsController.text,
                 imageResult: imageResult,
+                image2Result: null,
+                image3Result: null,
                 states: states,
                 count: int.parse(countController.text),
                 loginUser: widget.loginProvider.user,

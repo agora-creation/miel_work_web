@@ -28,6 +28,8 @@ class ProblemProvider with ChangeNotifier {
     required String targetAddress,
     required String details,
     required FilePickerResult? imageResult,
+    required FilePickerResult? image2Result,
+    required FilePickerResult? image3Result,
     required List<String> states,
     required int count,
     required UserModel? loginUser,
@@ -50,6 +52,28 @@ class ProblemProvider with ChangeNotifier {
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
       }
+      String image2 = '';
+      if (image2Result != null) {
+        Uint8List? upload2File = image2Result.files.single.bytes;
+        if (upload2File == null) return '添付写真のアップロードに失敗しました';
+        String file2Name = p.basename(image2Result.files.single.name);
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child('problem/$id/$file2Name');
+        UploadTask uploadTask = storageRef.putData(upload2File);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image2 = (await downloadUrl.ref.getDownloadURL());
+      }
+      String image3 = '';
+      if (image3Result != null) {
+        Uint8List? upload3File = image3Result.files.single.bytes;
+        if (upload3File == null) return '添付写真のアップロードに失敗しました';
+        String file3Name = p.basename(image3Result.files.single.name);
+        Reference storageRef =
+            FirebaseStorage.instance.ref().child('problem/$id/$file3Name');
+        UploadTask uploadTask = storageRef.putData(upload3File);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image3 = (await downloadUrl.ref.getDownloadURL());
+      }
       _problemService.create({
         'id': id,
         'organizationId': organization.id,
@@ -62,6 +86,8 @@ class ProblemProvider with ChangeNotifier {
         'targetAddress': targetAddress,
         'details': details,
         'image': image,
+        'image2': image2,
+        'image3': image3,
         'states': states,
         'count': count,
         'processed': false,
@@ -102,6 +128,8 @@ class ProblemProvider with ChangeNotifier {
     required String targetAddress,
     required String details,
     required FilePickerResult? imageResult,
+    required FilePickerResult? image2Result,
+    required FilePickerResult? image3Result,
     required List<String> states,
     required int count,
     required UserModel? loginUser,
@@ -124,7 +152,31 @@ class ProblemProvider with ChangeNotifier {
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
       }
-      if (image != null) {
+      String? image2;
+      if (image2Result != null) {
+        Uint8List? upload2File = image2Result.files.single.bytes;
+        if (upload2File == null) return '添付写真のアップロードに失敗しました';
+        String file2Name = p.basename(image2Result.files.single.name);
+        Reference storageRef = FirebaseStorage.instance
+            .ref()
+            .child('problem/${problem.id}/$file2Name');
+        UploadTask uploadTask = storageRef.putData(upload2File);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image2 = (await downloadUrl.ref.getDownloadURL());
+      }
+      String? image3;
+      if (image3Result != null) {
+        Uint8List? upload3File = image3Result.files.single.bytes;
+        if (upload3File == null) return '添付写真のアップロードに失敗しました';
+        String file3Name = p.basename(image3Result.files.single.name);
+        Reference storageRef = FirebaseStorage.instance
+            .ref()
+            .child('problem/${problem.id}/$file3Name');
+        UploadTask uploadTask = storageRef.putData(upload3File);
+        TaskSnapshot downloadUrl = await uploadTask;
+        image3 = (await downloadUrl.ref.getDownloadURL());
+      }
+      if (image != null || image2 != null || image3 != null) {
         _problemService.update({
           'id': problem.id,
           'type': type,
@@ -136,6 +188,8 @@ class ProblemProvider with ChangeNotifier {
           'targetAddress': targetAddress,
           'details': details,
           'image': image,
+          'image2': image2,
+          'image3': image3,
           'states': states,
           'count': count,
           'createdAt': createdAt,
