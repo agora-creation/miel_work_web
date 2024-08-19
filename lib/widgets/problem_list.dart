@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/problem.dart';
@@ -19,71 +18,76 @@ class ProblemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: !problem.readUserIds.contains(user?.id)
-              ? kRedColor.withOpacity(0.3)
-              : kWhiteColor,
-          border: Border(bottom: BorderSide(color: kBorderColor)),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: problem.typeColor(),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 12,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Chip(
-                        label: Text(problem.type),
-                        backgroundColor: problem.typeColor(),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        problem.title,
-                        style: const TextStyle(fontSize: 16),
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
                   Text(
-                    problem.details,
-                    style: const TextStyle(fontSize: 16),
+                    dateText('yyyy/MM/dd HH:mm', problem.createdAt),
+                    style: const TextStyle(
+                      color: kBlackColor,
+                      fontSize: 16,
+                    ),
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
                   Text(
-                    dateText('yyyy/MM/dd HH:mm', problem.createdAt),
-                    style: const TextStyle(fontSize: 14),
+                    problem.type,
+                    style: const TextStyle(
+                      color: kBlackColor,
+                      fontSize: 16,
+                    ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  problem.stateText() != ''
-                      ? Text(
-                          problem.stateText(),
-                          style: const TextStyle(
-                            color: kRedColor,
-                            fontSize: 16,
-                          ),
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        )
-                      : Container(),
                 ],
               ),
-            ),
-            const FaIcon(
-              FontAwesomeIcons.chevronRight,
-              color: kDisabledColor,
-              size: 16,
-            ),
-          ],
+              Text(
+                problem.title,
+                style: const TextStyle(
+                  color: kBlackColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              problem.stateText() != ''
+                  ? Text(
+                      problem.stateText(),
+                      style: const TextStyle(
+                        color: kRedColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SourceHanSansJP-Bold',
+                      ),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );

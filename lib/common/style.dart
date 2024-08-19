@@ -106,3 +106,20 @@ const kReportHeaderStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontFamily: 'SourceHanSansJP-Bold',
 );
+
+const List<String> imageExtensions = [
+  '.HEIC',
+  '.heic',
+  '.JPEG',
+  '.jpeg',
+  '.JPG',
+  '.jpg',
+  '.GIF',
+  '.gif',
+  '.PNG',
+  '.png',
+];
+
+const List<String> pdfExtensions = [
+  '.pdf',
+];
