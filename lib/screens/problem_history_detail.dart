@@ -149,6 +149,42 @@ class _ProblemHistoryDetailScreenState
                         ),
                       ),
               ),
+              const SizedBox(height: 4),
+              FormLabel(
+                '添付写真2',
+                child: widget.problem.image2 != ''
+                    ? Image.network(
+                        widget.problem.image2,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      )
+                    : Container(
+                        color: kGreyColor.withOpacity(0.3),
+                        width: double.infinity,
+                        height: 150,
+                        child: const Center(
+                          child: Text('写真が選択されていません'),
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 4),
+              FormLabel(
+                '添付写真3',
+                child: widget.problem.image3 != ''
+                    ? Image.network(
+                        widget.problem.image3,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      )
+                    : Container(
+                        color: kGreyColor.withOpacity(0.3),
+                        width: double.infinity,
+                        height: 150,
+                        child: const Center(
+                          child: Text('写真が選択されていません'),
+                        ),
+                      ),
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '対応状態',

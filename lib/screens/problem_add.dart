@@ -41,6 +41,8 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
   TextEditingController detailsController = TextEditingController();
   TextEditingController countController = TextEditingController(text: '0');
   FilePickerResult? imageResult;
+  FilePickerResult? image2Result;
+  FilePickerResult? image3Result;
   List<String> states = [];
 
   @override
@@ -81,8 +83,8 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 targetAddress: targetAddressController.text,
                 details: detailsController.text,
                 imageResult: imageResult,
-                image2Result: null,
-                image3Result: null,
+                image2Result: image2Result,
+                image3Result: image3Result,
                 states: states,
                 count: int.parse(countController.text),
                 loginUser: widget.loginProvider.user,
@@ -256,6 +258,64 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                   child: imageResult != null
                       ? Image.memory(
                           imageResult!.files.first.bytes!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        )
+                      : Container(
+                          color: kGreyColor.withOpacity(0.3),
+                          width: double.infinity,
+                          height: 150,
+                          child: const Center(
+                            child: Text('写真が選択されていません'),
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              FormLabel(
+                '添付写真2',
+                child: GestureDetector(
+                  onTap: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.image,
+                      withData: true,
+                    );
+                    setState(() {
+                      image2Result = result;
+                    });
+                  },
+                  child: image2Result != null
+                      ? Image.memory(
+                          image2Result!.files.first.bytes!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        )
+                      : Container(
+                          color: kGreyColor.withOpacity(0.3),
+                          width: double.infinity,
+                          height: 150,
+                          child: const Center(
+                            child: Text('写真が選択されていません'),
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              FormLabel(
+                '添付写真3',
+                child: GestureDetector(
+                  onTap: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.image,
+                      withData: true,
+                    );
+                    setState(() {
+                      image3Result = result;
+                    });
+                  },
+                  child: image3Result != null
+                      ? Image.memory(
+                          image3Result!.files.first.bytes!,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         )
