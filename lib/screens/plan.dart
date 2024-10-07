@@ -20,6 +20,7 @@ import 'package:miel_work_web/widgets/day_list.dart';
 import 'package:miel_work_web/widgets/plan_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class PlanScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -36,6 +37,7 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
+  AutoScrollController controller = AutoScrollController();
   PlanService planService = PlanService();
   List<String> searchCategories = [];
   DateTime searchMonth = DateTime.now();
@@ -66,6 +68,10 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    controller.scrollToIndex(
+      DateTime.now().day,
+      preferPosition: AutoScrollPosition.begin,
+    );
     String searchText = '指定なし';
     if (searchCategories.isNotEmpty) {
       searchText = '';
@@ -208,6 +214,7 @@ class _PlanScreenState extends State<PlanScreen> {
                       border: Border.all(color: kBorderColor),
                     ),
                     child: ListView.builder(
+                      controller: controller,
                       itemCount: days.length,
                       itemBuilder: (context, index) {
                         DateTime day = days[index];
@@ -232,12 +239,12 @@ class _PlanScreenState extends State<PlanScreen> {
                           for (PlanModel plan in plans) {
                             bool listIn = false;
                             if (plan.startedAt.millisecondsSinceEpoch <=
-                                dayStart.millisecondsSinceEpoch &&
+                                    dayStart.millisecondsSinceEpoch &&
                                 dayStart.millisecondsSinceEpoch <=
                                     plan.endedAt.millisecondsSinceEpoch) {
                               listIn = true;
                             } else if (dayStart.millisecondsSinceEpoch <=
-                                plan.startedAt.millisecondsSinceEpoch &&
+                                    plan.startedAt.millisecondsSinceEpoch &&
                                 plan.endedAt.millisecondsSinceEpoch <=
                                     dayEnd.millisecondsSinceEpoch) {
                               listIn = true;
@@ -247,30 +254,35 @@ class _PlanScreenState extends State<PlanScreen> {
                             }
                           }
                         }
-                        return DayList(
-                          day,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: dayPlans.map((dayPlan) {
-                                return PlanList(
-                                  plan: dayPlan,
-                                  groups: widget.homeProvider.groups,
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(
-                                        type: PageTransitionType.rightToLeft,
-                                        child: PlanModScreen(
-                                          loginProvider: widget.loginProvider,
-                                          homeProvider: widget.homeProvider,
-                                          plan: dayPlan,
+                        return AutoScrollTag(
+                          key: ValueKey(day.day),
+                          controller: controller,
+                          index: day.day,
+                          child: DayList(
+                            day,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                children: dayPlans.map((dayPlan) {
+                                  return PlanList(
+                                    plan: dayPlan,
+                                    groups: widget.homeProvider.groups,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          type: PageTransitionType.rightToLeft,
+                                          child: PlanModScreen(
+                                            loginProvider: widget.loginProvider,
+                                            homeProvider: widget.homeProvider,
+                                            plan: dayPlan,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }).toList(),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
                         );

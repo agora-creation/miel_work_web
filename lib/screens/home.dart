@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                             return HomeIconCard(
                               icon: FontAwesomeIcons.filePen,
-                              label: '各種申請',
+                              label: '社内申請',
                               color: kBlackColor,
                               backgroundColor: kWhiteColor,
                               alert: alert,

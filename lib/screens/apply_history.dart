@@ -45,7 +45,7 @@ class _ApplyHistoryScreenState extends State<ApplyHistoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '各種申請：承認済一覧',
+          '社内申請：承認済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
