@@ -10,6 +10,10 @@ class RequestInterviewService {
     firestore.collection(collection).doc(values['id']).update(values);
   }
 
+  void delete(Map<String, dynamic> values) {
+    firestore.collection(collection).doc(values['id']).delete();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required DateTime? searchStart,
     required DateTime? searchEnd,

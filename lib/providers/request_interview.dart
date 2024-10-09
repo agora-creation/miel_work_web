@@ -9,7 +9,6 @@ class RequestInterviewProvider with ChangeNotifier {
 
   Future<String?> approval({
     required RequestInterviewModel interview,
-    required String approvalReason,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -48,7 +47,6 @@ class RequestInterviewProvider with ChangeNotifier {
 
   Future<String?> reject({
     required RequestInterviewModel interview,
-    required String rejectReason,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -60,6 +58,20 @@ class RequestInterviewProvider with ChangeNotifier {
       });
     } catch (e) {
       error = '申請の否決に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> delete({
+    required RequestInterviewModel interview,
+  }) async {
+    String? error;
+    try {
+      _interviewService.delete({
+        'id': interview.id,
+      });
+    } catch (e) {
+      error = '申請情報の削除に失敗しました';
     }
     return error;
   }

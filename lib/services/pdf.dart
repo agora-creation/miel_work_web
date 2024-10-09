@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -10,6 +11,744 @@ import 'package:universal_html/html.dart' as html;
 const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
 class PdfService {
+  Future requestInterviewDownload(RequestInterviewModel interview) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    String approvalUserNameText = '';
+    if (interview.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel approvalUser in interview.approvalUsers) {
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
+        approvalUserNameText +=
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
+      }
+    }
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(8),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '取材申込',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請日時: ${dateText('yyyy/MM/dd HH:mm', interview.createdAt)}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 8,
+                ),
+              ),
+              interview.approval == 1
+                  ? pw.Text(
+                      '承認日時: ${dateText('yyyy/MM/dd HH:mm', interview.approvedAt)}',
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 8,
+                      ),
+                    )
+                  : pw.Container(),
+            ],
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '承認者一覧',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 60,
+                  ),
+                  _generateCell(
+                    label: approvalUserNameText,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 60,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '会社名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.companyName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label:
+                        '${interview.companyUserName} (EMAIL:${interview.companyUserEmail}) (TEL:${interview.companyUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '媒体名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.mediaName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '番組・雑誌名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.programName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '出演者情報',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.castInfo,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '特集内容・備考',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.featureContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: 'OA・掲載予定日',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.featureContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            '取材当日情報',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(120),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '予定日時',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedAt,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label:
+                        '${interview.interviewedUserName} (TEL:${interview.interviewedUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '取材時間',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedTime,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '席の予約',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedReserved ? '必要' : '',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '取材店舗',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedShopName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '訪問人数',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedVisitors,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '取材内容・備考',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.interviewedContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            'ロケハン情報',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(120),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '予定日時',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.locationAt,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label:
+                        '${interview.locationUserName} (TEL:${interview.locationUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '訪問人数',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.locationVisitors,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: 'ロケハン内容・備考',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.locationContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            'インサート撮影情報',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(120),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '予定日時',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedAt,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label:
+                        '${interview.insertedUserName} (TEL:${interview.insertedUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '撮影時間',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedTime,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '席の予約',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedReserved ? '必要' : '',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '取材店舗',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedShopName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '訪問人数',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedVisitors,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '撮影内容・備考',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.insertedContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(120),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: 'その他連絡事項',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                  ),
+                  _generateCell(
+                    label: interview.remarks,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
+    final fileName = '${interview.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
   Future applyDownload(ApplyModel apply) async {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
@@ -453,7 +1192,7 @@ class PdfService {
     double? height,
   }) {
     return pw.Container(
-      padding: const pw.EdgeInsets.all(8),
+      padding: const pw.EdgeInsets.all(4),
       child: pw.Text(label, style: style),
       color: color,
       width: width,

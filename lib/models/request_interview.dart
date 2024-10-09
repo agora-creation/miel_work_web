@@ -124,4 +124,17 @@ class RequestInterviewModel {
     }
     return converted;
   }
+
+  String approvalText() {
+    switch (_approval) {
+      case 0:
+        return '承認待ち';
+      case 1:
+        return '承認済み';
+      case 9:
+        return '否決';
+      default:
+        return '承認待ち';
+    }
+  }
 }

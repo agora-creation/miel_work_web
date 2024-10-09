@@ -25,8 +25,11 @@ import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/home_header.dart';
 import 'package:miel_work_web/widgets/home_icon_card.dart';
+import 'package:miel_work_web/widgets/request_list.dart';
+import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -178,17 +181,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          stream: interviewService.streamList(
-                            searchStart: null,
-                            searchEnd: null,
-                            approval: [0],
+                        StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
+                            QuerySnapshot<Map<String, dynamic>>>(
+                          streams: StreamTuple2(
+                            interviewService.streamList(
+                              searchStart: null,
+                              searchEnd: null,
+                              approval: [0],
+                            )!,
+                            interviewService.streamList(
+                              searchStart: null,
+                              searchEnd: null,
+                              approval: [0],
+                            )!,
                           ),
                           builder: (context, snapshot) {
                             bool alert = false;
-                            if (snapshot.hasData) {
+                            if (snapshot.snapshot1.hasData) {
                               alert = interviewService.checkAlert(
-                                data: snapshot.data,
+                                data: snapshot.snapshot1.data,
+                              );
+                            }
+                            if (snapshot.snapshot2.hasData) {
+                              alert = interviewService.checkAlert(
+                                data: snapshot.snapshot2.data,
                               );
                             }
                             return HomeIconCard(
@@ -198,9 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               backgroundColor: kWhiteColor,
                               alert: alert,
                               alertMessage: '承認待ちあり',
-                              onTap: () => showBottomUpScreen(
-                                context,
-                                RequestInterviewScreen(
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => RequestSelectDialog(
                                   loginProvider: loginProvider,
                                   homeProvider: homeProvider,
                                 ),
@@ -361,6 +377,82 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class RequestSelectDialog extends StatelessWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+
+  const RequestSelectDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    RequestInterviewService interviewService = RequestInterviewService();
+    return CustomAlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        decoration: BoxDecoration(border: Border.all(color: kBorderColor)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: interviewService.streamList(
+                  searchStart: null,
+                  searchEnd: null,
+                  approval: [0],
+                ),
+                builder: (context, snapshot) {
+                  bool alert = false;
+                  if (snapshot.hasData) {
+                    alert = interviewService.checkAlert(
+                      data: snapshot.data,
+                    );
+                  }
+                  return RequestList(
+                    label: '取材申込',
+                    alert: alert,
+                    onTap: () => showBottomUpScreen(
+                      context,
+                      RequestInterviewScreen(
+                        loginProvider: loginProvider,
+                        homeProvider: homeProvider,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              RequestList(
+                label: 'よさこい広場使用申込',
+                onTap: () {},
+              ),
+              RequestList(
+                label: '施設使用申込',
+                onTap: () {},
+              ),
+              RequestList(
+                label: '自転車置き場使用申込',
+                onTap: () {},
+              ),
+              RequestList(
+                label: '夜間居残り作業申請',
+                onTap: () {},
+              ),
+              RequestList(
+                label: '店舗工事作業申請',
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

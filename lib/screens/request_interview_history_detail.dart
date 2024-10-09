@@ -17,12 +17,12 @@ import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RequestInterviewDetailScreen extends StatefulWidget {
+class RequestInterviewHistoryDetailScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final RequestInterviewModel interview;
 
-  const RequestInterviewDetailScreen({
+  const RequestInterviewHistoryDetailScreen({
     required this.loginProvider,
     required this.homeProvider,
     required this.interview,
@@ -30,28 +30,14 @@ class RequestInterviewDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<RequestInterviewDetailScreen> createState() =>
-      _RequestInterviewDetailScreenState();
+  State<RequestInterviewHistoryDetailScreen> createState() =>
+      _RequestInterviewHistoryDetailScreenState();
 }
 
-class _RequestInterviewDetailScreenState
-    extends State<RequestInterviewDetailScreen> {
+class _RequestInterviewHistoryDetailScreenState
+    extends State<RequestInterviewHistoryDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    bool isApproval = true;
-    bool isReject = true;
-    if (widget.interview.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.interview.approvalUsers) {
-        if (user.userId == widget.loginProvider.user?.id) {
-          isApproval = false;
-          isReject = false;
-        }
-      }
-    }
-    if (widget.interview.approval == 1 || widget.interview.approval == 9) {
-      isApproval = false;
-      isReject = false;
-    }
     List<ApprovalUserModel> approvalUsers = widget.interview.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
@@ -73,34 +59,17 @@ class _RequestInterviewDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '否決する',
+            label: '削除する',
             labelColor: kWhiteColor,
-            backgroundColor: kRejectColor,
+            backgroundColor: kRedColor,
             onPressed: () => showDialog(
               context: context,
-              builder: (context) => RejectRequestInterviewDialog(
+              builder: (context) => DelRequestInterviewDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
                 interview: widget.interview,
               ),
             ),
-            disabled: !isReject || widget.loginProvider.user?.president != true,
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '承認する',
-            labelColor: kWhiteColor,
-            backgroundColor: kApprovalColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => ApprovalRequestInterviewDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                interview: widget.interview,
-              ),
-            ),
-            disabled: !isApproval,
           ),
           const SizedBox(width: 8),
         ],
@@ -119,8 +88,12 @@ class _RequestInterviewDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
+                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
+                  ),
+                  Text(
+                    '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.approvedAt)}',
+                    style: const TextStyle(color: kRedColor),
                   ),
                 ],
               ),
@@ -349,12 +322,12 @@ class _RequestInterviewDetailScreenState
   }
 }
 
-class ApprovalRequestInterviewDialog extends StatefulWidget {
+class DelRequestInterviewDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final RequestInterviewModel interview;
 
-  const ApprovalRequestInterviewDialog({
+  const DelRequestInterviewDialog({
     required this.loginProvider,
     required this.homeProvider,
     required this.interview,
@@ -362,24 +335,25 @@ class ApprovalRequestInterviewDialog extends StatefulWidget {
   });
 
   @override
-  State<ApprovalRequestInterviewDialog> createState() =>
-      _ApprovalRequestInterviewDialogState();
+  State<DelRequestInterviewDialog> createState() =>
+      _DelRequestInterviewDialogState();
 }
 
-class _ApprovalRequestInterviewDialogState
-    extends State<ApprovalRequestInterviewDialog> {
+class _DelRequestInterviewDialogState extends State<DelRequestInterviewDialog> {
   @override
   Widget build(BuildContext context) {
     final interviewProvider = Provider.of<RequestInterviewProvider>(context);
     return CustomAlertDialog(
-      content: const SizedBox(
-        width: 600,
+      content: const SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 8),
-            Text('本当に承認しますか？'),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
           ],
         ),
       ),
@@ -393,13 +367,12 @@ class _ApprovalRequestInterviewDialogState
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '承認する',
+          label: '削除する',
           labelColor: kWhiteColor,
-          backgroundColor: kApprovalColor,
+          backgroundColor: kRedColor,
           onPressed: () async {
-            String? error = await interviewProvider.approval(
+            String? error = await interviewProvider.delete(
               interview: widget.interview,
-              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -407,77 +380,9 @@ class _ApprovalRequestInterviewDialogState
               return;
             }
             if (!mounted) return;
-            showMessage(context, '申請が承認されました', true);
+            showMessage(context, '申請情報が削除されました', true);
             Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class RejectRequestInterviewDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestInterviewModel interview;
-
-  const RejectRequestInterviewDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.interview,
-    super.key,
-  });
-
-  @override
-  State<RejectRequestInterviewDialog> createState() =>
-      _RejectRequestInterviewDialogState();
-}
-
-class _RejectRequestInterviewDialogState
-    extends State<RejectRequestInterviewDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final interviewProvider = Provider.of<RequestInterviewProvider>(context);
-    return CustomAlertDialog(
-      content: const SizedBox(
-        width: 600,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 8),
-            Text('本当に否決しますか？'),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '否決する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRejectColor,
-          onPressed: () async {
-            String? error = await interviewProvider.reject(
-              interview: widget.interview,
-              loginUser: widget.loginProvider.user,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '申請が否決されました', true);
-            Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
         ),
       ],
