@@ -14,6 +14,7 @@ import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/providers/problem.dart';
 import 'package:miel_work_web/providers/report.dart';
+import 'package:miel_work_web/providers/request_interview.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/screens/login.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ReportProvider()),
         ChangeNotifierProvider.value(value: LostProvider()),
         ChangeNotifierProvider.value(value: LoanProvider()),
+        ChangeNotifierProvider.value(value: RequestInterviewProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

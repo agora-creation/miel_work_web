@@ -520,31 +520,34 @@ class _ApprovalApplyDialogState extends State<ApprovalApplyDialog> {
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
     return CustomAlertDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 8),
-          const Text('本当に承認しますか？'),
-          const SizedBox(height: 8),
-          FormLabel(
-            '承認番号',
-            child: CustomTextField(
-              controller: approvalNumberController,
-              textInputType: TextInputType.number,
-              maxLines: 1,
+      content: SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8),
+            const Text('本当に承認しますか？'),
+            const SizedBox(height: 8),
+            FormLabel(
+              '承認番号',
+              child: CustomTextField(
+                controller: approvalNumberController,
+                textInputType: TextInputType.number,
+                maxLines: 1,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          FormLabel(
-            '承認理由',
-            child: CustomTextField(
-              controller: approvalReasonController,
-              textInputType: TextInputType.multiline,
-              maxLines: 10,
+            const SizedBox(height: 8),
+            FormLabel(
+              '承認理由',
+              child: CustomTextField(
+                controller: approvalReasonController,
+                textInputType: TextInputType.multiline,
+                maxLines: 10,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         CustomButton(
@@ -605,22 +608,25 @@ class _RejectApplyDialogState extends State<RejectApplyDialog> {
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
     return CustomAlertDialog(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 8),
-          const Text('本当に否決しますか？'),
-          const SizedBox(height: 8),
-          FormLabel(
-            '否決理由',
-            child: CustomTextField(
-              controller: reasonController,
-              textInputType: TextInputType.multiline,
-              maxLines: 10,
+      content: SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8),
+            const Text('本当に否決しますか？'),
+            const SizedBox(height: 8),
+            FormLabel(
+              '否決理由',
+              child: CustomTextField(
+                controller: reasonController,
+                textInputType: TextInputType.multiline,
+                maxLines: 10,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         CustomButton(

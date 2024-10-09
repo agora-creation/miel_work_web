@@ -14,6 +14,7 @@ import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/report.dart';
+import 'package:miel_work_web/screens/request_interview.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/screens/work.dart';
 import 'package:miel_work_web/services/apply.dart';
@@ -22,6 +23,7 @@ import 'package:miel_work_web/services/loan.dart';
 import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/home_header.dart';
 import 'package:miel_work_web/widgets/home_icon_card.dart';
@@ -40,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ChatMessageService messageService = ChatMessageService();
   ProblemService problemService = ProblemService();
   ApplyService applyService = ApplyService();
+  RequestInterviewService interviewService = RequestInterviewService();
   LostService lostService = LostService();
   LoanService loanService = LoanService();
 
@@ -145,6 +148,67 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: applyService.streamList(
+                            organizationId: loginProvider.organization?.id,
+                            searchStart: null,
+                            searchEnd: null,
+                            approval: [0],
+                          ),
+                          builder: (context, snapshot) {
+                            bool alert = false;
+                            if (snapshot.hasData) {
+                              alert = applyService.checkAlert(
+                                data: snapshot.data,
+                              );
+                            }
+                            return HomeIconCard(
+                              icon: FontAwesomeIcons.solidFile,
+                              label: '社内申請',
+                              color: kBlackColor,
+                              backgroundColor: kWhiteColor,
+                              alert: alert,
+                              alertMessage: '承認待ちあり',
+                              onTap: () => showBottomUpScreen(
+                                context,
+                                ApplyScreen(
+                                  loginProvider: loginProvider,
+                                  homeProvider: homeProvider,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                          stream: interviewService.streamList(
+                            searchStart: null,
+                            searchEnd: null,
+                            approval: [0],
+                          ),
+                          builder: (context, snapshot) {
+                            bool alert = false;
+                            if (snapshot.hasData) {
+                              alert = interviewService.checkAlert(
+                                data: snapshot.data,
+                              );
+                            }
+                            return HomeIconCard(
+                              icon: FontAwesomeIcons.file,
+                              label: '社外申請',
+                              color: kBlackColor,
+                              backgroundColor: kWhiteColor,
+                              alert: alert,
+                              alertMessage: '承認待ちあり',
+                              onTap: () => showBottomUpScreen(
+                                context,
+                                RequestInterviewScreen(
+                                  loginProvider: loginProvider,
+                                  homeProvider: homeProvider,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                           stream: problemService.streamList(
                             organizationId: loginProvider.organization?.id,
                             searchStart: null,
@@ -168,37 +232,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () => showBottomUpScreen(
                                 context,
                                 ProblemScreen(
-                                  loginProvider: loginProvider,
-                                  homeProvider: homeProvider,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          stream: applyService.streamList(
-                            organizationId: loginProvider.organization?.id,
-                            searchStart: null,
-                            searchEnd: null,
-                            approval: [0],
-                          ),
-                          builder: (context, snapshot) {
-                            bool alert = false;
-                            if (snapshot.hasData) {
-                              alert = applyService.checkAlert(
-                                data: snapshot.data,
-                              );
-                            }
-                            return HomeIconCard(
-                              icon: FontAwesomeIcons.filePen,
-                              label: '社内申請',
-                              color: kBlackColor,
-                              backgroundColor: kWhiteColor,
-                              alert: alert,
-                              alertMessage: '承認待ちあり',
-                              onTap: () => showBottomUpScreen(
-                                context,
-                                ApplyScreen(
                                   loginProvider: loginProvider,
                                   homeProvider: homeProvider,
                                 ),
