@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/request_interview.dart';
+import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/request_interview_history_detail.dart';
+import 'package:miel_work_web/screens/request_square_history_detail.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class RequestInterviewHistorySource extends DataGridSource {
+class RequestSquareHistorySource extends DataGridSource {
   final BuildContext context;
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final List<RequestInterviewModel> interviews;
+  final List<RequestSquareModel> squares;
 
-  RequestInterviewHistorySource({
+  RequestSquareHistorySource({
     required this.context,
     required this.loginProvider,
     required this.homeProvider,
-    required this.interviews,
+    required this.squares,
   }) {
     buildDataGridRows();
   }
@@ -29,11 +29,11 @@ class RequestInterviewHistorySource extends DataGridSource {
   List<DataGridRow> dataGridRows = [];
 
   void buildDataGridRows() {
-    dataGridRows = interviews.map<DataGridRow>((interview) {
+    dataGridRows = squares.map<DataGridRow>((square) {
       return DataGridRow(cells: [
         DataGridCell(
           columnName: 'id',
-          value: interview.id,
+          value: square.id,
         ),
       ]);
     }).toList();
@@ -50,18 +50,18 @@ class RequestInterviewHistorySource extends DataGridSource {
       backgroundColor = kWhiteColor;
     }
     List<Widget> cells = [];
-    RequestInterviewModel interview = interviews.singleWhere(
+    RequestSquareModel square = squares.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
-    String approvedAtText = dateText('yyyy/MM/dd HH:mm', interview.approvedAt);
+    String approvedAtText = dateText('yyyy/MM/dd HH:mm', square.approvedAt);
     cells.add(CustomColumnLabel(approvedAtText));
-    String createdAtText = dateText('yyyy/MM/dd HH:mm', interview.createdAt);
+    String createdAtText = dateText('yyyy/MM/dd HH:mm', square.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(interview.companyName));
-    cells.add(CustomColumnLabel(interview.companyUserName));
-    cells.add(CustomColumnLabel(interview.companyUserEmail));
-    cells.add(CustomColumnLabel(interview.companyUserTel));
-    cells.add(CustomColumnLabel(interview.approvalText()));
+    cells.add(CustomColumnLabel(square.companyName));
+    cells.add(CustomColumnLabel(square.companyUserName));
+    cells.add(CustomColumnLabel(square.companyUserEmail));
+    cells.add(CustomColumnLabel(square.companyUserTel));
+    cells.add(CustomColumnLabel(square.approvalText()));
     cells.add(Row(
       children: [
         CustomButton(
@@ -74,10 +74,10 @@ class RequestInterviewHistorySource extends DataGridSource {
               context,
               PageTransition(
                 type: PageTransitionType.rightToLeft,
-                child: RequestInterviewHistoryDetailScreen(
+                child: RequestSquareHistoryDetailScreen(
                   loginProvider: loginProvider,
                   homeProvider: homeProvider,
-                  interview: interview,
+                  square: square,
                 ),
               ),
             );
@@ -90,7 +90,7 @@ class RequestInterviewHistorySource extends DataGridSource {
           labelColor: kWhiteColor,
           backgroundColor: kPdfColor,
           onPressed: () async =>
-              await PdfService().requestInterviewDownload(interview),
+              await PdfService().requestSquareDownload(square),
         ),
       ],
     ));

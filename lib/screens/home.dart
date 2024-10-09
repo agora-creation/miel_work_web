@@ -24,6 +24,7 @@ import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/services/request_interview.dart';
+import 'package:miel_work_web/services/request_square.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/home_header.dart';
@@ -46,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ProblemService problemService = ProblemService();
   ApplyService applyService = ApplyService();
   RequestInterviewService interviewService = RequestInterviewService();
+  RequestSquareService squareService = RequestSquareService();
   LostService lostService = LostService();
   LoanService loanService = LoanService();
 
@@ -189,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               searchEnd: null,
                               approval: [0],
                             )!,
-                            interviewService.streamList(
+                            squareService.streamList(
                               searchStart: null,
                               searchEnd: null,
                               approval: [0],
@@ -203,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                             if (snapshot.snapshot2.hasData) {
-                              alert = interviewService.checkAlert(
+                              alert = squareService.checkAlert(
                                 data: snapshot.snapshot2.data,
                               );
                             }
@@ -395,6 +397,8 @@ class RequestSelectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RequestInterviewService interviewService = RequestInterviewService();
+    RequestSquareService squareService = RequestSquareService();
+
     return CustomAlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Container(
@@ -430,9 +434,25 @@ class RequestSelectDialog extends StatelessWidget {
                   );
                 },
               ),
-              RequestList(
-                label: 'よさこい広場使用申込',
-                onTap: () {},
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: squareService.streamList(
+                  searchStart: null,
+                  searchEnd: null,
+                  approval: [0],
+                ),
+                builder: (context, snapshot) {
+                  bool alert = false;
+                  if (snapshot.hasData) {
+                    alert = squareService.checkAlert(
+                      data: snapshot.data,
+                    );
+                  }
+                  return RequestList(
+                    label: 'よさこい広場使用申込',
+                    alert: alert,
+                    onTap: () {},
+                  );
+                },
               ),
               RequestList(
                 label: '施設使用申込',

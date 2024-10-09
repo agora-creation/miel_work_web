@@ -3,6 +3,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/request_interview.dart';
+import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -800,6 +801,400 @@ class PdfService {
     final fileName = '${interview.id}.pdf';
     await _pdfWebDownload(pdf: pdf, fileName: fileName);
   }
+
+  Future requestSquareDownload(RequestSquareModel square) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    String approvalUserNameText = '';
+    if (square.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel approvalUser in square.approvalUsers) {
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
+        approvalUserNameText +=
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
+      }
+    }
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(8),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              'よさこい広場使用申込',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請日時: ${dateText('yyyy/MM/dd HH:mm', square.createdAt)}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 8,
+                ),
+              ),
+              square.approval == 1
+                  ? pw.Text(
+                      '承認日時: ${dateText('yyyy/MM/dd HH:mm', square.approvedAt)}',
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 8,
+                      ),
+                    )
+                  : pw.Container(),
+            ],
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '承認者一覧',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 60,
+                  ),
+                  _generateCell(
+                    label: approvalUserNameText,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 60,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '申込会社名(又は店名)',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: square.companyName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '申込担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label:
+                        '${square.companyUserName} (EMAIL:${square.companyUserEmail}) (TEL:${square.companyUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '住所',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: square.companyAddress,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            '使用者情報(上記と異なる場合のみ入力)',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用会社名(又は店名)',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: square.useName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用担当者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: '${square.useUserName} (TEL:${square.useUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            '使用情報',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用期間',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: square.usePeriod,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用時間帯',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: square.useTimezone,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用区分',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: '',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用内容',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 50,
+                  ),
+                  _generateCell(
+                    label: square.useContent,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 50,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: 'その他連絡事項',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 50,
+                  ),
+                  _generateCell(
+                    label: square.remarks,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 50,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
+    final fileName = '${square.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
+  Future requestFacilityDownload() async {}
+
+  Future requestCycleDownload() async {}
+
+  Future requestOvertimeDownload() async {}
+
+  Future requestConstDownload() async {}
 
   Future applyDownload(ApplyModel apply) async {
     final pdf = pw.Document();
