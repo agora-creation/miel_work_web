@@ -114,6 +114,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.companyName,
@@ -122,6 +123,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -136,6 +138,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label:
@@ -145,6 +148,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -159,6 +163,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.mediaName,
@@ -167,6 +172,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -181,6 +187,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.programName,
@@ -189,6 +196,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -203,6 +211,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.castInfo,
@@ -211,6 +220,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -225,6 +235,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 50,
                   ),
                   _generateCell(
                     label: interview.featureContent,
@@ -233,6 +244,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 50,
                   ),
                 ],
               ),
@@ -247,6 +259,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.featureContent,
@@ -255,6 +268,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -271,7 +285,7 @@ class PdfService {
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),
             columnWidths: const {
-              0: pw.FixedColumnWidth(120),
+              0: pw.FixedColumnWidth(100),
               1: pw.FlexColumnWidth(),
             },
             children: [
@@ -286,6 +300,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.interviewedAt,
@@ -294,6 +309,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -308,6 +324,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label:
@@ -317,6 +334,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -331,6 +349,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.interviewedTime,
@@ -339,6 +358,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -353,6 +373,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.interviewedReserved ? '必要' : '',
@@ -361,6 +382,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -375,6 +397,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.interviewedShopName,
@@ -383,6 +406,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -397,6 +421,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.interviewedVisitors,
@@ -405,6 +430,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -419,6 +445,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 50,
                   ),
                   _generateCell(
                     label: interview.interviewedContent,
@@ -427,6 +454,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 50,
                   ),
                 ],
               ),
@@ -443,7 +471,7 @@ class PdfService {
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),
             columnWidths: const {
-              0: pw.FixedColumnWidth(120),
+              0: pw.FixedColumnWidth(100),
               1: pw.FlexColumnWidth(),
             },
             children: [
@@ -458,6 +486,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.locationAt,
@@ -466,6 +495,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -480,6 +510,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label:
@@ -489,6 +520,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -503,6 +535,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.locationVisitors,
@@ -511,6 +544,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -525,6 +559,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 50,
                   ),
                   _generateCell(
                     label: interview.locationContent,
@@ -533,6 +568,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 50,
                   ),
                 ],
               ),
@@ -549,7 +585,7 @@ class PdfService {
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),
             columnWidths: const {
-              0: pw.FixedColumnWidth(120),
+              0: pw.FixedColumnWidth(100),
               1: pw.FlexColumnWidth(),
             },
             children: [
@@ -564,6 +600,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.insertedAt,
@@ -572,6 +609,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -586,6 +624,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label:
@@ -595,6 +634,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -609,6 +649,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.insertedTime,
@@ -617,6 +658,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -631,6 +673,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.insertedReserved ? '必要' : '',
@@ -639,6 +682,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -653,6 +697,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.insertedShopName,
@@ -661,6 +706,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -675,6 +721,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 20,
                   ),
                   _generateCell(
                     label: interview.insertedVisitors,
@@ -683,6 +730,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 20,
                   ),
                 ],
               ),
@@ -697,6 +745,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 50,
                   ),
                   _generateCell(
                     label: interview.insertedContent,
@@ -705,6 +754,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 50,
                   ),
                 ],
               ),
@@ -714,7 +764,7 @@ class PdfService {
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey),
             columnWidths: const {
-              0: pw.FixedColumnWidth(120),
+              0: pw.FixedColumnWidth(100),
               1: pw.FlexColumnWidth(),
             },
             children: [
@@ -729,6 +779,7 @@ class PdfService {
                       font: ttf,
                       fontSize: 8,
                     ),
+                    height: 50,
                   ),
                   _generateCell(
                     label: interview.remarks,
@@ -737,6 +788,7 @@ class PdfService {
                       fontSize: 8,
                     ),
                     color: PdfColors.white,
+                    height: 50,
                   ),
                 ],
               ),
