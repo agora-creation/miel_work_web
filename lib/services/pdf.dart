@@ -5,6 +5,7 @@ import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/request_cycle.dart';
 import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/models/request_interview.dart';
+import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:pdf/pdf.dart';
@@ -1417,7 +1418,7 @@ class PdfService {
 
   Future requestCycleDownload(RequestCycleModel cycle) async {}
 
-  Future requestOvertimeDownload() async {}
+  Future requestOvertimeDownload(RequestOvertimeModel overtime) async {}
 
   Future requestConstDownload() async {}
 
