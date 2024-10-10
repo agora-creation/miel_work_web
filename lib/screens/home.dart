@@ -14,7 +14,9 @@ import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/report.dart';
+import 'package:miel_work_web/screens/request_facility.dart';
 import 'package:miel_work_web/screens/request_interview.dart';
+import 'package:miel_work_web/screens/request_square.dart';
 import 'package:miel_work_web/screens/user.dart';
 import 'package:miel_work_web/screens/work.dart';
 import 'package:miel_work_web/services/apply.dart';
@@ -23,6 +25,7 @@ import 'package:miel_work_web/services/loan.dart';
 import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/services/request_facility.dart';
 import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/services/request_square.dart';
 import 'package:miel_work_web/widgets/animation_background.dart';
@@ -48,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ApplyService applyService = ApplyService();
   RequestInterviewService interviewService = RequestInterviewService();
   RequestSquareService squareService = RequestSquareService();
+  RequestFacilityService facilityService = RequestFacilityService();
   LostService lostService = LostService();
   LoanService loanService = LoanService();
 
@@ -183,15 +187,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                        StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
+                        StreamBuilder3<
+                            QuerySnapshot<Map<String, dynamic>>,
+                            QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>>(
-                          streams: StreamTuple2(
+                          streams: StreamTuple3(
                             interviewService.streamList(
                               searchStart: null,
                               searchEnd: null,
                               approval: [0],
                             )!,
                             squareService.streamList(
+                              searchStart: null,
+                              searchEnd: null,
+                              approval: [0],
+                            )!,
+                            facilityService.streamList(
                               searchStart: null,
                               searchEnd: null,
                               approval: [0],
@@ -207,6 +218,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (snapshot.snapshot2.hasData) {
                               alert = squareService.checkAlert(
                                 data: snapshot.snapshot2.data,
+                              );
+                            }
+                            if (snapshot.snapshot3.hasData) {
+                              alert = facilityService.checkAlert(
+                                data: snapshot.snapshot3.data,
                               );
                             }
                             return HomeIconCard(
@@ -398,6 +414,7 @@ class RequestSelectDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     RequestInterviewService interviewService = RequestInterviewService();
     RequestSquareService squareService = RequestSquareService();
+    RequestFacilityService facilityService = RequestFacilityService();
 
     return CustomAlertDialog(
       contentPadding: EdgeInsets.zero,
@@ -450,13 +467,41 @@ class RequestSelectDialog extends StatelessWidget {
                   return RequestList(
                     label: 'よさこい広場使用申込',
                     alert: alert,
-                    onTap: () {},
+                    onTap: () => showBottomUpScreen(
+                      context,
+                      RequestSquareScreen(
+                        loginProvider: loginProvider,
+                        homeProvider: homeProvider,
+                      ),
+                    ),
                   );
                 },
               ),
-              RequestList(
-                label: '施設使用申込',
-                onTap: () {},
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: facilityService.streamList(
+                  searchStart: null,
+                  searchEnd: null,
+                  approval: [0],
+                ),
+                builder: (context, snapshot) {
+                  bool alert = false;
+                  if (snapshot.hasData) {
+                    alert = squareService.checkAlert(
+                      data: snapshot.data,
+                    );
+                  }
+                  return RequestList(
+                    label: '施設使用申込',
+                    alert: alert,
+                    onTap: () => showBottomUpScreen(
+                      context,
+                      RequestFacilityScreen(
+                        loginProvider: loginProvider,
+                        homeProvider: homeProvider,
+                      ),
+                    ),
+                  );
+                },
               ),
               RequestList(
                 label: '自転車置き場使用申込',

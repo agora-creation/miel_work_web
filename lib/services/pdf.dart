@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -1188,7 +1189,230 @@ class PdfService {
     await _pdfWebDownload(pdf: pdf, fileName: fileName);
   }
 
-  Future requestFacilityDownload() async {}
+  Future requestFacilityDownload(RequestFacilityModel facility) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    String approvalUserNameText = '';
+    if (facility.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel approvalUser in facility.approvalUsers) {
+        if (approvalUserNameText != '') approvalUserNameText += '\n';
+        approvalUserNameText +=
+            '${dateText('yyyy/MM/dd HH:mm', approvalUser.approvedAt)}に『${approvalUser.userName}』が承認';
+      }
+    }
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(8),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '施設使用申込',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請日時: ${dateText('yyyy/MM/dd HH:mm', facility.createdAt)}',
+                style: pw.TextStyle(
+                  font: ttf,
+                  color: PdfColors.grey,
+                  fontSize: 8,
+                ),
+              ),
+              facility.approval == 1
+                  ? pw.Text(
+                      '承認日時: ${dateText('yyyy/MM/dd HH:mm', facility.approvedAt)}',
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 8,
+                      ),
+                    )
+                  : pw.Container(),
+            ],
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '承認者一覧',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 60,
+                  ),
+                  _generateCell(
+                    label: approvalUserNameText,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 60,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '店舗名',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: facility.shopName,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '店舗責任者',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label:
+                        '${facility.shopUserName} (EMAIL:${facility.shopUserEmail}) (TEL:${facility.shopUserTel})',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            '旧梵屋跡の倉庫を使用します (貸出面積：約12㎡)',
+            style: pw.TextStyle(
+              font: ttf,
+              fontSize: 8,
+            ),
+          ),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: '使用期間',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 20,
+                  ),
+                  _generateCell(
+                    label: facility.usePeriod,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 20,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 4),
+          pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.grey),
+            columnWidths: const {
+              0: pw.FixedColumnWidth(100),
+              1: pw.FlexColumnWidth(),
+            },
+            children: [
+              pw.TableRow(
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                children: [
+                  _generateCell(
+                    label: 'その他連絡事項',
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    height: 50,
+                  ),
+                  _generateCell(
+                    label: facility.remarks,
+                    style: pw.TextStyle(
+                      font: ttf,
+                      fontSize: 8,
+                    ),
+                    color: PdfColors.white,
+                    height: 50,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ));
+    final fileName = '${facility.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
   Future requestCycleDownload() async {}
 
