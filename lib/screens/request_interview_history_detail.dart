@@ -88,7 +88,7 @@ class _RequestInterviewHistoryDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
                   Text(

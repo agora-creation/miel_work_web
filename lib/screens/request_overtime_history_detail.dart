@@ -88,7 +88,7 @@ class _RequestOvertimeHistoryDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
                   Text(

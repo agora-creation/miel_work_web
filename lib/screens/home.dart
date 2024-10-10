@@ -237,32 +237,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           builder: (context, snapshot) {
                             bool alert = false;
-                            if (snapshot.snapshot1.hasData) {
+                            if (snapshot.snapshot1.data != null ||
+                                snapshot.snapshot2.data != null ||
+                                snapshot.snapshot3.data != null ||
+                                snapshot.snapshot4.data != null ||
+                                snapshot.snapshot5.data != null ||
+                                snapshot.snapshot6.data != null) {
                               alert = interviewService.checkAlert(
                                 data: snapshot.snapshot1.data,
                               );
-                            }
-                            if (snapshot.snapshot2.hasData) {
                               alert = squareService.checkAlert(
                                 data: snapshot.snapshot2.data,
                               );
-                            }
-                            if (snapshot.snapshot3.hasData) {
                               alert = facilityService.checkAlert(
                                 data: snapshot.snapshot3.data,
                               );
-                            }
-                            if (snapshot.snapshot4.hasData) {
                               alert = cycleService.checkAlert(
                                 data: snapshot.snapshot4.data,
                               );
-                            }
-                            if (snapshot.snapshot5.hasData) {
                               alert = overtimeService.checkAlert(
                                 data: snapshot.snapshot5.data,
                               );
-                            }
-                            if (snapshot.snapshot6.hasData) {
                               alert = constService.checkAlert(
                                 data: snapshot.snapshot6.data,
                               );

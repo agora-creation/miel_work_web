@@ -88,7 +88,7 @@ class _RequestSquareHistoryDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.square.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.square.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
                   Text(
