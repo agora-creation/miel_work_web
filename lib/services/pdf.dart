@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/request_cycle.dart';
 import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/models/request_square.dart';
@@ -1414,7 +1415,7 @@ class PdfService {
     await _pdfWebDownload(pdf: pdf, fileName: fileName);
   }
 
-  Future requestCycleDownload() async {}
+  Future requestCycleDownload(RequestCycleModel cycle) async {}
 
   Future requestOvertimeDownload() async {}
 

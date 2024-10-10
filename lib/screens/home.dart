@@ -14,6 +14,7 @@ import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/report.dart';
+import 'package:miel_work_web/screens/request_cycle.dart';
 import 'package:miel_work_web/screens/request_facility.dart';
 import 'package:miel_work_web/screens/request_interview.dart';
 import 'package:miel_work_web/screens/request_square.dart';
@@ -25,6 +26,7 @@ import 'package:miel_work_web/services/loan.dart';
 import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/services/request_cycle.dart';
 import 'package:miel_work_web/services/request_facility.dart';
 import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/services/request_square.dart';
@@ -52,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   RequestInterviewService interviewService = RequestInterviewService();
   RequestSquareService squareService = RequestSquareService();
   RequestFacilityService facilityService = RequestFacilityService();
+  RequestCycleService cycleService = RequestCycleService();
   LostService lostService = LostService();
   LoanService loanService = LoanService();
 
@@ -187,11 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                        StreamBuilder3<
+                        StreamBuilder4<
+                            QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>>(
-                          streams: StreamTuple3(
+                          streams: StreamTuple4(
                             interviewService.streamList(
                               searchStart: null,
                               searchEnd: null,
@@ -203,6 +207,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               approval: [0],
                             )!,
                             facilityService.streamList(
+                              searchStart: null,
+                              searchEnd: null,
+                              approval: [0],
+                            )!,
+                            cycleService.streamList(
                               searchStart: null,
                               searchEnd: null,
                               approval: [0],
@@ -223,6 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (snapshot.snapshot3.hasData) {
                               alert = facilityService.checkAlert(
                                 data: snapshot.snapshot3.data,
+                              );
+                            }
+                            if (snapshot.snapshot4.hasData) {
+                              alert = cycleService.checkAlert(
+                                data: snapshot.snapshot4.data,
                               );
                             }
                             return HomeIconCard(
@@ -415,6 +429,7 @@ class RequestSelectDialog extends StatelessWidget {
     RequestInterviewService interviewService = RequestInterviewService();
     RequestSquareService squareService = RequestSquareService();
     RequestFacilityService facilityService = RequestFacilityService();
+    RequestCycleService cycleService = RequestCycleService();
 
     return CustomAlertDialog(
       contentPadding: EdgeInsets.zero,
@@ -503,9 +518,31 @@ class RequestSelectDialog extends StatelessWidget {
                   );
                 },
               ),
-              RequestList(
-                label: '自転車置き場使用申込',
-                onTap: () {},
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: cycleService.streamList(
+                  searchStart: null,
+                  searchEnd: null,
+                  approval: [0],
+                ),
+                builder: (context, snapshot) {
+                  bool alert = false;
+                  if (snapshot.hasData) {
+                    alert = squareService.checkAlert(
+                      data: snapshot.data,
+                    );
+                  }
+                  return RequestList(
+                    label: '自転車置き場使用申込',
+                    alert: alert,
+                    onTap: () => showBottomUpScreen(
+                      context,
+                      RequestCycleScreen(
+                        loginProvider: loginProvider,
+                        homeProvider: homeProvider,
+                      ),
+                    ),
+                  );
+                },
               ),
               RequestList(
                 label: '夜間居残り作業申請',
