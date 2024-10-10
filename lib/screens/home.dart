@@ -14,6 +14,7 @@ import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
 import 'package:miel_work_web/screens/problem.dart';
 import 'package:miel_work_web/screens/report.dart';
+import 'package:miel_work_web/screens/request_const.dart';
 import 'package:miel_work_web/screens/request_cycle.dart';
 import 'package:miel_work_web/screens/request_facility.dart';
 import 'package:miel_work_web/screens/request_interview.dart';
@@ -27,6 +28,7 @@ import 'package:miel_work_web/services/loan.dart';
 import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/services/request_const.dart';
 import 'package:miel_work_web/services/request_cycle.dart';
 import 'package:miel_work_web/services/request_facility.dart';
 import 'package:miel_work_web/services/request_interview.dart';
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   RequestFacilityService facilityService = RequestFacilityService();
   RequestCycleService cycleService = RequestCycleService();
   RequestOvertimeService overtimeService = RequestOvertimeService();
+  RequestConstService constService = RequestConstService();
   LostService lostService = LostService();
   LoanService loanService = LoanService();
 
@@ -193,13 +196,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                        StreamBuilder5<
+                        StreamBuilder6<
+                            QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>,
                             QuerySnapshot<Map<String, dynamic>>>(
-                          streams: StreamTuple5(
+                          streams: StreamTuple6(
                             interviewService.streamList(
                               searchStart: null,
                               searchEnd: null,
@@ -221,6 +225,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               approval: [0],
                             )!,
                             overtimeService.streamList(
+                              searchStart: null,
+                              searchEnd: null,
+                              approval: [0],
+                            )!,
+                            constService.streamList(
                               searchStart: null,
                               searchEnd: null,
                               approval: [0],
@@ -249,8 +258,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                             if (snapshot.snapshot5.hasData) {
-                              alert = cycleService.checkAlert(
+                              alert = overtimeService.checkAlert(
                                 data: snapshot.snapshot5.data,
+                              );
+                            }
+                            if (snapshot.snapshot6.hasData) {
+                              alert = constService.checkAlert(
+                                data: snapshot.snapshot6.data,
                               );
                             }
                             return HomeIconCard(
@@ -445,6 +459,7 @@ class RequestSelectDialog extends StatelessWidget {
     RequestFacilityService facilityService = RequestFacilityService();
     RequestCycleService cycleService = RequestCycleService();
     RequestOvertimeService overtimeService = RequestOvertimeService();
+    RequestConstService constService = RequestConstService();
 
     return CustomAlertDialog(
       contentPadding: EdgeInsets.zero,
@@ -516,7 +531,7 @@ class RequestSelectDialog extends StatelessWidget {
                 builder: (context, snapshot) {
                   bool alert = false;
                   if (snapshot.hasData) {
-                    alert = squareService.checkAlert(
+                    alert = facilityService.checkAlert(
                       data: snapshot.data,
                     );
                   }
@@ -542,7 +557,7 @@ class RequestSelectDialog extends StatelessWidget {
                 builder: (context, snapshot) {
                   bool alert = false;
                   if (snapshot.hasData) {
-                    alert = squareService.checkAlert(
+                    alert = cycleService.checkAlert(
                       data: snapshot.data,
                     );
                   }
@@ -568,7 +583,7 @@ class RequestSelectDialog extends StatelessWidget {
                 builder: (context, snapshot) {
                   bool alert = false;
                   if (snapshot.hasData) {
-                    alert = squareService.checkAlert(
+                    alert = overtimeService.checkAlert(
                       data: snapshot.data,
                     );
                   }
@@ -585,9 +600,31 @@ class RequestSelectDialog extends StatelessWidget {
                   );
                 },
               ),
-              RequestList(
-                label: '店舗工事作業申請',
-                onTap: () {},
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: constService.streamList(
+                  searchStart: null,
+                  searchEnd: null,
+                  approval: [0],
+                ),
+                builder: (context, snapshot) {
+                  bool alert = false;
+                  if (snapshot.hasData) {
+                    alert = constService.checkAlert(
+                      data: snapshot.data,
+                    );
+                  }
+                  return RequestList(
+                    label: '店舗工事作業申請',
+                    alert: alert,
+                    onTap: () => showBottomUpScreen(
+                      context,
+                      RequestConstScreen(
+                        loginProvider: loginProvider,
+                        homeProvider: homeProvider,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),

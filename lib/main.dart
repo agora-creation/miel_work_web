@@ -14,6 +14,7 @@ import 'package:miel_work_web/providers/notice.dart';
 import 'package:miel_work_web/providers/plan.dart';
 import 'package:miel_work_web/providers/problem.dart';
 import 'package:miel_work_web/providers/report.dart';
+import 'package:miel_work_web/providers/request_const.dart';
 import 'package:miel_work_web/providers/request_cycle.dart';
 import 'package:miel_work_web/providers/request_facility.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: RequestFacilityProvider()),
         ChangeNotifierProvider.value(value: RequestCycleProvider()),
         ChangeNotifierProvider.value(value: RequestOvertimeProvider()),
+        ChangeNotifierProvider.value(value: RequestConstProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

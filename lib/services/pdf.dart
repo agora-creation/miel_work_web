@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/request_const.dart';
 import 'package:miel_work_web/models/request_cycle.dart';
 import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/models/request_interview.dart';
@@ -1420,7 +1421,7 @@ class PdfService {
 
   Future requestOvertimeDownload(RequestOvertimeModel overtime) async {}
 
-  Future requestConstDownload() async {}
+  Future requestConstDownload(RequestConstModel requestConst) async {}
 
   Future applyDownload(ApplyModel apply) async {
     final pdf = pw.Document();
