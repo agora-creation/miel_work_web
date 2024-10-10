@@ -38,7 +38,7 @@ class RequestOvertimeList extends StatelessWidget {
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(
-                  '申込日時: ${dateText('yyyy/MM/dd HH:mm', overtime.createdAt)}',
+                  '申請日時: ${dateText('yyyy/MM/dd HH:mm', overtime.createdAt)}',
                   style: const TextStyle(fontSize: 14),
                 ),
               ],

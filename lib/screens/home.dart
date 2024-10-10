@@ -237,30 +237,47 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           builder: (context, snapshot) {
                             bool alert = false;
-                            if (snapshot.snapshot1.data != null ||
-                                snapshot.snapshot2.data != null ||
-                                snapshot.snapshot3.data != null ||
-                                snapshot.snapshot4.data != null ||
-                                snapshot.snapshot5.data != null ||
-                                snapshot.snapshot6.data != null) {
-                              alert = interviewService.checkAlert(
-                                data: snapshot.snapshot1.data,
-                              );
-                              alert = squareService.checkAlert(
-                                data: snapshot.snapshot2.data,
-                              );
-                              alert = facilityService.checkAlert(
-                                data: snapshot.snapshot3.data,
-                              );
-                              alert = cycleService.checkAlert(
-                                data: snapshot.snapshot4.data,
-                              );
-                              alert = overtimeService.checkAlert(
-                                data: snapshot.snapshot5.data,
-                              );
-                              alert = constService.checkAlert(
-                                data: snapshot.snapshot6.data,
-                              );
+                            if (snapshot.snapshot1.data != null) {
+                              if (snapshot.snapshot1.data!.size > 0) {
+                                alert = interviewService.checkAlert(
+                                  data: snapshot.snapshot1.data,
+                                );
+                              }
+                            }
+                            if (snapshot.snapshot2.data != null) {
+                              if (snapshot.snapshot2.data!.size > 0) {
+                                alert = squareService.checkAlert(
+                                  data: snapshot.snapshot2.data,
+                                );
+                              }
+                            }
+                            if (snapshot.snapshot3.data != null) {
+                              if (snapshot.snapshot3.data!.size > 0) {
+                                alert = facilityService.checkAlert(
+                                  data: snapshot.snapshot3.data,
+                                );
+                              }
+                            }
+                            if (snapshot.snapshot4.data != null) {
+                              if (snapshot.snapshot4.data!.size > 0) {
+                                alert = cycleService.checkAlert(
+                                  data: snapshot.snapshot4.data,
+                                );
+                              }
+                            }
+                            if (snapshot.snapshot5.data != null) {
+                              if (snapshot.snapshot5.data!.size > 0) {
+                                alert = overtimeService.checkAlert(
+                                  data: snapshot.snapshot5.data,
+                                );
+                              }
+                            }
+                            if (snapshot.snapshot6.data != null) {
+                              if (snapshot.snapshot6.data!.size > 0) {
+                                alert = constService.checkAlert(
+                                  data: snapshot.snapshot6.data,
+                                );
+                              }
                             }
                             return HomeIconCard(
                               icon: FontAwesomeIcons.file,
