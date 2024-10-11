@@ -57,10 +57,10 @@ class RequestFacilityHistorySource extends DataGridSource {
     cells.add(CustomColumnLabel(approvedAtText));
     String createdAtText = dateText('yyyy/MM/dd HH:mm', facility.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(facility.shopName));
-    cells.add(CustomColumnLabel(facility.shopUserName));
-    cells.add(CustomColumnLabel(facility.shopUserEmail));
-    cells.add(CustomColumnLabel(facility.shopUserTel));
+    cells.add(CustomColumnLabel(facility.companyName));
+    cells.add(CustomColumnLabel(facility.companyUserName));
+    cells.add(CustomColumnLabel(facility.companyUserEmail));
+    cells.add(CustomColumnLabel(facility.companyUserTel));
     cells.add(CustomColumnLabel(facility.approvalText()));
     cells.add(Row(
       children: [

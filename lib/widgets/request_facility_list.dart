@@ -30,11 +30,11 @@ class RequestFacilityList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  facility.shopName,
+                  facility.companyName,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
-                  '店舗責任者名: ${facility.shopUserName}',
+                  '店舗責任者名: ${facility.companyUserName}',
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(

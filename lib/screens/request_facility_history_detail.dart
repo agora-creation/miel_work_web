@@ -53,7 +53,7 @@ class _RequestFacilityHistoryDetailScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          '施設使用申込：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -111,26 +111,35 @@ class _RequestFacilityHistoryDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const Text(
+                '申込者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.facility.shopName),
+                child: FormValue(widget.facility.companyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.facility.shopUserName),
+                child: FormValue(widget.facility.companyUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.facility.shopUserEmail),
+                child: FormValue(widget.facility.companyUserEmail),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.facility.shopUserEmail}',
+                    'mailto:${widget.facility.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -138,30 +147,27 @@ class _RequestFacilityHistoryDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.facility.shopUserTel),
+                child: FormValue(widget.facility.companyUserTel),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               const Text(
                 '旧梵屋跡の倉庫を使用します (貸出面積：約12㎡)',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SourceHanSansJP-Bold',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '使用期間',
-                child: FormValue(widget.facility.usePeriod),
-              ),
-              const SizedBox(height: 24),
-              const DottedDivider(),
-              const SizedBox(height: 16),
-              FormLabel(
-                'その他連絡事項',
-                child: FormValue(widget.facility.remarks),
+                '使用予定日時',
+                child: FormValue(
+                  widget.facility.useAtPending
+                      ? '未定'
+                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useEndedAt)}',
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
