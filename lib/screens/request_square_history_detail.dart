@@ -53,7 +53,7 @@ class _RequestSquareHistoryDetailScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          'よさこい広場使用申込：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -111,6 +111,17 @@ class _RequestSquareHistoryDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              const Text(
+                '申込者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '申込会社名(又は店名)',
                 child: FormValue(widget.square.companyName),
@@ -145,13 +156,13 @@ class _RequestSquareHistoryDetailScreenState
                 '住所',
                 child: FormValue(widget.square.companyAddress),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               const Text(
-                '使用者情報 (上記と異なる場合のみ入力)',
+                '使用者情報 (申込者情報と異なる場合のみ)',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SourceHanSansJP-Bold',
                 ),
@@ -159,38 +170,32 @@ class _RequestSquareHistoryDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '使用会社名(又は店名)',
-                child: FormValue(widget.square.useName),
+                child: FormValue(widget.square.useCompanyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '使用担当者名',
-                child: FormValue(widget.square.useUserName),
+                '使用者名',
+                child: FormValue(widget.square.useCompanyUserName),
               ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '使用担当者電話番号',
-                child: FormValue(widget.square.useUserTel),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               const Text(
                 '使用情報',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SourceHanSansJP-Bold',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '使用期間',
-                child: FormValue(widget.square.usePeriod),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '使用時間帯',
-                child: FormValue(widget.square.useTimezone),
+                '使用予定日時',
+                child: FormValue(
+                  widget.square.useAtPending
+                      ? '未定'
+                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.square.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.square.useEndedAt)}',
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -205,13 +210,13 @@ class _RequestSquareHistoryDetailScreenState
                     widget.square.useChair
                         ? const ListTile(
                             title: Text('折りたたみイス'),
-                            subtitle: Text('150円税抜／1脚／1日'),
+                            subtitle: Text('150円(税抜)／1脚・1日'),
                           )
                         : Container(),
                     widget.square.useDesk
                         ? const ListTile(
                             title: Text('折りたたみ机'),
-                            subtitle: Text('300円税抜／1脚／1日'),
+                            subtitle: Text('300円(税抜)／1脚・1日'),
                           )
                         : Container(),
                   ],
@@ -221,13 +226,6 @@ class _RequestSquareHistoryDetailScreenState
               FormLabel(
                 '使用内容',
                 child: FormValue(widget.square.useContent),
-              ),
-              const SizedBox(height: 24),
-              const DottedDivider(),
-              const SizedBox(height: 16),
-              FormLabel(
-                'その他連絡事項',
-                child: FormValue(widget.square.remarks),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),

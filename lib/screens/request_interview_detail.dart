@@ -138,6 +138,17 @@ class _RequestInterviewDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              const Text(
+                '申込者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '申込会社名',
                 child: FormValue(widget.interview.companyName),
