@@ -308,7 +308,7 @@ class PdfService {
                     height: 20,
                   ),
                   _generateCell(
-                    label: interview.interviewedAt,
+                    label: '',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 8,
@@ -357,7 +357,7 @@ class PdfService {
                     height: 20,
                   ),
                   _generateCell(
-                    label: interview.interviewedTime,
+                    label: '',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 8,
@@ -494,7 +494,7 @@ class PdfService {
                     height: 20,
                   ),
                   _generateCell(
-                    label: interview.locationAt,
+                    label: '',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 8,
@@ -608,7 +608,7 @@ class PdfService {
                     height: 20,
                   ),
                   _generateCell(
-                    label: interview.insertedAt,
+                    label: '',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 8,
@@ -657,7 +657,7 @@ class PdfService {
                     height: 20,
                   ),
                   _generateCell(
-                    label: interview.insertedTime,
+                    label: '',
                     style: pw.TextStyle(
                       font: ttf,
                       fontSize: 8,

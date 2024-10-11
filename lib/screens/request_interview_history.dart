@@ -130,19 +130,19 @@ class _RequestInterviewHistoryScreenState
                       ),
                       GridColumn(
                         columnName: 'companyName',
-                        label: const CustomColumnLabel('会社名'),
+                        label: const CustomColumnLabel('申込会社名'),
                       ),
                       GridColumn(
                         columnName: 'companyUserName',
-                        label: const CustomColumnLabel('担当者名'),
+                        label: const CustomColumnLabel('申込担当者名'),
                       ),
                       GridColumn(
                         columnName: 'companyUserEmail',
-                        label: const CustomColumnLabel('担当者メールアドレス'),
+                        label: const CustomColumnLabel('申込担当者メールアドレス'),
                       ),
                       GridColumn(
                         columnName: 'companyUserTel',
-                        label: const CustomColumnLabel('担当者電話番号'),
+                        label: const CustomColumnLabel('申込担当者電話番号'),
                       ),
                       GridColumn(
                         columnName: 'approval',

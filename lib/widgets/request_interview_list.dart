@@ -34,7 +34,7 @@ class RequestInterviewList extends StatelessWidget {
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
-                  '担当者名: ${interview.companyUserName}',
+                  '申込担当者名: ${interview.companyUserName}',
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(

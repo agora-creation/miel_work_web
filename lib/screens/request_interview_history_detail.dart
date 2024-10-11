@@ -53,7 +53,7 @@ class _RequestInterviewHistoryDetailScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          '取材申込：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -112,17 +112,17 @@ class _RequestInterviewHistoryDetailScreenState
               ),
               const SizedBox(height: 16),
               FormLabel(
-                '会社名',
+                '申込会社名',
                 child: FormValue(widget.interview.companyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '担当者名',
+                '申込担当者名',
                 child: FormValue(widget.interview.companyUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '担当者メールアドレス',
+                '申込担当者メールアドレス',
                 child: FormValue(widget.interview.companyUserEmail),
               ),
               LinkText(
@@ -137,7 +137,7 @@ class _RequestInterviewHistoryDetailScreenState
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '担当者電話番号',
+                '申込担当者電話番号',
                 child: FormValue(widget.interview.companyUserTel),
               ),
               const SizedBox(height: 8),
@@ -165,36 +165,35 @@ class _RequestInterviewHistoryDetailScreenState
                 'OA・掲載予定日',
                 child: FormValue(widget.interview.publishedAt),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               const Text(
                 '取材当日情報',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SourceHanSansJP-Bold',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '予定日時',
-                child: FormValue(widget.interview.interviewedAt),
+                '取材予定日時',
+                child: FormValue(
+                  widget.interview.interviewedAtPending
+                      ? '未定'
+                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedEndedAt)}',
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '担当者名',
+                '取材担当者名',
                 child: FormValue(widget.interview.interviewedUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '担当者電話番号',
+                '取材担当者電話番号',
                 child: FormValue(widget.interview.interviewedUserTel),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '取材時間',
-                child: FormValue(widget.interview.interviewedTime),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -209,7 +208,7 @@ class _RequestInterviewHistoryDetailScreenState
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '訪問人数',
+                'いらっしゃる人数',
                 child: FormValue(widget.interview.interviewedVisitors),
               ),
               const SizedBox(height: 8),
@@ -217,94 +216,114 @@ class _RequestInterviewHistoryDetailScreenState
                 '取材内容・備考',
                 child: FormValue(widget.interview.interviewedContent),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              const Text(
-                'ロケハン情報',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '予定日時',
-                child: FormValue(widget.interview.locationAt),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '担当者名',
-                child: FormValue(widget.interview.locationUserName),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '担当者電話番号',
-                child: FormValue(widget.interview.locationUserTel),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '訪問人数',
-                child: FormValue(widget.interview.locationVisitors),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                'ロケハン内容・備考',
-                child: FormValue(widget.interview.locationContent),
-              ),
-              const SizedBox(height: 24),
+              widget.interview.location
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        const Text(
+                          'ロケハン情報',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'SourceHanSansJP-Bold',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'ロケハン予定日時',
+                          child: FormValue(
+                            widget.interview.locationAtPending
+                                ? '未定'
+                                : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationEndedAt)}',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'ロケハン担当者名',
+                          child: FormValue(widget.interview.locationUserName),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'ロケハン担当者電話番号',
+                          child: FormValue(widget.interview.locationUserTel),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'いらっしゃる人数',
+                          child: FormValue(widget.interview.locationVisitors),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'ロケハン内容・備考',
+                          child: FormValue(widget.interview.locationContent),
+                        ),
+                      ],
+                    )
+                  : Container(),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              const Text(
-                'インサート撮影情報',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '予定日時',
-                child: FormValue(widget.interview.insertedAt),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '担当者名',
-                child: FormValue(widget.interview.insertedUserName),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '担当者電話番号',
-                child: FormValue(widget.interview.insertedUserTel),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '撮影時間',
-                child: FormValue(widget.interview.insertedTime),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '席の予約',
-                child: FormValue(widget.interview.insertedReserved ? '必要' : ''),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '取材店舗',
-                child: FormValue(widget.interview.insertedShopName),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '訪問人数',
-                child: FormValue(widget.interview.insertedVisitors),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '撮影内容・備考',
-                child: FormValue(widget.interview.insertedContent),
-              ),
-              const SizedBox(height: 24),
+              widget.interview.insert
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        const Text(
+                          'インサート撮影情報',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'SourceHanSansJP-Bold',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '撮影予定日時',
+                          child: FormValue(
+                            widget.interview.insertedAtPending
+                                ? '未定'
+                                : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedEndedAt)}',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '撮影担当者名',
+                          child: FormValue(widget.interview.insertedUserName),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '撮影担当者電話番号',
+                          child: FormValue(widget.interview.insertedUserTel),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '席の予約',
+                          child: FormValue(
+                              widget.interview.insertedReserved ? '必要' : ''),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '撮影店舗',
+                          child: FormValue(widget.interview.insertedShopName),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          'いらっしゃる人数',
+                          child: FormValue(widget.interview.insertedVisitors),
+                        ),
+                        const SizedBox(height: 8),
+                        FormLabel(
+                          '撮影内容・備考',
+                          child: FormValue(widget.interview.insertedContent),
+                        ),
+                      ],
+                    )
+                  : Container(),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               FormLabel(
