@@ -30,11 +30,11 @@ class RequestCycleList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  cycle.shopName,
+                  cycle.companyName,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
-                  '使用者名: ${cycle.shopUserName}',
+                  '使用者名: ${cycle.companyUserName}',
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(

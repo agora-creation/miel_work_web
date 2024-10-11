@@ -57,10 +57,10 @@ class RequestCycleHistorySource extends DataGridSource {
     cells.add(CustomColumnLabel(approvedAtText));
     String createdAtText = dateText('yyyy/MM/dd HH:mm', cycle.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(cycle.shopName));
-    cells.add(CustomColumnLabel(cycle.shopUserName));
-    cells.add(CustomColumnLabel(cycle.shopUserEmail));
-    cells.add(CustomColumnLabel(cycle.shopUserTel));
+    cells.add(CustomColumnLabel(cycle.companyName));
+    cells.add(CustomColumnLabel(cycle.companyUserName));
+    cells.add(CustomColumnLabel(cycle.companyUserEmail));
+    cells.add(CustomColumnLabel(cycle.companyUserTel));
     cells.add(CustomColumnLabel(cycle.approvalText()));
     cells.add(Row(
       children: [

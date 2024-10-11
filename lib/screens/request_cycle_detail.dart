@@ -66,7 +66,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          '自転車置き場使用申込：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -137,26 +137,37 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              const Text(
+                '申込者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.cycle.shopName),
+                child: FormValue(widget.cycle.companyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者名',
-                child: FormValue(widget.cycle.shopUserName),
+                child: FormValue(widget.cycle.companyUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者メールアドレス',
-                child: FormValue(widget.cycle.shopUserEmail),
+                child: FormValue(widget.cycle.companyUserEmail),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.cycle.shopUserEmail}',
+                    'mailto:${widget.cycle.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -164,14 +175,12 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '使用者電話番号',
-                child: FormValue(widget.cycle.shopUserTel),
+                child: FormValue(widget.cycle.companyUserTel),
               ),
-              const SizedBox(height: 24),
-              const DottedDivider(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               FormLabel(
-                'その他連絡事項',
-                child: FormValue(widget.cycle.remarks),
+                '住所',
+                child: FormValue(widget.cycle.companyAddress),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
