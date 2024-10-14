@@ -138,6 +138,8 @@ class _RequestFacilityDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
               const Text(
                 '申込者情報',
                 style: TextStyle(
