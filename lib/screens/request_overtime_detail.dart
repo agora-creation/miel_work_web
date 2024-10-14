@@ -67,7 +67,7 @@ class _RequestOvertimeDetailScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          '夜間居残り作業申請：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
