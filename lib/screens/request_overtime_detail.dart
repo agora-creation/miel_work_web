@@ -138,26 +138,37 @@ class _RequestOvertimeDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              const Text(
+                '申請者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.overtime.shopName),
+                child: FormValue(widget.overtime.companyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.overtime.shopUserName),
+                child: FormValue(widget.overtime.companyUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.overtime.shopUserEmail),
+                child: FormValue(widget.overtime.companyUserEmail),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.overtime.shopUserEmail}',
+                    'mailto:${widget.overtime.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -165,35 +176,32 @@ class _RequestOvertimeDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.overtime.shopUserTel),
+                child: FormValue(widget.overtime.companyUserTel),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
               const Text(
                 '作業情報',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SourceHanSansJP-Bold',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '作業期間',
-                child: FormValue(widget.overtime.workPeriod),
+                '作業予定日時',
+                child: FormValue(
+                  widget.overtime.useAtPending
+                      ? '未定'
+                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useEndedAt)}',
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '作業内容',
-                child: FormValue(widget.overtime.workContent),
-              ),
-              const SizedBox(height: 24),
-              const DottedDivider(),
-              const SizedBox(height: 16),
-              FormLabel(
-                'その他連絡事項',
-                child: FormValue(widget.overtime.remarks),
+                child: FormValue(widget.overtime.useContent),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),

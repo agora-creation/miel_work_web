@@ -129,19 +129,19 @@ class _RequestOvertimeHistoryScreenState
                         label: const CustomColumnLabel('申請日時'),
                       ),
                       GridColumn(
-                        columnName: 'shopName',
+                        columnName: 'companyName',
                         label: const CustomColumnLabel('店舗名'),
                       ),
                       GridColumn(
-                        columnName: 'shopUserName',
+                        columnName: 'companyUserName',
                         label: const CustomColumnLabel('店舗責任者名'),
                       ),
                       GridColumn(
-                        columnName: 'shopUserEmail',
+                        columnName: 'companyUserEmail',
                         label: const CustomColumnLabel('店舗責任者メールアドレス'),
                       ),
                       GridColumn(
-                        columnName: 'shopUserTel',
+                        columnName: 'companyUserTel',
                         label: const CustomColumnLabel('店舗責任者電話番号'),
                       ),
                       GridColumn(

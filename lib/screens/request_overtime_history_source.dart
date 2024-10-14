@@ -57,10 +57,10 @@ class RequestOvertimeHistorySource extends DataGridSource {
     cells.add(CustomColumnLabel(approvedAtText));
     String createdAtText = dateText('yyyy/MM/dd HH:mm', overtime.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(overtime.shopName));
-    cells.add(CustomColumnLabel(overtime.shopUserName));
-    cells.add(CustomColumnLabel(overtime.shopUserEmail));
-    cells.add(CustomColumnLabel(overtime.shopUserTel));
+    cells.add(CustomColumnLabel(overtime.companyName));
+    cells.add(CustomColumnLabel(overtime.companyUserName));
+    cells.add(CustomColumnLabel(overtime.companyUserEmail));
+    cells.add(CustomColumnLabel(overtime.companyUserTel));
     cells.add(CustomColumnLabel(overtime.approvalText()));
     cells.add(Row(
       children: [

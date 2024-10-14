@@ -30,11 +30,11 @@ class RequestOvertimeList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  overtime.shopName,
+                  overtime.companyName,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
-                  '店舗責任者名: ${overtime.shopUserName}',
+                  '店舗責任者名: ${overtime.companyUserName}',
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(
