@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
@@ -14,6 +16,7 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -212,6 +215,23 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                       ? '未定'
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
                 ),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '工程表ファイル',
+                child: widget.requestConst.processFile != ''
+                    ? LinkText(
+                        label: '確認する',
+                        color: kBlueColor,
+                        onTap: () {
+                          File file = File(widget.requestConst.processFile);
+                          downloadFile(
+                            url: widget.requestConst.processFile,
+                            name: p.basename(file.path),
+                          );
+                        },
+                      )
+                    : Container(),
               ),
               const SizedBox(height: 8),
               FormLabel(

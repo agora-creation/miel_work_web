@@ -13,6 +13,8 @@ class RequestConstModel {
   DateTime _constStartedAt = DateTime.now();
   DateTime _constEndedAt = DateTime.now();
   bool _constAtPending = false;
+  String _processFile = '';
+  String _processFileExt = '';
   String _constContent = '';
   bool _noise = false;
   String _noiseMeasures = '';
@@ -36,6 +38,8 @@ class RequestConstModel {
   DateTime get constStartedAt => _constStartedAt;
   DateTime get constEndedAt => _constEndedAt;
   bool get constAtPending => _constAtPending;
+  String get processFile => _processFile;
+  String get processFileExt => _processFileExt;
   String get constContent => _constContent;
   bool get noise => _noise;
   String get noiseMeasures => _noiseMeasures;
@@ -62,6 +66,8 @@ class RequestConstModel {
     _constStartedAt = data['constStartedAt'].toDate() ?? DateTime.now();
     _constEndedAt = data['constEndedAt'].toDate() ?? DateTime.now();
     _constAtPending = data['constAtPending'] ?? false;
+    _processFile = data['processFile'] ?? '';
+    _processFileExt = data['processFileExt'] ?? '';
     _constContent = data['constContent'] ?? '';
     _noise = data['noise'] ?? false;
     _noiseMeasures = data['noiseMeasures'] ?? '';
