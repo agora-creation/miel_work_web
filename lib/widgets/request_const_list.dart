@@ -38,7 +38,7 @@ class RequestConstList extends StatelessWidget {
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(
-                  '申込日時: ${dateText('yyyy/MM/dd HH:mm', requestConst.createdAt)}',
+                  '申請日時: ${dateText('yyyy/MM/dd HH:mm', requestConst.createdAt)}',
                   style: const TextStyle(fontSize: 14),
                 ),
               ],
