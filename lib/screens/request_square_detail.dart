@@ -83,7 +83,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                 square: widget.square,
               ),
             ),
-            disabled: !isReject || widget.loginProvider.user?.president != true,
+            disabled: !isReject,
           ),
           const SizedBox(width: 4),
           CustomButton(

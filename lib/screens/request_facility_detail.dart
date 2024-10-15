@@ -84,7 +84,7 @@ class _RequestFacilityDetailScreenState
                 facility: widget.facility,
               ),
             ),
-            disabled: !isReject || widget.loginProvider.user?.president != true,
+            disabled: !isReject,
           ),
           const SizedBox(width: 4),
           CustomButton(

@@ -83,7 +83,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                 cycle: widget.cycle,
               ),
             ),
-            disabled: !isReject || widget.loginProvider.user?.president != true,
+            disabled: !isReject,
           ),
           const SizedBox(width: 4),
           CustomButton(
