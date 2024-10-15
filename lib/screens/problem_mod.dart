@@ -48,8 +48,8 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   FilePickerResult? imageResult;
   FilePickerResult? image2Result;
   FilePickerResult? image3Result;
-
   List<String> states = [];
+  TextEditingController memoController = TextEditingController();
 
   @override
   void initState() {
@@ -140,6 +140,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 image3Result: image3Result,
                 states: states,
                 count: int.parse(countController.text),
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

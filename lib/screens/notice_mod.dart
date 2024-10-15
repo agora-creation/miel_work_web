@@ -41,6 +41,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
   TextEditingController contentController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
   PlatformFile? pickedFile;
+  TextEditingController memoController = TextEditingController();
 
   void _init() async {
     UserModel? user = widget.loginProvider.user;
@@ -127,6 +128,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                 content: contentController.text,
                 group: selectedGroup,
                 pickedFile: pickedFile,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -200,6 +202,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

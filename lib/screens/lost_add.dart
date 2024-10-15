@@ -35,6 +35,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
   TextEditingController itemNameController = TextEditingController();
   FilePickerResult? itemImageResult;
   TextEditingController remarksController = TextEditingController();
+  TextEditingController memoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
                 remarks: remarksController.text,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

@@ -32,6 +32,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
   TextEditingController contentController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
   PlatformFile? pickedFile;
+  TextEditingController memoController = TextEditingController();
 
   @override
   void initState() {
@@ -87,6 +88,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                 content: contentController.text,
                 group: selectedGroup,
                 pickedFile: pickedFile,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -160,6 +162,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 80),
             ],
           ),
         ),

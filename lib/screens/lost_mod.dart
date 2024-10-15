@@ -46,6 +46,7 @@ class _LostModScreenState extends State<LostModScreen> {
     penStrokeWidth: 2,
     exportBackgroundColor: kWhiteColor,
   );
+  TextEditingController memoController = TextEditingController();
 
   @override
   void initState() {
@@ -109,6 +110,7 @@ class _LostModScreenState extends State<LostModScreen> {
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
                 remarks: remarksController.text,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

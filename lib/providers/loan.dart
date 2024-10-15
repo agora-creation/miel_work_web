@@ -26,6 +26,7 @@ class LoanProvider with ChangeNotifier {
     required DateTime returnPlanAt,
     required String itemName,
     required FilePickerResult? itemImageResult,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -62,6 +63,7 @@ class LoanProvider with ChangeNotifier {
         'returnAt': DateTime.now(),
         'returnUser': '',
         'signImage': '',
+        'memo': memo,
         'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
@@ -96,6 +98,7 @@ class LoanProvider with ChangeNotifier {
     required DateTime returnPlanAt,
     required String itemName,
     required FilePickerResult? itemImageResult,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -127,6 +130,7 @@ class LoanProvider with ChangeNotifier {
           'returnPlanAt': returnPlanAt,
           'itemName': itemName,
           'itemImage': itemImage,
+          'memo': memo,
         });
       } else {
         _loanService.update({
@@ -137,6 +141,7 @@ class LoanProvider with ChangeNotifier {
           'loanStaff': loanStaff,
           'returnPlanAt': returnPlanAt,
           'itemName': itemName,
+          'memo': memo,
         });
       }
     } catch (e) {

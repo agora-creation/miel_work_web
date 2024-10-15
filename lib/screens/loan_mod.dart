@@ -46,6 +46,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
     penStrokeWidth: 2,
     exportBackgroundColor: kWhiteColor,
   );
+  TextEditingController memoController = TextEditingController();
 
   @override
   void initState() {
@@ -109,6 +110,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 returnPlanAt: returnPlanAt,
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
+                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

@@ -21,6 +21,7 @@ class NoticeProvider with ChangeNotifier {
     required String content,
     required OrganizationGroupModel? group,
     required PlatformFile? pickedFile,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -52,6 +53,7 @@ class NoticeProvider with ChangeNotifier {
         'content': content,
         'file': file,
         'fileExt': fileExt,
+        'memo': memo,
         'readUserIds': [loginUser.id],
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
@@ -92,6 +94,7 @@ class NoticeProvider with ChangeNotifier {
     required String content,
     required OrganizationGroupModel? group,
     required PlatformFile? pickedFile,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -120,6 +123,7 @@ class NoticeProvider with ChangeNotifier {
           'groupId': group?.id ?? '',
           'title': title,
           'content': content,
+          'memo': memo,
           'readUserIds': [loginUser.id],
           'expirationAt': DateTime.now().add(const Duration(days: 365)),
         });
@@ -131,6 +135,7 @@ class NoticeProvider with ChangeNotifier {
           'content': content,
           'file': file,
           'fileExt': fileExt,
+          'memo': memo,
           'readUserIds': [loginUser.id],
           'expirationAt': DateTime.now().add(const Duration(days: 365)),
         });

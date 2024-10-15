@@ -26,6 +26,7 @@ class LostProvider with ChangeNotifier {
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -61,6 +62,7 @@ class LostProvider with ChangeNotifier {
         'returnAt': DateTime.now(),
         'returnUser': '',
         'signImage': '',
+        'memo': memo,
         'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
@@ -95,6 +97,7 @@ class LostProvider with ChangeNotifier {
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
+    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -125,6 +128,7 @@ class LostProvider with ChangeNotifier {
           'itemName': itemName,
           'itemImage': itemImage,
           'remarks': remarks,
+          'memo': memo,
         });
       } else {
         _lostService.update({
@@ -135,6 +139,7 @@ class LostProvider with ChangeNotifier {
           'itemNumber': itemNumber,
           'itemName': itemName,
           'remarks': remarks,
+          'memo': memo,
         });
       }
     } catch (e) {

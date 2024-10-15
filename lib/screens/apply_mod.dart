@@ -377,7 +377,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
               ),
               const SizedBox(height: 8),
               FormLabel(
-                'メモ',
+                '社内メモ',
                 child: CustomTextField(
                   controller: memoController,
                   textInputType: TextInputType.multiline,

@@ -230,7 +230,7 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
               ),
               const SizedBox(height: 8),
               FormLabel(
-                'メモ',
+                '社内メモ',
                 child: FormValue(
                   widget.apply.memo,
                   onTap: () {
