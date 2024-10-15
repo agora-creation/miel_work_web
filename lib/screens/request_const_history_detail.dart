@@ -53,7 +53,7 @@ class _RequestConstHistoryDetailScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報の詳細',
+          '店舗工事作業申請：申請情報の詳細',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -111,26 +111,37 @@ class _RequestConstHistoryDetailScreenState
                 ),
               ),
               const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              const Text(
+                '申請者情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
+              ),
+              const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.requestConst.shopName),
+                child: FormValue(widget.requestConst.constName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.requestConst.shopUserName),
+                child: FormValue(widget.requestConst.companyUserName),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.requestConst.shopUserEmail),
+                child: FormValue(widget.requestConst.companyUserEmail),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.requestConst.shopUserEmail}',
+                    'mailto:${widget.requestConst.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -138,15 +149,90 @@ class _RequestConstHistoryDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.requestConst.shopUserTel),
+                child: FormValue(widget.requestConst.companyUserTel),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              FormLabel(
-                'その他連絡事項',
-                child: FormValue(widget.requestConst.remarks),
+              const Text(
+                '工事施工情報',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'SourceHanSansJP-Bold',
+                ),
               ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '工事施工会社名',
+                child: FormValue(widget.requestConst.constName),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '工事施工代表者名',
+                child: FormValue(widget.requestConst.constUserName),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '工事施工代表者電話番号',
+                child: FormValue(widget.requestConst.companyUserTel),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '施工予定日時',
+                child: FormValue(
+                  widget.requestConst.constAtPending
+                      ? '未定'
+                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
+                ),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '施工内容',
+                child: FormValue(widget.requestConst.constContent),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
+                '騒音',
+                child: FormValue(widget.requestConst.noise ? '有' : '無'),
+              ),
+              widget.requestConst.noise
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: FormLabel(
+                        '騒音対策',
+                        child: FormValue(widget.requestConst.noiseMeasures),
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              FormLabel(
+                '粉塵',
+                child: FormValue(widget.requestConst.dust ? '有' : '無'),
+              ),
+              widget.requestConst.dust
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: FormLabel(
+                        '粉塵対策',
+                        child: FormValue(widget.requestConst.dustMeasures),
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              FormLabel(
+                '火気の使用',
+                child: FormValue(widget.requestConst.fire ? '有' : '無'),
+              ),
+              widget.requestConst.fire
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: FormLabel(
+                        '火気対策',
+                        child: FormValue(widget.requestConst.fireMeasures),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 80),

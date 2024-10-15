@@ -30,11 +30,11 @@ class RequestConstList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  requestConst.shopName,
+                  requestConst.companyName,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Text(
-                  '店舗責任者名: ${requestConst.shopUserName}',
+                  '店舗責任者名: ${requestConst.companyUserName}',
                   style: const TextStyle(fontSize: 14),
                 ),
                 Text(

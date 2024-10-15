@@ -58,10 +58,10 @@ class RequestConstHistorySource extends DataGridSource {
     cells.add(CustomColumnLabel(approvedAtText));
     String createdAtText = dateText('yyyy/MM/dd HH:mm', requestConst.createdAt);
     cells.add(CustomColumnLabel(createdAtText));
-    cells.add(CustomColumnLabel(requestConst.shopName));
-    cells.add(CustomColumnLabel(requestConst.shopUserName));
-    cells.add(CustomColumnLabel(requestConst.shopUserEmail));
-    cells.add(CustomColumnLabel(requestConst.shopUserTel));
+    cells.add(CustomColumnLabel(requestConst.companyName));
+    cells.add(CustomColumnLabel(requestConst.companyUserName));
+    cells.add(CustomColumnLabel(requestConst.companyUserEmail));
+    cells.add(CustomColumnLabel(requestConst.companyUserTel));
     cells.add(CustomColumnLabel(requestConst.approvalText()));
     cells.add(Row(
       children: [
