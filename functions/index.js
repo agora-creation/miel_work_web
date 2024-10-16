@@ -19,24 +19,39 @@
 // });
 const formatWeeks = ["日", "月", "火", "水", "木", "金", "土"];
 
-const {onCall, HttpsError} = require("firebase-functions/v2/https");
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const nodemailer = require('nodemailer')
 admin.initializeApp()
 const firestore = admin.firestore()
 
-exports.sendRequestInterview = onCall(async (request) => {
-    const db = admin.firestore()
-    var data = request.data
-
-    await db.collection('requestInterview').add({
-        to: ["info@agora-c.com"],
-        message: {
-            subject: "Support Request",
-            html: "This is an <code>HTML</code> email body.",
-        },
-    })
-})
+exports.sendRequestInterview = functions.region('asia-northeast1').firestore.document('/requestInterview/{documentId}')
+    .onCreate(async (snap, context) => {
+        const requestInterviewData = snap.data();
+        const from = 'agora.creation.com@gmail.com';
+        const to = requestInterviewData.companyUserEmail;
+        const subject = 'メールのタイトルです。';
+        const message = 'メールの内容です。';
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: from,
+                    pass: 'H39cU8Rf'
+                }
+            });
+            const mailOptions = {
+                from: from,
+                to: to,
+                subject: subject,
+                text: message
+            };
+            const info = await transporter.sendMail(mailOptions);
+            console.log('メールが送信されました:', info.response);
+        } catch (error) {
+            console.error('メールの送信中にエラーが発生しました:', error);
+        };
+    });
 
 exports.planAlertMessages = functions.region('asia-northeast1')
     .runWith({memory: '512MB'})
