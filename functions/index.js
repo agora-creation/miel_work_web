@@ -19,10 +19,24 @@
 // });
 const formatWeeks = ["日", "月", "火", "水", "木", "金", "土"];
 
+const {onCall, HttpsError} = require("firebase-functions/v2/https");
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 admin.initializeApp()
 const firestore = admin.firestore()
+
+exports.sendRequestInterview = onCall(async (request) => {
+    const db = admin.firestore()
+    var data = request.data
+
+    await db.collection('requestInterview').add({
+        to: ["info@agora-c.com"],
+        message: {
+            subject: "Support Request",
+            html: "This is an <code>HTML</code> email body.",
+        },
+    })
+})
 
 exports.planAlertMessages = functions.region('asia-northeast1')
     .runWith({memory: '512MB'})
