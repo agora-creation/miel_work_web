@@ -28,16 +28,19 @@ const firestore = admin.firestore()
 exports.sendRequestInterview = functions.region('asia-northeast1').firestore.document('/requestInterview/{documentId}')
     .onCreate(async (snap, context) => {
         const requestInterviewData = snap.data();
-        const from = 'agora.creation.com@gmail.com';
+        const from = 'admin@hirome.co.jp';
         const to = requestInterviewData.companyUserEmail;
         const subject = 'メールのタイトルです。';
         const message = 'メールの内容です。';
         try {
             const transporter = nodemailer.createTransport({
-                service: 'gmail',
+                pool: true,
+                host: 'sv215.xbiz.ne.jp',
+                port: 465,
+                secure: true,
                 auth: {
                     user: from,
-                    pass: 'H39cU8Rf'
+                    pass: 'Admin_1111'
                 }
             });
             const mailOptions = {
