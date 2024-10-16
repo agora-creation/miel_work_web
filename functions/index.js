@@ -25,22 +25,24 @@ const nodemailer = require('nodemailer')
 admin.initializeApp()
 const firestore = admin.firestore()
 
-exports.sendRequestInterview = functions.region('asia-northeast1').firestore.document('/requestInterview/{documentId}')
+exports.sendMail = functions.region('asia-northeast1').firestore.document('/mail/{documentId}')
     .onCreate(async (snap, context) => {
-        const requestInterviewData = snap.data();
+        const resultData = snap.data();
         const from = 'admin@hirome.co.jp';
-        const to = requestInterviewData.companyUserEmail;
-        const subject = 'メールのタイトルです。';
-        const message = 'メールの内容です。';
+        const fromPass = 'Admin_1111';
+        const fromHost = 'sv215.xbiz.ne.jp';
+        const to = resultData.to;
+        const subject = resultData.subject;
+        const message = resultData.message;
         try {
             const transporter = nodemailer.createTransport({
                 pool: true,
-                host: 'sv215.xbiz.ne.jp',
+                host: fromHost,
                 port: 465,
                 secure: true,
                 auth: {
                     user: from,
-                    pass: 'Admin_1111'
+                    pass: fromPass
                 }
             });
             const mailOptions = {
