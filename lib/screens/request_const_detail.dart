@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
@@ -10,6 +8,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_const.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
+import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
@@ -205,7 +204,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工代表者電話番号',
-                child: FormValue(widget.requestConst.companyUserTel),
+                child: FormValue(widget.requestConst.constUserTel),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -215,23 +214,6 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                       ? '未定'
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
                 ),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '工程表ファイル',
-                child: widget.requestConst.processFile != ''
-                    ? LinkText(
-                        label: '確認する',
-                        color: kBlueColor,
-                        onTap: () {
-                          File file = File(widget.requestConst.processFile);
-                          downloadFile(
-                            url: widget.requestConst.processFile,
-                            name: p.basename(file.path),
-                          );
-                        },
-                      )
-                    : Container(),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -280,6 +262,30 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                       ),
                     )
                   : Container(),
+              const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              FormLabel(
+                '添付ファイル',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: widget.requestConst.attachedFiles.map((file) {
+                        return AttachedFileList(
+                          fileName: p.basename(file),
+                          onTap: () {
+                            downloadFile(
+                              url: file,
+                              name: p.basename(file),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 80),
