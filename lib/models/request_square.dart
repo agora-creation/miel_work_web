@@ -69,7 +69,7 @@ class RequestSquareModel {
     _useDesk = data['useDesk'] ?? false;
     _useDeskNum = data['useDeskNum'] ?? 0;
     _useContent = data['useContent'] ?? '';
-    attachedFiles = _convertAttachedFiles(data['attachedFiles']);
+    attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
     _memo = data['memo'] ?? '';
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();

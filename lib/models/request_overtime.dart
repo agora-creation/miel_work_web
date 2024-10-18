@@ -45,7 +45,7 @@ class RequestOvertimeModel {
     _useEndedAt = data['useEndedAt'].toDate() ?? DateTime.now();
     _useAtPending = data['useAtPending'] ?? false;
     _useContent = data['useContent'] ?? '';
-    attachedFiles = _convertAttachedFiles(data['attachedFiles']);
+    attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
     _memo = data['memo'] ?? '';
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();

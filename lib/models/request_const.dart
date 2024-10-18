@@ -78,7 +78,7 @@ class RequestConstModel {
     _dustMeasures = data['dustMeasures'] ?? '';
     _fire = data['fire'] ?? false;
     _fireMeasures = data['fireMeasures'] ?? '';
-    attachedFiles = _convertAttachedFiles(data['attachedFiles']);
+    attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
     _meeting = data['meeting'] ?? false;
     _meetingAt = data['meetingAt'].toDate() ?? DateTime.now();
     _caution = data['caution'] ?? '';

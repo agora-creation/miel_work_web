@@ -132,7 +132,7 @@ class RequestInterviewModel {
     _insertedShopName = data['insertedShopName'] ?? '';
     _insertedVisitors = data['insertedVisitors'] ?? '';
     _insertedContent = data['insertedContent'] ?? '';
-    attachedFiles = _convertAttachedFiles(data['attachedFiles']);
+    attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
     _remarks = data['remarks'] ?? '';
     _memo = data['memo'] ?? '';
     _approval = data['approval'] ?? 0;
