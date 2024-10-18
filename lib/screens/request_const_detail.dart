@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
@@ -154,7 +155,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.requestConst.constName),
+                child: FormValue(widget.requestConst.companyName),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -323,6 +324,7 @@ class ApprovalRequestConstDialog extends StatefulWidget {
 class _ApprovalRequestConstDialogState
     extends State<ApprovalRequestConstDialog> {
   bool meeting = false;
+  DateTime meetingAt = DateTime.now();
   TextEditingController cautionController = TextEditingController();
 
   @override
@@ -347,8 +349,6 @@ class _ApprovalRequestConstDialogState
                     bottom: BorderSide(color: kGreyColor),
                   ),
                 ),
-                padding: const EdgeInsets.all(8),
-                width: double.infinity,
                 child: CheckboxListTile(
                   value: meeting,
                   onChanged: (value) {
@@ -360,6 +360,27 @@ class _ApprovalRequestConstDialogState
                 ),
               ),
             ),
+            meeting
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: FormLabel(
+                      '打ち合わせ日時',
+                      child: FormValue(
+                        dateText('yyyy/MM/dd HH:mm', meetingAt),
+                        onTap: () async => await CustomDateTimePicker().picker(
+                          context: context,
+                          init: meetingAt,
+                          title: '打ち合わせ日時を選択',
+                          onChanged: (value) {
+                            setState(() {
+                              meetingAt = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
             const SizedBox(height: 8),
             FormLabel(
               '注意事項',
@@ -389,6 +410,7 @@ class _ApprovalRequestConstDialogState
             String? error = await constProvider.approval(
               requestConst: widget.requestConst,
               meeting: meeting,
+              meetingAt: meetingAt,
               caution: cautionController.text,
               loginUser: widget.loginProvider.user,
             );

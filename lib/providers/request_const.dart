@@ -13,6 +13,7 @@ class RequestConstProvider with ChangeNotifier {
   Future<String?> approval({
     required RequestConstModel requestConst,
     required bool meeting,
+    required DateTime meetingAt,
     required String caution,
     required UserModel? loginUser,
   }) async {
@@ -35,6 +36,7 @@ class RequestConstProvider with ChangeNotifier {
       _constService.update({
         'id': requestConst.id,
         'meeting': meeting,
+        'meetingAt': meetingAt,
         'caution': caution,
         'approval': 1,
         'approvedAt': DateTime.now(),
@@ -65,8 +67,17 @@ class RequestConstProvider with ChangeNotifier {
           attachedFilesText += '$file\n';
         }
       }
+      String meetingText = '不要';
+      if (meeting) {
+        meetingText = '必要(${dateText('yyyy/MM/dd HH:mm', meetingAt)})';
+      }
       String message = '''
 店舗工事作業申請が承認されました。
+
+[着工前の打ち合わせ] $meetingText
+[注意事項]
+$caution
+
 以下申込内容をご確認し、作業を行なってください。
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ■申請者情報

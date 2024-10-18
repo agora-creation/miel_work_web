@@ -78,7 +78,7 @@ class RequestConstModel {
     _dustMeasures = data['dustMeasures'] ?? '';
     _fire = data['fire'] ?? false;
     _fireMeasures = data['fireMeasures'] ?? '';
-    attachedFiles = data['attachedFiles'] ?? [];
+    attachedFiles = _convertAttachedFiles(data['attachedFiles']);
     _meeting = data['meeting'] ?? false;
     _meetingAt = data['meetingAt'].toDate() ?? DateTime.now();
     _caution = data['caution'] ?? '';
@@ -87,6 +87,14 @@ class RequestConstModel {
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
     approvalUsers = _convertApprovalUsers(data['approvalUsers']);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
+  }
+
+  List<String> _convertAttachedFiles(List list) {
+    List<String> converted = [];
+    for (String data in list) {
+      converted.add(data);
+    }
+    return converted;
   }
 
   List<ApprovalUserModel> _convertApprovalUsers(List list) {
