@@ -200,6 +200,11 @@ class _RequestOvertimeDetailScreenState
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useEndedAt)}',
                 ),
               ),
+              LinkText(
+                label: '日時を調整する',
+                color: kBlueColor,
+                onTap: () {},
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '作業内容',

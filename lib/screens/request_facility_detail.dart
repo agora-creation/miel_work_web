@@ -209,6 +209,11 @@ class _RequestFacilityDetailScreenState
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useEndedAt)}',
                 ),
               ),
+              LinkText(
+                label: '日時を調整する',
+                color: kBlueColor,
+                onTap: () {},
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用料合計(税抜)',

@@ -225,6 +225,11 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.square.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.square.useEndedAt)}',
                 ),
               ),
+              LinkText(
+                label: '日時を調整する',
+                color: kBlueColor,
+                onTap: () {},
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用区分',

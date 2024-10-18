@@ -215,6 +215,11 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
                 ),
               ),
+              LinkText(
+                label: '日時を調整する',
+                color: kBlueColor,
+                onTap: () {},
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '施工内容',

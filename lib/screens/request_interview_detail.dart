@@ -225,6 +225,11 @@ class _RequestInterviewDetailScreenState
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedEndedAt)}',
                 ),
               ),
+              LinkText(
+                label: '日時を調整する',
+                color: kBlueColor,
+                onTap: () {},
+              ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者名',
@@ -281,6 +286,11 @@ class _RequestInterviewDetailScreenState
                                 : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationEndedAt)}',
                           ),
                         ),
+                        LinkText(
+                          label: '日時を調整する',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者名',
@@ -328,6 +338,11 @@ class _RequestInterviewDetailScreenState
                                 ? '未定'
                                 : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedEndedAt)}',
                           ),
+                        ),
+                        LinkText(
+                          label: '日時を調整する',
+                          color: kBlueColor,
+                          onTap: () {},
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
