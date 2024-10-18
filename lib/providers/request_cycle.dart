@@ -11,9 +11,11 @@ class RequestCycleProvider with ChangeNotifier {
 
   Future<String?> approval({
     required RequestCycleModel cycle,
+    required String lockNumber,
     required UserModel? loginUser,
   }) async {
     String? error;
+    if (lockNumber == '') return '施錠番号を入力してください';
     if (loginUser == null) return '申請の承認に失敗しました';
     try {
       List<Map> approvalUsers = [];
@@ -30,12 +32,16 @@ class RequestCycleProvider with ChangeNotifier {
       });
       _cycleService.update({
         'id': cycle.id,
+        'lockNumber': lockNumber,
         'approval': 1,
         'approvedAt': DateTime.now(),
         'approvalUsers': approvalUsers,
       });
       String message = '''
 自転車置き場使用申込が承認されました。
+
+施錠番号は『$lockNumber』です。
+
 以下申込内容をご確認し、ご利用ください。
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ■申込者情報
