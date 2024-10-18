@@ -29,42 +29,43 @@ class RequestSquareProvider with ChangeNotifier {
         'userPresident': loginUser.president,
         'approvedAt': DateTime.now(),
       });
-      _squareService.update({
-        'id': square.id,
-        'approval': 1,
-        'approvedAt': DateTime.now(),
-        'approvalUsers': approvalUsers,
-      });
-      String useAtText = '';
-      if (square.useAtPending) {
-        useAtText = '未定';
-      } else {
-        useAtText =
-            '${dateText('yyyy/MM/dd HH:mm', square.useStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', square.useEndedAt)}';
-      }
-      String useClassText = '';
-      if (square.useFull) {
-        useClassText = '''
+      if (loginUser.president) {
+        _squareService.update({
+          'id': square.id,
+          'approval': 1,
+          'approvedAt': DateTime.now(),
+          'approvalUsers': approvalUsers,
+        });
+        String useAtText = '';
+        if (square.useAtPending) {
+          useAtText = '未定';
+        } else {
+          useAtText =
+              '${dateText('yyyy/MM/dd HH:mm', square.useStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', square.useEndedAt)}';
+        }
+        String useClassText = '';
+        if (square.useFull) {
+          useClassText = '''
 全面使用
         ''';
-      }
-      if (square.useChair) {
-        useClassText = '''
+        }
+        if (square.useChair) {
+          useClassText = '''
 折りたたみイス：${square.useChairNum}脚
         ''';
-      }
-      if (square.useDesk) {
-        useClassText = '''
+        }
+        if (square.useDesk) {
+          useClassText = '''
 折りたたみ机：${square.useDeskNum}台
         ''';
-      }
-      String attachedFilesText = '';
-      if (square.attachedFiles.isNotEmpty) {
-        for (final file in square.attachedFiles) {
-          attachedFilesText += '$file\n';
         }
-      }
-      String message = '''
+        String attachedFilesText = '';
+        if (square.attachedFiles.isNotEmpty) {
+          for (final file in square.attachedFiles) {
+            attachedFilesText += '$file\n';
+          }
+        }
+        String message = '''
 よさこい広場使用申込が承認されました。
 以下申込内容をご確認し、ご利用ください。
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -90,14 +91,20 @@ $attachedFilesText
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       ''';
-      _mailService.create({
-        'id': _mailService.id(),
-        'to': square.companyUserEmail,
-        'subject': 'よさこい広場使用申込承認のお知らせ',
-        'message': message,
-        'createdAt': DateTime.now(),
-        'expirationAt': DateTime.now().add(const Duration(hours: 1)),
-      });
+        _mailService.create({
+          'id': _mailService.id(),
+          'to': square.companyUserEmail,
+          'subject': 'よさこい広場使用申込承認のお知らせ',
+          'message': message,
+          'createdAt': DateTime.now(),
+          'expirationAt': DateTime.now().add(const Duration(hours: 1)),
+        });
+      } else {
+        _squareService.update({
+          'id': square.id,
+          'approvalUsers': approvalUsers,
+        });
+      }
     } catch (e) {
       error = '申請の承認に失敗しました';
     }

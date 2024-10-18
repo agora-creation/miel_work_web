@@ -29,33 +29,34 @@ class RequestInterviewProvider with ChangeNotifier {
         'userPresident': loginUser.president,
         'approvedAt': DateTime.now(),
       });
-      _interviewService.update({
-        'id': interview.id,
-        'approval': 1,
-        'approvedAt': DateTime.now(),
-        'approvalUsers': approvalUsers,
-      });
-      String interviewedAtText = '';
-      if (interview.interviewedAtPending) {
-        interviewedAtText = '未定';
-      } else {
-        interviewedAtText =
-            '${dateText('yyyy/MM/dd HH:mm', interview.interviewedStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.interviewedEndedAt)}';
-      }
-      String interviewedReservedText = '';
-      if (interview.interviewedReserved) {
-        interviewedReservedText = '必要';
-      }
-      String locationText = '';
-      if (interview.location) {
-        String locationAtText = '';
-        if (interview.locationAtPending) {
-          locationAtText = '未定';
+      if (loginUser.president) {
+        _interviewService.update({
+          'id': interview.id,
+          'approval': 1,
+          'approvedAt': DateTime.now(),
+          'approvalUsers': approvalUsers,
+        });
+        String interviewedAtText = '';
+        if (interview.interviewedAtPending) {
+          interviewedAtText = '未定';
         } else {
-          locationAtText =
-              '${dateText('yyyy/MM/dd HH:mm', interview.locationStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.locationEndedAt)}';
+          interviewedAtText =
+              '${dateText('yyyy/MM/dd HH:mm', interview.interviewedStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.interviewedEndedAt)}';
         }
-        locationText = '''
+        String interviewedReservedText = '';
+        if (interview.interviewedReserved) {
+          interviewedReservedText = '必要';
+        }
+        String locationText = '';
+        if (interview.location) {
+          String locationAtText = '';
+          if (interview.locationAtPending) {
+            locationAtText = '未定';
+          } else {
+            locationAtText =
+                '${dateText('yyyy/MM/dd HH:mm', interview.locationStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.locationEndedAt)}';
+          }
+          locationText = '''
 ■ロケハン情報
 【ロケハン予定日時】$locationAtText
 【ロケハン担当者名】${interview.locationUserName}
@@ -65,21 +66,21 @@ class RequestInterviewProvider with ChangeNotifier {
 ${interview.locationContent}
 
         ''';
-      }
-      String insertText = '';
-      if (interview.insert) {
-        String insertedAt = '';
-        if (interview.insertedAtPending) {
-          insertedAt = '未定';
-        } else {
-          insertedAt =
-              '${dateText('yyyy/MM/dd HH:mm', interview.insertedStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.insertedEndedAt)}';
         }
-        String insertedReservedText = '';
-        if (interview.insertedReserved) {
-          insertedReservedText = '必要';
-        }
-        insertText = '''
+        String insertText = '';
+        if (interview.insert) {
+          String insertedAt = '';
+          if (interview.insertedAtPending) {
+            insertedAt = '未定';
+          } else {
+            insertedAt =
+                '${dateText('yyyy/MM/dd HH:mm', interview.insertedStartedAt)}〜${dateText('yyyy/MM/dd HH:mm', interview.insertedEndedAt)}';
+          }
+          String insertedReservedText = '';
+          if (interview.insertedReserved) {
+            insertedReservedText = '必要';
+          }
+          insertText = '''
 ■インサート撮影情報
 【撮影予定日時】$insertedAt
 【撮影担当者名】${interview.insertedUserName}
@@ -91,14 +92,14 @@ ${interview.locationContent}
 ${interview.insertedContent}
 
         ''';
-      }
-      String attachedFilesText = '';
-      if (interview.attachedFiles.isNotEmpty) {
-        for (final file in interview.attachedFiles) {
-          attachedFilesText += '$file\n';
         }
-      }
-      String message = '''
+        String attachedFilesText = '';
+        if (interview.attachedFiles.isNotEmpty) {
+          for (final file in interview.attachedFiles) {
+            attachedFilesText += '$file\n';
+          }
+        }
+        String message = '''
 取材申込が承認されました。
 以下申込内容をご確認し、お越しください。
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -134,14 +135,20 @@ ${interview.remarks}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       ''';
-      _mailService.create({
-        'id': _mailService.id(),
-        'to': interview.companyUserEmail,
-        'subject': '取材申込承認のお知らせ',
-        'message': message,
-        'createdAt': DateTime.now(),
-        'expirationAt': DateTime.now().add(const Duration(hours: 1)),
-      });
+        _mailService.create({
+          'id': _mailService.id(),
+          'to': interview.companyUserEmail,
+          'subject': '取材申込承認のお知らせ',
+          'message': message,
+          'createdAt': DateTime.now(),
+          'expirationAt': DateTime.now().add(const Duration(hours: 1)),
+        });
+      } else {
+        _interviewService.update({
+          'id': interview.id,
+          'approvalUsers': approvalUsers,
+        });
+      }
     } catch (e) {
       error = '申請の承認に失敗しました';
     }
