@@ -12,9 +12,12 @@ class RequestConstProvider with ChangeNotifier {
 
   Future<String?> approval({
     required RequestConstModel requestConst,
+    required bool meeting,
+    required String caution,
     required UserModel? loginUser,
   }) async {
     String? error;
+    if (caution == '') return '注意事項を入力してください';
     if (loginUser == null) return '申請の承認に失敗しました';
     try {
       List<Map> approvalUsers = [];
@@ -31,6 +34,8 @@ class RequestConstProvider with ChangeNotifier {
       });
       _constService.update({
         'id': requestConst.id,
+        'meeting': meeting,
+        'caution': caution,
         'approval': 1,
         'approvedAt': DateTime.now(),
         'approvalUsers': approvalUsers,

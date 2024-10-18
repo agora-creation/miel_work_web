@@ -11,6 +11,7 @@ import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
@@ -321,18 +322,53 @@ class ApprovalRequestConstDialog extends StatefulWidget {
 
 class _ApprovalRequestConstDialogState
     extends State<ApprovalRequestConstDialog> {
+  bool meeting = false;
+  TextEditingController cautionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final constProvider = Provider.of<RequestConstProvider>(context);
     return CustomAlertDialog(
-      content: const SizedBox(
+      content: SizedBox(
         width: 600,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 8),
-            Text('本当に承認しますか？'),
+            const SizedBox(height: 8),
+            const Text('本当に承認しますか？'),
+            const SizedBox(height: 8),
+            FormLabel(
+              '着工前の打ち合わせ',
+              child: Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: kGreyColor),
+                    bottom: BorderSide(color: kGreyColor),
+                  ),
+                ),
+                padding: const EdgeInsets.all(8),
+                width: double.infinity,
+                child: CheckboxListTile(
+                  value: meeting,
+                  onChanged: (value) {
+                    setState(() {
+                      meeting = value ?? false;
+                    });
+                  },
+                  title: const Text('必要'),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '注意事項',
+              child: CustomTextField(
+                controller: cautionController,
+                textInputType: TextInputType.multiline,
+                maxLines: 3,
+              ),
+            ),
           ],
         ),
       ),
@@ -352,6 +388,8 @@ class _ApprovalRequestConstDialogState
           onPressed: () async {
             String? error = await constProvider.approval(
               requestConst: widget.requestConst,
+              meeting: meeting,
+              caution: cautionController.text,
               loginUser: widget.loginProvider.user,
             );
             if (error != null) {
