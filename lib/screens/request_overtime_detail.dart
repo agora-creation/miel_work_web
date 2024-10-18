@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
@@ -7,10 +8,12 @@ import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
+import 'package:miel_work_web/services/request_overtime.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
@@ -203,7 +206,14 @@ class _RequestOvertimeDetailScreenState
               LinkText(
                 label: '日時を調整する',
                 color: kBlueColor,
-                onTap: () {},
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => ModUseAtDialog(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    overtime: widget.overtime,
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -241,6 +251,105 @@ class _RequestOvertimeDetailScreenState
           ),
         ),
       ),
+    );
+  }
+}
+
+class ModUseAtDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestOvertimeModel overtime;
+
+  const ModUseAtDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.overtime,
+    super.key,
+  });
+
+  @override
+  State<ModUseAtDialog> createState() => _ModUseAtDialogState();
+}
+
+class _ModUseAtDialogState extends State<ModUseAtDialog> {
+  RequestOvertimeService overtimeService = RequestOvertimeService();
+  DateTime useStartedAt = DateTime.now();
+  DateTime useEndedAt = DateTime.now();
+
+  @override
+  void initState() {
+    useStartedAt = widget.overtime.useStartedAt;
+    useEndedAt = widget.overtime.useEndedAt;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              '作業予定日時',
+              child: DatetimeRangeForm(
+                startedAt: useStartedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: useStartedAt,
+                  title: '作業予定開始日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      useStartedAt = value;
+                    });
+                  },
+                ),
+                endedAt: useEndedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: useEndedAt,
+                  title: '作業予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      useEndedAt = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '変更する',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            overtimeService.update({
+              'id': widget.overtime.id,
+              'useStartedAt': useStartedAt,
+              'useEndedAt': useEndedAt,
+              'useAtPending': false,
+            });
+            if (!mounted) return;
+            showMessage(context, '作業予定日時が変更されました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

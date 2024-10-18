@@ -729,7 +729,7 @@ class _ModInsertedAtDialogState extends State<ModInsertedAtDialog> {
               'insertedAtPending': false,
             });
             if (!mounted) return;
-            showMessage(context, '撮影s予定日時が変更されました', true);
+            showMessage(context, '撮影予定日時が変更されました', true);
             Navigator.pop(context);
             Navigator.pop(context);
           },

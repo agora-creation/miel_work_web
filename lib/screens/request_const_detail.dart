@@ -8,11 +8,13 @@ import 'package:miel_work_web/models/request_const.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_const.dart';
+import 'package:miel_work_web/services/request_const.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
@@ -220,7 +222,14 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               LinkText(
                 label: '日時を調整する',
                 color: kBlueColor,
-                onTap: () {},
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => ModConstAtDialog(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    requestConst: widget.requestConst,
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -300,6 +309,105 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ModConstAtDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestConstModel requestConst;
+
+  const ModConstAtDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.requestConst,
+    super.key,
+  });
+
+  @override
+  State<ModConstAtDialog> createState() => _ModConstAtDialogState();
+}
+
+class _ModConstAtDialogState extends State<ModConstAtDialog> {
+  RequestConstService constService = RequestConstService();
+  DateTime constStartedAt = DateTime.now();
+  DateTime constEndedAt = DateTime.now();
+
+  @override
+  void initState() {
+    constStartedAt = widget.requestConst.constStartedAt;
+    constEndedAt = widget.requestConst.constEndedAt;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              '施工予定日時',
+              child: DatetimeRangeForm(
+                startedAt: constStartedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: constStartedAt,
+                  title: '施工予定開始日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      constStartedAt = value;
+                    });
+                  },
+                ),
+                endedAt: constEndedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: constEndedAt,
+                  title: '施工予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      constEndedAt = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '変更する',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            constService.update({
+              'id': widget.requestConst.id,
+              'constStartedAt': constStartedAt,
+              'constEndedAt': constEndedAt,
+              'constAtPending': false,
+            });
+            if (!mounted) return;
+            showMessage(context, '施工予定日時が変更されました', true);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
