@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
@@ -8,16 +7,16 @@ import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
-import 'package:miel_work_web/services/request_interview.dart';
+import 'package:miel_work_web/screens/request_interview_mod.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,6 +77,41 @@ class _RequestInterviewDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelRequestInterviewDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                interview: widget.interview,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '編集する',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: RequestInterviewModScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    interview: widget.interview,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -127,6 +161,12 @@ class _RequestInterviewDetailScreenState
                     '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
+                  widget.interview.approval == 1
+                      ? Text(
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.approvedAt)}',
+                          style: const TextStyle(color: kRedColor),
+                        )
+                      : Container(),
                 ],
               ),
               const SizedBox(height: 8),
@@ -228,18 +268,6 @@ class _RequestInterviewDetailScreenState
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedEndedAt)}',
                 ),
               ),
-              LinkText(
-                label: '日時を調整する',
-                color: kBlueColor,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ModInterviewedAtDialog(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    interview: widget.interview,
-                  ),
-                ),
-              ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者名',
@@ -296,18 +324,6 @@ class _RequestInterviewDetailScreenState
                                 : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationEndedAt)}',
                           ),
                         ),
-                        LinkText(
-                          label: '日時を調整する',
-                          color: kBlueColor,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => ModLocationAtDialog(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                              interview: widget.interview,
-                            ),
-                          ),
-                        ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者名',
@@ -354,18 +370,6 @@ class _RequestInterviewDetailScreenState
                             widget.interview.insertedAtPending
                                 ? '未定'
                                 : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedEndedAt)}',
-                          ),
-                        ),
-                        LinkText(
-                          label: '日時を調整する',
-                          color: kBlueColor,
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => ModInsertedAtDialog(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                              interview: widget.interview,
-                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -442,12 +446,12 @@ class _RequestInterviewDetailScreenState
   }
 }
 
-class ModInterviewedAtDialog extends StatefulWidget {
+class DelRequestInterviewDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final RequestInterviewModel interview;
 
-  const ModInterviewedAtDialog({
+  const DelRequestInterviewDialog({
     required this.loginProvider,
     required this.homeProvider,
     required this.interview,
@@ -455,57 +459,24 @@ class ModInterviewedAtDialog extends StatefulWidget {
   });
 
   @override
-  State<ModInterviewedAtDialog> createState() => _ModInterviewedAtDialogState();
+  State<DelRequestInterviewDialog> createState() =>
+      _DelRequestInterviewDialogState();
 }
 
-class _ModInterviewedAtDialogState extends State<ModInterviewedAtDialog> {
-  RequestInterviewService interviewService = RequestInterviewService();
-  DateTime interviewedStartedAt = DateTime.now();
-  DateTime interviewedEndedAt = DateTime.now();
-
-  @override
-  void initState() {
-    interviewedStartedAt = widget.interview.interviewedStartedAt;
-    interviewedEndedAt = widget.interview.interviewedEndedAt;
-    super.initState();
-  }
-
+class _DelRequestInterviewDialogState extends State<DelRequestInterviewDialog> {
   @override
   Widget build(BuildContext context) {
+    final interviewProvider = Provider.of<RequestInterviewProvider>(context);
     return CustomAlertDialog(
-      content: SizedBox(
-        width: 600,
+      content: const SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 8),
-            FormLabel(
-              '取材予定日時',
-              child: DatetimeRangeForm(
-                startedAt: interviewedStartedAt,
-                startedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: interviewedStartedAt,
-                  title: '取材予定開始日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      interviewedStartedAt = value;
-                    });
-                  },
-                ),
-                endedAt: interviewedEndedAt,
-                endedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: interviewedEndedAt,
-                  title: '取材予定終了日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      interviewedEndedAt = value;
-                    });
-                  },
-                ),
-              ),
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
             ),
           ],
         ),
@@ -520,218 +491,22 @@ class _ModInterviewedAtDialogState extends State<ModInterviewedAtDialog> {
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '変更する',
+          label: '削除する',
           labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
+          backgroundColor: kRedColor,
           onPressed: () async {
-            interviewService.update({
-              'id': widget.interview.id,
-              'interviewedStartedAt': interviewedStartedAt,
-              'interviewedEndedAt': interviewedEndedAt,
-              'interviewedAtPending': false,
-            });
+            String? error = await interviewProvider.delete(
+              interview: widget.interview,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
             if (!mounted) return;
-            showMessage(context, '取材予定日時が変更されました', true);
+            showMessage(context, '申請情報が削除されました', true);
             Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ModLocationAtDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestInterviewModel interview;
-
-  const ModLocationAtDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.interview,
-    super.key,
-  });
-
-  @override
-  State<ModLocationAtDialog> createState() => _ModLocationAtDialogState();
-}
-
-class _ModLocationAtDialogState extends State<ModLocationAtDialog> {
-  RequestInterviewService interviewService = RequestInterviewService();
-  DateTime locationStartedAt = DateTime.now();
-  DateTime locationEndedAt = DateTime.now();
-
-  @override
-  void initState() {
-    locationStartedAt = widget.interview.locationStartedAt;
-    locationEndedAt = widget.interview.locationEndedAt;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomAlertDialog(
-      content: SizedBox(
-        width: 600,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            FormLabel(
-              'ロケハン予定日時',
-              child: DatetimeRangeForm(
-                startedAt: locationStartedAt,
-                startedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: locationStartedAt,
-                  title: 'ロケハン予定開始日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      locationStartedAt = value;
-                    });
-                  },
-                ),
-                endedAt: locationEndedAt,
-                endedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: locationEndedAt,
-                  title: 'ロケハン予定終了日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      locationEndedAt = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '変更する',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            interviewService.update({
-              'id': widget.interview.id,
-              'locationStartedAt': locationStartedAt,
-              'locationEndedAt': locationEndedAt,
-              'locationAtPending': false,
-            });
-            if (!mounted) return;
-            showMessage(context, 'ロケハン予定日時が変更されました', true);
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ModInsertedAtDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestInterviewModel interview;
-
-  const ModInsertedAtDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.interview,
-    super.key,
-  });
-
-  @override
-  State<ModInsertedAtDialog> createState() => _ModInsertedAtDialogState();
-}
-
-class _ModInsertedAtDialogState extends State<ModInsertedAtDialog> {
-  RequestInterviewService interviewService = RequestInterviewService();
-  DateTime insertedStartedAt = DateTime.now();
-  DateTime insertedEndedAt = DateTime.now();
-
-  @override
-  void initState() {
-    insertedStartedAt = widget.interview.insertedStartedAt;
-    insertedEndedAt = widget.interview.insertedEndedAt;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomAlertDialog(
-      content: SizedBox(
-        width: 600,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            FormLabel(
-              '撮影予定日時',
-              child: DatetimeRangeForm(
-                startedAt: insertedStartedAt,
-                startedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: insertedStartedAt,
-                  title: '撮影予定開始日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      insertedStartedAt = value;
-                    });
-                  },
-                ),
-                endedAt: insertedEndedAt,
-                endedOnTap: () async => await CustomDateTimePicker().picker(
-                  context: context,
-                  init: insertedEndedAt,
-                  title: '撮影予定終了日時を選択',
-                  onChanged: (value) {
-                    setState(() {
-                      insertedEndedAt = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '変更する',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () async {
-            interviewService.update({
-              'id': widget.interview.id,
-              'insertedStartedAt': insertedStartedAt,
-              'insertedEndedAt': insertedEndedAt,
-              'insertedAtPending': false,
-            });
-            if (!mounted) return;
-            showMessage(context, '撮影予定日時が変更されました', true);
-            Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
         ),
       ],

@@ -4,7 +4,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/request_overtime_history_detail.dart';
+import 'package:miel_work_web/screens/request_overtime_detail.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
@@ -74,7 +74,7 @@ class RequestOvertimeHistorySource extends DataGridSource {
               context,
               PageTransition(
                 type: PageTransitionType.rightToLeft,
-                child: RequestOvertimeHistoryDetailScreen(
+                child: RequestOvertimeDetailScreen(
                   loginProvider: loginProvider,
                   homeProvider: homeProvider,
                   overtime: overtime,

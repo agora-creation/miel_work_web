@@ -8,6 +8,7 @@ import 'package:miel_work_web/models/request_const.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_const.dart';
+import 'package:miel_work_web/screens/request_const_mod.dart';
 import 'package:miel_work_web/services/request_const.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
@@ -19,6 +20,7 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -79,6 +81,41 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelRequestConstDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                requestConst: widget.requestConst,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '編集する',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: RequestConstModScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    requestConst: widget.requestConst,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -128,6 +165,12 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                     '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.requestConst.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
+                  widget.requestConst.approval == 1
+                      ? Text(
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.requestConst.approvedAt)}',
+                          style: const TextStyle(color: kRedColor),
+                        )
+                      : Container(),
                 ],
               ),
               const SizedBox(height: 8),
@@ -219,18 +262,6 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
                 ),
               ),
-              LinkText(
-                label: '日時を調整する',
-                color: kBlueColor,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ModConstAtDialog(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    requestConst: widget.requestConst,
-                  ),
-                ),
-              ),
               const SizedBox(height: 8),
               FormLabel(
                 '施工内容',
@@ -309,6 +340,73 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelRequestConstDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestConstModel requestConst;
+
+  const DelRequestConstDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.requestConst,
+    super.key,
+  });
+
+  @override
+  State<DelRequestConstDialog> createState() => _DelRequestConstDialogState();
+}
+
+class _DelRequestConstDialogState extends State<DelRequestConstDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final constProvider = Provider.of<RequestConstProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await constProvider.delete(
+              requestConst: widget.requestConst,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '申請情報が削除されました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }

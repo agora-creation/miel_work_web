@@ -8,6 +8,7 @@ import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
+import 'package:miel_work_web/screens/request_overtime_mod.dart';
 import 'package:miel_work_web/services/request_overtime.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
@@ -18,6 +19,7 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,6 +80,41 @@ class _RequestOvertimeDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: '削除する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => DelRequestOvertimeDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                overtime: widget.overtime,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '編集する',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: RequestOvertimeModScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                    overtime: widget.overtime,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -127,6 +164,12 @@ class _RequestOvertimeDetailScreenState
                     '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
+                  widget.overtime.approval == 1
+                      ? Text(
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.approvedAt)}',
+                          style: const TextStyle(color: kRedColor),
+                        )
+                      : Container(),
                 ],
               ),
               const SizedBox(height: 8),
@@ -203,18 +246,6 @@ class _RequestOvertimeDetailScreenState
                       : '${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useEndedAt)}',
                 ),
               ),
-              LinkText(
-                label: '日時を調整する',
-                color: kBlueColor,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => ModUseAtDialog(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    overtime: widget.overtime,
-                  ),
-                ),
-              ),
               const SizedBox(height: 8),
               FormLabel(
                 '作業内容',
@@ -251,6 +282,74 @@ class _RequestOvertimeDetailScreenState
           ),
         ),
       ),
+    );
+  }
+}
+
+class DelRequestOvertimeDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestOvertimeModel overtime;
+
+  const DelRequestOvertimeDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.overtime,
+    super.key,
+  });
+
+  @override
+  State<DelRequestOvertimeDialog> createState() =>
+      _DelRequestOvertimeDialogState();
+}
+
+class _DelRequestOvertimeDialogState extends State<DelRequestOvertimeDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final overtimeProvider = Provider.of<RequestOvertimeProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に削除しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await overtimeProvider.delete(
+              overtime: widget.overtime,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '申請情報が削除されました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }
