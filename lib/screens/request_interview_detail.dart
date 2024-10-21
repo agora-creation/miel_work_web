@@ -10,6 +10,7 @@ import 'package:miel_work_web/providers/request_interview.dart';
 import 'package:miel_work_web/screens/request_interview_mod.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
+import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
@@ -437,6 +438,35 @@ class _RequestInterviewDetailScreenState
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
+              const SizedBox(height: 8),
+              Container(
+                color: kGreyColor.withOpacity(0.2),
+                padding: const EdgeInsets.all(16),
+                child: FormLabel(
+                  '社内コメント',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      widget.interview.comments.isNotEmpty
+                          ? Column(
+                              children:
+                                  widget.interview.comments.map((comment) {
+                                return CommentList(comment: comment);
+                              }).toList(),
+                            )
+                          : const ListTile(title: Text('コメントがありません')),
+                      const SizedBox(height: 8),
+                      CustomButton(
+                        type: ButtonSizeType.sm,
+                        label: 'コメント追加',
+                        labelColor: kWhiteColor,
+                        backgroundColor: kBlueColor,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 80),
             ],
           ),

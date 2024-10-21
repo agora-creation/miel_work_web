@@ -10,6 +10,7 @@ import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
+import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -40,7 +41,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   TextEditingController priceController = TextEditingController(text: '0');
-  TextEditingController memoController = TextEditingController();
 
   void _init() async {
     numberController.text = widget.apply.number;
@@ -170,7 +170,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                 title: titleController.text,
                 content: contentController.text,
                 price: price,
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -374,15 +373,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                       )
                     : Container(),
               ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '社内メモ',
-                child: CustomTextField(
-                  controller: memoController,
-                  textInputType: TextInputType.multiline,
-                  maxLines: 10,
-                ),
-              ),
               const SizedBox(height: 16),
               const Text(
                 '※『承認』は、承認状況が「承認待ち」で、作成者・既承認者以外のスタッフが実行できます。',
@@ -417,6 +407,34 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                 style: TextStyle(
                   color: kRedColor,
                   fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                color: kGreyColor.withOpacity(0.2),
+                padding: const EdgeInsets.all(16),
+                child: FormLabel(
+                  '社内コメント',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      widget.apply.comments.isNotEmpty
+                          ? Column(
+                              children: widget.apply.comments.map((comment) {
+                                return CommentList(comment: comment);
+                              }).toList(),
+                            )
+                          : const ListTile(title: Text('コメントがありません')),
+                      const SizedBox(height: 8),
+                      CustomButton(
+                        type: ButtonSizeType.sm,
+                        label: 'コメント追加',
+                        labelColor: kWhiteColor,
+                        backgroundColor: kBlueColor,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 80),

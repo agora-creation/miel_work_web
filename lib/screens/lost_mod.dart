@@ -8,6 +8,7 @@ import 'package:miel_work_web/models/lost.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/lost.dart';
+import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -326,6 +327,34 @@ class _LostModScreenState extends State<LostModScreen> {
                   showMessage(context, '返却されました', true);
                   Navigator.pop(context);
                 },
+              ),
+              const SizedBox(height: 8),
+              Container(
+                color: kGreyColor.withOpacity(0.2),
+                padding: const EdgeInsets.all(16),
+                child: FormLabel(
+                  '社内コメント',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      widget.lost.comments.isNotEmpty
+                          ? Column(
+                              children: widget.lost.comments.map((comment) {
+                                return CommentList(comment: comment);
+                              }).toList(),
+                            )
+                          : const ListTile(title: Text('コメントがありません')),
+                      const SizedBox(height: 8),
+                      CustomButton(
+                        type: ButtonSizeType.sm,
+                        label: 'コメント追加',
+                        labelColor: kWhiteColor,
+                        backgroundColor: kBlueColor,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 80),
             ],

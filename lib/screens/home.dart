@@ -416,6 +416,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                         HomeIconCard(
+                          icon: FontAwesomeIcons.tableCells,
+                          label: '警備員予定表',
+                          color: kBlackColor,
+                          backgroundColor: kWhiteColor,
+                          onTap: () {},
+                        ),
+                        HomeIconCard(
+                          icon: FontAwesomeIcons.tableCells,
+                          label: '清掃員予定表',
+                          color: kBlackColor,
+                          backgroundColor: kWhiteColor,
+                          onTap: () {},
+                        ),
+                        HomeIconCard(
+                          icon: FontAwesomeIcons.tableCells,
+                          label: '食器センター予定表',
+                          color: kBlackColor,
+                          backgroundColor: kWhiteColor,
+                          onTap: () {},
+                        ),
+                        HomeIconCard(
                           icon: FontAwesomeIcons.bolt,
                           label: 'メーター検針',
                           color: kBlackColor,
