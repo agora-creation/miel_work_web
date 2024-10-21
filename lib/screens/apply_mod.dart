@@ -48,7 +48,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
     titleController.text = widget.apply.title;
     contentController.text = widget.apply.content;
     priceController.text = widget.apply.price.toString();
-    memoController.text = widget.apply.memo;
     setState(() {});
   }
 

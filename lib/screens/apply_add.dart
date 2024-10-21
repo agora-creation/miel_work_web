@@ -49,7 +49,6 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
     titleController.text = widget.apply?.title ?? '';
     contentController.text = widget.apply?.content ?? '';
     priceController.text = widget.apply?.price.toString() ?? '';
-    memoController.text = widget.apply?.memo ?? '';
     setState(() {});
   }
 

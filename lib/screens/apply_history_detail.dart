@@ -8,10 +8,7 @@ import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
-import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
@@ -227,40 +224,6 @@ class _ApplyHistoryDetailScreenState extends State<ApplyHistoryDetailScreen> {
                         },
                       )
                     : Container(),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '社内メモ',
-                child: FormValue(
-                  widget.apply.memo,
-                  onTap: () {
-                    TextEditingController memoController =
-                        TextEditingController(text: widget.apply.memo);
-                    showDialog(
-                      context: context,
-                      builder: (context) => CustomAlertDialog(
-                        contentPadding: const EdgeInsets.all(16),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomTextField(
-                              controller: memoController,
-                              textInputType: TextInputType.multiline,
-                              maxLines: null,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ).then((value) {
-                      widget.apply.memo = memoController.text;
-                      ApplyService().update({
-                        'id': widget.apply.id,
-                        'memo': memoController.text,
-                      });
-                      setState(() {});
-                    });
-                  },
-                ),
               ),
               const SizedBox(height: 80),
             ],
