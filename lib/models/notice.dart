@@ -38,8 +38,8 @@ class NoticeModel {
     _content = data['content'] ?? '';
     _file = data['file'] ?? '';
     _fileExt = data['fileExt'] ?? '';
-    comments = _convertComments(data['comments']);
-    readUserIds = _convertReadUserIds(data['readUserIds']);
+    comments = _convertComments(data['comments'] ?? []);
+    readUserIds = _convertReadUserIds(data['readUserIds'] ?? []);
     _createdUserId = data['createdUserId'] ?? '';
     _createdUserName = data['createdUserName'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();

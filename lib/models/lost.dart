@@ -52,8 +52,8 @@ class LostModel {
     _returnAt = data['returnAt'].toDate() ?? DateTime.now();
     _returnUser = data['returnUser'] ?? '';
     _signImage = data['signImage'] ?? '';
-    comments = _convertComments(data['comments']);
-    readUserIds = _convertReadUserIds(data['readUserIds']);
+    comments = _convertComments(data['comments'] ?? []);
+    readUserIds = _convertReadUserIds(data['readUserIds'] ?? []);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
     _expirationAt = data['expirationAt'].toDate() ?? DateTime.now();
   }

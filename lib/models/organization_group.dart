@@ -23,7 +23,7 @@ class OrganizationGroupModel {
     _id = data['id'] ?? '';
     _organizationId = data['organizationId'] ?? '';
     _name = data['name'] ?? '';
-    userIds = _convertUserIds(data['userIds']);
+    userIds = _convertUserIds(data['userIds'] ?? []);
     _loginId = data['loginId'] ?? '';
     _password = data['password'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();

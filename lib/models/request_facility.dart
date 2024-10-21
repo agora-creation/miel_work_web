@@ -43,10 +43,10 @@ class RequestFacilityModel {
     _useEndedAt = data['useEndedAt'].toDate() ?? DateTime.now();
     _useAtPending = data['useAtPending'] ?? false;
     attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
-    comments = _convertComments(data['comments']);
+    comments = _convertComments(data['comments'] ?? []);
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
-    approvalUsers = _convertApprovalUsers(data['approvalUsers']);
+    approvalUsers = _convertApprovalUsers(data['approvalUsers'] ?? []);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
   }
 

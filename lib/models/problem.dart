@@ -67,11 +67,11 @@ class ProblemModel {
     _image = data['image'] ?? '';
     _image2 = data['image2'] ?? '';
     _image3 = data['image3'] ?? '';
-    states = _convertStates(data['states']);
+    states = _convertStates(data['states'] ?? []);
     _count = data['count'] ?? 0;
-    comments = _convertComments(data['comments']);
+    comments = _convertComments(data['comments'] ?? []);
     _processed = data['processed'] ?? false;
-    readUserIds = _convertReadUserIds(data['readUserIds']);
+    readUserIds = _convertReadUserIds(data['readUserIds'] ?? []);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
     _expirationAt = data['expirationAt'].toDate() ?? DateTime.now();
   }

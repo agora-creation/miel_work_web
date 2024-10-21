@@ -82,10 +82,10 @@ class RequestConstModel {
     _meeting = data['meeting'] ?? false;
     _meetingAt = data['meetingAt'].toDate() ?? DateTime.now();
     _caution = data['caution'] ?? '';
-    comments = _convertComments(data['comments']);
+    comments = _convertComments(data['comments'] ?? []);
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
-    approvalUsers = _convertApprovalUsers(data['approvalUsers']);
+    approvalUsers = _convertApprovalUsers(data['approvalUsers'] ?? []);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
   }
 

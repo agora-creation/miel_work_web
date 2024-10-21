@@ -90,10 +90,10 @@ class ApplyModel {
     _reason = data['reason'] ?? '';
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
-    approvalUsers = _convertApprovalUsers(data['approvalUsers']);
+    approvalUsers = _convertApprovalUsers(data['approvalUsers'] ?? []);
     _approvalNumber = data['approvalNumber'] ?? '';
     _approvalReason = data['approvalReason'] ?? '';
-    comments = _convertComments(data['comments']);
+    comments = _convertComments(data['comments'] ?? []);
     _createdUserId = data['createdUserId'] ?? '';
     _createdUserName = data['createdUserName'] ?? '';
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();

@@ -70,10 +70,10 @@ class RequestSquareModel {
     _useDeskNum = data['useDeskNum'] ?? 0;
     _useContent = data['useContent'] ?? '';
     attachedFiles = _convertAttachedFiles(data['attachedFiles'] ?? []);
-    comments = _convertComments(data['comments']);
+    comments = _convertComments(data['comments'] ?? []);
     _approval = data['approval'] ?? 0;
     _approvedAt = data['approvedAt'].toDate() ?? DateTime.now();
-    approvalUsers = _convertApprovalUsers(data['approvalUsers']);
+    approvalUsers = _convertApprovalUsers(data['approvalUsers'] ?? []);
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();
   }
 

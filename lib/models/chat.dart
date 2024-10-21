@@ -24,7 +24,7 @@ class ChatModel {
     _id = data['id'] ?? '';
     _organizationId = data['organizationId'] ?? '';
     _groupId = data['groupId'] ?? '';
-    userIds = _convertUserIds(data['userIds']);
+    userIds = _convertUserIds(data['userIds'] ?? []);
     _name = data['name'] ?? '';
     _lastMessage = data['lastMessage'] ?? '';
     _updatedAt = data['updatedAt'].toDate() ?? DateTime.now();
