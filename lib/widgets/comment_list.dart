@@ -21,6 +21,7 @@ class CommentList extends StatelessWidget {
         title: Text(comment.content),
         subtitle: Text(
           '${dateText('yyyy/MM/dd HH:mm', comment.createdAt)} (${comment.userName})',
+          style: const TextStyle(fontSize: 12),
         ),
       ),
     );

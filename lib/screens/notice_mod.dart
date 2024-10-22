@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -42,7 +43,16 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
   TextEditingController contentController = TextEditingController();
   OrganizationGroupModel? selectedGroup;
   PlatformFile? pickedFile;
-  TextEditingController memoController = TextEditingController();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    NoticeModel? tmpNotice = await noticeService.selectData(
+      id: widget.notice.id,
+    );
+    if (tmpNotice == null) return;
+    comments = tmpNotice.comments;
+    setState(() {});
+  }
 
   void _init() async {
     UserModel? user = widget.loginProvider.user;
@@ -61,6 +71,7 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
     titleController.text = widget.notice.title;
     contentController.text = widget.notice.content;
     selectedGroup = widget.noticeInGroup;
+    comments = widget.notice.comments;
     _init();
     super.initState();
   }
@@ -129,7 +140,6 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                 content: contentController.text,
                 group: selectedGroup,
                 pickedFile: pickedFile,
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -212,9 +222,9 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.notice.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.notice.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -225,7 +235,63 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await noticeProvider.addComment(
+                                      notice: widget.notice,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

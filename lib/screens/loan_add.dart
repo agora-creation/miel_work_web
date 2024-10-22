@@ -35,7 +35,6 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
   DateTime returnPlanAt = DateTime.now();
   TextEditingController itemNameController = TextEditingController();
   FilePickerResult? itemImageResult;
-  TextEditingController memoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +71,6 @@ class _LoanAddScreenState extends State<LoanAddScreen> {
                 returnPlanAt: returnPlanAt,
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

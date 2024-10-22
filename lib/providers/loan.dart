@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/loan.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -26,7 +27,6 @@ class LoanProvider with ChangeNotifier {
     required DateTime returnPlanAt,
     required String itemName,
     required FilePickerResult? itemImageResult,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -63,7 +63,6 @@ class LoanProvider with ChangeNotifier {
         'returnAt': DateTime.now(),
         'returnUser': '',
         'signImage': '',
-        'memo': memo,
         'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
@@ -98,7 +97,6 @@ class LoanProvider with ChangeNotifier {
     required DateTime returnPlanAt,
     required String itemName,
     required FilePickerResult? itemImageResult,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -130,7 +128,6 @@ class LoanProvider with ChangeNotifier {
           'returnPlanAt': returnPlanAt,
           'itemName': itemName,
           'itemImage': itemImage,
-          'memo': memo,
         });
       } else {
         _loanService.update({
@@ -141,7 +138,6 @@ class LoanProvider with ChangeNotifier {
           'loanStaff': loanStaff,
           'returnPlanAt': returnPlanAt,
           'itemName': itemName,
-          'memo': memo,
         });
       }
     } catch (e) {
@@ -180,6 +176,38 @@ class LoanProvider with ChangeNotifier {
       });
     } catch (e) {
       error = '貸出物の返却に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> addComment({
+    required LoanModel loan,
+    required String content,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (content == '') return '社内コメントの追記に失敗しました';
+    if (loginUser == null) return '社内コメントの追記に失敗しました';
+    try {
+      List<Map> comments = [];
+      if (loan.comments.isNotEmpty) {
+        for (final comment in loan.comments) {
+          comments.add(comment.toMap());
+        }
+      }
+      comments.add({
+        'id': dateText('yyyyMMddHHmm', DateTime.now()),
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'content': content,
+        'createdAt': DateTime.now(),
+      });
+      _loanService.update({
+        'id': loan.id,
+        'comments': comments,
+      });
+    } catch (e) {
+      error = '社内コメントの追記に失敗しました';
     }
     return error;
   }

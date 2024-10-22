@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/organization.dart';
@@ -185,6 +186,38 @@ class ApplyProvider with ChangeNotifier {
       });
     } catch (e) {
       error = '申請情報の編集に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> addComment({
+    required ApplyModel apply,
+    required String content,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (content == '') return '社内コメントの追記に失敗しました';
+    if (loginUser == null) return '社内コメントの追記に失敗しました';
+    try {
+      List<Map> comments = [];
+      if (apply.comments.isNotEmpty) {
+        for (final comment in apply.comments) {
+          comments.add(comment.toMap());
+        }
+      }
+      comments.add({
+        'id': dateText('yyyyMMddHHmm', DateTime.now()),
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'content': content,
+        'createdAt': DateTime.now(),
+      });
+      _applyService.update({
+        'id': apply.id,
+        'comments': comments,
+      });
+    } catch (e) {
+      error = '社内コメントの追記に失敗しました';
     }
     return error;
   }

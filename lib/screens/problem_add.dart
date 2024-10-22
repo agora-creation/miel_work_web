@@ -44,7 +44,6 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
   FilePickerResult? image2Result;
   FilePickerResult? image3Result;
   List<String> states = [];
-  TextEditingController memoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +87,6 @@ class _ProblemAddScreenState extends State<ProblemAddScreen> {
                 image3Result: image3Result,
                 states: states,
                 count: int.parse(countController.text),
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {

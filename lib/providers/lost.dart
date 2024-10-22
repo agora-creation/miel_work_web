@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/lost.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -26,7 +27,6 @@ class LostProvider with ChangeNotifier {
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -62,7 +62,6 @@ class LostProvider with ChangeNotifier {
         'returnAt': DateTime.now(),
         'returnUser': '',
         'signImage': '',
-        'memo': memo,
         'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(days: 365)),
@@ -97,7 +96,6 @@ class LostProvider with ChangeNotifier {
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -128,7 +126,6 @@ class LostProvider with ChangeNotifier {
           'itemName': itemName,
           'itemImage': itemImage,
           'remarks': remarks,
-          'memo': memo,
         });
       } else {
         _lostService.update({
@@ -139,7 +136,6 @@ class LostProvider with ChangeNotifier {
           'itemNumber': itemNumber,
           'itemName': itemName,
           'remarks': remarks,
-          'memo': memo,
         });
       }
     } catch (e) {
@@ -178,6 +174,38 @@ class LostProvider with ChangeNotifier {
       });
     } catch (e) {
       error = '落とし物の返却に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> addComment({
+    required LostModel lost,
+    required String content,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (content == '') return '社内コメントの追記に失敗しました';
+    if (loginUser == null) return '社内コメントの追記に失敗しました';
+    try {
+      List<Map> comments = [];
+      if (lost.comments.isNotEmpty) {
+        for (final comment in lost.comments) {
+          comments.add(comment.toMap());
+        }
+      }
+      comments.add({
+        'id': dateText('yyyyMMddHHmm', DateTime.now()),
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'content': content,
+        'createdAt': DateTime.now(),
+      });
+      _lostService.update({
+        'id': lost.id,
+        'comments': comments,
+      });
+    } catch (e) {
+      error = '社内コメントの追記に失敗しました';
     }
     return error;
   }

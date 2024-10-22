@@ -3,16 +3,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_square.dart';
 import 'package:miel_work_web/screens/request_square_mod.dart';
+import 'package:miel_work_web/services/request_square.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
@@ -40,8 +43,32 @@ class RequestSquareDetailScreen extends StatefulWidget {
 }
 
 class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
+  RequestSquareService squareService = RequestSquareService();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    RequestSquareModel? tmpSquare = await squareService.selectData(
+      id: widget.square.id,
+    );
+    if (tmpSquare == null) return;
+    comments = tmpSquare.comments;
+    setState(() {});
+  }
+
+  void _init() async {
+    comments = widget.square.comments;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final squareProvider = Provider.of<RequestSquareProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.square.approvalUsers.isNotEmpty) {
@@ -335,9 +362,9 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.square.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.square.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -348,7 +375,63 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await squareProvider.addComment(
+                                      square: widget.square,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

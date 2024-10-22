@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/models/user.dart';
@@ -32,7 +33,6 @@ class ProblemProvider with ChangeNotifier {
     required FilePickerResult? image3Result,
     required List<String> states,
     required int count,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -91,7 +91,6 @@ class ProblemProvider with ChangeNotifier {
         'image3': image3,
         'states': states,
         'count': count,
-        'memo': memo,
         'processed': false,
         'readUserIds': [loginUser.id],
         'createdAt': createdAt,
@@ -134,7 +133,6 @@ class ProblemProvider with ChangeNotifier {
     required FilePickerResult? image3Result,
     required List<String> states,
     required int count,
-    required String memo,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -195,7 +193,6 @@ class ProblemProvider with ChangeNotifier {
           'image3': image3,
           'states': states,
           'count': count,
-          'memo': memo,
           'createdAt': createdAt,
           'expirationAt': createdAt.add(const Duration(days: 365)),
         });
@@ -212,13 +209,44 @@ class ProblemProvider with ChangeNotifier {
           'details': details,
           'states': states,
           'count': count,
-          'memo': memo,
           'createdAt': createdAt,
           'expirationAt': createdAt.add(const Duration(days: 365)),
         });
       }
     } catch (e) {
       error = 'クレーム／要望情報の編集に失敗しました';
+    }
+    return error;
+  }
+
+  Future<String?> addComment({
+    required ProblemModel problem,
+    required String content,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (content == '') return '社内コメントの追記に失敗しました';
+    if (loginUser == null) return '社内コメントの追記に失敗しました';
+    try {
+      List<Map> comments = [];
+      if (problem.comments.isNotEmpty) {
+        for (final comment in problem.comments) {
+          comments.add(comment.toMap());
+        }
+      }
+      comments.add({
+        'id': dateText('yyyyMMddHHmm', DateTime.now()),
+        'userId': loginUser.id,
+        'userName': loginUser.name,
+        'content': content,
+        'createdAt': DateTime.now(),
+      });
+      _problemService.update({
+        'id': problem.id,
+        'comments': comments,
+      });
+    } catch (e) {
+      error = '社内コメントの追記に失敗しました';
     }
     return error;
   }

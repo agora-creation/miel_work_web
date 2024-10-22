@@ -3,11 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
 import 'package:miel_work_web/screens/request_interview_mod.dart';
+import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
@@ -41,6 +43,29 @@ class RequestInterviewDetailScreen extends StatefulWidget {
 
 class _RequestInterviewDetailScreenState
     extends State<RequestInterviewDetailScreen> {
+  RequestInterviewService interviewService = RequestInterviewService();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    RequestInterviewModel? tmpInterview = await interviewService.selectData(
+      id: widget.interview.id,
+    );
+    if (tmpInterview == null) return;
+    comments = tmpInterview.comments;
+    setState(() {});
+  }
+
+  void _init() async {
+    comments = widget.interview.comments;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isApproval = true;

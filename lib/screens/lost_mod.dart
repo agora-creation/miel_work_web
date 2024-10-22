@@ -4,10 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/lost.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/lost.dart';
+import 'package:miel_work_web/services/lost.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
@@ -34,6 +36,7 @@ class LostModScreen extends StatefulWidget {
 }
 
 class _LostModScreenState extends State<LostModScreen> {
+  LostService lostService = LostService();
   DateTime discoveryAt = DateTime.now();
   TextEditingController discoveryPlaceController = TextEditingController();
   TextEditingController discoveryUserController = TextEditingController();
@@ -47,7 +50,16 @@ class _LostModScreenState extends State<LostModScreen> {
     penStrokeWidth: 2,
     exportBackgroundColor: kWhiteColor,
   );
-  TextEditingController memoController = TextEditingController();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    LostModel? tmpLost = await lostService.selectData(
+      id: widget.lost.id,
+    );
+    if (tmpLost == null) return;
+    comments = tmpLost.comments;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -57,6 +69,7 @@ class _LostModScreenState extends State<LostModScreen> {
     itemNumberController.text = widget.lost.itemNumber;
     itemNameController.text = widget.lost.itemName;
     remarksController.text = widget.lost.remarks;
+    comments = widget.lost.comments;
     super.initState();
   }
 
@@ -111,7 +124,6 @@ class _LostModScreenState extends State<LostModScreen> {
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
                 remarks: remarksController.text,
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -337,9 +349,9 @@ class _LostModScreenState extends State<LostModScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.lost.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.lost.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -350,7 +362,63 @@ class _LostModScreenState extends State<LostModScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await lostProvider.addComment(
+                                      lost: widget.lost,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

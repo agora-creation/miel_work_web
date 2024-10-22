@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -50,7 +51,16 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   FilePickerResult? image2Result;
   FilePickerResult? image3Result;
   List<String> states = [];
-  TextEditingController memoController = TextEditingController();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    ProblemModel? tmpProblem = await problemService.selectData(
+      id: widget.problem.id,
+    );
+    if (tmpProblem == null) return;
+    comments = tmpProblem.comments;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -65,6 +75,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
     detailsController.text = widget.problem.details;
     states = widget.problem.states;
     countController.text = widget.problem.count.toString();
+    comments = widget.problem.comments;
     super.initState();
   }
 
@@ -141,7 +152,6 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 image3Result: image3Result,
                 states: states,
                 count: int.parse(countController.text),
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -440,9 +450,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.problem.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.problem.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -453,7 +463,63 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await problemProvider.addComment(
+                                      problem: widget.problem,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

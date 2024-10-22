@@ -6,9 +6,11 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
@@ -36,11 +38,22 @@ class ApplyModScreen extends StatefulWidget {
 }
 
 class _ApplyModScreenState extends State<ApplyModScreen> {
+  ApplyService applyService = ApplyService();
   TextEditingController numberController = TextEditingController();
   String type = kApplyTypes.first;
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   TextEditingController priceController = TextEditingController(text: '0');
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    ApplyModel? tmpApply = await applyService.selectData(
+      id: widget.apply.id,
+    );
+    if (tmpApply == null) return;
+    comments = tmpApply.comments;
+    setState(() {});
+  }
 
   void _init() async {
     numberController.text = widget.apply.number;
@@ -48,6 +61,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
     titleController.text = widget.apply.title;
     contentController.text = widget.apply.content;
     priceController.text = widget.apply.price.toString();
+    comments = widget.apply.comments;
     setState(() {});
   }
 
@@ -418,9 +432,9 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.apply.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.apply.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -431,7 +445,63 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await applyProvider.addComment(
+                                      apply: widget.apply,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

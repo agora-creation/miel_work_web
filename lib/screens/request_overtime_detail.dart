@@ -4,6 +4,7 @@ import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -15,6 +16,7 @@ import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
@@ -44,8 +46,32 @@ class RequestOvertimeDetailScreen extends StatefulWidget {
 
 class _RequestOvertimeDetailScreenState
     extends State<RequestOvertimeDetailScreen> {
+  RequestOvertimeService overtimeService = RequestOvertimeService();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    RequestOvertimeModel? tmpOvertime = await overtimeService.selectData(
+      id: widget.overtime.id,
+    );
+    if (tmpOvertime == null) return;
+    comments = tmpOvertime.comments;
+    setState(() {});
+  }
+
+  void _init() async {
+    comments = widget.overtime.comments;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final overtimeProvider = Provider.of<RequestOvertimeProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.overtime.approvalUsers.isNotEmpty) {
@@ -287,9 +313,9 @@ class _RequestOvertimeDetailScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.overtime.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.overtime.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -300,7 +326,63 @@ class _RequestOvertimeDetailScreenState
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await overtimeProvider.addComment(
+                                      overtime: widget.overtime,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

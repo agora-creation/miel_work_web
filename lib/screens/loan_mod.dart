@@ -4,10 +4,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/loan.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/loan.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/services/loan.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
@@ -34,6 +36,7 @@ class LoanModScreen extends StatefulWidget {
 }
 
 class _LoanModScreenState extends State<LoanModScreen> {
+  LoanService loanService = LoanService();
   DateTime loanAt = DateTime.now();
   TextEditingController loanUserController = TextEditingController();
   TextEditingController loanCompanyController = TextEditingController();
@@ -47,7 +50,16 @@ class _LoanModScreenState extends State<LoanModScreen> {
     penStrokeWidth: 2,
     exportBackgroundColor: kWhiteColor,
   );
-  TextEditingController memoController = TextEditingController();
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    LoanModel? tmpLoan = await loanService.selectData(
+      id: widget.loan.id,
+    );
+    if (tmpLoan == null) return;
+    comments = tmpLoan.comments;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -57,6 +69,7 @@ class _LoanModScreenState extends State<LoanModScreen> {
     loanStaffController.text = widget.loan.loanStaff;
     returnPlanAt = widget.loan.returnPlanAt;
     itemNameController.text = widget.loan.itemName;
+    comments = widget.loan.comments;
     super.initState();
   }
 
@@ -111,7 +124,6 @@ class _LoanModScreenState extends State<LoanModScreen> {
                 returnPlanAt: returnPlanAt,
                 itemName: itemNameController.text,
                 itemImageResult: itemImageResult,
-                memo: memoController.text,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -355,9 +367,9 @@ class _LoanModScreenState extends State<LoanModScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      widget.loan.comments.isNotEmpty
+                      comments.isNotEmpty
                           ? Column(
-                              children: widget.loan.comments.map((comment) {
+                              children: comments.map((comment) {
                                 return CommentList(comment: comment);
                               }).toList(),
                             )
@@ -368,7 +380,63 @@ class _LoanModScreenState extends State<LoanModScreen> {
                         label: 'コメント追加',
                         labelColor: kWhiteColor,
                         backgroundColor: kBlueColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await loanProvider.addComment(
+                                      loan: widget.loan,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
