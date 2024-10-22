@@ -147,6 +147,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                   return CustomCalendar(
                     controller: controller,
                     initialMonth: searchMonth,
+                    cellAspectRatio: 1,
                     onCellTap: (events, day) {
                       Navigator.push(
                         context,

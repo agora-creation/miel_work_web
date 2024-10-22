@@ -5,11 +5,15 @@ import 'package:miel_work_web/common/style.dart';
 class CustomCalendar extends StatelessWidget {
   final EventController<Object?> controller;
   final DateTime? initialMonth;
+  final double cellAspectRatio;
+  final Function(DateTime, int)? onPageChange;
   final Function(List<CalendarEventData<Object?>>, DateTime)? onCellTap;
 
   const CustomCalendar({
     required this.controller,
     required this.initialMonth,
+    this.cellAspectRatio = 0.55,
+    this.onPageChange,
     required this.onCellTap,
     super.key,
   });
@@ -22,7 +26,7 @@ class CustomCalendar extends StatelessWidget {
         borderColor: kBorderColor,
         controller: controller,
         initialMonth: initialMonth,
-        cellAspectRatio: 1,
+        cellAspectRatio: cellAspectRatio,
         headerBuilder: MonthHeader.hidden,
         weekDayBuilder: (day) {
           return Padding(
@@ -37,6 +41,7 @@ class CustomCalendar extends StatelessWidget {
             ),
           );
         },
+        onPageChange: onPageChange,
         onCellTap: onCellTap,
         startDay: WeekDays.sunday,
         hideDaysNotInMonth: true,
