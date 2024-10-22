@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.5"
+  cell_calendar:
+    dependency: "direct main"
+    description:
+      name: cell_calendar
+      sha256: e4c530cbec471cd673201971a567d1a4d155a8a482a633db20b55c1f75d82e8a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0"
   characters:
     dependency: transitive
     description:
@@ -431,6 +439,14 @@ packages:
       url: "https://github.com/mchome/flutter_colorpicker"
     source: git
     version: "1.1.0"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      sha256: cde36b12f7188c85286fba9b38cc5a902e7279f36dd676967106c041dc9dde70
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.5"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -484,6 +500,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.21"
+  flutter_riverpod:
+    dependency: transitive
+    description:
+      name: flutter_riverpod
+      sha256: "6eda4e247774474c715a0805a2fb8e3cd55fbae4ead641e063c95b4bd5f3b317"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -518,6 +542,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.7.0"
+  hooks_riverpod:
+    dependency: transitive
+    description:
+      name: hooks_riverpod
+      sha256: "8010a5abaa625a98358d9bce14b56f63dacdb4ec8637544da3bfd0ae184a9ae6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   html:
     dependency: transitive
     description:
@@ -766,6 +798,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      sha256: bd6e656a764e3d27f211975626e0c4f9b8d06ab16acf3c7ba7a8061e09744c75
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   scroll_to_index:
     dependency: "direct main"
     description:
@@ -859,6 +899,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
