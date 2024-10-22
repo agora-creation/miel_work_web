@@ -12,6 +12,7 @@ import 'package:miel_work_web/screens/loan.dart';
 import 'package:miel_work_web/screens/lost.dart';
 import 'package:miel_work_web/screens/notice.dart';
 import 'package:miel_work_web/screens/plan.dart';
+import 'package:miel_work_web/screens/plan_center.dart';
 import 'package:miel_work_web/screens/plan_garbageman.dart';
 import 'package:miel_work_web/screens/plan_guardsman.dart';
 import 'package:miel_work_web/screens/problem.dart';
@@ -448,7 +449,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: '食器センター予定表',
                           color: kBlackColor,
                           backgroundColor: kWhiteColor,
-                          onTap: () {},
+                          onTap: () => showBottomUpScreen(
+                            context,
+                            PlanCenterScreen(
+                              loginProvider: loginProvider,
+                              homeProvider: homeProvider,
+                            ),
+                          ),
                         ),
                         HomeIconCard(
                           icon: FontAwesomeIcons.bolt,
