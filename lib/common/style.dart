@@ -107,11 +107,6 @@ const kReportHeaderStyle = TextStyle(
   fontFamily: 'SourceHanSansJP-Bold',
 );
 
-const kEventTextStyle = TextStyle(
-  fontSize: 10,
-  color: kWhiteColor,
-);
-
 const List<String> imageExtensions = [
   '.HEIC',
   '.heic',
