@@ -1,4 +1,4 @@
-import 'package:cell_calendar/cell_calendar.dart';
+import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +13,7 @@ import 'package:miel_work_web/screens/plan_guardsman_timeline.dart';
 import 'package:miel_work_web/services/plan_guardsman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_cell_calendar.dart';
+import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
@@ -37,7 +37,7 @@ class PlanGuardsmanScreen extends StatefulWidget {
 }
 
 class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
-  CellCalendarPageController controller = CellCalendarPageController();
+  EventController controller = EventController();
   PlanGuardsmanService guardsmanService = PlanGuardsmanService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -45,7 +45,6 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
   void _changeMonth(DateTime value) {
     searchMonth = value;
     days = generateDays(value);
-    controller.jumpToDate(searchMonth);
     setState(() {});
   }
 
@@ -137,20 +136,18 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                       data: snapshot.data,
                     );
                   }
-                  List<CalendarEvent> events = [];
                   if (guardsMans.isNotEmpty) {
                     for (final guardsman in guardsMans) {
-                      events.add(CalendarEvent(
-                        eventName: guardsman.content,
-                        eventDate: guardsman.eventAt,
-                        eventTextStyle: kEventTextStyle,
+                      controller.add(CalendarEventData(
+                        title: guardsman.content,
+                        date: guardsman.eventAt,
                       ));
                     }
                   }
-                  return CustomCellCalendar(
+                  return CustomCalendar(
                     controller: controller,
-                    events: events,
-                    onCellTapped: (day) {
+                    initialMonth: searchMonth,
+                    onCellTap: (events, day) {
                       Navigator.push(
                         context,
                         PageTransition(

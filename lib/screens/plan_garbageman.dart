@@ -1,4 +1,4 @@
-import 'package:cell_calendar/cell_calendar.dart';
+import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +13,7 @@ import 'package:miel_work_web/screens/plan_garbageman_timeline.dart';
 import 'package:miel_work_web/services/plan_garbageman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_cell_calendar.dart';
+import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
@@ -37,7 +37,7 @@ class PlanGarbagemanScreen extends StatefulWidget {
 }
 
 class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
-  CellCalendarPageController controller = CellCalendarPageController();
+  EventController controller = EventController();
   PlanGarbagemanService garbagemanService = PlanGarbagemanService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -45,7 +45,6 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
   void _changeMonth(DateTime value) {
     searchMonth = value;
     days = generateDays(value);
-    controller.jumpToDate(searchMonth);
     setState(() {});
   }
 
@@ -137,20 +136,18 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                       data: snapshot.data,
                     );
                   }
-                  List<CalendarEvent> events = [];
                   if (garbageMans.isNotEmpty) {
                     for (final garbageman in garbageMans) {
-                      events.add(CalendarEvent(
-                        eventName: garbageman.content,
-                        eventDate: garbageman.eventAt,
-                        eventTextStyle: kEventTextStyle,
+                      controller.add(CalendarEventData(
+                        title: garbageman.content,
+                        date: garbageman.eventAt,
                       ));
                     }
                   }
-                  return CustomCellCalendar(
+                  return CustomCalendar(
                     controller: controller,
-                    events: events,
-                    onCellTapped: (day) {
+                    initialMonth: searchMonth,
+                    onCellTap: (events, day) {
                       Navigator.push(
                         context,
                         PageTransition(
