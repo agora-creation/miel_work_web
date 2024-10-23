@@ -15,9 +15,8 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -137,12 +136,15 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                     );
                   }
                   if (guardsMans.isNotEmpty) {
+                    List<CalendarEventData> events = [];
                     for (final guardsman in guardsMans) {
-                      controller.add(CalendarEventData(
-                        title: guardsman.content,
-                        date: guardsman.eventAt,
+                      events.add(CalendarEventData(
+                        title:
+                            '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)}',
+                        date: guardsman.startedAt,
                       ));
                     }
+                    controller.addAll(events);
                   }
                   return CustomCalendar(
                     controller: controller,
@@ -189,12 +191,23 @@ class AddGuardsmanDialog extends StatefulWidget {
 }
 
 class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
-  TextEditingController contentController = TextEditingController();
-  DateTime eventAt = DateTime.now();
+  DateTime startedAt = DateTime.now();
+  DateTime endedAt = DateTime.now();
 
   @override
   void initState() {
-    eventAt = widget.day;
+    startedAt = DateTime(
+      widget.day.year,
+      widget.day.month,
+      widget.day.day,
+      9,
+    );
+    endedAt = DateTime(
+      widget.day.year,
+      widget.day.month,
+      widget.day.day,
+      23,
+    );
     super.initState();
   }
 
@@ -208,29 +221,31 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FormLabel(
-              '内容',
-              child: CustomTextField(
-                controller: contentController,
-                textInputType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
             const SizedBox(height: 8),
             FormLabel(
-              '予定日',
-              child: FormValue(
-                dateText('yyyy/MM/dd', eventAt),
-                onTap: () async => await CustomDateTimePicker().picker(
+              '予定日時',
+              child: DatetimeRangeForm(
+                startedAt: startedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
-                  init: eventAt,
-                  title: '予定日を選択',
+                  init: startedAt,
+                  title: '予定開始日時を選択',
                   onChanged: (value) {
                     setState(() {
-                      eventAt = value;
+                      startedAt = value;
                     });
                   },
-                  datetime: false,
+                ),
+                endedAt: endedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: endedAt,
+                  title: '予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      endedAt = value;
+                    });
+                  },
                 ),
               ),
             ),
@@ -253,8 +268,8 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
           onPressed: () async {
             String? error = await guardsmanProvider.create(
               organization: widget.loginProvider.organization,
-              content: contentController.text,
-              eventAt: eventAt,
+              startedAt: startedAt,
+              endedAt: endedAt,
             );
             if (error != null) {
               if (!mounted) return;

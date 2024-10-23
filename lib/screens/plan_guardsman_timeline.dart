@@ -12,9 +12,8 @@ import 'package:miel_work_web/screens/plan_guardsman.dart';
 import 'package:miel_work_web/services/plan_guardsman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/plan_guardsman_list.dart';
 import 'package:provider/provider.dart';
 
@@ -145,13 +144,13 @@ class ModGuardsmanDialog extends StatefulWidget {
 }
 
 class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
-  TextEditingController contentController = TextEditingController();
-  DateTime eventAt = DateTime.now();
+  DateTime startedAt = DateTime.now();
+  DateTime endedAt = DateTime.now();
 
   @override
   void initState() {
-    contentController.text = widget.guardsman.content;
-    eventAt = widget.guardsman.eventAt;
+    startedAt = widget.guardsman.startedAt;
+    endedAt = widget.guardsman.endedAt;
     super.initState();
   }
 
@@ -165,29 +164,31 @@ class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FormLabel(
-              '内容',
-              child: CustomTextField(
-                controller: contentController,
-                textInputType: TextInputType.text,
-                maxLines: 1,
-              ),
-            ),
             const SizedBox(height: 8),
             FormLabel(
-              '予定日',
-              child: FormValue(
-                dateText('yyyy/MM/dd', eventAt),
-                onTap: () async => await CustomDateTimePicker().picker(
+              '予定日時',
+              child: DatetimeRangeForm(
+                startedAt: startedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
-                  init: eventAt,
-                  title: '予定日を選択',
+                  init: startedAt,
+                  title: '予定開始日時を選択',
                   onChanged: (value) {
                     setState(() {
-                      eventAt = value;
+                      startedAt = value;
                     });
                   },
-                  datetime: false,
+                ),
+                endedAt: endedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: endedAt,
+                  title: '予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      endedAt = value;
+                    });
+                  },
                 ),
               ),
             ),
@@ -230,8 +231,8 @@ class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
             String? error = await guardsmanProvider.update(
               guardsman: widget.guardsman,
               organization: widget.loginProvider.organization,
-              content: contentController.text,
-              eventAt: eventAt,
+              startedAt: startedAt,
+              endedAt: endedAt,
             );
             if (error != null) {
               if (!mounted) return;

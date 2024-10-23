@@ -29,29 +29,17 @@ class PlanGuardsmanList extends StatelessWidget {
             vertical: 8,
             horizontal: 12,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                guardsman.content,
-                style: const TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              Text(
-                dateText('yyyy/MM/dd', guardsman.eventAt),
-                style: const TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          child: Text(
+            '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)}',
+            style: const TextStyle(
+              color: kWhiteColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'SourceHanSansJP-Bold',
+            ),
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ),
