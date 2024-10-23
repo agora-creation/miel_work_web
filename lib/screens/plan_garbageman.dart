@@ -6,11 +6,13 @@ import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/plan_garbageman.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_garbageman.dart';
 import 'package:miel_work_web/screens/plan_garbageman_timeline.dart';
 import 'package:miel_work_web/services/plan_garbageman.dart';
+import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
@@ -140,8 +142,10 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                     for (final garbageman in garbageMans) {
                       events.add(CalendarEventData(
                         title:
-                            '${dateText('HH:mm', garbageman.startedAt)}〜${dateText('HH:mm', garbageman.endedAt)}',
+                            '[${garbageman.userName}]${dateText('HH:mm', garbageman.startedAt)}〜${dateText('HH:mm', garbageman.endedAt)}',
                         date: garbageman.startedAt,
+                        startTime: garbageman.startedAt,
+                        endTime: garbageman.endedAt,
                       ));
                     }
                     controller.addAll(events);
@@ -149,7 +153,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                   return CustomCalendar(
                     controller: controller,
                     initialMonth: searchMonth,
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 1.5,
                     onCellTap: (events, day) {
                       Navigator.push(
                         context,
@@ -191,11 +195,28 @@ class AddGarbagemanDialog extends StatefulWidget {
 }
 
 class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
+  UserService userService = UserService();
+  List<UserModel> users = [];
+  UserModel? selectedUser;
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
 
+  void _getUsers() async {
+    if (widget.homeProvider.currentGroup == null) {
+      users = await userService.selectList(
+        userIds: widget.loginProvider.organization?.userIds ?? [],
+      );
+    } else {
+      users = await userService.selectList(
+        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
+      );
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
+    _getUsers();
     startedAt = DateTime(
       widget.day.year,
       widget.day.month,
@@ -208,6 +229,9 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
       widget.day.day,
       23,
     );
+    if (users.isNotEmpty) {
+      selectedUser = users.first;
+    }
     super.initState();
   }
 
@@ -221,6 +245,25 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              'スタッフ選択',
+              child: DropdownButton<UserModel>(
+                isExpanded: true,
+                value: selectedUser,
+                items: users.map((user) {
+                  return DropdownMenuItem(
+                    value: user,
+                    child: Text(user.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedUser = value;
+                  });
+                },
+              ),
+            ),
             const SizedBox(height: 8),
             FormLabel(
               '予定日時',
@@ -268,6 +311,7 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
           onPressed: () async {
             String? error = await garbagemanProvider.create(
               organization: widget.loginProvider.organization,
+              user: selectedUser,
               startedAt: startedAt,
               endedAt: endedAt,
             );

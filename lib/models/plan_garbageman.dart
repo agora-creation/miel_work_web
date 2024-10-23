@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PlanGarbagemanModel {
   String _id = '';
   String _organizationId = '';
-  String _groupId = '';
   String _userId = '';
+  String _userName = '';
   DateTime _startedAt = DateTime.now();
   DateTime _endedAt = DateTime.now();
   DateTime _createdAt = DateTime.now();
@@ -12,8 +12,8 @@ class PlanGarbagemanModel {
 
   String get id => _id;
   String get organizationId => _organizationId;
-  String get groupId => _groupId;
   String get userId => _userId;
+  String get userName => _userName;
   DateTime get startedAt => _startedAt;
   DateTime get endedAt => _endedAt;
   DateTime get createdAt => _createdAt;
@@ -25,8 +25,8 @@ class PlanGarbagemanModel {
     if (data == null) return;
     _id = data['id'] ?? '';
     _organizationId = data['organizationId'] ?? '';
-    _groupId = data['groupId'] ?? '';
     _userId = data['userId'] ?? '';
+    _userName = data['userName'] ?? '';
     _startedAt = data['startedAt'].toDate() ?? DateTime.now();
     _endedAt = data['endedAt'].toDate() ?? DateTime.now();
     _createdAt = data['createdAt'].toDate() ?? DateTime.now();

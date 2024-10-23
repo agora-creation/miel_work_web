@@ -142,6 +142,8 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                         title:
                             '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)}',
                         date: guardsman.startedAt,
+                        startTime: guardsman.startedAt,
+                        endTime: guardsman.endedAt,
                       ));
                     }
                     controller.addAll(events);
@@ -149,7 +151,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   return CustomCalendar(
                     controller: controller,
                     initialMonth: searchMonth,
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 1.5,
                     onCellTap: (events, day) {
                       Navigator.push(
                         context,

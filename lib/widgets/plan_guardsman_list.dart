@@ -22,7 +22,7 @@ class PlanGuardsmanList extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: kBlueColor,
+            color: kGreyColor.withOpacity(0.3),
             borderRadius: BorderRadius.circular(4),
           ),
           padding: const EdgeInsets.symmetric(
@@ -32,7 +32,6 @@ class PlanGuardsmanList extends StatelessWidget {
           child: Text(
             '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)}',
             style: const TextStyle(
-              color: kWhiteColor,
               fontSize: 20,
               fontWeight: FontWeight.bold,
               fontFamily: 'SourceHanSansJP-Bold',

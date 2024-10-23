@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/plan_garbageman.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/plan_garbageman.dart';
 
 class PlanGarbagemanProvider with ChangeNotifier {
@@ -8,18 +9,20 @@ class PlanGarbagemanProvider with ChangeNotifier {
 
   Future<String?> create({
     required OrganizationModel? organization,
+    required UserModel? user,
     required DateTime startedAt,
     required DateTime endedAt,
   }) async {
     String? error;
     if (organization == null) return '清掃員予定の追加に失敗しました';
+    if (user == null) return '清掃員予定の追加に失敗しました';
     try {
       String id = _garbagemanService.id();
       _garbagemanService.create({
         'id': id,
         'organizationId': organization.id,
-        'groupId': '',
-        'userId': '',
+        'userId': user.id,
+        'userName': user.name,
         'startedAt': startedAt,
         'endedAt': endedAt,
         'createdAt': DateTime.now(),
@@ -34,15 +37,19 @@ class PlanGarbagemanProvider with ChangeNotifier {
   Future<String?> update({
     required PlanGarbagemanModel garbageman,
     required OrganizationModel? organization,
+    required UserModel? user,
     required DateTime startedAt,
     required DateTime endedAt,
   }) async {
     String? error;
     if (organization == null) return '清掃員予定の編集に失敗しました';
+    if (user == null) return '清掃員予定の編集に失敗しました';
     try {
       _garbagemanService.update({
         'id': garbageman.id,
         'organizationId': organization.id,
+        'userId': user.id,
+        'userName': user.name,
         'startedAt': startedAt,
         'endedAt': endedAt,
         'expirationAt': startedAt.add(const Duration(days: 365)),
