@@ -4,26 +4,27 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/plan_center.dart';
+import 'package:miel_work_web/models/plan_dish_center.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/providers/plan_center.dart';
-import 'package:miel_work_web/screens/plan_center.dart';
-import 'package:miel_work_web/services/plan_center.dart';
+import 'package:miel_work_web/providers/plan_dish_center.dart';
+import 'package:miel_work_web/screens/plan_dish_center.dart';
+import 'package:miel_work_web/services/plan_dish_center.dart';
+import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/form_value.dart';
-import 'package:miel_work_web/widgets/plan_center_list.dart';
+import 'package:miel_work_web/widgets/plan_dish_center_list.dart';
 import 'package:provider/provider.dart';
 
-class PlanCenterTimelineScreen extends StatefulWidget {
+class PlanDishCenterTimelineScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final DateTime day;
 
-  const PlanCenterTimelineScreen({
+  const PlanDishCenterTimelineScreen({
     required this.loginProvider,
     required this.homeProvider,
     required this.day,
@@ -31,12 +32,13 @@ class PlanCenterTimelineScreen extends StatefulWidget {
   });
 
   @override
-  State<PlanCenterTimelineScreen> createState() =>
-      _PlanCenterTimelineScreenState();
+  State<PlanDishCenterTimelineScreen> createState() =>
+      _PlanDishCenterTimelineScreenState();
 }
 
-class _PlanCenterTimelineScreenState extends State<PlanCenterTimelineScreen> {
-  PlanCenterService centerService = PlanCenterService();
+class _PlanDishCenterTimelineScreenState
+    extends State<PlanDishCenterTimelineScreen> {
+  PlanDishCenterService dishCenterService = PlanDishCenterService();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,7 @@ class _PlanCenterTimelineScreenState extends State<PlanCenterTimelineScreen> {
             backgroundColor: kBlueColor,
             onPressed: () => showDialog(
               context: context,
-              builder: (context) => AddCenterDialog(
+              builder: (context) => AddDishCenterDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
                 day: widget.day,
@@ -82,7 +84,7 @@ class _PlanCenterTimelineScreenState extends State<PlanCenterTimelineScreen> {
         ),
         child: SingleChildScrollView(
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: centerService.streamList(
+            stream: dishCenterService.streamList(
               organizationId: widget.loginProvider.organization?.id,
               searchStart: widget.day,
               searchEnd: DateTime(
@@ -95,25 +97,25 @@ class _PlanCenterTimelineScreenState extends State<PlanCenterTimelineScreen> {
               ),
             ),
             builder: (context, snapshot) {
-              List<PlanCenterModel> centers = [];
+              List<PlanDishCenterModel> dishCenters = [];
               if (snapshot.hasData) {
-                centers = centerService.generateList(
+                dishCenters = dishCenterService.generateList(
                   data: snapshot.data,
                 );
               }
-              if (centers.isEmpty) {
+              if (dishCenters.isEmpty) {
                 return const Center(child: Text('この日の予定はありません'));
               }
               return Column(
-                children: centers.map((center) {
-                  return PlanCenterList(
-                    center: center,
+                children: dishCenters.map((dishCenter) {
+                  return PlanDishCenterList(
+                    dishCenter: dishCenter,
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) => ModCenterDialog(
+                      builder: (context) => ModDishCenterDialog(
                         loginProvider: widget.loginProvider,
                         homeProvider: widget.homeProvider,
-                        center: center,
+                        dishCenter: dishCenter,
                       ),
                     ),
                   );
@@ -127,36 +129,54 @@ class _PlanCenterTimelineScreenState extends State<PlanCenterTimelineScreen> {
   }
 }
 
-class ModCenterDialog extends StatefulWidget {
+class ModDishCenterDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final PlanCenterModel center;
+  final PlanDishCenterModel dishCenter;
 
-  const ModCenterDialog({
+  const ModDishCenterDialog({
     required this.loginProvider,
     required this.homeProvider,
-    required this.center,
+    required this.dishCenter,
     super.key,
   });
 
   @override
-  State<ModCenterDialog> createState() => _ModCenterDialogState();
+  State<ModDishCenterDialog> createState() => _ModDishCenterDialogState();
 }
 
-class _ModCenterDialogState extends State<ModCenterDialog> {
-  TextEditingController contentController = TextEditingController();
-  DateTime eventAt = DateTime.now();
+class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
+  UserService userService = UserService();
+  List<UserModel> users = [];
+  UserModel? selectedUser;
+  DateTime startedAt = DateTime.now();
+  DateTime endedAt = DateTime.now();
+
+  void _getUsers() async {
+    if (widget.homeProvider.currentGroup == null) {
+      users = await userService.selectList(
+        userIds: widget.loginProvider.organization?.userIds ?? [],
+      );
+    } else {
+      users = await userService.selectList(
+        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
+      );
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
-    contentController.text = widget.center.content;
-    eventAt = widget.center.eventAt;
+    _getUsers();
+    startedAt = widget.dishCenter.startedAt;
+    endedAt = widget.dishCenter.endedAt;
+    selectedUser = users.singleWhere((e) => e.id == widget.dishCenter.userId);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final centerProvider = Provider.of<PlanCenterProvider>(context);
+    final dishCenterProvider = Provider.of<PlanDishCenterProvider>(context);
     return CustomAlertDialog(
       content: SizedBox(
         width: 500,
@@ -164,29 +184,50 @@ class _ModCenterDialogState extends State<ModCenterDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 8),
             FormLabel(
-              '内容',
-              child: CustomTextField(
-                controller: contentController,
-                textInputType: TextInputType.text,
-                maxLines: 1,
+              'スタッフ選択',
+              child: DropdownButton<UserModel>(
+                isExpanded: true,
+                value: selectedUser,
+                items: users.map((user) {
+                  return DropdownMenuItem(
+                    value: user,
+                    child: Text(user.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedUser = value;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 8),
             FormLabel(
-              '予定日',
-              child: FormValue(
-                dateText('yyyy/MM/dd', eventAt),
-                onTap: () async => await CustomDateTimePicker().picker(
+              '予定日時',
+              child: DatetimeRangeForm(
+                startedAt: startedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
-                  init: eventAt,
-                  title: '予定日を選択',
+                  init: startedAt,
+                  title: '予定開始日時を選択',
                   onChanged: (value) {
                     setState(() {
-                      eventAt = value;
+                      startedAt = value;
                     });
                   },
-                  datetime: false,
+                ),
+                endedAt: endedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: endedAt,
+                  title: '予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      endedAt = value;
+                    });
+                  },
                 ),
               ),
             ),
@@ -207,8 +248,8 @@ class _ModCenterDialogState extends State<ModCenterDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () async {
-            String? error = await centerProvider.delete(
-              center: widget.center,
+            String? error = await dishCenterProvider.delete(
+              dishCenter: widget.dishCenter,
             );
             if (error != null) {
               if (!mounted) return;
@@ -226,11 +267,12 @@ class _ModCenterDialogState extends State<ModCenterDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await centerProvider.update(
-              center: widget.center,
+            String? error = await dishCenterProvider.update(
+              dishCenter: widget.dishCenter,
               organization: widget.loginProvider.organization,
-              content: contentController.text,
-              eventAt: eventAt,
+              user: selectedUser,
+              startedAt: startedAt,
+              endedAt: endedAt,
             );
             if (error != null) {
               if (!mounted) return;

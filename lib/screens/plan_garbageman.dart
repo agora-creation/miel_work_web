@@ -221,13 +221,13 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
       widget.day.year,
       widget.day.month,
       widget.day.day,
-      9,
+      8,
     );
     endedAt = DateTime(
       widget.day.year,
       widget.day.month,
       widget.day.day,
-      23,
+      20,
     );
     if (users.isNotEmpty) {
       selectedUser = users.first;

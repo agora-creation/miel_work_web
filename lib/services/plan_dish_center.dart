@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:miel_work_web/common/functions.dart';
-import 'package:miel_work_web/models/plan_center.dart';
+import 'package:miel_work_web/models/plan_dish_center.dart';
 
-class PlanCenterService {
-  String collection = 'planCenter';
+class PlanDishCenterService {
+  String collection = 'planDishCenter';
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String id() {
@@ -33,23 +33,23 @@ class PlanCenterService {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .orderBy('eventAt', descending: true)
-          .startAt([endAt]).endAt([startAt]).snapshots();
+          .orderBy('startedAt', descending: false)
+          .startAt([startAt]).endAt([endAt]).snapshots();
     } else {
       return FirebaseFirestore.instance
           .collection(collection)
           .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .orderBy('eventAt', descending: true)
+          .orderBy('startedAt', descending: false)
           .snapshots();
     }
   }
 
-  List<PlanCenterModel> generateList({
+  List<PlanDishCenterModel> generateList({
     required QuerySnapshot<Map<String, dynamic>>? data,
   }) {
-    List<PlanCenterModel> ret = [];
+    List<PlanDishCenterModel> ret = [];
     for (DocumentSnapshot<Map<String, dynamic>> doc in data!.docs) {
-      ret.add(PlanCenterModel.fromSnapshot(doc));
+      ret.add(PlanDishCenterModel.fromSnapshot(doc));
     }
     return ret;
   }

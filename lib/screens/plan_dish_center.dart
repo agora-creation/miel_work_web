@@ -5,40 +5,41 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
-import 'package:miel_work_web/models/plan_center.dart';
+import 'package:miel_work_web/models/plan_dish_center.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/providers/plan_center.dart';
-import 'package:miel_work_web/screens/plan_center_timeline.dart';
-import 'package:miel_work_web/services/plan_center.dart';
+import 'package:miel_work_web/providers/plan_dish_center.dart';
+import 'package:miel_work_web/screens/plan_dish_center_timeline.dart';
+import 'package:miel_work_web/services/plan_dish_center.dart';
+import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
-import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class PlanCenterScreen extends StatefulWidget {
+class PlanDishCenterScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
 
-  const PlanCenterScreen({
+  const PlanDishCenterScreen({
     required this.loginProvider,
     required this.homeProvider,
     super.key,
   });
 
   @override
-  State<PlanCenterScreen> createState() => _PlanCenterScreenState();
+  State<PlanDishCenterScreen> createState() => _PlanDishCenterScreenState();
 }
 
-class _PlanCenterScreenState extends State<PlanCenterScreen> {
+class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
   EventController controller = EventController();
-  PlanCenterService centerService = PlanCenterService();
+  PlanDishCenterService dishCenterService = PlanDishCenterService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
 
@@ -112,7 +113,7 @@ class _PlanCenterScreenState extends State<PlanCenterScreen> {
                   leftIcon: FontAwesomeIcons.plus,
                   onPressed: () => showDialog(
                     context: context,
-                    builder: (context) => AddCenterDialog(
+                    builder: (context) => AddDishCenterDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
                       day: DateTime.now(),
@@ -124,36 +125,41 @@ class _PlanCenterScreenState extends State<PlanCenterScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: centerService.streamList(
+                stream: dishCenterService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
                   searchStart: days.first,
                   searchEnd: days.last,
                 ),
                 builder: (context, snapshot) {
-                  List<PlanCenterModel> centers = [];
+                  List<PlanDishCenterModel> dishCenters = [];
                   if (snapshot.hasData) {
-                    centers = centerService.generateList(
+                    dishCenters = dishCenterService.generateList(
                       data: snapshot.data,
                     );
                   }
-                  if (centers.isNotEmpty) {
-                    for (final center in centers) {
-                      controller.add(CalendarEventData(
-                        title: center.content,
-                        date: center.eventAt,
+                  if (dishCenters.isNotEmpty) {
+                    List<CalendarEventData> events = [];
+                    for (final dishCenter in dishCenters) {
+                      events.add(CalendarEventData(
+                        title:
+                            '[${dishCenter.userName}]${dateText('HH:mm', dishCenter.startedAt)}〜${dateText('HH:mm', dishCenter.endedAt)}',
+                        date: dishCenter.startedAt,
+                        startTime: dishCenter.startedAt,
+                        endTime: dishCenter.endedAt,
                       ));
                     }
+                    controller.addAll(events);
                   }
                   return CustomCalendar(
                     controller: controller,
                     initialMonth: searchMonth,
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 1.5,
                     onCellTap: (events, day) {
                       Navigator.push(
                         context,
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: PlanCenterTimelineScreen(
+                          child: PlanDishCenterTimelineScreen(
                             loginProvider: widget.loginProvider,
                             homeProvider: widget.homeProvider,
                             day: day,
@@ -172,12 +178,12 @@ class _PlanCenterScreenState extends State<PlanCenterScreen> {
   }
 }
 
-class AddCenterDialog extends StatefulWidget {
+class AddDishCenterDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final DateTime day;
 
-  const AddCenterDialog({
+  const AddDishCenterDialog({
     required this.loginProvider,
     required this.homeProvider,
     required this.day,
@@ -185,22 +191,53 @@ class AddCenterDialog extends StatefulWidget {
   });
 
   @override
-  State<AddCenterDialog> createState() => _AddGarbagemanDialogState();
+  State<AddDishCenterDialog> createState() => _AddDishCenterDialogState();
 }
 
-class _AddGarbagemanDialogState extends State<AddCenterDialog> {
-  TextEditingController contentController = TextEditingController();
-  DateTime eventAt = DateTime.now();
+class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
+  UserService userService = UserService();
+  List<UserModel> users = [];
+  UserModel? selectedUser;
+  DateTime startedAt = DateTime.now();
+  DateTime endedAt = DateTime.now();
+
+  void _getUsers() async {
+    if (widget.homeProvider.currentGroup == null) {
+      users = await userService.selectList(
+        userIds: widget.loginProvider.organization?.userIds ?? [],
+      );
+    } else {
+      users = await userService.selectList(
+        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
+      );
+    }
+    setState(() {});
+  }
 
   @override
   void initState() {
-    eventAt = widget.day;
+    _getUsers();
+    startedAt = DateTime(
+      widget.day.year,
+      widget.day.month,
+      widget.day.day,
+      8,
+    );
+    endedAt = DateTime(
+      widget.day.year,
+      widget.day.month,
+      widget.day.day,
+      20,
+    );
+    if (users.isNotEmpty) {
+      selectedUser = users.first;
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final centerProvider = Provider.of<PlanCenterProvider>(context);
+    final dishCenterProvider = Provider.of<PlanDishCenterProvider>(context);
     return CustomAlertDialog(
       content: SizedBox(
         width: 500,
@@ -208,29 +245,50 @@ class _AddGarbagemanDialogState extends State<AddCenterDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 8),
             FormLabel(
-              '内容',
-              child: CustomTextField(
-                controller: contentController,
-                textInputType: TextInputType.text,
-                maxLines: 1,
+              'スタッフ選択',
+              child: DropdownButton<UserModel>(
+                isExpanded: true,
+                value: selectedUser,
+                items: users.map((user) {
+                  return DropdownMenuItem(
+                    value: user,
+                    child: Text(user.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedUser = value;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 8),
             FormLabel(
-              '予定日',
-              child: FormValue(
-                dateText('yyyy/MM/dd', eventAt),
-                onTap: () async => await CustomDateTimePicker().picker(
+              '予定日時',
+              child: DatetimeRangeForm(
+                startedAt: startedAt,
+                startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
-                  init: eventAt,
-                  title: '予定日を選択',
+                  init: startedAt,
+                  title: '予定開始日時を選択',
                   onChanged: (value) {
                     setState(() {
-                      eventAt = value;
+                      startedAt = value;
                     });
                   },
-                  datetime: false,
+                ),
+                endedAt: endedAt,
+                endedOnTap: () async => await CustomDateTimePicker().picker(
+                  context: context,
+                  init: endedAt,
+                  title: '予定終了日時を選択',
+                  onChanged: (value) {
+                    setState(() {
+                      endedAt = value;
+                    });
+                  },
                 ),
               ),
             ),
@@ -251,10 +309,11 @@ class _AddGarbagemanDialogState extends State<AddCenterDialog> {
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () async {
-            String? error = await centerProvider.create(
+            String? error = await dishCenterProvider.create(
               organization: widget.loginProvider.organization,
-              content: contentController.text,
-              eventAt: eventAt,
+              user: selectedUser,
+              startedAt: startedAt,
+              endedAt: endedAt,
             );
             if (error != null) {
               if (!mounted) return;
