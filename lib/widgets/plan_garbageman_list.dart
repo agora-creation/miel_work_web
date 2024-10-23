@@ -29,29 +29,17 @@ class PlanGarbagemanList extends StatelessWidget {
             vertical: 8,
             horizontal: 12,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                garbageman.content,
-                style: const TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              Text(
-                dateText('yyyy/MM/dd', garbageman.eventAt),
-                style: const TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          child: Text(
+            '${dateText('HH:mm', garbageman.startedAt)}〜${dateText('HH:mm', garbageman.endedAt)}',
+            style: const TextStyle(
+              color: kWhiteColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'SourceHanSansJP-Bold',
+            ),
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ),
