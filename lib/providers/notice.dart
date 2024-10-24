@@ -34,7 +34,7 @@ class NoticeProvider with ChangeNotifier {
       String file = '';
       String fileExt = '';
       if (pickedFile != null) {
-        String ext = p.extension(pickedFile.path ?? '');
+        String ext = p.extension(pickedFile.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()
@@ -81,6 +81,7 @@ class NoticeProvider with ChangeNotifier {
         }
       }
     } catch (e) {
+      print(e);
       error = 'お知らせの追加に失敗しました';
     }
     return error;
@@ -104,7 +105,7 @@ class NoticeProvider with ChangeNotifier {
       String? file;
       String? fileExt;
       if (pickedFile != null) {
-        String ext = p.extension(pickedFile.path ?? '');
+        String ext = p.extension(pickedFile.name);
         storage.UploadTask uploadTask;
         storage.Reference ref = storage.FirebaseStorage.instance
             .ref()

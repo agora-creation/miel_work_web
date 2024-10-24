@@ -196,6 +196,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {
@@ -213,6 +214,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {
@@ -230,6 +232,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {
@@ -247,6 +250,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {
@@ -264,6 +268,7 @@ class _ApplyAddScreenState extends State<ApplyAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {

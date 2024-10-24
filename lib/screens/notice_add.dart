@@ -152,6 +152,7 @@ class _NoticeAddScreenState extends State<NoticeAddScreen> {
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
                       type: FileType.any,
+                      withData: true,
                     );
                     if (result == null) return;
                     setState(() {
