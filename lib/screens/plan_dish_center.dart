@@ -5,12 +5,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/plan_dish_center.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_dish_center.dart';
 import 'package:miel_work_web/screens/plan_dish_center_timeline.dart';
+import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/plan_dish_center.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
@@ -195,43 +197,44 @@ class AddDishCenterDialog extends StatefulWidget {
 }
 
 class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
+  OrganizationGroupService groupService = OrganizationGroupService();
   UserService userService = UserService();
   List<UserModel> users = [];
   UserModel? selectedUser;
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
 
-  void _getUsers() async {
-    if (widget.homeProvider.currentGroup == null) {
+  void _init() async {
+    OrganizationGroupModel? group = await groupService.selectDataName(
+      organizationId: widget.loginProvider.organization?.id ?? 'error',
+      name: '食器センター',
+    );
+    if (group != null) {
       users = await userService.selectList(
-        userIds: widget.loginProvider.organization?.userIds ?? [],
-      );
-    } else {
-      users = await userService.selectList(
-        userIds: widget.homeProvider.currentGroup?.userIds ?? [],
+        userIds: group.userIds,
       );
     }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    _getUsers();
+    if (users.isNotEmpty) {
+      selectedUser = users.first;
+    }
     startedAt = DateTime(
       widget.day.year,
       widget.day.month,
       widget.day.day,
-      8,
+      9,
     );
     endedAt = DateTime(
       widget.day.year,
       widget.day.month,
       widget.day.day,
-      20,
+      17,
     );
-    if (users.isNotEmpty) {
-      selectedUser = users.first;
-    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
     super.initState();
   }
 
@@ -248,7 +251,7 @@ class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
             const SizedBox(height: 8),
             FormLabel(
               'スタッフ選択',
-              child: DropdownButton<UserModel>(
+              child: DropdownButton<UserModel?>(
                 isExpanded: true,
                 value: selectedUser,
                 items: users.map((user) {
