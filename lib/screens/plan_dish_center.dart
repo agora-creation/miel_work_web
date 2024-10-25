@@ -155,7 +155,7 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                   return CustomCalendar(
                     controller: controller,
                     initialMonth: searchMonth,
-                    cellAspectRatio: 1,
+                    cellAspectRatio: 0.8,
                     onCellTap: (events, day) {
                       Navigator.push(
                         context,
