@@ -47,6 +47,7 @@ class UserProvider with ChangeNotifier {
         'resigned': false,
         'createdAt': DateTime.now(),
       });
+      //会社のユーザID配列に追加
       List<String> orgUserIds = organization.userIds;
       if (!orgUserIds.contains(id)) {
         orgUserIds.add(id);
@@ -56,6 +57,8 @@ class UserProvider with ChangeNotifier {
         'userIds': orgUserIds,
       });
       if (group != null) {
+        //グループに所属している場合
+        //グループのユーザID配列に追加
         List<String> groupUserIds = group.userIds;
         if (!groupUserIds.contains(id)) {
           groupUserIds.add(id);
@@ -65,27 +68,36 @@ class UserProvider with ChangeNotifier {
           'organizationId': group.organizationId,
           'userIds': groupUserIds,
         });
+        //チャットのユーザID配列に追加
         ChatModel? groupChat = await _chatService.selectData(
           organizationId: organization.id,
           groupId: group.id,
         );
         if (groupChat != null) {
+          List<String> chatUserIds = groupChat.userIds;
+          if (!chatUserIds.contains(id)) {
+            chatUserIds.add(id);
+          }
           _chatService.update({
             'id': groupChat.id,
-            'userIds': groupUserIds,
+            'userIds': chatUserIds,
           });
         }
       } else {
+        //グループに所属していない場合
+        //チャットのユーザID配列に追加
         List<ChatModel> chats = await _chatService.selectList(
           organizationId: organization.id,
           groupId: null,
         );
         for (ChatModel chat in chats) {
-          List<String> userIds = chat.userIds;
-          userIds.add(id);
+          List<String> chatUserIds = chat.userIds;
+          if (!chatUserIds.contains(id)) {
+            chatUserIds.add(id);
+          }
           _chatService.update({
             'id': chat.id,
-            'userIds': userIds,
+            'userIds': chatUserIds,
           });
         }
       }
