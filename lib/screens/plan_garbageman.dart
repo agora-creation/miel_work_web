@@ -70,7 +70,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '清掃員予定表',
+          '清掃員勤務表',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -109,7 +109,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                   },
                 ),
                 CustomIconTextButton(
-                  label: '清掃員予定を追加',
+                  label: '勤務予定を追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,
@@ -324,7 +324,7 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '清掃員予定が追加されました', true);
+            showMessage(context, '勤務予定が追加されました', true);
             Navigator.pop(context);
           },
         ),

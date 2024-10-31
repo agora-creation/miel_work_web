@@ -66,7 +66,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '警備員予定表',
+          '警備員勤務表',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -105,7 +105,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   },
                 ),
                 CustomIconTextButton(
-                  label: '警備員予定を追加',
+                  label: '勤務予定を追加',
                   labelColor: kWhiteColor,
                   backgroundColor: kBlueColor,
                   leftIcon: FontAwesomeIcons.plus,
@@ -279,7 +279,7 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
               return;
             }
             if (!mounted) return;
-            showMessage(context, '警備員予定が追加されました', true);
+            showMessage(context, '勤務予定が追加されました', true);
             Navigator.pop(context);
           },
         ),

@@ -420,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         HomeIconCard(
                           icon: FontAwesomeIcons.tableCells,
-                          label: '警備員予定表',
+                          label: '警備員勤務表',
                           color: kBlackColor,
                           backgroundColor: kWhiteColor,
                           onTap: () => showBottomUpScreen(
@@ -433,7 +433,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         HomeIconCard(
                           icon: FontAwesomeIcons.tableCells,
-                          label: '清掃員予定表',
+                          label: '清掃員勤務表',
                           color: kBlackColor,
                           backgroundColor: kWhiteColor,
                           onTap: () => showBottomUpScreen(
@@ -446,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         HomeIconCard(
                           icon: FontAwesomeIcons.tableCells,
-                          label: '食器センター予定表',
+                          label: '食器センター勤務表',
                           color: kBlackColor,
                           backgroundColor: kWhiteColor,
                           onTap: () => showBottomUpScreen(
