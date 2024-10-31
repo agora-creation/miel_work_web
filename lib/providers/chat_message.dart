@@ -65,11 +65,13 @@ class ChatMessageProvider with ChangeNotifier {
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
           if (user.id == loginUser.id) continue;
-          _fmService.send(
-            token: user.token,
-            title: '[${chat.name}]${loginUser.name}からのメッセージ',
-            body: content,
-          );
+          for (final token in user.tokens) {
+            _fmService.send(
+              token: token,
+              title: '[${chat.name}]${loginUser.name}からのメッセージ',
+              body: content,
+            );
+          }
         }
       }
     } catch (e) {
@@ -132,11 +134,13 @@ class ChatMessageProvider with ChangeNotifier {
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
           if (user.id == loginUser.id) continue;
-          _fmService.send(
-            token: user.token,
-            title: '[${chat.name}]${loginUser.name}からのメッセージ',
-            body: content,
-          );
+          for (final token in user.tokens) {
+            _fmService.send(
+              token: token,
+              title: '[${chat.name}]${loginUser.name}からのメッセージ',
+              body: content,
+            );
+          }
         }
       }
     } catch (e) {
@@ -199,11 +203,13 @@ class ChatMessageProvider with ChangeNotifier {
       if (sendUsers.isNotEmpty) {
         for (UserModel user in sendUsers) {
           if (user.id == loginUser.id) continue;
-          _fmService.send(
-            token: user.token,
-            title: '[${chat.name}]${loginUser.name}からのメッセージ',
-            body: content,
-          );
+          for (final token in user.tokens) {
+            _fmService.send(
+              token: token,
+              title: '[${chat.name}]${loginUser.name}からのメッセージ',
+              body: content,
+            );
+          }
         }
       }
     } catch (e) {

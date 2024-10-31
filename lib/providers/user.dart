@@ -35,13 +35,16 @@ class UserProvider with ChangeNotifier {
       String id = _userService.id();
       _userService.create({
         'id': id,
+        'number': '',
         'name': name,
         'email': email,
         'password': password,
+        'job': '',
         'uid': '',
-        'token': '',
+        'tokens': [],
         'admin': admin,
         'president': president,
+        'resigned': false,
         'createdAt': DateTime.now(),
       });
       List<String> orgUserIds = organization.userIds;
@@ -200,7 +203,7 @@ class UserProvider with ChangeNotifier {
       _userService.update({
         'id': user.id,
         'uid': '',
-        'token': '',
+        'tokens': [],
       });
     } catch (e) {
       error = 'ログアウトに失敗しました';
