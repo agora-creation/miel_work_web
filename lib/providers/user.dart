@@ -203,7 +203,6 @@ class UserProvider with ChangeNotifier {
       _userService.update({
         'id': user.id,
         'uid': '',
-        'tokens': [],
       });
     } catch (e) {
       error = 'ログアウトに失敗しました';
