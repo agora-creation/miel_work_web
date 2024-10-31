@@ -138,55 +138,60 @@ class UserProvider with ChangeNotifier {
         'president': president,
       });
       if (befGroup != aftGroup) {
+        //所属→所属
+        if (befGroup != null && aftGroup != null) {}
         //所属→未所属
-        if (befGroup != null) {
-          List<String> befGroupUserIds = befGroup.userIds;
-          if (befGroupUserIds.contains(user.id)) {
-            befGroupUserIds.remove(user.id);
+        if (befGroup != null && aftGroup == null) {
+          //グループのユーザID配列から削除
+          List<String> groupUserIds = befGroup.userIds;
+          if (groupUserIds.contains(user.id)) {
+            groupUserIds.remove(user.id);
           }
           _groupService.update({
             'id': befGroup.id,
             'organizationId': befGroup.organizationId,
-            'userIds': befGroupUserIds,
+            'userIds': groupUserIds,
           });
+          //チャットのユーザID配列に追加
           List<ChatModel> chats = await _chatService.selectList(
             organizationId: organization.id,
             groupId: null,
           );
           for (ChatModel chat in chats) {
-            List<String> userIds = chat.userIds;
-            if (!userIds.contains(user.id)) {
-              userIds.add(user.id);
+            List<String> chatUserIds = chat.userIds;
+            if (!chatUserIds.contains(user.id)) {
+              chatUserIds.add(user.id);
             }
             _chatService.update({
               'id': chat.id,
-              'userIds': userIds,
+              'userIds': chatUserIds,
             });
           }
         }
         //未所属→所属
-        if (aftGroup != null) {
-          List<String> aftGroupUserIds = aftGroup.userIds;
-          if (!aftGroupUserIds.contains(user.id)) {
-            aftGroupUserIds.add(user.id);
+        if (befGroup == null && aftGroup != null) {
+          List<String> groupUserIds = aftGroup.userIds;
+          if (!groupUserIds.contains(user.id)) {
+            groupUserIds.add(user.id);
           }
           _groupService.update({
             'id': aftGroup.id,
             'organizationId': aftGroup.organizationId,
-            'userIds': aftGroupUserIds,
+            'userIds': groupUserIds,
           });
+          //チャットのユーザID配列から削除
           List<ChatModel> chats = await _chatService.selectList(
             organizationId: organization.id,
             groupId: null,
           );
           for (ChatModel chat in chats) {
-            List<String> userIds = chat.userIds;
-            if (userIds.contains(user.id)) {
-              userIds.remove(user.id);
+            List<String> chatUserIds = chat.userIds;
+            if (chatUserIds.contains(user.id)) {
+              chatUserIds.remove(user.id);
             }
             _chatService.update({
               'id': chat.id,
-              'userIds': userIds,
+              'userIds': chatUserIds,
             });
           }
           ChatModel? groupChat = await _chatService.selectData(
@@ -194,9 +199,13 @@ class UserProvider with ChangeNotifier {
             groupId: aftGroup.id,
           );
           if (groupChat != null) {
+            List<String> chatUserIds = groupChat.userIds;
+            if (!chatUserIds.contains(user.id)) {
+              chatUserIds.add(user.id);
+            }
             _chatService.update({
               'id': groupChat.id,
-              'userIds': aftGroupUserIds,
+              'userIds': chatUserIds,
             });
           }
         }
