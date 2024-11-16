@@ -133,6 +133,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                   searchEnd: days.last,
                 ),
                 builder: (context, snapshot) {
+                  controller = EventController();
                   List<PlanGarbagemanModel> garbageMans = [];
                   if (snapshot.hasData) {
                     garbageMans = garbagemanService.generateList(

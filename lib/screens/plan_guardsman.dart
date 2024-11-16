@@ -129,6 +129,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   searchEnd: days.last,
                 ),
                 builder: (context, snapshot) {
+                  controller = EventController();
                   List<PlanGuardsmanModel> guardsMans = [];
                   if (snapshot.hasData) {
                     guardsMans = guardsmanService.generateList(

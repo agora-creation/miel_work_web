@@ -133,6 +133,7 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                   searchEnd: days.last,
                 ),
                 builder: (context, snapshot) {
+                  controller = EventController();
                   List<PlanDishCenterModel> dishCenters = [];
                   if (snapshot.hasData) {
                     dishCenters = dishCenterService.generateList(
