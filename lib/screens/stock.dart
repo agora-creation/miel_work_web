@@ -90,8 +90,6 @@ class _StockScreenState extends State<StockScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: stockService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  searchStart: null,
-                  searchEnd: null,
                 ),
                 builder: (context, snapshot) {
                   List<StockModel> stocks = [];
@@ -158,7 +156,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
   TextEditingController quantityController = TextEditingController(text: '999');
 
   void _init() async {
-    numberController.text = await stockService.lastNumber(
+    numberController.text = await stockService.getLastNumber(
       organizationId: widget.loginProvider.organization?.id,
     );
     setState(() {});

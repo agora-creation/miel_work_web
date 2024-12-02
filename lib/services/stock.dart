@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/stock.dart';
 
 class StockService {
@@ -22,18 +21,18 @@ class StockService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<String> lastNumber({
+  Future<String> getLastNumber({
     required String? organizationId,
   }) async {
     String ret = '1';
     await firestore
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .orderBy('createdAt', descending: true)
+        .orderBy('number', descending: false)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        StockModel stock = StockModel.fromSnapshot(value.docs.first);
+        StockModel stock = StockModel.fromSnapshot(value.docs.last);
         int newNumber = int.parse(stock.number) + 1;
         ret = newNumber.toString();
       }
@@ -43,24 +42,12 @@ class StockService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
-    required DateTime? searchStart,
-    required DateTime? searchEnd,
   }) {
-    if (searchStart != null && searchEnd != null) {
-      Timestamp startAt = convertTimestamp(searchStart, false);
-      Timestamp endAt = convertTimestamp(searchEnd, true);
-      return FirebaseFirestore.instance
-          .collection(collection)
-          .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .orderBy('createdAt', descending: true)
-          .startAt([endAt]).endAt([startAt]).snapshots();
-    } else {
-      return FirebaseFirestore.instance
-          .collection(collection)
-          .where('organizationId', isEqualTo: organizationId ?? 'error')
-          .orderBy('createdAt', descending: true)
-          .snapshots();
-    }
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .orderBy('number', descending: false)
+        .snapshots();
   }
 
   List<StockModel> generateList({
