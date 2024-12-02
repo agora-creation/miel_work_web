@@ -64,7 +64,7 @@ class StockSource extends DataGridSource {
       children: [
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '(ー)出庫',
+          label: '(−)出庫',
           labelColor: kWhiteColor,
           backgroundColor: kRedColor,
           onPressed: () => showDialog(
@@ -82,7 +82,7 @@ class StockSource extends DataGridSource {
         const SizedBox(width: 4),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '(＋)入庫',
+          label: '(+)入庫',
           labelColor: kWhiteColor,
           backgroundColor: kBlueColor,
           onPressed: () => showDialog(
@@ -426,6 +426,7 @@ class _ModStockDialogState extends State<ModStockDialog> {
               stock: widget.stock,
               number: numberController.text,
               name: nameController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

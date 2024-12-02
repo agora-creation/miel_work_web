@@ -211,6 +211,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
               number: numberController.text,
               name: nameController.text,
               quantity: int.parse(quantityController.text),
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

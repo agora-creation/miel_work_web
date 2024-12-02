@@ -41,7 +41,7 @@ class StockHistoryModel {
   }
 
   Color typeColor() {
-    Color ret = kRedColor.withOpacity(0.3);
+    Color ret = kGreyColor.withOpacity(0.3);
     switch (_type) {
       case 0:
         ret = kRedColor.withOpacity(0.3);
@@ -53,5 +53,16 @@ class StockHistoryModel {
         break;
     }
     return ret;
+  }
+
+  String typeSign() {
+    switch (_type) {
+      case 0:
+        return '−';
+      case 1:
+        return '+';
+      default:
+        return '';
+    }
   }
 }

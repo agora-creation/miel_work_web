@@ -7,12 +7,13 @@ import 'package:miel_work_web/models/stock.dart';
 import 'package:miel_work_web/models/stock_history.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/stock_history_source.dart';
+import 'package:miel_work_web/providers/stock_history.dart';
 import 'package:miel_work_web/services/stock_history.dart';
-import 'package:miel_work_web/widgets/custom_column_label.dart';
-import 'package:miel_work_web/widgets/custom_data_grid.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:miel_work_web/widgets/stock_history_list.dart';
+import 'package:provider/provider.dart';
 
 class StockHistoryScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -115,39 +116,25 @@ class _StockHistoryScreenState extends State<StockHistoryScreen> {
                       data: snapshot.data,
                     );
                   }
-                  return CustomDataGrid(
-                    source: StockHistorySource(
-                      context: context,
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      stock: widget.stock,
-                      stockHistories: stockHistories,
-                    ),
-                    columns: [
-                      GridColumn(
-                        columnName: 'createdAt',
-                        label: const CustomColumnLabel('変動日時'),
-                        width: 200,
-                      ),
-                      GridColumn(
-                        columnName: 'type',
-                        label: const CustomColumnLabel('変動種別'),
-                        width: 150,
-                      ),
-                      GridColumn(
-                        columnName: 'quantity',
-                        label: const CustomColumnLabel('変動数'),
-                      ),
-                      GridColumn(
-                        columnName: 'createdUserName',
-                        label: const CustomColumnLabel('記入スタッフ'),
-                      ),
-                      GridColumn(
-                        columnName: 'edit',
-                        label: const CustomColumnLabel('操作'),
-                        width: 100,
-                      ),
-                    ],
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: stockHistories.length,
+                    itemBuilder: (context, index) {
+                      StockHistoryModel stockHistory = stockHistories[index];
+                      return StockHistoryList(
+                        stockHistory: stockHistory,
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => DelStockHistoryDialog(
+                            loginProvider: widget.loginProvider,
+                            homeProvider: widget.homeProvider,
+                            stock: widget.stock,
+                            stockHistory: stockHistory,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -155,6 +142,77 @@ class _StockHistoryScreenState extends State<StockHistoryScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class DelStockHistoryDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final StockModel stock;
+  final StockHistoryModel stockHistory;
+
+  const DelStockHistoryDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.stock,
+    required this.stockHistory,
+    super.key,
+  });
+
+  @override
+  State<DelStockHistoryDialog> createState() => _DelStockHistoryDialogState();
+}
+
+class _DelStockHistoryDialogState extends State<DelStockHistoryDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final stockHistoryProvider = Provider.of<StockHistoryProvider>(context);
+    return CustomAlertDialog(
+      content: const Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 8),
+          Text(
+            '本当に削除しますか？',
+            style: TextStyle(color: kRedColor),
+          ),
+          Text(
+            '※在庫数は元に戻ります。',
+            style: TextStyle(color: kRedColor),
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '削除する',
+          labelColor: kWhiteColor,
+          backgroundColor: kRedColor,
+          onPressed: () async {
+            String? error = await stockHistoryProvider.delete(
+              stock: widget.stock,
+              stockHistory: widget.stockHistory,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '在庫変動履歴を削除しました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
