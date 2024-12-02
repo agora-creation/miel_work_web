@@ -22,17 +22,20 @@ class StockService {
     firestore.collection(collection).doc(values['id']).delete();
   }
 
-  Future<StockModel?> selectData({
-    required String id,
+  Future<String> lastNumber({
+    required String? organizationId,
   }) async {
-    StockModel? ret;
+    String ret = '1';
     await firestore
         .collection(collection)
-        .where('id', isEqualTo: id)
+        .where('organizationId', isEqualTo: organizationId ?? 'error')
+        .orderBy('createdAt', descending: true)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        ret = StockModel.fromSnapshot(value.docs.first);
+        StockModel stock = StockModel.fromSnapshot(value.docs.first);
+        int newNumber = int.parse(stock.number) + 1;
+        ret = newNumber.toString();
       }
     });
     return ret;

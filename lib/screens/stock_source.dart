@@ -365,12 +365,10 @@ class ModStockDialog extends StatefulWidget {
 }
 
 class _ModStockDialogState extends State<ModStockDialog> {
-  TextEditingController numberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
-    numberController.text = widget.stock.number;
     nameController.text = widget.stock.name;
     super.initState();
   }
@@ -385,11 +383,7 @@ class _ModStockDialogState extends State<ModStockDialog> {
         children: [
           FormLabel(
             '在庫No',
-            child: CustomTextField(
-              controller: numberController,
-              textInputType: TextInputType.number,
-              maxLines: 1,
-            ),
+            child: FormValue(widget.stock.number),
           ),
           const SizedBox(height: 8),
           FormLabel(
@@ -424,7 +418,6 @@ class _ModStockDialogState extends State<ModStockDialog> {
             String? error = await stockProvider.update(
               organization: widget.loginProvider.organization,
               stock: widget.stock,
-              number: numberController.text,
               name: nameController.text,
               loginUser: widget.loginProvider.user,
             );

@@ -152,9 +152,23 @@ class AddStockDialog extends StatefulWidget {
 }
 
 class _AddStockDialogState extends State<AddStockDialog> {
+  StockService stockService = StockService();
   TextEditingController numberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController quantityController = TextEditingController(text: '999');
+
+  void _init() async {
+    numberController.text = await stockService.lastNumber(
+      organizationId: widget.loginProvider.organization?.id,
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
