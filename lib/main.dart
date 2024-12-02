@@ -23,6 +23,8 @@ import 'package:miel_work_web/providers/request_facility.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
 import 'package:miel_work_web/providers/request_square.dart';
+import 'package:miel_work_web/providers/stock.dart';
+import 'package:miel_work_web/providers/stock_history.dart';
 import 'package:miel_work_web/providers/user.dart';
 import 'package:miel_work_web/screens/home.dart';
 import 'package:miel_work_web/screens/login.dart';
@@ -81,6 +83,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: PlanGuardsmanProvider()),
         ChangeNotifierProvider.value(value: PlanGarbagemanProvider()),
         ChangeNotifierProvider.value(value: PlanDishCenterProvider()),
+        ChangeNotifierProvider.value(value: StockProvider()),
+        ChangeNotifierProvider.value(value: StockHistoryProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
