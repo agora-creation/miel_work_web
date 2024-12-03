@@ -135,6 +135,11 @@ class _LostScreenState extends State<LostScreen> {
               ],
             ),
             const SizedBox(height: 8),
+            const Text(
+              '※発見日から3ヶ月経過した場合、自動で『破棄』となります。',
+              style: TextStyle(color: kRedColor),
+            ),
+            const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

@@ -221,6 +221,34 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
     }
 })
 
+exports.lostStatusCheck = functions.region('asia-northeast1')
+    .runWith({memory: '512MB'})
+    .pubsub.schedule('every 1 days')
+    .timeZone('Asia/Tokyo')
+    .onRun(async (context) => {
+
+    //3ヶ月前の時刻
+    const months3 = (() => {
+        let nowSeconds = admin.firestore.Timestamp.now().seconds
+        nowSeconds = nowSeconds - nowSeconds % 60
+        const months3Seconds = 3 * 30 * 24 * 60 * 60
+        const s = nowSeconds - months3Seconds
+        return new admin.firestore.Timestamp(s, 0)
+    })()
+
+    //DB取得
+    const lostRef = firestore.collection('lost')
+    const lostSnapshot = await planRef.where('status', '==', 0)
+        .where('createdAt', '==', months3)
+        .get()
+    if (!lostSnapshot.empty) {
+        lostSnapshot.forEach(async lostDoc => {
+            const lostRef = lostDoc.ref
+            lostRef.update({'status': 9})
+        })
+    }
+})
+
 const pushMessage = (token, title, body) => ({
     notification: {
         title: title,
