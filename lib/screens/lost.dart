@@ -10,7 +10,11 @@ import 'package:miel_work_web/screens/lost_add.dart';
 import 'package:miel_work_web/screens/lost_history.dart';
 import 'package:miel_work_web/screens/lost_mod.dart';
 import 'package:miel_work_web/services/lost.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/lost_card.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -32,6 +36,18 @@ class _LostScreenState extends State<LostScreen> {
   LostService lostService = LostService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  String? searchItemName;
+
+  void _getItemName() async {
+    searchItemName = await getPrefsString('itemName') ?? '';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getItemName();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +55,10 @@ class _LostScreenState extends State<LostScreen> {
     if (searchStart != null && searchEnd != null) {
       searchText =
           '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
+    String searchItemNameText = '指定なし';
+    if (searchItemName != null) {
+      searchItemNameText = '$searchItemName';
     }
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -69,32 +89,49 @@ class _LostScreenState extends State<LostScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                CustomIconTextButton(
-                  label: '期間検索: $searchText',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kSearchColor,
-                  leftIcon: FontAwesomeIcons.magnifyingGlass,
-                  onPressed: () async {
-                    var selected = await showDataRangePickerDialog(
-                      context: context,
-                      startValue: searchStart,
-                      endValue: searchEnd,
-                    );
-                    if (selected != null &&
-                        selected.first != null &&
-                        selected.last != null) {
-                      var diff = selected.last!.difference(selected.first!);
-                      int diffDays = diff.inDays;
-                      if (diffDays > 31) {
-                        if (!mounted) return;
-                        showMessage(context, '1ヵ月以上の範囲が選択されています', false);
-                        return;
-                      }
-                      searchStart = selected.first;
-                      searchEnd = selected.last;
-                      setState(() {});
-                    }
-                  },
+                Row(
+                  children: [
+                    CustomIconTextButton(
+                      label: '期間検索: $searchText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () async {
+                        var selected = await showDataRangePickerDialog(
+                          context: context,
+                          startValue: searchStart,
+                          endValue: searchEnd,
+                        );
+                        if (selected != null &&
+                            selected.first != null &&
+                            selected.last != null) {
+                          var diff = selected.last!.difference(selected.first!);
+                          int diffDays = diff.inDays;
+                          if (diffDays > 31) {
+                            if (!mounted) return;
+                            showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+                            return;
+                          }
+                          searchStart = selected.first;
+                          searchEnd = selected.last;
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
+                      label: '品名検索: $searchItemNameText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchItemNameDialog(
+                          getItemName: _getItemName,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
@@ -193,6 +230,79 @@ class _LostScreenState extends State<LostScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SearchItemNameDialog extends StatefulWidget {
+  final Function() getItemName;
+
+  const SearchItemNameDialog({
+    required this.getItemName,
+    super.key,
+  });
+
+  @override
+  State<SearchItemNameDialog> createState() => _SearchItemNameDialogState();
+}
+
+class _SearchItemNameDialogState extends State<SearchItemNameDialog> {
+  TextEditingController itemNameController = TextEditingController();
+
+  void _getItemName() async {
+    itemNameController = TextEditingController(
+      text: await getPrefsString('itemName') ?? '',
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getItemName();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              '品名',
+              child: CustomTextField(
+                controller: itemNameController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
+          onPressed: () async {
+            await setPrefsString('itemName', itemNameController.text);
+            widget.getItemName();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
