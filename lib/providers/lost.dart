@@ -23,7 +23,6 @@ class LostProvider with ChangeNotifier {
     required DateTime discoveryAt,
     required String discoveryPlace,
     required String discoveryUser,
-    required String itemNumber,
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
@@ -48,6 +47,9 @@ class LostProvider with ChangeNotifier {
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());
       }
+      String itemNumber = await _lostService.getLastItemNumber(
+        organizationId: organization.id,
+      );
       _lostService.create({
         'id': id,
         'organizationId': organization.id,
@@ -94,7 +96,6 @@ class LostProvider with ChangeNotifier {
     required DateTime discoveryAt,
     required String discoveryPlace,
     required String discoveryUser,
-    required String itemNumber,
     required String itemName,
     required FilePickerResult? itemImageResult,
     required String remarks,
@@ -124,7 +125,6 @@ class LostProvider with ChangeNotifier {
           'discoveryAt': discoveryAt,
           'discoveryPlace': discoveryPlace,
           'discoveryUser': discoveryUser,
-          'itemNumber': itemNumber,
           'itemName': itemName,
           'itemImage': itemImage,
           'remarks': remarks,
@@ -135,7 +135,6 @@ class LostProvider with ChangeNotifier {
           'discoveryAt': discoveryAt,
           'discoveryPlace': discoveryPlace,
           'discoveryUser': discoveryUser,
-          'itemNumber': itemNumber,
           'itemName': itemName,
           'remarks': remarks,
         });
