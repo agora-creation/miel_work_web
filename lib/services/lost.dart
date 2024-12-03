@@ -45,7 +45,7 @@ class LostService {
     await firestore
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .orderBy('itemNumber', descending: true)
+        .orderBy('createdAt', descending: true)
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
