@@ -9,6 +9,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/models/read_user.dart';
+import 'package:miel_work_web/models/reply_source.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -215,6 +216,46 @@ class _ChatScreenState extends State<ChatScreen> {
                                       message: message,
                                     ),
                                   ),
+                                  onTapFavorite: () async {
+                                    String? error =
+                                        await messageProvider.favorite(
+                                      message: message,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    if (!mounted) return;
+                                    showMessage(context, 'いいねしました', true);
+                                  },
+                                  onTapReply: () {
+                                    if (!currentChatUserIds.contains(
+                                        widget.loginProvider.user?.id)) {
+                                      return;
+                                    }
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: ChatMessageScreen(
+                                          loginProvider: widget.loginProvider,
+                                          currentChat: currentChat,
+                                          replySource:
+                                              ReplySourceModel.fromMap({
+                                            'id': message.id,
+                                            'content': message.content,
+                                            'image': message.image,
+                                            'file': message.file,
+                                            'fileExt': message.fileExt,
+                                            'createdUserName':
+                                                message.createdUserName,
+                                          }),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               },
                             );

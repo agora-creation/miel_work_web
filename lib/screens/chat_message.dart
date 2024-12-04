@@ -8,15 +8,19 @@ import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/reply_source_list.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final ChatModel? currentChat;
+  final ReplySourceModel? replySource;
 
   const ChatMessageScreen({
     required this.loginProvider,
     this.currentChat,
+    this.replySource,
     super.key,
   });
 
@@ -27,6 +31,12 @@ class ChatMessageScreen extends StatefulWidget {
 class _ChatMessageScreenState extends State<ChatMessageScreen> {
   TextEditingController contentController = TextEditingController();
   ReplySourceModel? replySource;
+
+  @override
+  void initState() {
+    replySource = widget.replySource;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +89,12 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              replySource != null
+                  ? FormLabel(
+                      'リプライ元',
+                      child: ReplySourceList(replySource: replySource),
+                    )
+                  : Container(),
               CustomTextField(
                 controller: contentController,
                 textInputType: TextInputType.multiline,

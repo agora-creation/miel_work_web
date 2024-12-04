@@ -218,6 +218,27 @@ class ChatMessageProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> favorite({
+    required ChatMessageModel message,
+    required UserModel? loginUser,
+  }) async {
+    String? error;
+    if (loginUser == null) return 'メッセージのいいねに失敗しました';
+    try {
+      List<String> favoriteUserIds = message.favoriteUserIds;
+      if (!favoriteUserIds.contains(loginUser.id)) {
+        favoriteUserIds.add(loginUser.id);
+      }
+      _messageService.update({
+        'id': message.id,
+        'favoriteUserIds': favoriteUserIds,
+      });
+    } catch (e) {
+      error = 'メッセージのいいねに失敗しました';
+    }
+    return error;
+  }
+
   Future<String?> delete({
     required ChatMessageModel message,
   }) async {

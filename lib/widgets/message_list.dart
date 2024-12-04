@@ -14,6 +14,8 @@ class MessageList extends StatelessWidget {
   final Function()? onTapImage;
   final Function()? onTapFile;
   final Function()? onTapDelete;
+  final Function()? onTapFavorite;
+  final Function()? onTapReply;
 
   const MessageList({
     required this.message,
@@ -22,6 +24,8 @@ class MessageList extends StatelessWidget {
     required this.onTapImage,
     required this.onTapFile,
     required this.onTapDelete,
+    required this.onTapFavorite,
+    required this.onTapReply,
     super.key,
   });
 
@@ -327,6 +331,21 @@ class MessageList extends StatelessWidget {
                     ),
                   )
                 : Container(),
+            Row(
+              children: [
+                LinkText(
+                  label: 'いいね',
+                  color: kBlueColor,
+                  onTap: onTapFavorite,
+                ),
+                const SizedBox(width: 8),
+                LinkText(
+                  label: 'リプライ',
+                  color: kBlueColor,
+                  onTap: onTapReply,
+                ),
+              ],
+            ),
           ],
         ),
       );
