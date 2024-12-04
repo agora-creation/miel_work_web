@@ -8,9 +8,13 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/lost_history_source.dart';
 import 'package:miel_work_web/services/lost.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_column_label.dart';
 import 'package:miel_work_web/widgets/custom_data_grid.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class LostHistoryScreen extends StatefulWidget {
@@ -31,6 +35,18 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
   LostService lostService = LostService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  String? searchItemName;
+
+  void _getItemName() async {
+    searchItemName = await getPrefsString('itemName');
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getItemName();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +54,10 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
     if (searchStart != null && searchEnd != null) {
       searchText =
           '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
+    String searchItemNameText = '指定なし';
+    if (searchItemName != null) {
+      searchItemNameText = '$searchItemName';
     }
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -99,11 +119,16 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
-                      label: '品名検索: ',
+                      label: '品名検索: $searchItemNameText',
                       labelColor: kWhiteColor,
                       backgroundColor: kSearchColor,
                       leftIcon: FontAwesomeIcons.magnifyingGlass,
-                      onPressed: () {},
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchItemNameDialog(
+                          getItemName: _getItemName,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -121,7 +146,10 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                 builder: (context, snapshot) {
                   List<LostModel> losts = [];
                   if (snapshot.hasData) {
-                    losts = lostService.generateList(data: snapshot.data);
+                    losts = lostService.generateList(
+                      data: snapshot.data,
+                      itemName: searchItemName,
+                    );
                   }
                   return CustomDataGrid(
                     source: LostHistorySource(
@@ -173,6 +201,79 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SearchItemNameDialog extends StatefulWidget {
+  final Function() getItemName;
+
+  const SearchItemNameDialog({
+    required this.getItemName,
+    super.key,
+  });
+
+  @override
+  State<SearchItemNameDialog> createState() => _SearchItemNameDialogState();
+}
+
+class _SearchItemNameDialogState extends State<SearchItemNameDialog> {
+  TextEditingController itemNameController = TextEditingController();
+
+  void _getItemName() async {
+    itemNameController = TextEditingController(
+      text: await getPrefsString('itemName') ?? '',
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getItemName();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              '品名',
+              child: CustomTextField(
+                controller: itemNameController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
+          onPressed: () async {
+            await setPrefsString('itemName', itemNameController.text);
+            widget.getItemName();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

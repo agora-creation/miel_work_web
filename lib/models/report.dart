@@ -23,8 +23,6 @@ class ReportModel {
   List<ReportProblemModel> reportProblems = [];
   List<ReportPamphletModel> reportPamphlets = [];
   List<ReportEquipmentModel> reportEquipments = [];
-  String _passport = '';
-  int _passportCount = 0;
   String _remarks = '';
   String _agenda = '';
   bool _lastConfirmShop = false;
@@ -67,8 +65,6 @@ class ReportModel {
   String get organizationId => _organizationId;
   int get advancePayment1 => _advancePayment1;
   int get advancePayment2 => _advancePayment2;
-  String get passport => _passport;
-  int get passportCount => _passportCount;
   String get remarks => _remarks;
   String get agenda => _agenda;
   bool get lastConfirmShop => _lastConfirmShop;
@@ -123,8 +119,6 @@ class ReportModel {
     reportProblems = _convertReportProblems(data['reportProblems'] ?? []);
     reportPamphlets = _convertReportPamphlets(data['reportPamphlets'] ?? []);
     reportEquipments = _convertReportEquipments(data['reportEquipments'] ?? []);
-    _passport = data['passport'] ?? '';
-    _passportCount = data['passportCount'] ?? 0;
     _remarks = data['remarks'] ?? '';
     _agenda = data['agenda'] ?? '';
     _lastConfirmShop = data['lastConfirmShop'] ?? false;

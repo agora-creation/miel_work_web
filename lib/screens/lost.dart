@@ -39,7 +39,7 @@ class _LostScreenState extends State<LostScreen> {
   String? searchItemName;
 
   void _getItemName() async {
-    searchItemName = await getPrefsString('itemName') ?? '';
+    searchItemName = await getPrefsString('itemName');
     setState(() {});
   }
 
@@ -189,7 +189,10 @@ class _LostScreenState extends State<LostScreen> {
                   builder: (context, snapshot) {
                     List<LostModel> losts = [];
                     if (snapshot.hasData) {
-                      losts = lostService.generateList(data: snapshot.data);
+                      losts = lostService.generateList(
+                        data: snapshot.data,
+                        itemName: searchItemName,
+                      );
                     }
                     if (losts.isEmpty) {
                       return const Center(
