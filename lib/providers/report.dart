@@ -20,6 +20,9 @@ class ReportProvider with ChangeNotifier {
     required OrganizationModel? organization,
     required DateTime createdAt,
     required List<ReportWorkerModel> reportWorkers,
+    required List<ReportWorkerModel> reportWorkersGuardsman,
+    required List<ReportWorkerModel> reportWorkersGarbageman,
+    required List<ReportWorkerModel> reportWorkersCycle,
     required ReportVisitorModel reportVisitor,
     required ReportLockerModel reportLocker,
     required List<ReportPlanModel> reportPlans,
@@ -77,6 +80,18 @@ class ReportProvider with ChangeNotifier {
       for (final data in reportWorkers) {
         reportWorkersMap.add(data.toMap());
       }
+      List<Map> reportWorkersGuardsmanMap = [];
+      for (final data in reportWorkersGuardsman) {
+        reportWorkersGuardsmanMap.add(data.toMap());
+      }
+      List<Map> reportWorkersGarbagemanMap = [];
+      for (final data in reportWorkersGarbageman) {
+        reportWorkersGarbagemanMap.add(data.toMap());
+      }
+      List<Map> reportWorkersCycleMap = [];
+      for (final data in reportWorkersCycle) {
+        reportWorkersCycleMap.add(data.toMap());
+      }
       List<Map> reportPlansMap = [];
       for (final data in reportPlans) {
         reportPlansMap.add(data.toMap());
@@ -101,6 +116,9 @@ class ReportProvider with ChangeNotifier {
         'id': id,
         'organizationId': organization.id,
         'reportWorkers': reportWorkersMap,
+        'reportWorkersGuardsman': reportWorkersGuardsmanMap,
+        'reportWorkersGarbageman': reportWorkersGarbagemanMap,
+        'reportWorkersCycle': reportWorkersCycleMap,
         'reportVisitor': reportVisitor.toMap(),
         'reportLocker': reportLocker.toMap(),
         'reportPlans': reportPlansMap,
@@ -162,6 +180,9 @@ class ReportProvider with ChangeNotifier {
   Future<String?> update({
     required ReportModel report,
     required List<ReportWorkerModel> reportWorkers,
+    required List<ReportWorkerModel> reportWorkersGuardsman,
+    required List<ReportWorkerModel> reportWorkersGarbageman,
+    required List<ReportWorkerModel> reportWorkersCycle,
     required ReportVisitorModel reportVisitor,
     required ReportLockerModel reportLocker,
     required List<ReportPlanModel> reportPlans,
@@ -217,6 +238,18 @@ class ReportProvider with ChangeNotifier {
       for (final data in reportWorkers) {
         reportWorkersMap.add(data.toMap());
       }
+      List<Map> reportWorkersGuardsmanMap = [];
+      for (final data in reportWorkersGuardsman) {
+        reportWorkersGuardsmanMap.add(data.toMap());
+      }
+      List<Map> reportWorkersGarbagemanMap = [];
+      for (final data in reportWorkersGarbageman) {
+        reportWorkersGarbagemanMap.add(data.toMap());
+      }
+      List<Map> reportWorkersCycleMap = [];
+      for (final data in reportWorkersCycle) {
+        reportWorkersCycleMap.add(data.toMap());
+      }
       List<Map> reportPlansMap = [];
       for (final data in reportPlans) {
         reportPlansMap.add(data.toMap());
@@ -240,6 +273,9 @@ class ReportProvider with ChangeNotifier {
       _reportService.update({
         'id': report.id,
         'reportWorkers': reportWorkersMap,
+        'reportWorkersGuardsman': reportWorkersGuardsmanMap,
+        'reportWorkersGarbageman': reportWorkersGarbagemanMap,
+        'reportWorkersCycle': reportWorkersCycleMap,
         'reportVisitor': reportVisitor.toMap(),
         'reportLocker': reportLocker.toMap(),
         'reportPlans': reportPlansMap,

@@ -49,6 +49,9 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
   ProblemService problemService = ProblemService();
   DateTime createdAt = DateTime.now();
   List<ReportWorkerModel> reportWorkers = [];
+  List<ReportWorkerModel> reportWorkersGuardsman = [];
+  List<ReportWorkerModel> reportWorkersGarbageman = [];
+  List<ReportWorkerModel> reportWorkersCycle = [];
   ReportVisitorModel reportVisitor = ReportVisitorModel.fromMap({});
   ReportLockerModel reportLocker = ReportLockerModel.fromMap({});
   List<ReportPlanModel> reportPlans = [];
@@ -265,6 +268,9 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 organization: widget.loginProvider.organization,
                 createdAt: createdAt,
                 reportWorkers: reportWorkers,
+                reportWorkersGuardsman: reportWorkersGuardsman,
+                reportWorkersGarbageman: reportWorkersGarbageman,
+                reportWorkersCycle: reportWorkersCycle,
                 reportVisitor: reportVisitor,
                 reportLocker: reportLocker,
                 reportPlans: reportPlans,
@@ -448,6 +454,210 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               color: kBlueColor.withOpacity(0.3),
                               onPressed: () {
                                 reportWorkers
+                                    .add(ReportWorkerModel.fromMap({}));
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          '出勤者(警備員)',
+                          style: kReportHeaderStyle,
+                        ),
+                        Table(
+                          border: TableBorder.all(color: kGreyColor),
+                          columnWidths: const {
+                            0: FlexColumnWidth(1),
+                            1: FlexColumnWidth(2),
+                          },
+                          children: [
+                            const TableRow(
+                              children: [
+                                ReportTableTh('名前'),
+                                ReportTableTh('時間帯'),
+                              ],
+                            ),
+                            ...reportWorkersGuardsman.map((reportWorker) {
+                              return TableRow(
+                                children: [
+                                  FormValue(
+                                    reportWorker.name,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.name,
+                                      onChanged: (value) {
+                                        reportWorker.name = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  FormValue(
+                                    reportWorker.time,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.time,
+                                      onChanged: (value) {
+                                        reportWorker.time = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ReportTableButton(
+                              label: '削除',
+                              color: kRedColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersGuardsman.removeLast();
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(width: 4),
+                            ReportTableButton(
+                              label: '追加',
+                              color: kBlueColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersGuardsman
+                                    .add(ReportWorkerModel.fromMap({}));
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          '出勤者(清掃員)',
+                          style: kReportHeaderStyle,
+                        ),
+                        Table(
+                          border: TableBorder.all(color: kGreyColor),
+                          columnWidths: const {
+                            0: FlexColumnWidth(1),
+                            1: FlexColumnWidth(2),
+                          },
+                          children: [
+                            const TableRow(
+                              children: [
+                                ReportTableTh('名前'),
+                                ReportTableTh('時間帯'),
+                              ],
+                            ),
+                            ...reportWorkersGarbageman.map((reportWorker) {
+                              return TableRow(
+                                children: [
+                                  FormValue(
+                                    reportWorker.name,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.name,
+                                      onChanged: (value) {
+                                        reportWorker.name = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  FormValue(
+                                    reportWorker.time,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.time,
+                                      onChanged: (value) {
+                                        reportWorker.time = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ReportTableButton(
+                              label: '削除',
+                              color: kRedColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersGarbageman.removeLast();
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(width: 4),
+                            ReportTableButton(
+                              label: '追加',
+                              color: kBlueColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersGarbageman
+                                    .add(ReportWorkerModel.fromMap({}));
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          '出勤者(自転車整理)',
+                          style: kReportHeaderStyle,
+                        ),
+                        Table(
+                          border: TableBorder.all(color: kGreyColor),
+                          columnWidths: const {
+                            0: FlexColumnWidth(1),
+                            1: FlexColumnWidth(2),
+                          },
+                          children: [
+                            const TableRow(
+                              children: [
+                                ReportTableTh('名前'),
+                                ReportTableTh('時間帯'),
+                              ],
+                            ),
+                            ...reportWorkersCycle.map((reportWorker) {
+                              return TableRow(
+                                children: [
+                                  FormValue(
+                                    reportWorker.name,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.name,
+                                      onChanged: (value) {
+                                        reportWorker.name = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                  FormValue(
+                                    reportWorker.time,
+                                    onTap: () => _showTextField(
+                                      text: reportWorker.time,
+                                      onChanged: (value) {
+                                        reportWorker.time = value;
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ReportTableButton(
+                              label: '削除',
+                              color: kRedColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersCycle.removeLast();
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(width: 4),
+                            ReportTableButton(
+                              label: '追加',
+                              color: kBlueColor.withOpacity(0.3),
+                              onPressed: () {
+                                reportWorkersCycle
                                     .add(ReportWorkerModel.fromMap({}));
                                 setState(() {});
                               },
