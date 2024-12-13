@@ -96,7 +96,14 @@ class _LostModScreenState extends State<LostModScreen> {
             label: '破棄済する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
-            onPressed: () {},
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => RejectLostDialog(
+                loginProvider: widget.loginProvider,
+                homeProvider: widget.homeProvider,
+                lost: widget.lost,
+              ),
+            ),
           ),
           const SizedBox(width: 4),
           CustomButton(
@@ -425,6 +432,75 @@ class _LostModScreenState extends State<LostModScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RejectLostDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final LostModel lost;
+
+  const RejectLostDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.lost,
+    super.key,
+  });
+
+  @override
+  State<RejectLostDialog> createState() => _RejectLostDialogState();
+}
+
+class _RejectLostDialogState extends State<RejectLostDialog> {
+  @override
+  Widget build(BuildContext context) {
+    final lostProvider = Provider.of<LostProvider>(context);
+    return CustomAlertDialog(
+      content: const SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text(
+              '本当に破棄しますか？',
+              style: TextStyle(color: kRedColor),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '破棄済にする',
+          labelColor: kWhiteColor,
+          backgroundColor: kRejectColor,
+          onPressed: () async {
+            String? error = await lostProvider.updateReject(
+              organization: widget.loginProvider.organization,
+              lost: widget.lost,
+              loginUser: widget.loginProvider.user,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            if (!mounted) return;
+            showMessage(context, '破棄されました', true);
+            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
     );
   }
 }
