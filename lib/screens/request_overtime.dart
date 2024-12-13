@@ -9,7 +9,11 @@ import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/request_overtime_detail.dart';
 import 'package:miel_work_web/screens/request_overtime_history.dart';
 import 'package:miel_work_web/services/request_overtime.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/request_overtime_list.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -98,6 +102,20 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
+                      label: 'フォーム内記載の連絡先編集',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kCyanColor,
+                      leftIcon: FontAwesomeIcons.pen,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => ModContactDialog(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
                       label: '承認済一覧',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
@@ -162,6 +180,87 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ModContactDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+
+  const ModContactDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    super.key,
+  });
+
+  @override
+  State<ModContactDialog> createState() => _ModContactDialogState();
+}
+
+class _ModContactDialogState extends State<ModContactDialog> {
+  TextEditingController contactController = TextEditingController();
+
+  @override
+  void initState() {
+    contactController.text = widget.loginProvider.organization?.contact ?? '';
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            FormLabel(
+              'フォーム内記載の連絡先',
+              child: CustomTextField(
+                controller: contactController,
+                textInputType: TextInputType.multiline,
+                maxLines: 3,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '保存する',
+          labelColor: kWhiteColor,
+          backgroundColor: kBlueColor,
+          onPressed: () async {
+            String? error =
+                await widget.loginProvider.organizationContactUpdate(
+              organization: widget.loginProvider.organization,
+              contact: contactController.text,
+            );
+            if (error != null) {
+              if (!mounted) return;
+              showMessage(context, error, false);
+              return;
+            }
+            await widget.loginProvider.reload();
+            widget.homeProvider.setGroups(
+              organizationId: widget.loginProvider.organization?.id ?? 'error',
+            );
+            if (!mounted) return;
+            showMessage(context, '連絡先を保存されました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

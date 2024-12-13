@@ -169,6 +169,23 @@ class LoginProvider with ChangeNotifier {
     return error;
   }
 
+  Future<String?> organizationContactUpdate({
+    required OrganizationModel? organization,
+    required String contact,
+  }) async {
+    String? error;
+    if (organization == null) return '連絡先の変更に失敗しました';
+    try {
+      _organizationService.update({
+        'id': organization.id,
+        'contact': contact,
+      });
+    } catch (e) {
+      error = '連絡先の変更に失敗しました';
+    }
+    return error;
+  }
+
   Future logout() async {
     await _auth?.signOut();
     _status = AuthStatus.unauthenticated;
