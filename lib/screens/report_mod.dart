@@ -820,15 +820,53 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             ),
                             TableRow(
                               children: [
+                                const ReportTableTh('バルコーナー'),
+                                FormValue(
+                                  '${reportVisitor.floor5_12}',
+                                  onTap: () => _showTextField(
+                                    text: '${reportVisitor.floor5_12}',
+                                    onChanged: (value) {
+                                      reportVisitor.floor5_12 =
+                                          int.parse(value);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                                FormValue(
+                                  '${reportVisitor.floor5_20}',
+                                  onTap: () => _showTextField(
+                                    text: '${reportVisitor.floor5_20}',
+                                    onChanged: (value) {
+                                      reportVisitor.floor5_20 =
+                                          int.parse(value);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                                FormValue(
+                                  '${reportVisitor.floor5_22}',
+                                  onTap: () => _showTextField(
+                                    text: '${reportVisitor.floor5_22}',
+                                    onChanged: (value) {
+                                      reportVisitor.floor5_22 =
+                                          int.parse(value);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
                                 const ReportTableTh('合計'),
                                 ReportTableTh(
-                                  '${reportVisitor.floor1_12 + reportVisitor.floor2_12 + reportVisitor.floor3_12 + reportVisitor.floor4_12}',
+                                  '${reportVisitor.floor1_12 + reportVisitor.floor2_12 + reportVisitor.floor3_12 + reportVisitor.floor4_12 + reportVisitor.floor5_12}',
                                 ),
                                 ReportTableTh(
-                                  '${reportVisitor.floor1_20 + reportVisitor.floor2_20 + reportVisitor.floor3_20 + reportVisitor.floor4_20}',
+                                  '${reportVisitor.floor1_20 + reportVisitor.floor2_20 + reportVisitor.floor3_20 + reportVisitor.floor4_20 + reportVisitor.floor5_20}',
                                 ),
                                 ReportTableTh(
-                                  '${reportVisitor.floor1_22 + reportVisitor.floor2_22 + reportVisitor.floor3_22 + reportVisitor.floor4_22}',
+                                  '${reportVisitor.floor1_22 + reportVisitor.floor2_22 + reportVisitor.floor3_22 + reportVisitor.floor4_22 + reportVisitor.floor5_22}',
                                 ),
                               ],
                             ),
@@ -1310,7 +1348,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                     children: [
                       ReportTableTh('種別'),
                       ReportTableTh('内容'),
-                      ReportTableTh('金額'),
+                      ReportTableTh('部数'),
                     ],
                   ),
                   ...reportPamphlets.map((reportPamphlet) {
