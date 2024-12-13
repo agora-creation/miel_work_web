@@ -1446,6 +1446,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                       ReportTableTh('両替'),
                       ReportTableTh('施錠'),
                       ReportTableTh('日報最終確認'),
+                      ReportTableTh('最終退出確認'),
                     ],
                   ),
                   TableRow(
@@ -1524,6 +1525,24 @@ class _ReportModScreenState extends State<ReportModScreen> {
                           yesAction: () {
                             lastConfirmLock = !lastConfirmLock;
                             lastConfirmLockAt = DateTime.now();
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      ReportConfirmButton(
+                        confirm: lastConfirmUser,
+                        confirmTime: dateText('HH:mm', lastConfirmUserAt),
+                        confirmLabel: lastConfirmUserName,
+                        onPressed: () => _showConfirm(
+                          confirm: lastConfirmUser,
+                          confirmLabel: lastConfirmUserName,
+                          onChanged: (value) {
+                            lastConfirmUserName = value;
+                            setState(() {});
+                          },
+                          yesAction: () {
+                            lastConfirmUser = !lastConfirmUser;
+                            lastConfirmUserAt = DateTime.now();
                             setState(() {});
                           },
                         ),
