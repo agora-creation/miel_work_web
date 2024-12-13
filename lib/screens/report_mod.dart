@@ -15,6 +15,7 @@ import 'package:miel_work_web/models/report_worker.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
+import 'package:miel_work_web/services/report.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -42,11 +43,14 @@ class ReportModScreen extends StatefulWidget {
 }
 
 class _ReportModScreenState extends State<ReportModScreen> {
+  ReportService reportService = ReportService();
   List<ReportWorkerModel> reportWorkers = [];
   List<ReportWorkerModel> reportWorkersGuardsman = [];
   List<ReportWorkerModel> reportWorkersGarbageman = [];
   List<ReportWorkerModel> reportWorkersCycle = [];
   ReportVisitorModel reportVisitor = ReportVisitorModel.fromMap({});
+  List<int> visitor1DayAlls = [0, 0, 0];
+  List<int> visitor1YearAlls = [0, 0, 0];
   ReportLockerModel reportLocker = ReportLockerModel.fromMap({});
   List<ReportPlanModel> reportPlans = [];
   ReportCheckModel reportCheck = ReportCheckModel.fromMap({});
@@ -177,7 +181,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
     );
   }
 
-  void _init() {
+  void _init() async {
     reportWorkers = widget.report.reportWorkers;
     reportWorkersGuardsman = widget.report.reportWorkersGuardsman;
     reportWorkersGarbageman = widget.report.reportWorkersGarbageman;
@@ -229,6 +233,18 @@ class _ReportModScreenState extends State<ReportModScreen> {
     lastExitUser = widget.report.lastExitUser;
     lastExitUserAt = widget.report.lastExitUserAt;
     lastExitUserName = widget.report.lastExitUserName;
+    visitor1DayAlls = await reportService.getVisitorAll(
+      organizationId: widget.loginProvider.organization?.id,
+      day: widget.report.createdAt,
+    );
+    visitor1YearAlls = await reportService.getVisitorAll(
+      organizationId: widget.loginProvider.organization?.id,
+      day: DateTime(
+        widget.report.createdAt.year - 1,
+        widget.report.createdAt.month,
+        widget.report.createdAt.day,
+      ),
+    );
     setState(() {});
   }
 
@@ -878,20 +894,20 @@ class _ReportModScreenState extends State<ReportModScreen> {
                                 ),
                               ],
                             ),
-                            const TableRow(
+                            TableRow(
                               children: [
-                                ReportTableTh('前日合計\n※自動取得'),
-                                ReportTableTh('0'),
-                                ReportTableTh('0'),
-                                ReportTableTh('0'),
+                                const ReportTableTh('前日合計\n※自動取得'),
+                                ReportTableTh('${visitor1DayAlls[0]}'),
+                                ReportTableTh('${visitor1DayAlls[1]}'),
+                                ReportTableTh('${visitor1DayAlls[2]}'),
                               ],
                             ),
-                            const TableRow(
+                            TableRow(
                               children: [
-                                ReportTableTh('前年合計\n※自動取得'),
-                                ReportTableTh('0'),
-                                ReportTableTh('0'),
-                                ReportTableTh('0'),
+                                const ReportTableTh('前年合計\n※自動取得'),
+                                ReportTableTh('${visitor1YearAlls[0]}'),
+                                ReportTableTh('${visitor1YearAlls[1]}'),
+                                ReportTableTh('${visitor1YearAlls[2]}'),
                               ],
                             ),
                           ],
