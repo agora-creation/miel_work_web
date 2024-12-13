@@ -101,20 +101,20 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
                 ),
                 Row(
                   children: [
-                    CustomIconTextButton(
-                      label: 'フォーム内記載の連絡先編集',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kCyanColor,
-                      leftIcon: FontAwesomeIcons.pen,
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => ModContactDialog(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
+                    // CustomIconTextButton(
+                    //   label: 'フォーム内記載の連絡先編集',
+                    //   labelColor: kWhiteColor,
+                    //   backgroundColor: kCyanColor,
+                    //   leftIcon: FontAwesomeIcons.pen,
+                    //   onPressed: () => showDialog(
+                    //     context: context,
+                    //     builder: (context) => ModContactDialog(
+                    //       loginProvider: widget.loginProvider,
+                    //       homeProvider: widget.homeProvider,
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(width: 4),
                     CustomIconTextButton(
                       label: '承認済一覧',
                       labelColor: kWhiteColor,

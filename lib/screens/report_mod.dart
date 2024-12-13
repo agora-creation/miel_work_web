@@ -78,6 +78,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
   DateTime lastConfirmTelAt = DateTime.now();
   bool lastConfirmCoupon = false;
   DateTime lastConfirmCouponAt = DateTime.now();
+  String lastConfirmCouponNumber = '';
   bool lastConfirmCalendar = false;
   DateTime lastConfirmCalendarAt = DateTime.now();
   bool lastConfirmMoney = false;
@@ -209,6 +210,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
     lastConfirmTelAt = widget.report.lastConfirmTelAt;
     lastConfirmCoupon = widget.report.lastConfirmCoupon;
     lastConfirmCouponAt = widget.report.lastConfirmCouponAt;
+    lastConfirmCouponNumber = widget.report.lastConfirmCouponNumber;
     lastConfirmCalendar = widget.report.lastConfirmCalendar;
     lastConfirmCalendarAt = widget.report.lastConfirmCalendarAt;
     lastConfirmMoney = widget.report.lastConfirmMoney;
@@ -327,6 +329,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 lastConfirmTelAt: lastConfirmTelAt,
                 lastConfirmCoupon: lastConfirmCoupon,
                 lastConfirmCouponAt: lastConfirmCouponAt,
+                lastConfirmCouponNumber: lastConfirmCouponNumber,
                 lastConfirmCalendar: lastConfirmCalendar,
                 lastConfirmCalendarAt: lastConfirmCalendarAt,
                 lastConfirmMoney: lastConfirmMoney,
@@ -872,7 +875,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             ),
                             const TableRow(
                               children: [
-                                ReportTableTh('前年同曜日'),
+                                ReportTableTh('前年同日数\n※自動取得'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
@@ -932,6 +935,42 @@ class _ReportModScreenState extends State<ReportModScreen> {
                             1: FlexColumnWidth(1),
                           },
                           children: [
+                            TableRow(
+                              children: [
+                                const ReportTableTh('ロッカー番号'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('連続使用日数'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('金額'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('備考'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
                             TableRow(
                               children: [
                                 const ReportTableTh('回収'),
@@ -1729,8 +1768,14 @@ class _ReportModScreenState extends State<ReportModScreen> {
                       ReportConfirmButton(
                         confirm: lastConfirmCoupon,
                         confirmTime: dateText('HH:mm', lastConfirmCouponAt),
+                        confirmLabel: lastConfirmCouponNumber,
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmCoupon,
+                          confirmLabel: lastConfirmCouponNumber,
+                          onChanged: (value) {
+                            lastConfirmCouponNumber = value;
+                            setState(() {});
+                          },
                           yesAction: () {
                             lastConfirmCoupon = !lastConfirmCoupon;
                             lastConfirmCouponAt = DateTime.now();

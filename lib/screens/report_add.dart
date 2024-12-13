@@ -85,6 +85,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
   DateTime lastConfirmTelAt = DateTime.now();
   bool lastConfirmCoupon = false;
   DateTime lastConfirmCouponAt = DateTime.now();
+  String lastConfirmCouponNumber = '';
   bool lastConfirmCalendar = false;
   DateTime lastConfirmCalendarAt = DateTime.now();
   bool lastConfirmMoney = false;
@@ -306,6 +307,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 lastConfirmCouponAt: lastConfirmCouponAt,
                 lastConfirmCalendar: lastConfirmCalendar,
                 lastConfirmCalendarAt: lastConfirmCalendarAt,
+                lastConfirmCouponNumber: lastConfirmCouponNumber,
                 lastConfirmMoney: lastConfirmMoney,
                 lastConfirmMoneyAt: lastConfirmMoneyAt,
                 lastConfirmLock: lastConfirmLock,
@@ -892,7 +894,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             ),
                             const TableRow(
                               children: [
-                                ReportTableTh('前年同曜日'),
+                                ReportTableTh('前年同日数\n※自動取得'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
@@ -952,6 +954,42 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             1: FlexColumnWidth(1),
                           },
                           children: [
+                            TableRow(
+                              children: [
+                                const ReportTableTh('ロッカー番号'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('連続使用日数'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('金額'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                const ReportTableTh('備考'),
+                                FormValue(
+                                  '',
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
                             TableRow(
                               children: [
                                 const ReportTableTh('回収'),
@@ -1749,8 +1787,14 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                       ReportConfirmButton(
                         confirm: lastConfirmCoupon,
                         confirmTime: dateText('HH:mm', lastConfirmCouponAt),
+                        confirmLabel: lastConfirmCouponNumber,
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmCoupon,
+                          confirmLabel: lastConfirmCouponNumber,
+                          onChanged: (value) {
+                            lastConfirmCouponNumber = value;
+                            setState(() {});
+                          },
                           yesAction: () {
                             lastConfirmCoupon = !lastConfirmCoupon;
                             lastConfirmCouponAt = DateTime.now();

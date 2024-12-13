@@ -49,6 +49,7 @@ class ReportModel {
   DateTime _lastConfirmTelAt = DateTime.now();
   bool _lastConfirmCoupon = false;
   DateTime _lastConfirmCouponAt = DateTime.now();
+  String _lastConfirmCouponNumber = '';
   bool _lastConfirmCalendar = false;
   DateTime _lastConfirmCalendarAt = DateTime.now();
   bool _lastConfirmMoney = false;
@@ -95,6 +96,7 @@ class ReportModel {
   DateTime get lastConfirmTelAt => _lastConfirmTelAt;
   bool get lastConfirmCoupon => _lastConfirmCoupon;
   DateTime get lastConfirmCouponAt => _lastConfirmCouponAt;
+  String get lastConfirmCouponNumber => _lastConfirmCouponNumber;
   bool get lastConfirmCalendar => _lastConfirmCalendar;
   DateTime get lastConfirmCalendarAt => _lastConfirmCalendarAt;
   bool get lastConfirmMoney => _lastConfirmMoney;
@@ -164,6 +166,7 @@ class ReportModel {
     _lastConfirmCoupon = data['lastConfirmCoupon'] ?? false;
     _lastConfirmCouponAt =
         data['lastConfirmCouponAt'].toDate() ?? DateTime.now();
+    _lastConfirmCouponNumber = data['lastConfirmCouponNumber'] ?? '';
     _lastConfirmCalendar = data['lastConfirmCalendar'] ?? false;
     _lastConfirmCalendarAt =
         data['lastConfirmCalendarAt'].toDate() ?? DateTime.now();
