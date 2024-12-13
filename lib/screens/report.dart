@@ -14,6 +14,7 @@ import 'package:miel_work_web/widgets/day_list.dart';
 import 'package:miel_work_web/widgets/report_list.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ReportScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -30,6 +31,7 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  AutoScrollController controller = AutoScrollController();
   ReportService reportService = ReportService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -53,6 +55,10 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    controller.scrollToIndex(
+      DateTime.now().day,
+      preferPosition: AutoScrollPosition.begin,
+    );
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -148,6 +154,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       border: Border.all(color: kBorderColor),
                     ),
                     child: ListView.builder(
+                      controller: controller,
                       itemCount: days.length,
                       itemBuilder: (context, index) {
                         DateTime day = days[index];
@@ -163,24 +170,29 @@ class _ReportScreenState extends State<ReportScreen> {
                             }
                           }
                         }
-                        return DayList(
-                          day,
-                          child: ReportList(
-                            report: report,
-                            onTap: () {
-                              if (report == null) return;
-                              Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.rightToLeft,
-                                  child: ReportModScreen(
-                                    loginProvider: widget.loginProvider,
-                                    homeProvider: widget.homeProvider,
-                                    report: report,
+                        return AutoScrollTag(
+                          key: ValueKey(day.day),
+                          controller: controller,
+                          index: day.day,
+                          child: DayList(
+                            day,
+                            child: ReportList(
+                              report: report,
+                              onTap: () {
+                                if (report == null) return;
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: ReportModScreen(
+                                      loginProvider: widget.loginProvider,
+                                      homeProvider: widget.homeProvider,
+                                      report: report,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         );
                       },

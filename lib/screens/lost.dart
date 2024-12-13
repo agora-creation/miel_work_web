@@ -136,7 +136,7 @@ class _LostScreenState extends State<LostScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
-                      label: '返却済一覧',
+                      label: '返却済/破棄済一覧',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
                       leftIcon: FontAwesomeIcons.list,

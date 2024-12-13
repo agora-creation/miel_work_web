@@ -83,6 +83,7 @@ class LostHistorySource extends DataGridSource {
     cells.add(CustomColumnLabel(lost.discoveryPlace));
     cells.add(CustomColumnLabel(lost.discoveryUser));
     cells.add(CustomColumnLabel(lost.remarks));
+    cells.add(CustomColumnLabel(lost.statusText()));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);
   }
 

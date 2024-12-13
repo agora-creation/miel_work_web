@@ -93,6 +93,14 @@ class _LostModScreenState extends State<LostModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: '破棄済する',
+            labelColor: kWhiteColor,
+            backgroundColor: kRejectColor,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '削除する',
             labelColor: kWhiteColor,
             backgroundColor: kRedColor,

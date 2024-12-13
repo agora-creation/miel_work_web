@@ -65,7 +65,7 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: kWhiteColor,
         title: const Text(
-          '落とし物：返却済一覧',
+          '落とし物：返却済/破棄済一覧',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -192,6 +192,10 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                       GridColumn(
                         columnName: 'remarks',
                         label: const CustomColumnLabel('備考'),
+                      ),
+                      GridColumn(
+                        columnName: 'status',
+                        label: const CustomColumnLabel('ステータス'),
                       ),
                     ],
                   );
