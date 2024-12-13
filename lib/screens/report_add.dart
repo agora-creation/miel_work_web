@@ -22,6 +22,7 @@ import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
+import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/report_confirm_button.dart';
 import 'package:miel_work_web/widgets/report_table_button.dart';
@@ -127,6 +128,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
   void _showConfirm({
     required bool confirm,
     String? confirmLabel,
+    String? confirmLabelHead,
     Function(String)? onChanged,
     required Function() yesAction,
   }) {
@@ -147,11 +149,14 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
             ),
             const SizedBox(height: 8),
             !confirm && confirmLabel != null
-                ? CustomTextField(
-                    controller: TextEditingController(text: confirmLabel),
-                    textInputType: TextInputType.text,
-                    maxLines: 1,
-                    onChanged: onChanged,
+                ? FormLabel(
+                    confirmLabelHead ?? '',
+                    child: CustomTextField(
+                      controller: TextEditingController(text: confirmLabel),
+                      textInputType: TextInputType.text,
+                      maxLines: 1,
+                      onChanged: onChanged,
+                    ),
                   )
                 : Container(),
           ],
@@ -894,7 +899,15 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                             ),
                             const TableRow(
                               children: [
-                                ReportTableTh('前年同日数\n※自動取得'),
+                                ReportTableTh('前日合計\n※自動取得'),
+                                ReportTableTh('0'),
+                                ReportTableTh('0'),
+                                ReportTableTh('0'),
+                              ],
+                            ),
+                            const TableRow(
+                              children: [
+                                ReportTableTh('前年合計\n※自動取得'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
                                 ReportTableTh('0'),
@@ -958,8 +971,15 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const ReportTableTh('ロッカー番号'),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  reportLocker.number,
+                                  onTap: () => _showTextField(
+                                    text: reportLocker.number,
+                                    textInputType: TextInputType.text,
+                                    onChanged: (value) {
+                                      reportLocker.number = value;
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -967,8 +987,15 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const ReportTableTh('連続使用日数'),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  reportLocker.days,
+                                  onTap: () => _showTextField(
+                                    text: reportLocker.days,
+                                    textInputType: TextInputType.text,
+                                    onChanged: (value) {
+                                      reportLocker.days = value;
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -976,8 +1003,15 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const ReportTableTh('金額'),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  reportLocker.price,
+                                  onTap: () => _showTextField(
+                                    text: reportLocker.price,
+                                    textInputType: TextInputType.text,
+                                    onChanged: (value) {
+                                      reportLocker.price = value;
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -985,8 +1019,15 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                               children: [
                                 const ReportTableTh('備考'),
                                 FormValue(
-                                  '',
-                                  onTap: () {},
+                                  reportLocker.remarks,
+                                  onTap: () => _showTextField(
+                                    text: reportLocker.remarks,
+                                    textInputType: TextInputType.multiline,
+                                    onChanged: (value) {
+                                      reportLocker.remarks = value;
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -1655,6 +1696,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmShop,
                           confirmLabel: lastConfirmShopName,
+                          confirmLabelHead: '店舗名',
                           onChanged: (value) {
                             lastConfirmShopName = value;
                             setState(() {});
@@ -1791,6 +1833,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmCoupon,
                           confirmLabel: lastConfirmCouponNumber,
+                          confirmLabelHead: '残枚数',
                           onChanged: (value) {
                             lastConfirmCouponNumber = value;
                             setState(() {});
@@ -1833,6 +1876,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmLock,
                           confirmLabel: lastConfirmLockName,
+                          confirmLabelHead: '施錠者名',
                           onChanged: (value) {
                             lastConfirmLockName = value;
                             setState(() {});
@@ -1851,6 +1895,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                         onPressed: () => _showConfirm(
                           confirm: lastConfirmUser,
                           confirmLabel: lastConfirmUserName,
+                          confirmLabelHead: '確認者名',
                           onChanged: (value) {
                             lastConfirmUserName = value;
                             setState(() {});
@@ -1869,6 +1914,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                         onPressed: () => _showConfirm(
                           confirm: lastExitUser,
                           confirmLabel: lastExitUserName,
+                          confirmLabelHead: '確認者名',
                           onChanged: (value) {
                             lastExitUserName = value;
                             setState(() {});
