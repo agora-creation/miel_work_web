@@ -85,6 +85,9 @@ class _ReportModScreenState extends State<ReportModScreen> {
   bool lastConfirmUser = false;
   DateTime lastConfirmUserAt = DateTime.now();
   String lastConfirmUserName = '';
+  bool lastExitUser = false;
+  DateTime lastExitUserAt = DateTime.now();
+  String lastExitUserName = '';
 
   void _showTextField({
     required String text,
@@ -210,6 +213,9 @@ class _ReportModScreenState extends State<ReportModScreen> {
     lastConfirmUser = widget.report.lastConfirmUser;
     lastConfirmUserAt = widget.report.lastConfirmUserAt;
     lastConfirmUserName = widget.report.lastConfirmUserName;
+    lastExitUser = widget.report.lastExitUser;
+    lastExitUserAt = widget.report.lastExitUserAt;
+    lastExitUserName = widget.report.lastExitUserName;
     setState(() {});
   }
 
@@ -322,6 +328,9 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 lastConfirmUser: lastConfirmUser,
                 lastConfirmUserAt: lastConfirmUserAt,
                 lastConfirmUserName: lastConfirmUserName,
+                lastExitUser: lastExitUser,
+                lastExitUserAt: lastExitUserAt,
+                lastExitUserName: lastExitUserName,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -1433,7 +1442,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
                       ReportTableTh('PC／ゴミ'),
                       ReportTableTh('留守電'),
                       ReportTableTh('クーポン券'),
-                      ReportTableTh('日付確認'),
+                      ReportTableTh('日付印確認'),
                       ReportTableTh('両替'),
                       ReportTableTh('施錠'),
                       ReportTableTh('日報最終確認'),
@@ -1520,19 +1529,19 @@ class _ReportModScreenState extends State<ReportModScreen> {
                         ),
                       ),
                       ReportConfirmButton(
-                        confirm: lastConfirmUser,
-                        confirmTime: dateText('HH:mm', lastConfirmUserAt),
-                        confirmLabel: lastConfirmUserName,
+                        confirm: lastExitUser,
+                        confirmTime: dateText('HH:mm', lastExitUserAt),
+                        confirmLabel: lastExitUserName,
                         onPressed: () => _showConfirm(
-                          confirm: lastConfirmUser,
-                          confirmLabel: lastConfirmUserName,
+                          confirm: lastExitUser,
+                          confirmLabel: lastExitUserName,
                           onChanged: (value) {
-                            lastConfirmUserName = value;
+                            lastExitUserName = value;
                             setState(() {});
                           },
                           yesAction: () {
-                            lastConfirmUser = !lastConfirmUser;
-                            lastConfirmUserAt = DateTime.now();
+                            lastExitUser = !lastExitUser;
+                            lastExitUserAt = DateTime.now();
                             setState(() {});
                           },
                         ),

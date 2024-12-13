@@ -63,6 +63,9 @@ class ReportProvider with ChangeNotifier {
     required bool lastConfirmUser,
     required DateTime lastConfirmUserAt,
     required String lastConfirmUserName,
+    required bool lastExitUser,
+    required DateTime lastExitUserAt,
+    required String lastExitUserName,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -141,6 +144,9 @@ class ReportProvider with ChangeNotifier {
         'lastConfirmUser': lastConfirmUser,
         'lastConfirmUserAt': lastConfirmUserAt,
         'lastConfirmUserName': lastConfirmUserName,
+        'lastExitUser': lastExitUser,
+        'lastExitUserAt': lastExitUserAt,
+        'lastExitUserName': lastExitUserName,
         'approval': 0,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
@@ -199,6 +205,9 @@ class ReportProvider with ChangeNotifier {
     required bool lastConfirmUser,
     required DateTime lastConfirmUserAt,
     required String lastConfirmUserName,
+    required bool lastExitUser,
+    required DateTime lastExitUserAt,
+    required String lastExitUserName,
     required UserModel? loginUser,
   }) async {
     String? error;
@@ -274,6 +283,9 @@ class ReportProvider with ChangeNotifier {
         'lastConfirmUser': lastConfirmUser,
         'lastConfirmUserAt': lastConfirmUserAt,
         'lastConfirmUserName': lastConfirmUserName,
+        'lastExitUser': lastExitUser,
+        'lastExitUserAt': lastExitUserAt,
+        'lastExitUserName': lastExitUserName,
         'createdUserId': loginUser.id,
         'createdUserName': loginUser.name,
       });

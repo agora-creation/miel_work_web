@@ -92,6 +92,9 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
   bool lastConfirmUser = false;
   DateTime lastConfirmUserAt = DateTime.now();
   String lastConfirmUserName = '';
+  bool lastExitUser = false;
+  DateTime lastExitUserAt = DateTime.now();
+  String lastExitUserName = '';
 
   void _showTextField({
     required String text,
@@ -305,6 +308,9 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                 lastConfirmUser: lastConfirmUser,
                 lastConfirmUserAt: lastConfirmUserAt,
                 lastConfirmUserName: lastConfirmUserName,
+                lastExitUser: lastExitUser,
+                lastExitUserAt: lastExitUserAt,
+                lastExitUserName: lastExitUserName,
                 loginUser: widget.loginProvider.user,
               );
               if (error != null) {
@@ -1459,10 +1465,11 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                       ReportTableTh('PC／ゴミ'),
                       ReportTableTh('留守電'),
                       ReportTableTh('クーポン券'),
-                      ReportTableTh('日付確認'),
+                      ReportTableTh('日付印確認'),
                       ReportTableTh('両替'),
                       ReportTableTh('施錠'),
                       ReportTableTh('日報最終確認'),
+                      ReportTableTh('最終退出確認'),
                     ],
                   ),
                   TableRow(
@@ -1559,6 +1566,24 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                           yesAction: () {
                             lastConfirmUser = !lastConfirmUser;
                             lastConfirmUserAt = DateTime.now();
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      ReportConfirmButton(
+                        confirm: lastExitUser,
+                        confirmTime: dateText('HH:mm', lastExitUserAt),
+                        confirmLabel: lastExitUserName,
+                        onPressed: () => _showConfirm(
+                          confirm: lastExitUser,
+                          confirmLabel: lastExitUserName,
+                          onChanged: (value) {
+                            lastExitUserName = value;
+                            setState(() {});
+                          },
+                          yesAction: () {
+                            lastExitUser = !lastExitUser;
+                            lastExitUserAt = DateTime.now();
                             setState(() {});
                           },
                         ),
