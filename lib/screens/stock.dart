@@ -90,7 +90,6 @@ class _StockScreenState extends State<StockScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: stockService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
-                  category: 0,
                 ),
                 builder: (context, snapshot) {
                   List<StockModel> stocks = [];

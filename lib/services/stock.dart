@@ -42,12 +42,10 @@ class StockService {
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? streamList({
     required String? organizationId,
-    required int category,
   }) {
     return FirebaseFirestore.instance
         .collection(collection)
         .where('organizationId', isEqualTo: organizationId ?? 'error')
-        .where('category', isEqualTo: category)
         .orderBy('createdAt', descending: true)
         .snapshots();
   }
