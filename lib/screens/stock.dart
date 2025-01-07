@@ -90,6 +90,7 @@ class _StockScreenState extends State<StockScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: stockService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
+                  category: 0,
                 ),
                 builder: (context, snapshot) {
                   List<StockModel> stocks = [];
@@ -106,12 +107,12 @@ class _StockScreenState extends State<StockScreen> {
                     columns: [
                       GridColumn(
                         columnName: 'number',
-                        label: const CustomColumnLabel('在庫No'),
+                        label: const CustomColumnLabel('管理No'),
                         width: 150,
                       ),
                       GridColumn(
                         columnName: 'name',
-                        label: const CustomColumnLabel('在庫品名'),
+                        label: const CustomColumnLabel('品名'),
                         width: 300,
                       ),
                       GridColumn(
@@ -220,6 +221,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
           onPressed: () async {
             String? error = await stockProvider.create(
               organization: widget.loginProvider.organization,
+              category: 0,
               number: numberController.text,
               name: nameController.text,
               quantity: int.parse(quantityController.text),
