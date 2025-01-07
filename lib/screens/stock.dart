@@ -106,6 +106,11 @@ class _StockScreenState extends State<StockScreen> {
                     ),
                     columns: [
                       GridColumn(
+                        columnName: 'category',
+                        label: const CustomColumnLabel('カテゴリ'),
+                        width: 150,
+                      ),
+                      GridColumn(
                         columnName: 'number',
                         label: const CustomColumnLabel('管理No'),
                         width: 150,
@@ -152,6 +157,7 @@ class AddStockDialog extends StatefulWidget {
 
 class _AddStockDialogState extends State<AddStockDialog> {
   StockService stockService = StockService();
+  int category = 0;
   TextEditingController numberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController quantityController = TextEditingController(text: '999');
@@ -178,7 +184,31 @@ class _AddStockDialogState extends State<AddStockDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FormLabel(
-            '在庫No',
+            'カテゴリ',
+            child: DropdownButton<int>(
+              isExpanded: true,
+              value: category,
+              items: const [
+                DropdownMenuItem(
+                  value: 0,
+                  child: Text('一般在庫'),
+                ),
+                DropdownMenuItem(
+                  value: 1,
+                  child: Text('資産'),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  category = value;
+                });
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '管理No',
             child: CustomTextField(
               controller: numberController,
               textInputType: TextInputType.number,
@@ -187,7 +217,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
           ),
           const SizedBox(height: 8),
           FormLabel(
-            '在庫品名',
+            '品名',
             child: CustomTextField(
               controller: nameController,
               textInputType: TextInputType.text,
@@ -221,7 +251,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
           onPressed: () async {
             String? error = await stockProvider.create(
               organization: widget.loginProvider.organization,
-              category: 0,
+              category: category,
               number: numberController.text,
               name: nameController.text,
               quantity: int.parse(quantityController.text),

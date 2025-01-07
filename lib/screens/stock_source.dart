@@ -58,59 +58,64 @@ class StockSource extends DataGridSource {
     StockModel stock = stocks.singleWhere(
       (e) => e.id == '${row.getCells()[0].value}',
     );
+    cells.add(CustomColumnLabel(stock.categoryText()));
     cells.add(CustomColumnLabel(stock.number));
     cells.add(CustomColumnLabel(stock.name));
-    cells.add(Row(
-      children: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '(−)出庫',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => AddStockType0Dialog(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-              stock: stock,
+    if (stock.category == 0) {
+      cells.add(Row(
+        children: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '(−)出庫',
+            labelColor: kWhiteColor,
+            backgroundColor: kRedColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AddStockType0Dialog(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                stock: stock,
+              ),
+            ),
+            disabled: stock.quantity == 0,
+          ),
+          const SizedBox(width: 4),
+          CustomColumnLabel(stock.quantity.toString()),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '(+)入庫',
+            labelColor: kWhiteColor,
+            backgroundColor: kBlueColor,
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AddStockType1Dialog(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                stock: stock,
+              ),
             ),
           ),
-          disabled: stock.quantity == 0,
-        ),
-        const SizedBox(width: 4),
-        CustomColumnLabel(stock.quantity.toString()),
-        const SizedBox(width: 4),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '(+)入庫',
-          labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (context) => AddStockType1Dialog(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-              stock: stock,
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: '在庫変動履歴',
+            labelColor: kBlackColor,
+            backgroundColor: kGreyColor,
+            onPressed: () => showBottomUpScreen(
+              context,
+              StockHistoryScreen(
+                loginProvider: loginProvider,
+                homeProvider: homeProvider,
+                stock: stock,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 4),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '在庫変動履歴',
-          labelColor: kBlackColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => showBottomUpScreen(
-            context,
-            StockHistoryScreen(
-              loginProvider: loginProvider,
-              homeProvider: homeProvider,
-              stock: stock,
-            ),
-          ),
-        ),
-      ],
-    ));
+        ],
+      ));
+    } else {
+      cells.add(const CustomColumnLabel(''));
+    }
     cells.add(Row(
       children: [
         CustomButton(
@@ -222,7 +227,7 @@ class _AddStockType0DialogState extends State<AddStockType0Dialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FormLabel(
-            '在庫品名',
+            '品名',
             child: FormValue(widget.stock.name),
           ),
           const SizedBox(height: 8),
@@ -299,7 +304,7 @@ class _AddStockType1DialogState extends State<AddStockType1Dialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FormLabel(
-            '在庫品名',
+            '品名',
             child: FormValue(widget.stock.name),
           ),
           const SizedBox(height: 8),
@@ -382,12 +387,17 @@ class _ModStockDialogState extends State<ModStockDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FormLabel(
-            '在庫No',
+            'カテゴリ',
+            child: FormValue(widget.stock.categoryText()),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '管理No',
             child: FormValue(widget.stock.number),
           ),
           const SizedBox(height: 8),
           FormLabel(
-            '在庫品名',
+            '品名',
             child: CustomTextField(
               controller: nameController,
               textInputType: TextInputType.text,
@@ -468,12 +478,17 @@ class _DelStockDialogState extends State<DelStockDialog> {
           ),
           const SizedBox(height: 8),
           FormLabel(
-            '在庫No',
+            'カテゴリ',
+            child: FormValue(widget.stock.categoryText()),
+          ),
+          const SizedBox(height: 8),
+          FormLabel(
+            '管理No',
             child: FormValue(widget.stock.number),
           ),
           const SizedBox(height: 8),
           FormLabel(
-            '在庫品名',
+            '品名',
             child: FormValue(widget.stock.name),
           ),
           const SizedBox(height: 8),
