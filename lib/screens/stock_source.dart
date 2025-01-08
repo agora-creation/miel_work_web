@@ -405,10 +405,10 @@ class _ModStockDialogState extends State<ModStockDialog> {
             ),
           ),
           const SizedBox(height: 8),
-          FormLabel(
+          widget.stock.category == 0 ? FormLabel(
             '現在の在庫数',
             child: FormValue(widget.stock.quantity.toString()),
-          ),
+          ) : Container(),
         ],
       ),
       actions: [
@@ -492,10 +492,10 @@ class _DelStockDialogState extends State<DelStockDialog> {
             child: FormValue(widget.stock.name),
           ),
           const SizedBox(height: 8),
-          FormLabel(
+          widget.stock.category == 0 ? FormLabel(
             '現在の在庫数',
             child: FormValue(widget.stock.quantity.toString()),
-          ),
+          ) : Container(),
         ],
       ),
       actions: [

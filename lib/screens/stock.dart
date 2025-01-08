@@ -224,14 +224,14 @@ class _AddStockDialogState extends State<AddStockDialog> {
             ),
           ),
           const SizedBox(height: 8),
-          FormLabel(
+          category == 0 ? FormLabel(
             '最初の在庫数',
             child: CustomTextField(
               controller: quantityController,
               textInputType: TextInputType.number,
               maxLines: 1,
             ),
-          ),
+          ) : Container(),
         ],
       ),
       actions: [
