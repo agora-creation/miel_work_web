@@ -36,12 +36,28 @@ class StockScreen extends StatefulWidget {
 
 class _StockScreenState extends State<StockScreen> {
   StockService stockService = StockService();
+  int searchCategory = 0;
+
+  void _getCategory() async {
+    searchCategory = await getPrefsInt('category') ?? 0;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getCategory();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     String organizationName = widget.loginProvider.organization?.name ?? '';
     OrganizationGroupModel? group = widget.homeProvider.currentGroup;
     String groupName = group?.name ?? '';
+    String searchCategoryText = '一般在庫';
+    if (searchCategory == 1) {
+      searchCategoryText = '資産';
+    }
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -68,8 +84,21 @@ class _StockScreenState extends State<StockScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                CustomIconTextButton(
+                  label: 'カテゴリ検索: $searchCategoryText',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kSearchColor,
+                  leftIcon: FontAwesomeIcons.magnifyingGlass,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => SearchCategoryDialog(
+                      getCategory: _getCategory,
+                    ),
+                  ),
+                ),
                 CustomIconTextButton(
                   label: '在庫品を追加',
                   labelColor: kWhiteColor,
@@ -90,6 +119,7 @@ class _StockScreenState extends State<StockScreen> {
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: stockService.streamList(
                   organizationId: widget.loginProvider.organization?.id,
+                  category: searchCategory,
                 ),
                 builder: (context, snapshot) {
                   List<StockModel> stocks = [];
@@ -140,6 +170,91 @@ class _StockScreenState extends State<StockScreen> {
   }
 }
 
+class SearchCategoryDialog extends StatefulWidget {
+  final Function() getCategory;
+
+  const SearchCategoryDialog({
+    required this.getCategory,
+    super.key,
+  });
+
+  @override
+  State<SearchCategoryDialog> createState() => _SearchCategoryDialogState();
+}
+
+class _SearchCategoryDialogState extends State<SearchCategoryDialog> {
+  int category = 0;
+
+  void _getCategory() async {
+    category = await getPrefsInt('category') ?? 0;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getCategory();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            RadioListTile(
+              title: const Text('一般在庫'),
+              value: 0,
+              groupValue: category,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  category = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('資産'),
+              value: 1,
+              groupValue: category,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  category = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
+          onPressed: () async {
+            await setPrefsInt('category', category);
+            widget.getCategory();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class AddStockDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
@@ -162,6 +277,7 @@ class _AddStockDialogState extends State<AddStockDialog> {
   TextEditingController quantityController = TextEditingController(text: '999');
 
   void _init() async {
+    category = await getPrefsInt('category') ?? 0;
     numberController.text = await stockService.getLastNumber(
       organizationId: widget.loginProvider.organization?.id,
     );
@@ -224,14 +340,16 @@ class _AddStockDialogState extends State<AddStockDialog> {
             ),
           ),
           const SizedBox(height: 8),
-          category == 0 ? FormLabel(
-            '最初の在庫数',
-            child: CustomTextField(
-              controller: quantityController,
-              textInputType: TextInputType.number,
-              maxLines: 1,
-            ),
-          ) : Container(),
+          category == 0
+              ? FormLabel(
+                  '最初の在庫数',
+                  child: CustomTextField(
+                    controller: quantityController,
+                    textInputType: TextInputType.number,
+                    maxLines: 1,
+                  ),
+                )
+              : Container(),
         ],
       ),
       actions: [
