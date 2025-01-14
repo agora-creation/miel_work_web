@@ -108,19 +108,31 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                     _changeMonth(selected);
                   },
                 ),
-                CustomIconTextButton(
-                  label: '勤務予定を追加',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kBlueColor,
-                  leftIcon: FontAwesomeIcons.plus,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AddDishCenterDialog(
-                      loginProvider: widget.loginProvider,
-                      homeProvider: widget.homeProvider,
-                      day: DateTime.now(),
+                Row(
+                  children: [
+                    CustomIconTextButton(
+                      label: '1週間テンプレート設定',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kGreyColor,
+                      leftIcon: FontAwesomeIcons.calendarWeek,
+                      onPressed: () {},
                     ),
-                  ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
+                      label: '勤務予定を追加',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kBlueColor,
+                      leftIcon: FontAwesomeIcons.plus,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => AddDishCenterDialog(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                          day: DateTime.now(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
