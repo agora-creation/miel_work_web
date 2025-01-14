@@ -37,6 +37,7 @@ class PlanGuardsmanScreen extends StatefulWidget {
 
 class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
   EventController controller = EventController();
+  GlobalKey<MonthViewState<Object?>> globalKey = GlobalKey<MonthViewState>();
   PlanGuardsmanService guardsmanService = PlanGuardsmanService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -44,11 +45,13 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
   void _changeMonth(DateTime value) {
     searchMonth = value;
     days = generateDays(value);
+    globalKey.currentState!.jumpToMonth(searchMonth);
     setState(() {});
   }
 
   void _init() {
     days = generateDays(searchMonth);
+    globalKey.currentState!.jumpToMonth(searchMonth);
     setState(() {});
   }
 
@@ -163,6 +166,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   }
                   return CustomCalendar(
                     controller: controller,
+                    globalKey: globalKey,
                     initialMonth: searchMonth,
                     cellAspectRatio: 1.5,
                     onCellTap: (events, day) {
