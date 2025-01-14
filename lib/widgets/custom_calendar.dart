@@ -5,7 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 
 class CustomCalendar extends StatelessWidget {
   final EventController<Object?> controller;
-  final GlobalKey<MonthViewState<Object?>> globalKey;
+  final GlobalKey<MonthViewState> globalKey;
   final DateTime? initialMonth;
   final double cellAspectRatio;
   final Function(DateTime, int)? onPageChange;

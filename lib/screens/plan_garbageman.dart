@@ -41,7 +41,7 @@ class PlanGarbagemanScreen extends StatefulWidget {
 
 class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
   EventController controller = EventController();
-  GlobalKey<MonthViewState<Object?>> globalKey = GlobalKey<MonthViewState>();
+  GlobalKey<MonthViewState> globalKey = GlobalKey<MonthViewState>();
   PlanGarbagemanService garbagemanService = PlanGarbagemanService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -49,13 +49,14 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
   void _changeMonth(DateTime value) {
     searchMonth = value;
     days = generateDays(value);
-    globalKey.currentState!.jumpToMonth(searchMonth);
+    if (globalKey.currentState != null) {
+      globalKey.currentState?.jumpToMonth(searchMonth);
+    }
     setState(() {});
   }
 
   void _init() {
     days = generateDays(searchMonth);
-    globalKey.currentState!.jumpToMonth(searchMonth);
     setState(() {});
   }
 
