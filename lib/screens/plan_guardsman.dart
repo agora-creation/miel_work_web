@@ -10,6 +10,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_guardsman.dart';
 import 'package:miel_work_web/screens/plan_guardsman_timeline.dart';
+import 'package:miel_work_web/screens/plan_guardsman_week.dart';
 import 'package:miel_work_web/services/plan_guardsman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
@@ -111,11 +112,17 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
-                      label: '1週間テンプレート設定',
+                      label: '1週間分の予定を設定',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
                       leftIcon: FontAwesomeIcons.calendarWeek,
-                      onPressed: () {},
+                      onPressed: () => showBottomUpScreen(
+                        context,
+                        PlanGuardsmanWeekScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(

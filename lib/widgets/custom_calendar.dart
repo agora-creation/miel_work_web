@@ -2,6 +2,7 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/widgets/plan_work_list.dart';
 
 class CustomCalendar extends StatelessWidget {
   final EventController<Object?> controller;
@@ -50,19 +51,7 @@ class CustomCalendar extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: events.map((event) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Container(
-                            color: kLightBlueColor.withOpacity(0.2),
-                            child: Text(
-                              event.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'SourceHanSansJP-Bold',
-                              ),
-                            ),
-                          ),
-                        );
+                        return PlanWorkList(event.title);
                       }).toList(),
                     ),
                   ),

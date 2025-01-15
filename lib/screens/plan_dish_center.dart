@@ -12,6 +12,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_dish_center.dart';
 import 'package:miel_work_web/screens/plan_dish_center_timeline.dart';
+import 'package:miel_work_web/screens/plan_dish_center_week.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/plan_dish_center.dart';
 import 'package:miel_work_web/services/user.dart';
@@ -115,11 +116,17 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                 Row(
                   children: [
                     CustomIconTextButton(
-                      label: '1週間テンプレート設定',
+                      label: '1週間分の予定を設定',
                       labelColor: kWhiteColor,
                       backgroundColor: kGreyColor,
                       leftIcon: FontAwesomeIcons.calendarWeek,
-                      onPressed: () {},
+                      onPressed: () => showBottomUpScreen(
+                        context,
+                        PlanDishCenterWeekScreen(
+                          loginProvider: widget.loginProvider,
+                          homeProvider: widget.homeProvider,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
