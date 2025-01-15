@@ -46,39 +46,37 @@ class PlanDishCenterProvider with ChangeNotifier {
     if (dishCenterWeeks.isEmpty) return '1ヵ月分の反映に失敗しました';
     if (days.isEmpty) return '1ヵ月分の反映に失敗しました';
     try {
-      for (final dishCenterWeek in dishCenterWeeks) {
-        String id = _dishCenterService.id();
-        DateTime startedAt = DateTime.now();
-        DateTime endedAt = DateTime.now();
-        for (final day in days) {
-          String week = dateText('E', day);
+      for (final day in days) {
+        String week = dateText('E', day);
+        for (final dishCenterWeek in dishCenterWeeks) {
           if (dishCenterWeek.week == week) {
-            startedAt = DateTime(
+            String id = _dishCenterService.id();
+            DateTime startedAt = DateTime(
               day.year,
               day.month,
               day.day,
               int.parse(dishCenterWeek.startedTime.split(':')[0]),
               int.parse(dishCenterWeek.startedTime.split(':')[1]),
             );
-            endedAt = DateTime(
+            DateTime endedAt = DateTime(
               day.year,
               day.month,
               day.day,
               int.parse(dishCenterWeek.endedTime.split(':')[0]),
               int.parse(dishCenterWeek.endedTime.split(':')[1]),
             );
+            _dishCenterService.create({
+              'id': id,
+              'organizationId': organization.id,
+              'userId': dishCenterWeek.userId,
+              'userName': dishCenterWeek.userName,
+              'startedAt': startedAt,
+              'endedAt': endedAt,
+              'createdAt': DateTime.now(),
+              'expirationAt': startedAt.add(const Duration(days: 365)),
+            });
           }
         }
-        _dishCenterService.create({
-          'id': id,
-          'organizationId': organization.id,
-          'userId': dishCenterWeek.userId,
-          'userName': dishCenterWeek.userName,
-          'startedAt': startedAt,
-          'endedAt': endedAt,
-          'createdAt': DateTime.now(),
-          'expirationAt': startedAt.add(const Duration(days: 365)),
-        });
       }
     } catch (e) {
       error = '1ヵ月分の反映に失敗しました';
