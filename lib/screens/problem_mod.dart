@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -187,6 +188,7 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                         dateText('yyyy/MM/dd HH:mm', createdAt),
                         onTap: () async => await CustomDateTimePicker().picker(
                           context: context,
+                          pickerType: DateTimePickerType.datetime,
                           init: createdAt,
                           title: '報告日時を選択',
                           onChanged: (value) {

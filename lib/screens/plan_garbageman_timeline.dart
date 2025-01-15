@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -213,6 +214,7 @@ class _ModGarbagemanDialogState extends State<ModGarbagemanDialog> {
                 startedAt: startedAt,
                 startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: startedAt,
                   title: '予定開始日時を選択',
                   onChanged: (value) {
@@ -224,6 +226,7 @@ class _ModGarbagemanDialogState extends State<ModGarbagemanDialog> {
                 endedAt: endedAt,
                 endedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: endedAt,
                   title: '予定終了日時を選択',
                   onChanged: (value) {

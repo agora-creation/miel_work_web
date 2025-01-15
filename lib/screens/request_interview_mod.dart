@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
@@ -322,6 +323,7 @@ class _RequestInterviewDetailScreenState
                   startedAt: interviewedStartedAt,
                   startedOnTap: () async => await CustomDateTimePicker().picker(
                     context: context,
+                    pickerType: DateTimePickerType.datetime,
                     init: interviewedStartedAt,
                     title: '取材予定開始日時を選択',
                     onChanged: (value) {
@@ -333,6 +335,7 @@ class _RequestInterviewDetailScreenState
                   endedAt: interviewedEndedAt,
                   endedOnTap: () async => await CustomDateTimePicker().picker(
                     context: context,
+                    pickerType: DateTimePickerType.datetime,
                     init: interviewedEndedAt,
                     title: '取材予定終了日時を選択',
                     onChanged: (value) {
@@ -442,6 +445,7 @@ class _RequestInterviewDetailScreenState
                             startedOnTap: () async =>
                                 await CustomDateTimePicker().picker(
                               context: context,
+                              pickerType: DateTimePickerType.datetime,
                               init: locationStartedAt,
                               title: 'ロケハン予定開始日時を選択',
                               onChanged: (value) {
@@ -454,6 +458,7 @@ class _RequestInterviewDetailScreenState
                             endedOnTap: () async =>
                                 await CustomDateTimePicker().picker(
                               context: context,
+                              pickerType: DateTimePickerType.datetime,
                               init: locationEndedAt,
                               title: 'ロケハン予定終了日時を選択',
                               onChanged: (value) {
@@ -541,6 +546,7 @@ class _RequestInterviewDetailScreenState
                             startedOnTap: () async =>
                                 await CustomDateTimePicker().picker(
                               context: context,
+                              pickerType: DateTimePickerType.datetime,
                               init: insertedStartedAt,
                               title: '撮影予定開始日時を選択',
                               onChanged: (value) {
@@ -553,6 +559,7 @@ class _RequestInterviewDetailScreenState
                             endedOnTap: () async =>
                                 await CustomDateTimePicker().picker(
                               context: context,
+                              pickerType: DateTimePickerType.datetime,
                               init: insertedEndedAt,
                               title: '撮影予定終了日時を選択',
                               onChanged: (value) {

@@ -5,15 +5,14 @@ import 'package:miel_work_web/common/style.dart';
 class CustomDateTimePicker {
   Future picker({
     required BuildContext context,
+    required DateTimePickerType pickerType,
     required DateTime init,
     required String title,
     required Function(DateTime) onChanged,
-    bool datetime = true,
   }) async {
     await showBoardDateTimePicker(
       context: context,
-      pickerType:
-          datetime ? DateTimePickerType.datetime : DateTimePickerType.date,
+      pickerType: pickerType,
       initialDate: init,
       minimumDate: kFirstDate,
       maximumDate: kLastDate,

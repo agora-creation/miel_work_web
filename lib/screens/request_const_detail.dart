@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
@@ -565,6 +566,7 @@ class _ModConstAtDialogState extends State<ModConstAtDialog> {
                 startedAt: constStartedAt,
                 startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: constStartedAt,
                   title: '施工予定開始日時を選択',
                   onChanged: (value) {
@@ -576,6 +578,7 @@ class _ModConstAtDialogState extends State<ModConstAtDialog> {
                 endedAt: constEndedAt,
                 endedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: constEndedAt,
                   title: '施工予定終了日時を選択',
                   onChanged: (value) {
@@ -685,6 +688,7 @@ class _ApprovalRequestConstDialogState
                         dateText('yyyy/MM/dd HH:mm', meetingAt),
                         onTap: () async => await CustomDateTimePicker().picker(
                           context: context,
+                          pickerType: DateTimePickerType.datetime,
                           init: meetingAt,
                           title: '打ち合わせ日時を選択',
                           onChanged: (value) {

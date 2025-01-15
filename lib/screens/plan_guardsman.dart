@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -255,6 +256,7 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
                 startedAt: startedAt,
                 startedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: startedAt,
                   title: '予定開始日時を選択',
                   onChanged: (value) {
@@ -266,6 +268,7 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
                 endedAt: endedAt,
                 endedOnTap: () async => await CustomDateTimePicker().picker(
                   context: context,
+                  pickerType: DateTimePickerType.datetime,
                   init: endedAt,
                   title: '予定終了日時を選択',
                   onChanged: (value) {

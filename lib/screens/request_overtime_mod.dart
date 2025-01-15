@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
@@ -183,6 +184,7 @@ class _RequestOvertimeModScreenState extends State<RequestOvertimeModScreen> {
                   startedAt: useStartedAt,
                   startedOnTap: () async => await CustomDateTimePicker().picker(
                     context: context,
+                    pickerType: DateTimePickerType.datetime,
                     init: useStartedAt,
                     title: '作業予定開始日時を選択',
                     onChanged: (value) {
@@ -194,6 +196,7 @@ class _RequestOvertimeModScreenState extends State<RequestOvertimeModScreen> {
                   endedAt: useEndedAt,
                   endedOnTap: () async => await CustomDateTimePicker().picker(
                     context: context,
+                    pickerType: DateTimePickerType.datetime,
                     init: useEndedAt,
                     title: '作業予定終了日時を選択',
                     onChanged: (value) {

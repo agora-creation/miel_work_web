@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -103,6 +104,7 @@ class _LostAddScreenState extends State<LostAddScreen> {
                         dateText('yyyy/MM/dd HH:mm', discoveryAt),
                         onTap: () async => await CustomDateTimePicker().picker(
                           context: context,
+                          pickerType: DateTimePickerType.date,
                           init: discoveryAt,
                           title: '発見日を選択',
                           onChanged: (value) {
@@ -110,7 +112,6 @@ class _LostAddScreenState extends State<LostAddScreen> {
                               discoveryAt = value;
                             });
                           },
-                          datetime: false,
                         ),
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/custom_date_time_picker.dart';
@@ -388,6 +389,7 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                   onTap: () async =>
                                       await CustomDateTimePicker().picker(
                                     context: context,
+                                    pickerType: DateTimePickerType.date,
                                     init: createdAt,
                                     title: '作成日を選択',
                                     onChanged: (value) {
@@ -395,7 +397,6 @@ class _ReportAddScreenState extends State<ReportAddScreen> {
                                         createdAt = value;
                                       });
                                     },
-                                    datetime: false,
                                   ),
                                 ),
                               ],
