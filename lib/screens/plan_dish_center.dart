@@ -126,6 +126,7 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                         PlanDishCenterWeekScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
+                          days: days,
                         ),
                       ),
                     ),

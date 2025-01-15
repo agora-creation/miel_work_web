@@ -11,6 +11,7 @@ import 'package:miel_work_web/models/plan_dish_center_week.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/providers/plan_dish_center.dart';
 import 'package:miel_work_web/services/organization_group.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
@@ -22,14 +23,17 @@ import 'package:miel_work_web/widgets/plan_work_list.dart';
 import 'package:miel_work_web/widgets/report_table_td.dart';
 import 'package:miel_work_web/widgets/report_table_th.dart';
 import 'package:miel_work_web/widgets/time_range_form.dart';
+import 'package:provider/provider.dart';
 
 class PlanDishCenterWeekScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
+  final List<DateTime> days;
 
   const PlanDishCenterWeekScreen({
     required this.loginProvider,
     required this.homeProvider,
+    required this.days,
     super.key,
   });
 
@@ -39,13 +43,13 @@ class PlanDishCenterWeekScreen extends StatefulWidget {
 }
 
 class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
-  List<PlanDishCenterWeekModel> planDishCenterWeeks = [];
+  List<PlanDishCenterWeekModel> dishCenterWeeks = [];
 
   Future _getData() async {
-    planDishCenterWeeks.clear();
-    List<String> result = await getPrefsList('planDishCenterWeeks') ?? [];
+    dishCenterWeeks.clear();
+    List<String> result = await getPrefsList('dishCenterWeeks') ?? [];
     if (result.isNotEmpty) {
-      planDishCenterWeeks = result
+      dishCenterWeeks = result
           .map((e) => PlanDishCenterWeekModel.fromMap(json.decode(e)))
           .toList();
     }
@@ -60,6 +64,7 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dishCenterProvider = Provider.of<PlanDishCenterProvider>(context);
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -105,12 +110,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '日') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -122,8 +137,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '日',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '日',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -134,12 +149,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '月') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -151,8 +176,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '月',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '月',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -163,12 +188,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '火') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -180,8 +215,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '火',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '火',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -192,12 +227,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '水') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -209,8 +254,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '水',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '水',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -221,12 +266,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '木') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -238,8 +293,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '木',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '木',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -250,12 +305,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '金') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -267,8 +332,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '金',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '金',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -279,12 +344,22 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
-                          children: planDishCenterWeeks.map((e) {
+                          children: dishCenterWeeks.map((e) {
                             if (e.week != '土') return Container();
                             return GestureDetector(
                               child: PlanWorkList(
-                                  '[${e.userName}]${e.startedTime}～${e.endedTime}'),
-                              onTap: () {},
+                                '[${e.userName}]${e.startedTime}～${e.endedTime}',
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ModDishCenterWeekDialog(
+                                  loginProvider: widget.loginProvider,
+                                  homeProvider: widget.homeProvider,
+                                  dishCenterWeek: e,
+                                  dishCenterWeeks: dishCenterWeeks,
+                                  getData: _getData,
+                                ),
+                              ),
                             );
                           }).toList(),
                         ),
@@ -296,8 +371,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                             builder: (context) => AddDishCenterWeekDialog(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              week: '土',
-                              planDishCenterWeeks: planDishCenterWeeks,
+                              currentWeek: '土',
+                              dishCenterWeeks: dishCenterWeeks,
                               getData: _getData,
                             ),
                           ),
@@ -314,10 +389,23 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
               children: [
                 CustomButton(
                   type: ButtonSizeType.sm,
-                  label: '上記内容を『2025年01月』の1ヵ月分に反映する',
+                  label:
+                      '上記内容を『${dateText('yyyy年MM月', widget.days.first)}』の1ヵ月分に反映する',
                   labelColor: kWhiteColor,
                   backgroundColor: kCyanColor,
-                  onPressed: () {
+                  onPressed: () async {
+                    String? error = await dishCenterProvider.createWeek(
+                      organization: widget.loginProvider.organization,
+                      dishCenterWeeks: dishCenterWeeks,
+                      days: widget.days,
+                    );
+                    if (error != null) {
+                      if (!mounted) return;
+                      showMessage(context, error, false);
+                      return;
+                    }
+                    if (!mounted) return;
+                    showMessage(context, '1ヵ月分に反映しました', true);
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                 ),
@@ -333,15 +421,15 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
 class AddDishCenterWeekDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final String week;
-  final List<PlanDishCenterWeekModel> planDishCenterWeeks;
+  final String currentWeek;
+  final List<PlanDishCenterWeekModel> dishCenterWeeks;
   final Function() getData;
 
   const AddDishCenterWeekDialog({
     required this.loginProvider,
     required this.homeProvider,
-    required this.week,
-    required this.planDishCenterWeeks,
+    required this.currentWeek,
+    required this.dishCenterWeeks,
     required this.getData,
     super.key,
   });
@@ -393,7 +481,7 @@ class _AddDishCenterWeekDialogState extends State<AddDishCenterWeekDialog> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 8),
-            FormLabel('曜日', child: FormValue(widget.week)),
+            FormLabel('曜日', child: FormValue(widget.currentWeek)),
             const SizedBox(height: 8),
             FormLabel(
               'スタッフ選択',
@@ -473,21 +561,21 @@ class _AddDishCenterWeekDialogState extends State<AddDishCenterWeekDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             List<Map> maps = [];
-            if (widget.planDishCenterWeeks.isNotEmpty) {
-              for (final planDishCenterWeek in widget.planDishCenterWeeks) {
-                maps.add(planDishCenterWeek.toMap());
+            if (widget.dishCenterWeeks.isNotEmpty) {
+              for (final data in widget.dishCenterWeeks) {
+                maps.add(data.toMap());
               }
             }
             maps.add({
               'id': dateText('yyyyMMddHHmm', DateTime.now()),
-              'week': widget.week,
+              'week': widget.currentWeek,
               'userId': selectedUser?.id,
               'userName': selectedUser?.name,
               'startedTime': startedTime,
               'endedTime': endedTime,
             });
             List<String> jsonMaps = maps.map((e) => json.encode(e)).toList();
-            await setPrefsList('planDishCenterWeeks', jsonMaps);
+            await setPrefsList('dishCenterWeeks', jsonMaps);
             if (!mounted) return;
             widget.getData();
             Navigator.pop(context);
@@ -501,15 +589,15 @@ class _AddDishCenterWeekDialogState extends State<AddDishCenterWeekDialog> {
 class ModDishCenterWeekDialog extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final PlanDishCenterWeekModel planDishCenterWeek;
-  final List<PlanDishCenterWeekModel> planDishCenterWeeks;
+  final PlanDishCenterWeekModel dishCenterWeek;
+  final List<PlanDishCenterWeekModel> dishCenterWeeks;
   final Function() getData;
 
   const ModDishCenterWeekDialog({
     required this.loginProvider,
     required this.homeProvider,
-    required this.planDishCenterWeek,
-    required this.planDishCenterWeeks,
+    required this.dishCenterWeek,
+    required this.dishCenterWeeks,
     required this.getData,
     super.key,
   });
@@ -538,9 +626,9 @@ class _ModDishCenterWeekDialogState extends State<ModDishCenterWeekDialog> {
       );
     }
     selectedUser =
-        users.singleWhere((e) => e.id == widget.planDishCenterWeek.userId);
-    startedTime = widget.planDishCenterWeek.startedTime;
-    endedTime = widget.planDishCenterWeek.endedTime;
+        users.singleWhere((e) => e.id == widget.dishCenterWeek.userId);
+    startedTime = widget.dishCenterWeek.startedTime;
+    endedTime = widget.dishCenterWeek.endedTime;
     setState(() {});
   }
 
@@ -560,7 +648,7 @@ class _ModDishCenterWeekDialogState extends State<ModDishCenterWeekDialog> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 8),
-            FormLabel('曜日', child: FormValue(widget.planDishCenterWeek.week)),
+            FormLabel('曜日', child: FormValue(widget.dishCenterWeek.week)),
             const SizedBox(height: 8),
             FormLabel(
               'スタッフ選択',
@@ -640,16 +728,16 @@ class _ModDishCenterWeekDialogState extends State<ModDishCenterWeekDialog> {
           backgroundColor: kRedColor,
           onPressed: () async {
             List<Map> maps = [];
-            if (widget.planDishCenterWeeks.isNotEmpty) {
-              for (final planDishCenterWeek in widget.planDishCenterWeeks) {
-                if (widget.planDishCenterWeek.id == planDishCenterWeek.id) {
+            if (widget.dishCenterWeeks.isNotEmpty) {
+              for (final dishCenterWeek in widget.dishCenterWeeks) {
+                if (widget.dishCenterWeek.id == dishCenterWeek.id) {
                   continue;
                 }
-                maps.add(planDishCenterWeek.toMap());
+                maps.add(dishCenterWeek.toMap());
               }
             }
             List<String> jsonMaps = maps.map((e) => json.encode(e)).toList();
-            await setPrefsList('planDishCenterWeeks', jsonMaps);
+            await setPrefsList('dishCenterWeeks', jsonMaps);
             if (!mounted) return;
             widget.getData();
             Navigator.pop(context);
@@ -662,19 +750,19 @@ class _ModDishCenterWeekDialogState extends State<ModDishCenterWeekDialog> {
           backgroundColor: kBlueColor,
           onPressed: () async {
             List<Map> maps = [];
-            if (widget.planDishCenterWeeks.isNotEmpty) {
-              for (final planDishCenterWeek in widget.planDishCenterWeeks) {
-                if (widget.planDishCenterWeek.id == planDishCenterWeek.id) {
-                  planDishCenterWeek.userId = selectedUser?.id ?? '';
-                  planDishCenterWeek.userName = selectedUser?.name ?? '';
-                  planDishCenterWeek.startedTime = startedTime;
-                  planDishCenterWeek.endedTime = endedTime;
+            if (widget.dishCenterWeeks.isNotEmpty) {
+              for (final dishCenterWeek in widget.dishCenterWeeks) {
+                if (widget.dishCenterWeek.id == dishCenterWeek.id) {
+                  dishCenterWeek.userId = selectedUser?.id ?? '';
+                  dishCenterWeek.userName = selectedUser?.name ?? '';
+                  dishCenterWeek.startedTime = startedTime;
+                  dishCenterWeek.endedTime = endedTime;
                 }
-                maps.add(planDishCenterWeek.toMap());
+                maps.add(dishCenterWeek.toMap());
               }
             }
             List<String> jsonMaps = maps.map((e) => json.encode(e)).toList();
-            await setPrefsList('planDishCenterWeeks', jsonMaps);
+            await setPrefsList('dishCenterWeeks', jsonMaps);
             if (!mounted) return;
             widget.getData();
             Navigator.pop(context);
