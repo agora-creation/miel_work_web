@@ -118,7 +118,7 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                     CustomIconTextButton(
                       label: '1週間分の予定を設定',
                       labelColor: kWhiteColor,
-                      backgroundColor: kGreyColor,
+                      backgroundColor: kCyanColor,
                       leftIcon: FontAwesomeIcons.calendarWeek,
                       onPressed: () => showBottomUpScreen(
                         context,

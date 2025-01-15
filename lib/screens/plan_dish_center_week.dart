@@ -4,6 +4,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:miel_work_web/widgets/plan_work_list.dart';
 import 'package:miel_work_web/widgets/report_table_td.dart';
 import 'package:miel_work_web/widgets/report_table_th.dart';
@@ -53,8 +54,8 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
           children: [
             Table(
               border: TableBorder.all(color: kGreyColor),
-              children: const [
-                TableRow(
+              children: [
+                const TableRow(
                   children: [
                     ReportTableTh('日'),
                     ReportTableTh('月'),
@@ -69,45 +70,138 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                   children: [
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                     ReportTableTd(Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        PlanWorkList('[田中]00:00～00:00'),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              child: const PlanWorkList('[田中]00:00～00:00'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        LinkText(
+                          label: '新規追加',
+                          color: kBlueColor,
+                          onTap: () {},
+                        ),
                       ],
                     )),
                   ],
@@ -120,7 +214,7 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
               children: [
                 CustomButton(
                   type: ButtonSizeType.sm,
-                  label: '上記内容を2025年01月に反映する',
+                  label: '上記内容を『2025年01月』の1ヵ月分に反映する',
                   labelColor: kWhiteColor,
                   backgroundColor: kCyanColor,
                   onPressed: () {
