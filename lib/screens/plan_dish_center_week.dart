@@ -394,7 +394,7 @@ class _PlanDishCenterWeekScreenState extends State<PlanDishCenterWeekScreen> {
                   labelColor: kWhiteColor,
                   backgroundColor: kCyanColor,
                   onPressed: () async {
-                    String? error = await dishCenterProvider.createWeek(
+                    String? error = await dishCenterProvider.createWeeks(
                       organization: widget.loginProvider.organization,
                       dishCenterWeeks: dishCenterWeeks,
                       days: widget.days,

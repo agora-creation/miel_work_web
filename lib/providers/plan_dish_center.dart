@@ -36,7 +36,7 @@ class PlanDishCenterProvider with ChangeNotifier {
     return error;
   }
 
-  Future<String?> createWeek({
+  Future<String?> createWeeks({
     required OrganizationModel? organization,
     required List<PlanDishCenterWeekModel> dishCenterWeeks,
     required List<DateTime> days,

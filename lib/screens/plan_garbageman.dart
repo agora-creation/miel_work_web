@@ -126,6 +126,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                         PlanGarbagemanWeekScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
+                          days: days,
                         ),
                       ),
                     ),
