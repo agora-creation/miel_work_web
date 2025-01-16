@@ -122,6 +122,7 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                         PlanGuardsmanWeekScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
+                          days: days,
                         ),
                       ),
                     ),
