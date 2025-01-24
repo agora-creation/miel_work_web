@@ -8,11 +8,14 @@ import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_facility.dart';
+import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class RequestFacilityModScreen extends StatefulWidget {
@@ -176,6 +179,21 @@ class _RequestFacilityModScreenState extends State<RequestFacilityModScreen> {
               ),
               const SizedBox(height: 8),
               FormLabel(
+                '使用場所を記したPDFファイル',
+                child: widget.facility.useLocationFile != ''
+                    ? AttachedFileList(
+                        fileName: p.basename(widget.facility.useLocationFile),
+                        onTap: () {
+                          downloadFile(
+                            url: widget.facility.useLocationFile,
+                            name: p.basename(widget.facility.useLocationFile),
+                          );
+                        },
+                      )
+                    : const FormValue('ファイルなし'),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
                 '使用予定日時',
                 child: DatetimeRangeForm(
                   startedAt: useStartedAt,
@@ -202,6 +220,30 @@ class _RequestFacilityModScreenState extends State<RequestFacilityModScreen> {
                       });
                     },
                   ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              FormLabel(
+                '添付ファイル',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: widget.facility.attachedFiles.map((file) {
+                        return AttachedFileList(
+                          fileName: p.basename(file),
+                          onTap: () {
+                            downloadFile(
+                              url: file,
+                              name: p.basename(file),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),

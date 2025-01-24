@@ -289,6 +289,21 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               ),
               const SizedBox(height: 8),
               FormLabel(
+                '使用場所を記したPDFファイル',
+                child: widget.square.useLocationFile != ''
+                    ? AttachedFileList(
+                        fileName: p.basename(widget.square.useLocationFile),
+                        onTap: () {
+                          downloadFile(
+                            url: widget.square.useLocationFile,
+                            name: p.basename(widget.square.useLocationFile),
+                          );
+                        },
+                      )
+                    : const FormValue('ファイルなし'),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
                 '使用予定日時',
                 child: FormValue(
                   widget.square.useAtPending

@@ -8,11 +8,13 @@ import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
+import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class RequestOvertimeModScreen extends StatefulWidget {
@@ -214,6 +216,30 @@ class _RequestOvertimeModScreenState extends State<RequestOvertimeModScreen> {
                   controller: useContent,
                   textInputType: TextInputType.multiline,
                   maxLines: 5,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              FormLabel(
+                '添付ファイル',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: widget.overtime.attachedFiles.map((file) {
+                        return AttachedFileList(
+                          fileName: p.basename(file),
+                          onTap: () {
+                            downloadFile(
+                              url: file,
+                              name: p.basename(file),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),

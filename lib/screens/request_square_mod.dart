@@ -8,12 +8,15 @@ import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_square.dart';
+import 'package:miel_work_web/widgets/attached_file_list.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_checkbox.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 class RequestSquareModScreen extends StatefulWidget {
@@ -243,6 +246,21 @@ class _RequestSquareModScreenState extends State<RequestSquareModScreen> {
               ),
               const SizedBox(height: 8),
               FormLabel(
+                '使用場所を記したPDFファイル',
+                child: widget.square.useLocationFile != ''
+                    ? AttachedFileList(
+                        fileName: p.basename(widget.square.useLocationFile),
+                        onTap: () {
+                          downloadFile(
+                            url: widget.square.useLocationFile,
+                            name: p.basename(widget.square.useLocationFile),
+                          );
+                        },
+                      )
+                    : const FormValue('ファイルなし'),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
                 '使用予定日時',
                 child: DatetimeRangeForm(
                   startedAt: useStartedAt,
@@ -330,6 +348,30 @@ class _RequestSquareModScreenState extends State<RequestSquareModScreen> {
                   controller: useContent,
                   textInputType: TextInputType.multiline,
                   maxLines: 5,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const DottedDivider(),
+              const SizedBox(height: 16),
+              FormLabel(
+                '添付ファイル',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: widget.square.attachedFiles.map((file) {
+                        return AttachedFileList(
+                          fileName: p.basename(file),
+                          onTap: () {
+                            downloadFile(
+                              url: file,
+                              name: p.basename(file),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),

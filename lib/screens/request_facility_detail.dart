@@ -273,6 +273,21 @@ class _RequestFacilityDetailScreenState
               ),
               const SizedBox(height: 8),
               FormLabel(
+                '使用場所を記したPDFファイル',
+                child: widget.facility.useLocationFile != ''
+                    ? AttachedFileList(
+                        fileName: p.basename(widget.facility.useLocationFile),
+                        onTap: () {
+                          downloadFile(
+                            url: widget.facility.useLocationFile,
+                            name: p.basename(widget.facility.useLocationFile),
+                          );
+                        },
+                      )
+                    : const FormValue('ファイルなし'),
+              ),
+              const SizedBox(height: 8),
+              FormLabel(
                 '使用予定日時',
                 child: FormValue(
                   widget.facility.useAtPending
