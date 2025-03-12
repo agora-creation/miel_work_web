@@ -87,17 +87,29 @@ class _StockScreenState extends State<StockScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                CustomIconTextButton(
-                  label: 'カテゴリ検索: $searchCategoryText',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kSearchColor,
-                  leftIcon: FontAwesomeIcons.magnifyingGlass,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => SearchCategoryDialog(
-                      getCategory: _getCategory,
+                Row(
+                  children: [
+                    CustomIconTextButton(
+                      label: 'カテゴリ検索: $searchCategoryText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchCategoryDialog(
+                          getCategory: _getCategory,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
+                      label: '品名検索: ',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
                 CustomIconTextButton(
                   label: '在庫品を追加',

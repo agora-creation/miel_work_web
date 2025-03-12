@@ -68,32 +68,44 @@ class _ProblemHistoryScreenState extends State<ProblemHistoryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomIconTextButton(
-                  label: '期間検索: $searchText',
-                  labelColor: kWhiteColor,
-                  backgroundColor: kSearchColor,
-                  leftIcon: FontAwesomeIcons.magnifyingGlass,
-                  onPressed: () async {
-                    var selected = await showDataRangePickerDialog(
-                      context: context,
-                      startValue: searchStart,
-                      endValue: searchEnd,
-                    );
-                    if (selected != null &&
-                        selected.first != null &&
-                        selected.last != null) {
-                      var diff = selected.last!.difference(selected.first!);
-                      int diffDays = diff.inDays;
-                      if (diffDays > 31) {
-                        if (!mounted) return;
-                        showMessage(context, '1ヵ月以上の範囲が選択されています', false);
-                        return;
-                      }
-                      searchStart = selected.first;
-                      searchEnd = selected.last;
-                      setState(() {});
-                    }
-                  },
+                Row(
+                  children: [
+                    CustomIconTextButton(
+                      label: '期間検索: $searchText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () async {
+                        var selected = await showDataRangePickerDialog(
+                          context: context,
+                          startValue: searchStart,
+                          endValue: searchEnd,
+                        );
+                        if (selected != null &&
+                            selected.first != null &&
+                            selected.last != null) {
+                          var diff = selected.last!.difference(selected.first!);
+                          int diffDays = diff.inDays;
+                          if (diffDays > 31) {
+                            if (!mounted) return;
+                            showMessage(context, '1ヵ月以上の範囲が選択されています', false);
+                            return;
+                          }
+                          searchStart = selected.first;
+                          searchEnd = selected.last;
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
+                      label: 'タイトル検索: ',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
               ],
             ),
