@@ -403,6 +403,8 @@ class _LostModScreenState extends State<LostModScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await lostProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       lost: widget.lost,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,

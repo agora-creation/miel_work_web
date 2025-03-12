@@ -104,7 +104,12 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                     DateTime? selected = await showMonthPicker(
                       context: context,
                       initialDate: searchMonth,
-                      locale: const Locale('ja'),
+                      monthPickerDialogSettings:
+                          const MonthPickerDialogSettings(
+                        dialogSettings: PickerDialogSettings(
+                          locale: Locale('ja'),
+                        ),
+                      ),
                     );
                     if (selected == null) return;
                     _changeMonth(selected);

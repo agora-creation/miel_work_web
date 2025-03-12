@@ -482,6 +482,8 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await applyProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       apply: widget.apply,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,

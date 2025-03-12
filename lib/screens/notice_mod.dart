@@ -273,6 +273,8 @@ class _NoticeModScreenState extends State<NoticeModScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await noticeProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       notice: widget.notice,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
