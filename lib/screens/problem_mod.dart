@@ -128,6 +128,8 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 problem: widget.problem,
               ),
             ),
+            disabled:
+                widget.problem.createdUserId != widget.loginProvider.user!.id,
           ),
           const SizedBox(width: 4),
           CustomButton(
