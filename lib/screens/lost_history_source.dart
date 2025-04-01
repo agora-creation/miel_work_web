@@ -50,6 +50,35 @@ class LostHistorySource extends DataGridSource {
       dateText('yyyy/MM/dd', lost.returnAt),
     ));
     cells.add(CustomColumnLabel(lost.returnUser));
+    if (lost.returnCustomerIDImage != '') {
+      cells.add(CustomColumnLink(
+        label: '写真を確認',
+        color: kBlueColor,
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => CustomAlertDialog(
+            content: SizedBox(
+              width: 600,
+              child: Image.network(
+                lost.returnCustomerIDImage,
+                fit: BoxFit.cover,
+              ),
+            ),
+            actions: [
+              CustomButton(
+                type: ButtonSizeType.sm,
+                label: '閉じる',
+                labelColor: kWhiteColor,
+                backgroundColor: kGreyColor,
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        ),
+      ));
+    } else {
+      cells.add(const CustomColumnLabel(''));
+    }
     cells.add(CustomColumnLink(
       label: '署名を確認',
       color: kBlueColor,

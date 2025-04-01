@@ -46,6 +46,10 @@ class _LostModScreenState extends State<LostModScreen> {
   TextEditingController remarksController = TextEditingController();
   DateTime returnAt = DateTime.now();
   TextEditingController returnUserController = TextEditingController();
+  TextEditingController returnCustomerController = TextEditingController();
+  TextEditingController returnCustomerAddressController =
+      TextEditingController();
+  FilePickerResult? returnCustomerIDImageResult;
   SignatureController signImageController = SignatureController(
     penStrokeWidth: 2,
     exportBackgroundColor: kWhiteColor,
@@ -270,30 +274,95 @@ class _LostModScreenState extends State<LostModScreen> {
               const SizedBox(height: 16),
               Divider(color: kBorderColor),
               const SizedBox(height: 16),
-              FormLabel(
-                '返却日',
-                child: FormValue(
-                  dateText('yyyy/MM/dd HH:mm', returnAt),
-                  onTap: () async => await CustomDateTimePicker().picker(
-                    context: context,
-                    pickerType: DateTimePickerType.date,
-                    init: returnAt,
-                    title: '返却日を選択',
-                    onChanged: (value) {
-                      setState(() {
-                        returnAt = value;
-                      });
-                    },
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: FormLabel(
+                      '返却日',
+                      child: FormValue(
+                        dateText('yyyy/MM/dd HH:mm', returnAt),
+                        onTap: () async => await CustomDateTimePicker().picker(
+                          context: context,
+                          pickerType: DateTimePickerType.date,
+                          init: returnAt,
+                          title: '返却日を選択',
+                          onChanged: (value) {
+                            setState(() {
+                              returnAt = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: FormLabel(
+                      '返却スタッフ',
+                      child: CustomTextField(
+                        controller: returnUserController,
+                        textInputType: TextInputType.text,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: FormLabel(
+                      'お客様名',
+                      child: CustomTextField(
+                        controller: returnCustomerController,
+                        textInputType: TextInputType.text,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: FormLabel(
+                      'お客様住所',
+                      child: CustomTextField(
+                        controller: returnCustomerAddressController,
+                        textInputType: TextInputType.text,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               FormLabel(
-                '返却スタッフ',
-                child: CustomTextField(
-                  controller: returnUserController,
-                  textInputType: TextInputType.text,
-                  maxLines: 1,
+                '本人確認身分証明書写真',
+                child: GestureDetector(
+                  onTap: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.image,
+                      withData: true,
+                    );
+                    setState(() {
+                      returnCustomerIDImageResult = result;
+                    });
+                  },
+                  child: returnCustomerIDImageResult != null
+                      ? Image.memory(
+                          returnCustomerIDImageResult!.files.first.bytes!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        )
+                      : Container(
+                          color: kGreyColor.withOpacity(0.3),
+                          width: double.infinity,
+                          height: 150,
+                          child: const Center(
+                            child: Text('写真が選択されていません'),
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -331,6 +400,9 @@ class _LostModScreenState extends State<LostModScreen> {
                     lost: widget.lost,
                     returnAt: returnAt,
                     returnUser: returnUserController.text,
+                    returnCustomer: returnCustomerController.text,
+                    returnCustomerAddress: returnCustomerAddressController.text,
+                    returnCustomerIDImageResult: returnCustomerIDImageResult,
                     signImageController: signImageController,
                     loginUser: widget.loginProvider.user,
                   );

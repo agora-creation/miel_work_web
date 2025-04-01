@@ -166,6 +166,10 @@ class _LostHistoryScreenState extends State<LostHistoryScreen> {
                         label: const CustomColumnLabel('返却スタッフ'),
                       ),
                       GridColumn(
+                        columnName: 'returnCustomerIDImage',
+                        label: const CustomColumnLabel('身分証明'),
+                      ),
+                      GridColumn(
                         columnName: 'signImage',
                         label: const CustomColumnLabel('署名'),
                       ),
