@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
+import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/models/report_check.dart';
 import 'package:miel_work_web/models/report_equipment.dart';
@@ -16,6 +17,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
 import 'package:miel_work_web/services/report.dart';
+import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
@@ -96,6 +98,16 @@ class _ReportModScreenState extends State<ReportModScreen> {
   bool lastExitUser = false;
   DateTime lastExitUserAt = DateTime.now();
   String lastExitUserName = '';
+  List<CommentModel> comments = [];
+
+  void _reloadComments() async {
+    ReportModel? tmpReport = await reportService.selectData(
+      id: widget.report.id,
+    );
+    if (tmpReport == null) return;
+    comments = tmpReport.comments;
+    setState(() {});
+  }
 
   void _showTextField({
     required String text,
@@ -247,6 +259,7 @@ class _ReportModScreenState extends State<ReportModScreen> {
         widget.report.createdAt.day,
       ),
     );
+    comments = widget.report.comments;
     setState(() {});
   }
 
@@ -1859,6 +1872,92 @@ class _ReportModScreenState extends State<ReportModScreen> {
                     ],
                   ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              Container(
+                color: kGreyColor.withOpacity(0.2),
+                padding: const EdgeInsets.all(16),
+                child: FormLabel(
+                  '社内コメント',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      comments.isNotEmpty
+                          ? Column(
+                              children: comments.map((comment) {
+                                return CommentList(comment: comment);
+                              }).toList(),
+                            )
+                          : const ListTile(title: Text('コメントがありません')),
+                      const SizedBox(height: 8),
+                      CustomButton(
+                        type: ButtonSizeType.sm,
+                        label: 'コメント追加',
+                        labelColor: kWhiteColor,
+                        backgroundColor: kBlueColor,
+                        onPressed: () {
+                          TextEditingController commentContentController =
+                              TextEditingController();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomAlertDialog(
+                              content: SizedBox(
+                                width: 600,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CustomTextField(
+                                      controller: commentContentController,
+                                      textInputType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: 'キャンセル',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kGreyColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CustomButton(
+                                  type: ButtonSizeType.sm,
+                                  label: '追記する',
+                                  labelColor: kWhiteColor,
+                                  backgroundColor: kBlueColor,
+                                  onPressed: () async {
+                                    String? error =
+                                        await reportProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      report: widget.report,
+                                      content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    if (error != null) {
+                                      if (!mounted) return;
+                                      showMessage(context, error, false);
+                                      return;
+                                    }
+                                    _reloadComments();
+                                    if (!mounted) return;
+                                    showMessage(
+                                        context, '社内コメントが追記されました', true);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 80),
             ],
