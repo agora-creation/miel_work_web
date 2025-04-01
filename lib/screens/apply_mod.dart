@@ -153,22 +153,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelApplyDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                apply: widget.apply,
-              ),
-            ),
-            disabled: !isDelete,
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '保存する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -514,73 +498,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class DelApplyDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final ApplyModel apply;
-
-  const DelApplyDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.apply,
-    super.key,
-  });
-
-  @override
-  State<DelApplyDialog> createState() => _DelApplyDialogState();
-}
-
-class _DelApplyDialogState extends State<DelApplyDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final applyProvider = Provider.of<ApplyProvider>(context);
-    return CustomAlertDialog(
-      content: const SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '削除する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await applyProvider.delete(
-              apply: widget.apply,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '申請情報が削除されました', true);
-            Navigator.pop(context);
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
-      ],
     );
   }
 }
