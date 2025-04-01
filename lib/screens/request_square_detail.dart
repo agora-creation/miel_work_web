@@ -104,21 +104,6 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelRequestSquareDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                square: widget.square,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '編集する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -457,73 +442,6 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class DelRequestSquareDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestSquareModel square;
-
-  const DelRequestSquareDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.square,
-    super.key,
-  });
-
-  @override
-  State<DelRequestSquareDialog> createState() => _DelRequestSquareDialogState();
-}
-
-class _DelRequestSquareDialogState extends State<DelRequestSquareDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final squareProvider = Provider.of<RequestSquareProvider>(context);
-    return CustomAlertDialog(
-      content: const SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '削除する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await squareProvider.delete(
-              square: widget.square,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '申請情報が削除されました', true);
-            Navigator.pop(context);
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
-      ],
     );
   }
 }

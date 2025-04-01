@@ -114,21 +114,6 @@ class _RequestFacilityDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelRequestFacilityDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                facility: widget.facility,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '編集する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -417,74 +402,6 @@ class _RequestFacilityDetailScreenState
           ),
         ),
       ),
-    );
-  }
-}
-
-class DelRequestFacilityDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestFacilityModel facility;
-
-  const DelRequestFacilityDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.facility,
-    super.key,
-  });
-
-  @override
-  State<DelRequestFacilityDialog> createState() =>
-      _DelRequestFacilityDialogState();
-}
-
-class _DelRequestFacilityDialogState extends State<DelRequestFacilityDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final facilityProvider = Provider.of<RequestFacilityProvider>(context);
-    return CustomAlertDialog(
-      content: const SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '削除する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await facilityProvider.delete(
-              facility: widget.facility,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '申請情報が削除されました', true);
-            Navigator.pop(context);
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
-      ],
     );
   }
 }

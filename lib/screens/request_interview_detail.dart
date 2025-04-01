@@ -105,21 +105,6 @@ class _RequestInterviewDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelRequestInterviewDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                interview: widget.interview,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '編集する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -554,74 +539,6 @@ class _RequestInterviewDetailScreenState
           ),
         ),
       ),
-    );
-  }
-}
-
-class DelRequestInterviewDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
-  final RequestInterviewModel interview;
-
-  const DelRequestInterviewDialog({
-    required this.loginProvider,
-    required this.homeProvider,
-    required this.interview,
-    super.key,
-  });
-
-  @override
-  State<DelRequestInterviewDialog> createState() =>
-      _DelRequestInterviewDialogState();
-}
-
-class _DelRequestInterviewDialogState extends State<DelRequestInterviewDialog> {
-  @override
-  Widget build(BuildContext context) {
-    final interviewProvider = Provider.of<RequestInterviewProvider>(context);
-    return CustomAlertDialog(
-      content: const SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              '本当に削除しますか？',
-              style: TextStyle(color: kRedColor),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: 'キャンセル',
-          labelColor: kWhiteColor,
-          backgroundColor: kGreyColor,
-          onPressed: () => Navigator.pop(context),
-        ),
-        CustomButton(
-          type: ButtonSizeType.sm,
-          label: '削除する',
-          labelColor: kWhiteColor,
-          backgroundColor: kRedColor,
-          onPressed: () async {
-            String? error = await interviewProvider.delete(
-              interview: widget.interview,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            if (!mounted) return;
-            showMessage(context, '申請情報が削除されました', true);
-            Navigator.pop(context);
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
-      ],
     );
   }
 }
