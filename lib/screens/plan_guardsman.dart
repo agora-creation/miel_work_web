@@ -17,6 +17,7 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -169,13 +170,15 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   if (guardsMans.isNotEmpty) {
                     List<CalendarEventData> events = [];
                     for (final guardsman in guardsMans) {
-                      events.add(CalendarEventData(
-                        title:
-                            '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)}',
-                        date: guardsman.startedAt,
-                        startTime: guardsman.startedAt,
-                        endTime: guardsman.endedAt,
-                      ));
+                      events.add(
+                        CalendarEventData(
+                          title:
+                              '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)} ${guardsman.remarks}',
+                          date: guardsman.startedAt,
+                          startTime: guardsman.startedAt,
+                          endTime: guardsman.endedAt,
+                        ),
+                      );
                     }
                     controller.addAll(events);
                   }
@@ -227,6 +230,7 @@ class AddGuardsmanDialog extends StatefulWidget {
 class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
+  TextEditingController remarksController = TextEditingController();
 
   @override
   void initState() {
@@ -285,6 +289,15 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '備考',
+              child: CustomTextField(
+                controller: remarksController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -306,6 +319,7 @@ class _AddGuardsmanDialogState extends State<AddGuardsmanDialog> {
               organization: widget.loginProvider.organization,
               startedAt: startedAt,
               endedAt: endedAt,
+              remarks: remarksController.text,
             );
             if (error != null) {
               if (!mounted) return;

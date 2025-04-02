@@ -21,6 +21,7 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -175,7 +176,7 @@ class _PlanDishCenterScreenState extends State<PlanDishCenterScreen> {
                     for (final dishCenter in dishCenters) {
                       events.add(CalendarEventData(
                         title:
-                            '[${dishCenter.userName}]${dateText('HH:mm', dishCenter.startedAt)}〜${dateText('HH:mm', dishCenter.endedAt)}',
+                            '[${dishCenter.userName}]${dateText('HH:mm', dishCenter.startedAt)}〜${dateText('HH:mm', dishCenter.endedAt)} ${dishCenter.remarks}',
                         date: dishCenter.startedAt,
                         startTime: dishCenter.startedAt,
                         endTime: dishCenter.endedAt,
@@ -235,6 +236,7 @@ class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
   UserModel? selectedUser;
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
+  TextEditingController remarksController = TextEditingController();
 
   void _init() async {
     OrganizationGroupModel? group = await groupService.selectDataName(
@@ -329,6 +331,15 @@ class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '備考',
+              child: CustomTextField(
+                controller: remarksController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -351,6 +362,7 @@ class _AddDishCenterDialogState extends State<AddDishCenterDialog> {
               user: selectedUser,
               startedAt: startedAt,
               endedAt: endedAt,
+              remarks: remarksController.text,
             );
             if (error != null) {
               if (!mounted) return;

@@ -17,6 +17,7 @@ import 'package:miel_work_web/services/plan_dish_center.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/plan_dish_center_list.dart';
@@ -155,6 +156,7 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
   UserModel? selectedUser;
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
+  TextEditingController remarksController = TextEditingController();
 
   void _init() async {
     OrganizationGroupModel? group = await groupService.selectDataName(
@@ -169,6 +171,7 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
     selectedUser = users.singleWhere((e) => e.id == widget.dishCenter.userId);
     startedAt = widget.dishCenter.startedAt;
     endedAt = widget.dishCenter.endedAt;
+    remarksController.text = widget.dishCenter.remarks;
     setState(() {});
   }
 
@@ -237,6 +240,15 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '備考',
+              child: CustomTextField(
+                controller: remarksController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -279,6 +291,7 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
               user: selectedUser,
               startedAt: startedAt,
               endedAt: endedAt,
+              remarks: remarksController.text,
             );
             if (error != null) {
               if (!mounted) return;

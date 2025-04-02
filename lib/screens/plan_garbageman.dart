@@ -21,6 +21,7 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -175,7 +176,7 @@ class _PlanGarbagemanScreenState extends State<PlanGarbagemanScreen> {
                     for (final garbageman in garbageMans) {
                       events.add(CalendarEventData(
                         title:
-                            '[${garbageman.userName}]${dateText('HH:mm', garbageman.startedAt)}〜${dateText('HH:mm', garbageman.endedAt)}',
+                            '[${garbageman.userName}]${dateText('HH:mm', garbageman.startedAt)}〜${dateText('HH:mm', garbageman.endedAt)} ${garbageman.remarks}',
                         date: garbageman.startedAt,
                         startTime: garbageman.startedAt,
                         endTime: garbageman.endedAt,
@@ -235,6 +236,7 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
   UserModel? selectedUser;
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
+  TextEditingController remarksController = TextEditingController();
 
   void _init() async {
     OrganizationGroupModel? group = await groupService.selectDataName(
@@ -329,6 +331,15 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '備考',
+              child: CustomTextField(
+                controller: remarksController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -351,6 +362,7 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
               user: selectedUser,
               startedAt: startedAt,
               endedAt: endedAt,
+              remarks: remarksController.text,
             );
             if (error != null) {
               if (!mounted) return;

@@ -13,6 +13,7 @@ import 'package:miel_work_web/screens/plan_guardsman.dart';
 import 'package:miel_work_web/services/plan_guardsman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
+import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/plan_guardsman_list.dart';
@@ -147,11 +148,13 @@ class ModGuardsmanDialog extends StatefulWidget {
 class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
   DateTime startedAt = DateTime.now();
   DateTime endedAt = DateTime.now();
+  TextEditingController remarksController = TextEditingController();
 
   @override
   void initState() {
     startedAt = widget.guardsman.startedAt;
     endedAt = widget.guardsman.endedAt;
+    remarksController.text = widget.guardsman.remarks;
     super.initState();
   }
 
@@ -195,6 +198,15 @@ class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            FormLabel(
+              '備考',
+              child: CustomTextField(
+                controller: remarksController,
+                textInputType: TextInputType.text,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       ),
@@ -236,6 +248,7 @@ class _ModGuardsmanDialogState extends State<ModGuardsmanDialog> {
               organization: widget.loginProvider.organization,
               startedAt: startedAt,
               endedAt: endedAt,
+              remarks: remarksController.text,
             );
             if (error != null) {
               if (!mounted) return;
