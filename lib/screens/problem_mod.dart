@@ -10,6 +10,7 @@ import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/widgets/checkbox_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
@@ -105,7 +106,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
             label: 'PDF出力',
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
-            onPressed: () {},
+            onPressed: () async => await PdfService().problemDownload(
+              widget.problem,
+            ),
           ),
           const SizedBox(width: 4),
           CustomButton(

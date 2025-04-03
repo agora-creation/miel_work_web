@@ -2,6 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/problem.dart';
+import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/models/request_const.dart';
 import 'package:miel_work_web/models/request_cycle.dart';
 import 'package:miel_work_web/models/request_facility.dart';
@@ -16,6 +18,64 @@ import 'package:universal_html/html.dart' as html;
 const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
 class PdfService {
+  Future reportDownload(ReportModel report) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '業務日報',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${report.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
+  Future problemDownload(ProblemModel problem) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              'クレーム／要望',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${problem.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
+
   Future requestInterviewDownload(RequestInterviewModel interview) async {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
