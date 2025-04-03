@@ -104,6 +104,14 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: 'PDF出力',
+            labelColor: kWhiteColor,
+            backgroundColor: kPdfColor,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '編集する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -121,7 +129,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               );
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '否決する',

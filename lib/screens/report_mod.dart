@@ -291,6 +291,14 @@ class _ReportModScreenState extends State<ReportModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: 'PDF出力',
+            labelColor: kWhiteColor,
+            backgroundColor: kPdfColor,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '承認する',
             labelColor: kWhiteColor,
             backgroundColor: kApprovalColor,

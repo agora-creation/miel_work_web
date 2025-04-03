@@ -11,6 +11,7 @@ import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/services/apply.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
@@ -119,6 +120,16 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
+          CustomButton(
+            type: ButtonSizeType.sm,
+            label: 'PDF出力',
+            labelColor: kWhiteColor,
+            backgroundColor: kPdfColor,
+            onPressed: () async => await PdfService().applyDownload(
+              widget.apply,
+            ),
+          ),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '否決する',

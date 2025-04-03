@@ -93,7 +93,7 @@ class ApplyHistorySource extends DataGridSource {
         const SizedBox(width: 4),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '帳票PDF',
+          label: 'PDF出力',
           labelColor: kWhiteColor,
           backgroundColor: kPdfColor,
           onPressed: () async => await PdfService().applyDownload(apply),

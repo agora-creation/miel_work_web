@@ -86,6 +86,14 @@ class ProblemHistorySource extends DataGridSource {
             );
           },
         ),
+        const SizedBox(width: 4),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'PDF出力',
+          labelColor: kWhiteColor,
+          backgroundColor: kPdfColor,
+          onPressed: () {},
+        ),
       ],
     ));
     return DataGridRowAdapter(color: backgroundColor, cells: cells);

@@ -114,6 +114,14 @@ class _RequestFacilityDetailScreenState
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: 'PDF出力',
+            labelColor: kWhiteColor,
+            backgroundColor: kPdfColor,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '編集する',
             labelColor: kWhiteColor,
             backgroundColor: kBlueColor,
@@ -131,7 +139,7 @@ class _RequestFacilityDetailScreenState
               );
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
             label: '否決する',

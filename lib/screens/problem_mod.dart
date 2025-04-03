@@ -102,6 +102,14 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
+            label: 'PDF出力',
+            labelColor: kWhiteColor,
+            backgroundColor: kPdfColor,
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+          CustomButton(
+            type: ButtonSizeType.sm,
             label: '処理済にする',
             labelColor: kWhiteColor,
             backgroundColor: kCheckColor,
