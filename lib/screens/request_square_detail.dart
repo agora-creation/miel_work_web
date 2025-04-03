@@ -9,6 +9,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_square.dart';
 import 'package:miel_work_web/screens/request_square_mod.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_square.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
@@ -107,7 +108,9 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
             label: 'PDF出力',
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
-            onPressed: () {},
+            onPressed: () async => await PdfService().requestSquareDownload(
+              widget.square,
+            ),
           ),
           const SizedBox(width: 4),
           CustomButton(

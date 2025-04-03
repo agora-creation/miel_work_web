@@ -9,6 +9,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_cycle.dart';
 import 'package:miel_work_web/screens/request_cycle_mod.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_cycle.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
@@ -105,7 +106,9 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
             label: 'PDF出力',
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
-            onPressed: () {},
+            onPressed: () async => await PdfService().requestCycleDownload(
+              widget.cycle,
+            ),
           ),
           const SizedBox(width: 4),
           CustomButton(

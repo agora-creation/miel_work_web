@@ -10,6 +10,7 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_facility.dart';
 import 'package:miel_work_web/screens/request_facility_mod.dart';
+import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_facility.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
 import 'package:miel_work_web/widgets/attached_file_list.dart';
@@ -117,7 +118,9 @@ class _RequestFacilityDetailScreenState
             label: 'PDF出力',
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
-            onPressed: () {},
+            onPressed: () async => await PdfService().requestFacilityDownload(
+              widget.facility,
+            ),
           ),
           const SizedBox(width: 4),
           CustomButton(
