@@ -16,17 +16,179 @@ import 'package:universal_html/html.dart' as html;
 const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
 class PdfService {
-  Future requestInterviewDownload(RequestInterviewModel interview) async {}
+  Future requestInterviewDownload(RequestInterviewModel interview) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '取材申込書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${interview.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
-  Future requestSquareDownload(RequestSquareModel square) async {}
+  Future requestSquareDownload(RequestSquareModel square) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              'よさこい広場使用申込書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${square.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
-  Future requestFacilityDownload(RequestFacilityModel facility) async {}
+  Future requestFacilityDownload(RequestFacilityModel facility) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '施設使用申込書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${facility.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
-  Future requestCycleDownload(RequestCycleModel cycle) async {}
+  Future requestCycleDownload(RequestCycleModel cycle) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '自転車置き場使用申込書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${cycle.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
-  Future requestOvertimeDownload(RequestOvertimeModel overtime) async {}
+  Future requestOvertimeDownload(RequestOvertimeModel overtime) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '夜間居残り作業申請書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${overtime.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
-  Future requestConstDownload(RequestConstModel requestConst) async {}
+  Future requestConstDownload(RequestConstModel requestConst) async {
+    final pdf = pw.Document();
+    final font = await rootBundle.load(kPdfFontUrl);
+    final ttf = pw.Font.ttf(font);
+    pdf.addPage(pw.Page(
+      margin: const pw.EdgeInsets.all(24),
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Center(
+            child: pw.Text(
+              '店舗工事作業申請書',
+              style: pw.TextStyle(
+                font: ttf,
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                letterSpacing: 8,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+        ],
+      ),
+    ));
+    final fileName = '${requestConst.id}.pdf';
+    await _pdfWebDownload(pdf: pdf, fileName: fileName);
+  }
 
   Future applyDownload(ApplyModel apply) async {
     final pdf = pw.Document();
