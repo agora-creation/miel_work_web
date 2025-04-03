@@ -293,9 +293,9 @@ class _ReportModScreenState extends State<ReportModScreen> {
         actions: [
           CustomButton(
             type: ButtonSizeType.sm,
-            label: 'ページ印刷',
+            label: 'PDF出力',
             labelColor: kWhiteColor,
-            backgroundColor: kCyanColor,
+            backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().reportDownload(
               widget.report,
             ),

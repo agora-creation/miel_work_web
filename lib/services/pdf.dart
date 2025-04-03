@@ -22,24 +22,93 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final commonStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 14,
+      fontWeight: pw.FontWeight.bold,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
-      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(16),
+      pageFormat: PdfPageFormat.a3,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Center(
             child: pw.Text(
-              '業務日報',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              '04/02(水)の日報',
+              style: commonStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          '出勤者',
+                          style: commonStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(width: 16),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          '予定',
+                          style: commonStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '営繕ヶ所等',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                'クレーム／要望等',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                'パンフレット',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '備品発注・入荷',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                'その他報告・連絡',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '申送事項',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '最終確認チェック',
+                style: commonStyle,
+              ),
+              pw.SizedBox(height: 16),
+            ],
+          ),
         ],
       ),
     ));
