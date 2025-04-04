@@ -989,8 +989,12 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final commonStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -998,12 +1002,7 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               'クレーム／要望',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: commonStyle,
             ),
           ),
           pw.SizedBox(height: 4),
