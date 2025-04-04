@@ -11,6 +11,7 @@ import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/models/request_square.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/services/report.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:universal_html/html.dart' as html;
@@ -19,13 +20,30 @@ const kPdfFontUrl = 'assets/fonts/GenShinGothic-Regular.ttf';
 
 class PdfService {
   Future reportDownload(ReportModel report) async {
+    List<int> visitor1DayAlls = [0, 0, 0];
+    List<int> visitor1YearAlls = [0, 0, 0];
+    visitor1DayAlls = await ReportService().getVisitorAll(
+      organizationId: report.organizationId,
+      day: DateTime(
+        report.createdAt.year,
+        report.createdAt.month,
+        report.createdAt.day,
+      ).subtract(const Duration(days: 1)),
+    );
+    visitor1YearAlls = await ReportService().getVisitorAll(
+      organizationId: report.organizationId,
+      day: DateTime(
+        report.createdAt.year - 1,
+        report.createdAt.month,
+        report.createdAt.day,
+      ),
+    );
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
     final commonStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 14,
-      fontWeight: pw.FontWeight.bold,
+      fontSize: 12,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -33,13 +51,11 @@ class PdfService {
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Center(
-            child: pw.Text(
-              '04/02(水)の日報',
-              style: commonStyle,
-            ),
+          pw.Text(
+            '${dateText('MM月dd日(E)', report.createdAt)}の日報',
+            style: commonStyle,
           ),
-          pw.SizedBox(height: 4),
+          pw.SizedBox(height: 8),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -54,6 +70,429 @@ class PdfService {
                           '出勤者',
                           style: commonStyle,
                         ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.FlexColumnWidth(1),
+                            1: pw.FlexColumnWidth(2),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '名前',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '時間帯',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            ...report.reportWorkers.map((reportWorker) {
+                              return pw.TableRow(
+                                children: [
+                                  pw.Text(
+                                    reportWorker.name,
+                                    style: commonStyle,
+                                  ),
+                                  pw.Text(
+                                    reportWorker.time,
+                                    style: commonStyle,
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        pw.Text(
+                          '出勤者(警備員)',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.FlexColumnWidth(1),
+                            1: pw.FlexColumnWidth(2),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '名前',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '時間帯',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            ...report.reportWorkersGuardsman
+                                .map((reportWorker) {
+                              return pw.TableRow(
+                                children: [
+                                  pw.Text(
+                                    reportWorker.name,
+                                    style: commonStyle,
+                                  ),
+                                  pw.Text(
+                                    reportWorker.time,
+                                    style: commonStyle,
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        pw.Text(
+                          '出勤者(清掃員)',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.FlexColumnWidth(1),
+                            1: pw.FlexColumnWidth(2),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '名前',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '時間帯',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            ...report.reportWorkersGarbageman
+                                .map((reportWorker) {
+                              return pw.TableRow(
+                                children: [
+                                  pw.Text(
+                                    reportWorker.name,
+                                    style: commonStyle,
+                                  ),
+                                  pw.Text(
+                                    reportWorker.time,
+                                    style: commonStyle,
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        pw.SizedBox(height: 16),
+                        pw.Text(
+                          '入場者数',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                            2: pw.FlexColumnWidth(1),
+                            3: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '12:30',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '20:00',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '22:00',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'お城下広場',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'いごっそう',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor2_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor2_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor2_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '自由広場',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor3_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor3_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor3_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '東通路',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor4_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor4_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor4_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'バルコーナー',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor5_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor5_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor5_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '合計',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_12 + report.reportVisitor.floor2_12 + report.reportVisitor.floor3_12 + report.reportVisitor.floor4_12 + report.reportVisitor.floor5_12}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_20 + report.reportVisitor.floor2_20 + report.reportVisitor.floor3_20 + report.reportVisitor.floor4_20 + report.reportVisitor.floor5_20}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.reportVisitor.floor1_22 + report.reportVisitor.floor2_22 + report.reportVisitor.floor3_22 + report.reportVisitor.floor4_22 + report.reportVisitor.floor5_22}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '前日合計\n※自動取得',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1DayAlls[0]}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1DayAlls[1]}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1DayAlls[2]}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '前年合計\n※自動取得',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1YearAlls[0]}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1YearAlls[1]}',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${visitor1YearAlls[2]}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 16),
+                        pw.Text(
+                          'コインロッカー',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                            2: pw.IntrinsicColumnWidth(),
+                            3: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '連続使用',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.use ? '有' : '',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '忘れ物',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.lost ? '有' : '',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'ロッカー番号',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.number,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '連続使用日数',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.days,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '金額',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.price,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '備考',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.remarks,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '回収',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportLocker.recovery,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -66,6 +505,252 @@ class PdfService {
                           '予定',
                           style: commonStyle,
                         ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.FlexColumnWidth(1),
+                            1: pw.IntrinsicColumnWidth(),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '内容',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '時間帯',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            ...report.reportPlans.map((reportPlan) {
+                              return pw.TableRow(
+                                children: [
+                                  pw.Text(
+                                    reportPlan.title,
+                                    style: commonStyle,
+                                  ),
+                                  pw.Text(
+                                    reportPlan.time,
+                                    style: commonStyle,
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        pw.SizedBox(height: 16),
+                        pw.Text(
+                          'メールチェック',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                            2: pw.IntrinsicColumnWidth(),
+                            3: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '時間',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '名前',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '時間',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '名前',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '10:30',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.mail10,
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '12:00',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.mail12,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '18:00',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.mail18,
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '22:00',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.mail22,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 16),
+                        pw.Text(
+                          '警戒チェック',
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          '19:45～',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '状態',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.warning19State,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '対処',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.warning19Deal,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Text(
+                          '23:00～',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '状態',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.warning23State,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '対処',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  report.reportCheck.warning23Deal,
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 16),
+                        pw.Text(
+                          '立替金',
+                          style: commonStyle,
+                        ),
+                        pw.Table(
+                          border:
+                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          columnWidths: const {
+                            0: pw.IntrinsicColumnWidth(),
+                            1: pw.FlexColumnWidth(1),
+                          },
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '立替',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.advancePayment1}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '現金',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.advancePayment2}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '合計',
+                                  style: commonStyle,
+                                ),
+                                pw.Text(
+                                  '${report.advancePayment1 + report.advancePayment2}',
+                                  style: commonStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -76,37 +761,221 @@ class PdfService {
                 '営繕ヶ所等',
                 style: commonStyle,
               ),
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '内容',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '対処',
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                  ...report.reportRepairs.map((reportRepair) {
+                    return pw.TableRow(
+                      children: [
+                        pw.Text(
+                          reportRepair.title,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportRepair.deal,
+                          style: commonStyle,
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
+              ),
               pw.SizedBox(height: 16),
               pw.Text(
                 'クレーム／要望等',
                 style: commonStyle,
+              ),
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '内容',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '対処',
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                  ...report.reportProblems.map((reportProblem) {
+                    return pw.TableRow(
+                      children: [
+                        pw.Text(
+                          reportProblem.title,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportProblem.deal,
+                          style: commonStyle,
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
               ),
               pw.SizedBox(height: 16),
               pw.Text(
                 'パンフレット',
                 style: commonStyle,
               ),
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '種別',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '内容',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '部数',
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                  ...report.reportPamphlets.map((reportPamphlet) {
+                    return pw.TableRow(
+                      children: [
+                        pw.Text(
+                          reportPamphlet.type,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportPamphlet.title,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportPamphlet.price,
+                          style: commonStyle,
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
+              ),
               pw.SizedBox(height: 16),
               pw.Text(
                 '備品発注・入荷',
                 style: commonStyle,
+              ),
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '種別',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '品名',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '業者',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '納期',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '納入数',
+                        style: commonStyle,
+                      ),
+                      pw.Text(
+                        '発注者',
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                  ...report.reportEquipments.map((reportEquipment) {
+                    return pw.TableRow(
+                      children: [
+                        pw.Text(
+                          reportEquipment.type,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportEquipment.name,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportEquipment.vendor,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportEquipment.deliveryDate,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportEquipment.deliveryNum,
+                          style: commonStyle,
+                        ),
+                        pw.Text(
+                          reportEquipment.client,
+                          style: commonStyle,
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ],
               ),
               pw.SizedBox(height: 16),
               pw.Text(
                 'その他報告・連絡',
                 style: commonStyle,
               ),
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        report.remarks,
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               pw.SizedBox(height: 16),
               pw.Text(
                 '申送事項',
                 style: commonStyle,
               ),
-              pw.SizedBox(height: 16),
-              pw.Text(
-                '最終確認チェック',
-                style: commonStyle,
+              pw.Table(
+                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        report.agenda,
+                        style: commonStyle,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              pw.SizedBox(height: 16),
             ],
           ),
         ],
