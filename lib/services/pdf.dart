@@ -41,7 +41,11 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
-    final commonStyle = pw.TextStyle(
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 14,
+    );
+    final bodyStyle = pw.TextStyle(
       font: ttf,
       fontSize: 12,
     );
@@ -53,7 +57,7 @@ class PdfService {
         children: [
           pw.Text(
             '${dateText('MM月dd日(E)', report.createdAt)}の日報',
-            style: commonStyle,
+            style: titleStyle,
           ),
           pw.SizedBox(height: 8),
           pw.Column(
@@ -68,11 +72,10 @@ class PdfService {
                       children: [
                         pw.Text(
                           '出勤者',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.FlexColumnWidth(1),
                             1: pw.FlexColumnWidth(2),
@@ -82,11 +85,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '名前',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '時間帯',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -95,11 +98,11 @@ class PdfService {
                                 children: [
                                   pw.Text(
                                     reportWorker.name,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                   pw.Text(
                                     reportWorker.time,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                 ],
                               );
@@ -108,11 +111,10 @@ class PdfService {
                         ),
                         pw.Text(
                           '出勤者(警備員)',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.FlexColumnWidth(1),
                             1: pw.FlexColumnWidth(2),
@@ -122,11 +124,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '名前',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '時間帯',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -136,11 +138,11 @@ class PdfService {
                                 children: [
                                   pw.Text(
                                     reportWorker.name,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                   pw.Text(
                                     reportWorker.time,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                 ],
                               );
@@ -149,11 +151,10 @@ class PdfService {
                         ),
                         pw.Text(
                           '出勤者(清掃員)',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.FlexColumnWidth(1),
                             1: pw.FlexColumnWidth(2),
@@ -163,11 +164,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '名前',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '時間帯',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -177,11 +178,11 @@ class PdfService {
                                 children: [
                                   pw.Text(
                                     reportWorker.name,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                   pw.Text(
                                     reportWorker.time,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                 ],
                               );
@@ -191,11 +192,10 @@ class PdfService {
                         pw.SizedBox(height: 16),
                         pw.Text(
                           '入場者数',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -207,19 +207,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '12:30',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '20:00',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '22:00',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -227,19 +227,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   'お城下広場',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -247,19 +247,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   'いごっそう',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor2_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor2_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor2_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -267,19 +267,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '自由広場',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor3_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor3_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor3_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -287,19 +287,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '東通路',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor4_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor4_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor4_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -307,19 +307,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   'バルコーナー',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor5_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor5_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor5_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -327,19 +327,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '合計',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_12 + report.reportVisitor.floor2_12 + report.reportVisitor.floor3_12 + report.reportVisitor.floor4_12 + report.reportVisitor.floor5_12}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_20 + report.reportVisitor.floor2_20 + report.reportVisitor.floor3_20 + report.reportVisitor.floor4_20 + report.reportVisitor.floor5_20}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.reportVisitor.floor1_22 + report.reportVisitor.floor2_22 + report.reportVisitor.floor3_22 + report.reportVisitor.floor4_22 + report.reportVisitor.floor5_22}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -347,19 +347,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '前日合計\n※自動取得',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1DayAlls[0]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1DayAlls[1]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1DayAlls[2]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -367,19 +367,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '前年合計\n※自動取得',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1YearAlls[0]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1YearAlls[1]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${visitor1YearAlls[2]}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -388,11 +388,10 @@ class PdfService {
                         pw.SizedBox(height: 16),
                         pw.Text(
                           'コインロッカー',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -404,19 +403,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '連続使用',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.use ? '有' : '',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '忘れ物',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.lost ? '有' : '',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -424,8 +423,7 @@ class PdfService {
                         ),
                         pw.SizedBox(height: 4),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -435,11 +433,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   'ロッカー番号',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.number,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -447,11 +445,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '連続使用日数',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.days,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -459,11 +457,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '金額',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.price,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -471,11 +469,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '備考',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.remarks,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -483,11 +481,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '回収',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportLocker.recovery,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -503,11 +501,10 @@ class PdfService {
                       children: [
                         pw.Text(
                           '予定',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.FlexColumnWidth(1),
                             1: pw.IntrinsicColumnWidth(),
@@ -517,11 +514,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '内容',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '時間帯',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -530,11 +527,11 @@ class PdfService {
                                 children: [
                                   pw.Text(
                                     reportPlan.title,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                   pw.Text(
                                     reportPlan.time,
-                                    style: commonStyle,
+                                    style: bodyStyle,
                                   ),
                                 ],
                               );
@@ -544,11 +541,10 @@ class PdfService {
                         pw.SizedBox(height: 16),
                         pw.Text(
                           'メールチェック',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -560,19 +556,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '時間',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '名前',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '時間',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '名前',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -580,19 +576,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '10:30',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.mail10,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '12:00',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.mail12,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -600,19 +596,19 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '18:00',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.mail18,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '22:00',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.mail22,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -621,15 +617,14 @@ class PdfService {
                         pw.SizedBox(height: 16),
                         pw.Text(
                           '警戒チェック',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           '19:45～',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -639,11 +634,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '状態',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.warning19State,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -651,11 +646,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '対処',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.warning19Deal,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -664,11 +659,10 @@ class PdfService {
                         pw.SizedBox(height: 4),
                         pw.Text(
                           '23:00～',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -678,11 +672,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '状態',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.warning23State,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -690,11 +684,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '対処',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   report.reportCheck.warning23Deal,
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -703,11 +697,10 @@ class PdfService {
                         pw.SizedBox(height: 16),
                         pw.Text(
                           '立替金',
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Table(
-                          border:
-                              pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                          border: pw.TableBorder.all(color: PdfColors.grey),
                           columnWidths: const {
                             0: pw.IntrinsicColumnWidth(),
                             1: pw.FlexColumnWidth(1),
@@ -717,11 +710,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '立替',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.advancePayment1}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -729,11 +722,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '現金',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.advancePayment2}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -741,11 +734,11 @@ class PdfService {
                               children: [
                                 pw.Text(
                                   '合計',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                                 pw.Text(
                                   '${report.advancePayment1 + report.advancePayment2}',
-                                  style: commonStyle,
+                                  style: bodyStyle,
                                 ),
                               ],
                             ),
@@ -759,20 +752,20 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 '営繕ヶ所等',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         '内容',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '対処',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -781,11 +774,11 @@ class PdfService {
                       children: [
                         pw.Text(
                           reportRepair.title,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportRepair.deal,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                       ],
                     );
@@ -795,20 +788,20 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 'クレーム／要望等',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         '内容',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '対処',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -817,11 +810,11 @@ class PdfService {
                       children: [
                         pw.Text(
                           reportProblem.title,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportProblem.deal,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                       ],
                     );
@@ -831,24 +824,24 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 'パンフレット',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         '種別',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '内容',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '部数',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -857,15 +850,15 @@ class PdfService {
                       children: [
                         pw.Text(
                           reportPamphlet.type,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportPamphlet.title,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportPamphlet.price,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                       ],
                     );
@@ -875,36 +868,36 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 '備品発注・入荷',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         '種別',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '品名',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '業者',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '納期',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '納入数',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                       pw.Text(
                         '発注者',
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -913,27 +906,27 @@ class PdfService {
                       children: [
                         pw.Text(
                           reportEquipment.type,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportEquipment.name,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportEquipment.vendor,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportEquipment.deliveryDate,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportEquipment.deliveryNum,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                         pw.Text(
                           reportEquipment.client,
-                          style: commonStyle,
+                          style: bodyStyle,
                         ),
                       ],
                     );
@@ -943,16 +936,16 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 'その他報告・連絡',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         report.remarks,
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -961,16 +954,16 @@ class PdfService {
               pw.SizedBox(height: 16),
               pw.Text(
                 '申送事項',
-                style: commonStyle,
+                style: bodyStyle,
               ),
               pw.Table(
-                border: pw.TableBorder.all(color: pw.GridPaper.lineColor),
+                border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
                   pw.TableRow(
                     children: [
                       pw.Text(
                         report.agenda,
-                        style: commonStyle,
+                        style: bodyStyle,
                       ),
                     ],
                   ),
@@ -989,7 +982,11 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
-    final commonStyle = pw.TextStyle(
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 14,
+    );
+    final bodyStyle = pw.TextStyle(
       font: ttf,
       fontSize: 12,
     );
@@ -1002,10 +999,282 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               'クレーム／要望',
-              style: commonStyle,
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    child: pw.Table(
+                      border: pw.TableBorder.all(color: PdfColors.grey),
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Text(
+                              '報告日時',
+                              style: bodyStyle,
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Text(
+                              dateText('yyyy/MM/dd HH:mm', problem.createdAt),
+                              style: bodyStyle,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(width: 8),
+                  pw.Expanded(
+                    child: pw.Table(
+                      border: pw.TableBorder.all(color: PdfColors.grey),
+                      children: [
+                        pw.TableRow(
+                          children: [
+                            pw.Text(
+                              '対応項目',
+                              style: bodyStyle,
+                            ),
+                          ],
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Text(
+                              problem.type,
+                              style: bodyStyle,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      children: [
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'タイトル',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.title,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '対応者',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.picName,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(width: 8),
+                  pw.Expanded(
+                    child: pw.Column(
+                      children: [
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '相手の名前',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.targetName,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '相手の年齢',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.targetAge,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '相手の連絡先',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.targetTel,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '相手の連絡先',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  problem.targetAddress,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '詳細',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        problem.details,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '対応状態',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: problem.states.map((state) {
+                      return pw.Text(
+                        state,
+                        style: bodyStyle,
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '同じような注意(対応)をした回数',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        problem.count.toString(),
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
