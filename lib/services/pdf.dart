@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
@@ -1286,8 +1287,16 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1295,15 +1304,700 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               '取材申込書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申込者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込会社名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '媒体名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.mediaName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '番組・雑誌名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.programName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '出演者情報',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.castInfo,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '特集内容・備考',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.featureContent,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        'OA・掲載予定日',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.publishedAt,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '取材当日情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '取材予定日時',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedAtPending
+                            ? '未定'
+                            : '${dateText('yyyy年MM月dd日 HH:mm', interview.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview.interviewedEndedAt)}',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '取材担当者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '取材担当者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '席の予約',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedReserved ? '必要' : '',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '取材店舗',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedShopName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        'いらっしゃる人数',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedVisitors,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '取材内容・備考',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.interviewedContent,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              interview.location
+                  ? pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.SizedBox(height: 8),
+                        pw.Text(
+                          'ロケハン情報',
+                          style: bodyStyle,
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'ロケハン予定日時',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.locationAtPending
+                                      ? '未定'
+                                      : '${dateText('yyyy年MM月dd日 HH:mm', interview.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview.locationEndedAt)}',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'ロケハン担当者名',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.locationUserName,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'ロケハン担当者電話番号',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.locationUserTel,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'いらっしゃる人数',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.locationVisitors,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'ロケハン内容・備考',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.locationContent,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : pw.Text(
+                      'ロケハンなし',
+                      style: bodyStyle,
+                    ),
+              pw.SizedBox(height: 16),
+              interview.insert
+                  ? pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.SizedBox(height: 8),
+                        pw.Text(
+                          'インサート撮影情報',
+                          style: bodyStyle,
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '撮影予定日時',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedAtPending
+                                      ? '未定'
+                                      : '${dateText('yyyy年MM月dd日 HH:mm', interview.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview.insertedEndedAt)}',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '撮影担当者名',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedUserName,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '撮影担当者電話番号',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedUserTel,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '席の予約',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedReserved ? '必要' : '',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '撮影店舗',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedShopName,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  'いらっしゃる人数',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedVisitors,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Table(
+                          border: pw.TableBorder.all(color: PdfColors.grey),
+                          children: [
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  '撮影内容・備考',
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                            pw.TableRow(
+                              children: [
+                                pw.Text(
+                                  interview.insertedContent,
+                                  style: bodyStyle,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : pw.Text(
+                      'インサート撮影なし',
+                      style: bodyStyle,
+                    ),
+              pw.SizedBox(height: 16),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        'その他連絡事項',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        interview.remarks,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
@@ -1315,8 +2009,16 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1324,15 +2026,286 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               'よさこい広場使用申込書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申込者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込会社名(又は店名)',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '申込担当者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '住所',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.companyAddress,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '使用者情報 (申込者情報と異なる場合のみ)',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用会社名(又は店名)',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.useCompanyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.useCompanyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '使用情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用予定日時',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.useAtPending
+                            ? '未定'
+                            : '${dateText('yyyy年MM月dd日 HH:mm', square.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', square.useEndedAt)}',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用区分',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          square.useFull
+                              ? pw.Text(
+                                  '全面使用',
+                                  style: bodyStyle,
+                                )
+                              : pw.Container(),
+                          square.useChair
+                              ? pw.Column(
+                                  children: [
+                                    pw.Text(
+                                      '折りたたみイス：${square.useChairNum}脚',
+                                      style: bodyStyle,
+                                    ),
+                                    pw.Text(
+                                      '150円(税抜)／1脚・1日',
+                                      style: bodyStyle,
+                                    ),
+                                  ],
+                                )
+                              : pw.Container(),
+                          square.useDesk
+                              ? pw.Column(
+                                  children: [
+                                    pw.Text(
+                                      '折りたたみ机：${square.useDeskNum}台',
+                                      style: bodyStyle,
+                                    ),
+                                    pw.Text(
+                                      '300円(税抜)／1台・1日',
+                                      style: bodyStyle,
+                                    ),
+                                  ],
+                                )
+                              : pw.Container(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用内容',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        square.useContent,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
@@ -1341,11 +2314,26 @@ class PdfService {
   }
 
   Future requestFacilityDownload(RequestFacilityModel facility) async {
+    int useAtDaysPrice = 0;
+    if (!facility.useAtPending) {
+      int useAtDays =
+          facility.useEndedAt.difference(facility.useStartedAt).inDays;
+      int price = 1200;
+      useAtDaysPrice = price * useAtDays;
+    }
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1353,15 +2341,158 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               '施設使用申込書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申込者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        facility.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        facility.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        facility.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        facility.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '旧梵屋跡の倉庫を使用します (貸出面積：約12㎡)',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用予定日時',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        facility.useAtPending
+                            ? '未定'
+                            : '${dateText('yyyy年MM月dd日 HH:mm', facility.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', facility.useEndedAt)}',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用料合計(税抜)',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '${NumberFormat("#,###").format(useAtDaysPrice)}円',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
@@ -1373,8 +2504,16 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1382,15 +2521,129 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               '自転車置き場使用申込書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申込者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        cycle.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        cycle.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        cycle.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '使用者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        cycle.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '住所',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        cycle.companyAddress,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
@@ -1402,8 +2655,16 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1411,15 +2672,158 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               '夜間居残り作業申請書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '作業情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '作業予定日時',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.useAtPending
+                            ? '未定'
+                            : '${dateText('yyyy年MM月dd日 HH:mm', overtime.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', overtime.useEndedAt)}',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '作業内容',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        overtime.useContent,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     ));
@@ -1431,8 +2835,16 @@ class PdfService {
     final pdf = pw.Document();
     final font = await rootBundle.load(kPdfFontUrl);
     final ttf = pw.Font.ttf(font);
+    final titleStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 12,
+    );
+    final bodyStyle = pw.TextStyle(
+      font: ttf,
+      fontSize: 10,
+    );
     pdf.addPage(pw.Page(
-      margin: const pw.EdgeInsets.all(24),
+      margin: const pw.EdgeInsets.all(16),
       pageFormat: PdfPageFormat.a4,
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1440,15 +2852,412 @@ class PdfService {
           pw.Center(
             child: pw.Text(
               '店舗工事作業申請書',
-              style: pw.TextStyle(
-                font: ttf,
-                fontSize: 18,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 8,
-              ),
+              style: titleStyle,
             ),
           ),
           pw.SizedBox(height: 4),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                '申請者情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.companyName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.companyUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者メールアドレス',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.companyUserEmail,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '店舗責任者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.companyUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 16),
+              pw.Text(
+                '工事施工情報',
+                style: bodyStyle,
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '工事施工会社名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.constName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '工事施工代表者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.constUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '工事施工代表者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.constUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '当日担当者名',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.chargeUserName,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '当日担当者電話番号',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.chargeUserTel,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '施工予定日時',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.constAtPending
+                            ? '未定'
+                            : '${dateText('yyyy年MM月dd日 HH:mm', requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', requestConst.constEndedAt)}',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '施工内容',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.constContent,
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '騒音',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.noise ? '有' : '無',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              requestConst.noise
+                  ? pw.Padding(
+                      padding: const pw.EdgeInsets.only(top: 4),
+                      child: pw.Table(
+                        border: pw.TableBorder.all(color: PdfColors.grey),
+                        children: [
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                '騒音対策',
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                requestConst.noiseMeasures,
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : pw.Container(),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '粉塵',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.dust ? '有' : '無',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              requestConst.dust
+                  ? pw.Padding(
+                      padding: const pw.EdgeInsets.only(top: 4),
+                      child: pw.Table(
+                        border: pw.TableBorder.all(color: PdfColors.grey),
+                        children: [
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                '粉塵対策',
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                requestConst.dustMeasures,
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : pw.Container(),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey),
+                children: [
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        '火気の使用',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Text(
+                        requestConst.fire ? '有' : '無',
+                        style: bodyStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              requestConst.fire
+                  ? pw.Padding(
+                      padding: const pw.EdgeInsets.only(top: 4),
+                      child: pw.Table(
+                        border: pw.TableBorder.all(color: PdfColors.grey),
+                        children: [
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                '火気対策',
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                          pw.TableRow(
+                            children: [
+                              pw.Text(
+                                requestConst.fireMeasures,
+                                style: bodyStyle,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : pw.Container(),
+            ],
+          ),
         ],
       ),
     ));
