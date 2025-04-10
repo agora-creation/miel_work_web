@@ -41,6 +41,7 @@ class ApplyDetailScreen extends StatefulWidget {
 
 class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
   ApplyService applyService = ApplyService();
+  ApplyModel? apply;
   List<CommentModel> comments = [];
 
   void _showTextField({
@@ -96,13 +97,28 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
     setState(() {});
   }
 
+  void _reloadApply() async {
+    ApplyModel? tmpApply = await applyService.selectData(
+      id: widget.apply.id,
+    );
+    if (tmpApply == null) return;
+    apply = tmpApply;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _reloadApply();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final applyProvider = Provider.of<ApplyProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     bool isDelete = true;
-    if (widget.apply.createdUserId == widget.loginProvider.user?.id) {
+    if (apply!.createdUserId == widget.loginProvider.user?.id) {
       isApproval = false;
       isReject = false;
       if (widget.loginProvider.user?.president == true) {
@@ -112,20 +128,20 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
     } else {
       isDelete = false;
     }
-    if (widget.apply.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.apply.approvalUsers) {
+    if (apply!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in apply!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.apply.approval == 1 || widget.apply.approval == 9) {
+    if (apply!.approval == 1 || apply!.approval == 9) {
       isApproval = false;
       isReject = false;
       isDelete = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.apply.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = apply!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -164,7 +180,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               builder: (context) => RejectApplyDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                apply: widget.apply,
+                apply: apply!,
               ),
             ),
             disabled: !isReject || widget.loginProvider.user?.president != true,
@@ -180,7 +196,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               builder: (context) => ApprovalApplyDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                apply: widget.apply,
+                apply: apply!,
               ),
             ),
             disabled: !isApproval,
@@ -202,26 +218,26 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.createdAt)}',
+                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', apply!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
                   Text(
-                    '申請番号: ${widget.apply.number}',
+                    '申請番号: ${apply!.number}',
                     style: const TextStyle(color: kGreyColor),
                   ),
                   Text(
-                    '申請者: ${widget.apply.createdUserName}',
+                    '申請者: ${apply!.createdUserName}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.apply.approval == 1
+                  apply!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', apply!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
-                  widget.apply.approval == 1
+                  apply!.approval == 1
                       ? Text(
-                          '承認番号: ${widget.apply.approvalNumber}',
+                          '承認番号: ${apply!.approvalNumber}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -246,26 +262,27 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               FormLabel(
                 '申請種別',
                 child: Chip(
-                  label: Text('${widget.apply.type}申請'),
-                  backgroundColor: widget.apply.typeColor(),
+                  label: Text('${apply!.type}申請'),
+                  backgroundColor: apply!.typeColor(),
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '件名',
                 child: FormValue(
-                  widget.apply.title,
+                  apply!.title,
                   onTap: () {
                     final titleController = TextEditingController(
-                      text: widget.apply.title,
+                      text: apply!.title,
                     );
                     _showTextField(
                       controller: titleController,
                       onPressed: () {
                         applyService.update({
-                          'id': widget.apply.id,
+                          'id': apply!.id,
                           'title': titleController.text,
                         });
+                        _reloadApply();
                         Navigator.pop(context);
                       },
                     );
@@ -273,22 +290,23 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              widget.apply.type == '稟議' || widget.apply.type == '支払伺い'
+              apply!.type == '稟議' || apply!.type == '支払伺い'
                   ? FormLabel(
                       '金額',
                       child: FormValue(
-                        '¥ ${widget.apply.formatPrice()}',
+                        '¥ ${apply!.formatPrice()}',
                         onTap: () {
                           final priceController = TextEditingController(
-                            text: widget.apply.price.toString(),
+                            text: apply!.price.toString(),
                           );
                           _showTextField(
                             controller: priceController,
                             onPressed: () {
                               applyService.update({
-                                'id': widget.apply.id,
+                                'id': apply!.id,
                                 'price': int.parse(priceController.text),
                               });
+                              _reloadApply();
                               Navigator.pop(context);
                             },
                           );
@@ -300,19 +318,20 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               FormLabel(
                 '内容',
                 child: FormValue(
-                  widget.apply.content,
+                  apply!.content,
                   onTap: () {
                     final contentController = TextEditingController(
-                      text: widget.apply.content,
+                      text: apply!.content,
                     );
                     _showTextField(
                       controller: contentController,
                       textInputType: TextInputType.multiline,
                       onPressed: () {
                         applyService.update({
-                          'id': widget.apply.id,
+                          'id': apply!.id,
                           'content': contentController.text,
                         });
+                        _reloadApply();
                         Navigator.pop(context);
                       },
                     );
@@ -320,30 +339,30 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              widget.apply.approvalReason != ''
+              apply!.approvalReason != ''
                   ? FormLabel(
                       '承認理由',
-                      child: FormValue(widget.apply.approvalReason),
+                      child: FormValue(apply!.approvalReason),
                     )
                   : Container(),
               const SizedBox(height: 8),
-              widget.apply.reason != ''
+              apply!.reason != ''
                   ? FormLabel(
                       '否決理由',
-                      child: FormValue(widget.apply.reason),
+                      child: FormValue(apply!.reason),
                     )
                   : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル',
-                child: widget.apply.file != ''
+                child: apply!.file != ''
                     ? LinkText(
                         label: '確認する',
                         color: kBlueColor,
                         onTap: () {
-                          File file = File(widget.apply.file);
+                          File file = File(apply!.file);
                           downloadFile(
-                            url: widget.apply.file,
+                            url: apply!.file,
                             name: p.basename(file.path),
                           );
                         },
@@ -353,14 +372,14 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル2',
-                child: widget.apply.file2 != ''
+                child: apply!.file2 != ''
                     ? LinkText(
                         label: '確認する',
                         color: kBlueColor,
                         onTap: () {
-                          File file = File(widget.apply.file2);
+                          File file = File(apply!.file2);
                           downloadFile(
-                            url: widget.apply.file2,
+                            url: apply!.file2,
                             name: p.basename(file.path),
                           );
                         },
@@ -370,14 +389,14 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル3',
-                child: widget.apply.file3 != ''
+                child: apply!.file3 != ''
                     ? LinkText(
                         label: '確認する',
                         color: kBlueColor,
                         onTap: () {
-                          File file = File(widget.apply.file3);
+                          File file = File(apply!.file3);
                           downloadFile(
-                            url: widget.apply.file3,
+                            url: apply!.file3,
                             name: p.basename(file.path),
                           );
                         },
@@ -387,14 +406,14 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル4',
-                child: widget.apply.file4 != ''
+                child: apply!.file4 != ''
                     ? LinkText(
                         label: '確認する',
                         color: kBlueColor,
                         onTap: () {
-                          File file = File(widget.apply.file4);
+                          File file = File(apply!.file4);
                           downloadFile(
-                            url: widget.apply.file4,
+                            url: apply!.file4,
                             name: p.basename(file.path),
                           );
                         },
@@ -404,14 +423,14 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル5',
-                child: widget.apply.file5 != ''
+                child: apply!.file5 != ''
                     ? LinkText(
                         label: '確認する',
                         color: kBlueColor,
                         onTap: () {
-                          File file = File(widget.apply.file5);
+                          File file = File(apply!.file5);
                           downloadFile(
-                            url: widget.apply.file5,
+                            url: apply!.file5,
                             name: p.basename(file.path),
                           );
                         },
@@ -515,7 +534,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                                         await applyProvider.addComment(
                                       organization:
                                           widget.loginProvider.organization,
-                                      apply: widget.apply,
+                                      apply: apply!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );

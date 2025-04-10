@@ -98,14 +98,6 @@ class _ProblemScreenState extends State<ProblemScreen> {
                         }
                       },
                     ),
-                    const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: 'タイトル検索: ',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kSearchColor,
-                      leftIcon: FontAwesomeIcons.magnifyingGlass,
-                      onPressed: () {},
-                    ),
                   ],
                 ),
                 Row(

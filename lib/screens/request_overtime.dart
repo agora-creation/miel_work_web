@@ -7,13 +7,10 @@ import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/request_overtime_detail.dart';
-import 'package:miel_work_web/screens/request_overtime_history.dart';
 import 'package:miel_work_web/services/request_overtime.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
-import 'package:miel_work_web/widgets/custom_text_field.dart';
-import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/request_overtime_list.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -35,6 +32,18 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
   RequestOvertimeService overtimeService = RequestOvertimeService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  int searchApproval = 0;
+
+  void _getApproval() async {
+    searchApproval = await getPrefsInt('approval') ?? 0;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getApproval();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +51,17 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
     if (searchStart != null && searchEnd != null) {
       searchText =
           '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
+    String searchApprovalText = '承認待ち';
+    switch (searchApproval) {
+      case 0:
+        searchApprovalText = '承認待ち';
+      case 1:
+        searchApprovalText = '承認済み';
+      case 9:
+        searchApprovalText = '否決';
+      default:
+        searchApprovalText = '承認待ち';
     }
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -103,40 +123,14 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
-                      label: '件名検索: ',
+                      label: '承認状況検索: $searchApprovalText',
                       labelColor: kWhiteColor,
                       backgroundColor: kSearchColor,
                       leftIcon: FontAwesomeIcons.magnifyingGlass,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    // CustomIconTextButton(
-                    //   label: 'フォーム内記載の連絡先編集',
-                    //   labelColor: kWhiteColor,
-                    //   backgroundColor: kCyanColor,
-                    //   leftIcon: FontAwesomeIcons.pen,
-                    //   onPressed: () => showDialog(
-                    //     context: context,
-                    //     builder: (context) => ModContactDialog(
-                    //       loginProvider: widget.loginProvider,
-                    //       homeProvider: widget.homeProvider,
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: '承認済一覧',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kGreyColor,
-                      leftIcon: FontAwesomeIcons.list,
-                      onPressed: () => showBottomUpScreen(
-                        context,
-                        RequestOvertimeHistoryScreen(
-                          loginProvider: widget.loginProvider,
-                          homeProvider: widget.homeProvider,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchApprovalDialog(
+                          getApproval: _getApproval,
                         ),
                       ),
                     ),
@@ -150,7 +144,7 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
                 stream: overtimeService.streamList(
                   searchStart: searchStart,
                   searchEnd: searchEnd,
-                  approval: [0],
+                  approval: [searchApproval],
                 ),
                 builder: (context, snapshot) {
                   List<RequestOvertimeModel> overtimes = [];
@@ -196,26 +190,29 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
   }
 }
 
-class ModContactDialog extends StatefulWidget {
-  final LoginProvider loginProvider;
-  final HomeProvider homeProvider;
+class SearchApprovalDialog extends StatefulWidget {
+  final Function() getApproval;
 
-  const ModContactDialog({
-    required this.loginProvider,
-    required this.homeProvider,
+  const SearchApprovalDialog({
+    required this.getApproval,
     super.key,
   });
 
   @override
-  State<ModContactDialog> createState() => _ModContactDialogState();
+  State<SearchApprovalDialog> createState() => _SearchApprovalDialogState();
 }
 
-class _ModContactDialogState extends State<ModContactDialog> {
-  TextEditingController contactController = TextEditingController();
+class _SearchApprovalDialogState extends State<SearchApprovalDialog> {
+  int approval = 0;
+
+  void _getApproval() async {
+    approval = await getPrefsInt('approval') ?? 0;
+    setState(() {});
+  }
 
   @override
   void initState() {
-    contactController.text = widget.loginProvider.organization?.contact ?? '';
+    _getApproval();
     super.initState();
   }
 
@@ -228,13 +225,38 @@ class _ModContactDialogState extends State<ModContactDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
-            FormLabel(
-              'フォーム内記載の連絡先',
-              child: CustomTextField(
-                controller: contactController,
-                textInputType: TextInputType.multiline,
-                maxLines: 3,
-              ),
+            RadioListTile(
+              title: const Text('承認待ち'),
+              value: 0,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('承認済み'),
+              value: 1,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('否決'),
+              value: 9,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
             ),
           ],
         ),
@@ -249,26 +271,13 @@ class _ModContactDialogState extends State<ModContactDialog> {
         ),
         CustomButton(
           type: ButtonSizeType.sm,
-          label: '保存する',
+          label: '検索する',
           labelColor: kWhiteColor,
-          backgroundColor: kBlueColor,
+          backgroundColor: kSearchColor,
           onPressed: () async {
-            String? error =
-                await widget.loginProvider.organizationContactUpdate(
-              organization: widget.loginProvider.organization,
-              contact: contactController.text,
-            );
-            if (error != null) {
-              if (!mounted) return;
-              showMessage(context, error, false);
-              return;
-            }
-            await widget.loginProvider.reload();
-            widget.homeProvider.setGroups(
-              organizationId: widget.loginProvider.organization?.id ?? 'error',
-            );
+            await setPrefsInt('approval', approval);
+            widget.getApproval();
             if (!mounted) return;
-            showMessage(context, '連絡先を保存されました', true);
             Navigator.pop(context);
           },
         ),

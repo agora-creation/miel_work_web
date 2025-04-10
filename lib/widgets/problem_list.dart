@@ -39,10 +39,10 @@ class ProblemList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    dateText('yyyy/MM/dd HH:mm', problem.createdAt),
+                    '報告日時: ${dateText('yyyy/MM/dd HH:mm', problem.createdAt)}',
                     style: const TextStyle(
                       color: kBlackColor,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
