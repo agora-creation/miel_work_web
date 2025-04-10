@@ -8,8 +8,7 @@ import 'package:miel_work_web/models/plan.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/category.dart';
-import 'package:miel_work_web/screens/plan_add.dart';
-import 'package:miel_work_web/screens/plan_mod.dart';
+import 'package:miel_work_web/screens/plan_edit.dart';
 import 'package:miel_work_web/services/category.dart';
 import 'package:miel_work_web/services/plan.dart';
 import 'package:miel_work_web/widgets/category_checkbox_list.dart';
@@ -174,10 +173,9 @@ class _PlanScreenState extends State<PlanScreen> {
                           context,
                           PageTransition(
                             type: PageTransitionType.rightToLeft,
-                            child: PlanAddScreen(
+                            child: PlanEditScreen(
                               loginProvider: widget.loginProvider,
                               homeProvider: widget.homeProvider,
-                              date: DateTime.now(),
                             ),
                           ),
                         );
@@ -281,7 +279,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                         context,
                                         PageTransition(
                                           type: PageTransitionType.rightToLeft,
-                                          child: PlanModScreen(
+                                          child: PlanEditScreen(
                                             loginProvider: widget.loginProvider,
                                             homeProvider: widget.homeProvider,
                                             plan: dayPlan,

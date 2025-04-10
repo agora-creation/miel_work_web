@@ -7,8 +7,7 @@ import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/notice_add.dart';
-import 'package:miel_work_web/screens/notice_mod.dart';
+import 'package:miel_work_web/screens/notice_edit.dart';
 import 'package:miel_work_web/services/notice.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/notice_list.dart';
@@ -121,7 +120,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       context,
                       PageTransition(
                         type: PageTransitionType.rightToLeft,
-                        child: NoticeAddScreen(
+                        child: NoticeEditScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
                         ),
@@ -179,7 +178,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                               context,
                               PageTransition(
                                 type: PageTransitionType.rightToLeft,
-                                child: NoticeModScreen(
+                                child: NoticeEditScreen(
                                   loginProvider: widget.loginProvider,
                                   homeProvider: widget.homeProvider,
                                   notice: notice,
