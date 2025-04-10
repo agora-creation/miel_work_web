@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/loan.dart';
 import 'package:miel_work_web/models/organization.dart';
@@ -45,7 +46,10 @@ class LoanProvider with ChangeNotifier {
         String fileName = p.basename(itemImageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('loan/$id/$fileName');
-        uploadFile = await compressImage(uploadFile);
+        uploadFile = await FlutterImageCompress.compressWithList(
+          uploadFile,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());
@@ -119,6 +123,10 @@ class LoanProvider with ChangeNotifier {
         String fileName = p.basename(itemImageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('loan/${loan.id}/$fileName');
+        uploadFile = await FlutterImageCompress.compressWithList(
+          uploadFile,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());
@@ -169,6 +177,10 @@ class LoanProvider with ChangeNotifier {
       String fileName = 'sign.png';
       Reference storageRef =
           FirebaseStorage.instance.ref().child('loan/${loan.id}/$fileName');
+      uploadFile = await FlutterImageCompress.compressWithList(
+        uploadFile,
+        quality: 60,
+      );
       UploadTask uploadTask = storageRef.putData(uploadFile);
       TaskSnapshot downloadUrl = await uploadTask;
       String signImage = (await downloadUrl.ref.getDownloadURL());

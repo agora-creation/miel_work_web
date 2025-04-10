@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/problem.dart';
@@ -49,7 +50,10 @@ class ProblemProvider with ChangeNotifier {
         String fileName = p.basename(imageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$fileName');
-        uploadFile = await compressImage(uploadFile);
+        uploadFile = await FlutterImageCompress.compressWithList(
+          uploadFile,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
@@ -61,7 +65,10 @@ class ProblemProvider with ChangeNotifier {
         String file2Name = p.basename(image2Result.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$file2Name');
-        upload2File = await compressImage(upload2File);
+        upload2File = await FlutterImageCompress.compressWithList(
+          upload2File,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(upload2File);
         TaskSnapshot downloadUrl = await uploadTask;
         image2 = (await downloadUrl.ref.getDownloadURL());
@@ -73,7 +80,10 @@ class ProblemProvider with ChangeNotifier {
         String file3Name = p.basename(image3Result.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$file3Name');
-        upload3File = await compressImage(upload3File);
+        upload3File = await FlutterImageCompress.compressWithList(
+          upload3File,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(upload3File);
         TaskSnapshot downloadUrl = await uploadTask;
         image3 = (await downloadUrl.ref.getDownloadURL());
@@ -156,7 +166,10 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$fileName');
-        uploadFile = await compressImage(uploadFile);
+        uploadFile = await FlutterImageCompress.compressWithList(
+          uploadFile,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
@@ -169,7 +182,10 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$file2Name');
-        upload2File = await compressImage(upload2File);
+        upload2File = await FlutterImageCompress.compressWithList(
+          upload2File,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(upload2File);
         TaskSnapshot downloadUrl = await uploadTask;
         image2 = (await downloadUrl.ref.getDownloadURL());
@@ -182,7 +198,10 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$file3Name');
-        upload3File = await compressImage(upload3File);
+        upload3File = await FlutterImageCompress.compressWithList(
+          upload3File,
+          quality: 60,
+        );
         UploadTask uploadTask = storageRef.putData(upload3File);
         TaskSnapshot downloadUrl = await uploadTask;
         image3 = (await downloadUrl.ref.getDownloadURL());
