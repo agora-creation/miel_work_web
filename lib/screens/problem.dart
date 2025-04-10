@@ -7,9 +7,10 @@ import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/problem_add.dart';
-import 'package:miel_work_web/screens/problem_history.dart';
 import 'package:miel_work_web/screens/problem_mod.dart';
 import 'package:miel_work_web/services/problem.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/problem_list.dart';
 import 'package:page_transition/page_transition.dart';
@@ -32,6 +33,18 @@ class _ProblemScreenState extends State<ProblemScreen> {
   ProblemService problemService = ProblemService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  bool searchProcessed = false;
+
+  void _getProcessed() async {
+    searchProcessed = await getPrefsBool('processed') ?? false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getProcessed();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +52,10 @@ class _ProblemScreenState extends State<ProblemScreen> {
     if (searchStart != null && searchEnd != null) {
       searchText =
           '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
+    String searchProcessedText = '処理待';
+    if (searchProcessed) {
+      searchProcessedText = '処理済';
     }
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -98,43 +115,38 @@ class _ProblemScreenState extends State<ProblemScreen> {
                         }
                       },
                     ),
+                    const SizedBox(width: 4),
+                    CustomIconTextButton(
+                      label: '処理状況検索: $searchProcessedText',
+                      labelColor: kWhiteColor,
+                      backgroundColor: kSearchColor,
+                      leftIcon: FontAwesomeIcons.magnifyingGlass,
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchProcessedDialog(
+                          getProcessed: _getProcessed,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-                Row(
-                  children: [
-                    CustomIconTextButton(
-                      label: '処理済一覧',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kGreyColor,
-                      leftIcon: FontAwesomeIcons.list,
-                      onPressed: () => showBottomUpScreen(
-                        context,
-                        ProblemHistoryScreen(
+                CustomIconTextButton(
+                  label: 'クレーム／要望を追加',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  leftIcon: FontAwesomeIcons.plus,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ProblemAddScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: 'クレーム／要望を追加',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kBlueColor,
-                      leftIcon: FontAwesomeIcons.plus,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: ProblemAddScreen(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -145,7 +157,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
                   organizationId: widget.loginProvider.organization?.id,
                   searchStart: searchStart,
                   searchEnd: searchEnd,
-                  processed: false,
+                  processed: searchProcessed,
                 ),
                 builder: (context, snapshot) {
                   List<ProblemModel> problems = [];
@@ -188,6 +200,91 @@ class _ProblemScreenState extends State<ProblemScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SearchProcessedDialog extends StatefulWidget {
+  final Function() getProcessed;
+
+  const SearchProcessedDialog({
+    required this.getProcessed,
+    super.key,
+  });
+
+  @override
+  State<SearchProcessedDialog> createState() => _SearchProcessedDialogState();
+}
+
+class _SearchProcessedDialogState extends State<SearchProcessedDialog> {
+  bool processed = false;
+
+  void _getProcessed() async {
+    processed = await getPrefsBool('processed') ?? false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getProcessed();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            RadioListTile(
+              title: const Text('処理待'),
+              value: false,
+              groupValue: processed,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  processed = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('処理済'),
+              value: true,
+              groupValue: processed,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  processed = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
+          onPressed: () async {
+            await setPrefsBool('processed', processed);
+            widget.getProcessed();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

@@ -10,7 +10,6 @@ import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
-import 'package:miel_work_web/screens/request_overtime_mod.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_overtime.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
@@ -24,7 +23,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -119,26 +117,6 @@ class _RequestOvertimeDetailScreenState
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '編集する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: RequestOvertimeModScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    overtime: widget.overtime,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -197,18 +175,20 @@ class _RequestOvertimeDetailScreenState
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
@@ -223,17 +203,26 @@ class _RequestOvertimeDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.overtime.companyName),
+                child: FormValue(
+                  widget.overtime.companyName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.overtime.companyUserName),
+                child: FormValue(
+                  widget.overtime.companyUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.overtime.companyUserEmail),
+                child: FormValue(
+                  widget.overtime.companyUserEmail,
+                  onTap: () {},
+                ),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
@@ -248,7 +237,10 @@ class _RequestOvertimeDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.overtime.companyUserTel),
+                child: FormValue(
+                  widget.overtime.companyUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -273,7 +265,10 @@ class _RequestOvertimeDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '作業内容',
-                child: FormValue(widget.overtime.useContent),
+                child: FormValue(
+                  widget.overtime.useContent,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),

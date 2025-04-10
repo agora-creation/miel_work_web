@@ -9,7 +9,6 @@ import 'package:miel_work_web/models/request_facility.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_facility.dart';
-import 'package:miel_work_web/screens/request_facility_mod.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_facility.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
@@ -22,7 +21,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -125,26 +123,6 @@ class _RequestFacilityDetailScreenState
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '編集する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: RequestFacilityModScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    facility: widget.facility,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -203,18 +181,20 @@ class _RequestFacilityDetailScreenState
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
@@ -229,17 +209,26 @@ class _RequestFacilityDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.facility.companyName),
+                child: FormValue(
+                  widget.facility.companyName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.facility.companyUserName),
+                child: FormValue(
+                  widget.facility.companyUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.facility.companyUserEmail),
+                child: FormValue(
+                  widget.facility.companyUserEmail,
+                  onTap: () {},
+                ),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
@@ -254,7 +243,10 @@ class _RequestFacilityDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.facility.companyUserTel),
+                child: FormValue(
+                  widget.facility.companyUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -296,6 +288,7 @@ class _RequestFacilityDetailScreenState
                 '使用料合計(税抜)',
                 child: FormValue(
                   '${NumberFormat("#,###").format(useAtDaysPrice)}円',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 16),

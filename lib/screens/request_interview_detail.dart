@@ -8,7 +8,6 @@ import 'package:miel_work_web/models/request_interview.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
-import 'package:miel_work_web/screens/request_interview_mod.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_interview.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
@@ -21,7 +20,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -116,26 +114,6 @@ class _RequestInterviewDetailScreenState
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '編集する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: RequestInterviewModScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    interview: widget.interview,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -194,18 +172,20 @@ class _RequestInterviewDetailScreenState
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
@@ -220,17 +200,26 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '申込会社名',
-                child: FormValue(widget.interview.companyName),
+                child: FormValue(
+                  widget.interview.companyName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者名',
-                child: FormValue(widget.interview.companyUserName),
+                child: FormValue(
+                  widget.interview.companyUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者メールアドレス',
-                child: FormValue(widget.interview.companyUserEmail),
+                child: FormValue(
+                  widget.interview.companyUserEmail,
+                  onTap: () {},
+                ),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
@@ -245,32 +234,50 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者電話番号',
-                child: FormValue(widget.interview.companyUserTel),
+                child: FormValue(
+                  widget.interview.companyUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '媒体名',
-                child: FormValue(widget.interview.mediaName),
+                child: FormValue(
+                  widget.interview.mediaName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '番組・雑誌名',
-                child: FormValue(widget.interview.programName),
+                child: FormValue(
+                  widget.interview.programName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '出演者情報',
-                child: FormValue(widget.interview.castInfo),
+                child: FormValue(
+                  widget.interview.castInfo,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '特集内容・備考',
-                child: FormValue(widget.interview.featureContent),
+                child: FormValue(
+                  widget.interview.featureContent,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 'OA・掲載予定日',
-                child: FormValue(widget.interview.publishedAt),
+                child: FormValue(
+                  widget.interview.publishedAt,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -295,12 +302,18 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者名',
-                child: FormValue(widget.interview.interviewedUserName),
+                child: FormValue(
+                  widget.interview.interviewedUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者電話番号',
-                child: FormValue(widget.interview.interviewedUserTel),
+                child: FormValue(
+                  widget.interview.interviewedUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -311,17 +324,26 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 '取材店舗',
-                child: FormValue(widget.interview.interviewedShopName),
+                child: FormValue(
+                  widget.interview.interviewedShopName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 'いらっしゃる人数',
-                child: FormValue(widget.interview.interviewedVisitors),
+                child: FormValue(
+                  widget.interview.interviewedVisitors,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材内容・備考',
-                child: FormValue(widget.interview.interviewedContent),
+                child: FormValue(
+                  widget.interview.interviewedContent,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -351,22 +373,34 @@ class _RequestInterviewDetailScreenState
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者名',
-                          child: FormValue(widget.interview.locationUserName),
+                          child: FormValue(
+                            widget.interview.locationUserName,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者電話番号',
-                          child: FormValue(widget.interview.locationUserTel),
+                          child: FormValue(
+                            widget.interview.locationUserTel,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'いらっしゃる人数',
-                          child: FormValue(widget.interview.locationVisitors),
+                          child: FormValue(
+                            widget.interview.locationVisitors,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン内容・備考',
-                          child: FormValue(widget.interview.locationContent),
+                          child: FormValue(
+                            widget.interview.locationContent,
+                            onTap: () {},
+                          ),
                         ),
                       ],
                     )
@@ -399,12 +433,18 @@ class _RequestInterviewDetailScreenState
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影担当者名',
-                          child: FormValue(widget.interview.insertedUserName),
+                          child: FormValue(
+                            widget.interview.insertedUserName,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影担当者電話番号',
-                          child: FormValue(widget.interview.insertedUserTel),
+                          child: FormValue(
+                            widget.interview.insertedUserTel,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
@@ -415,17 +455,26 @@ class _RequestInterviewDetailScreenState
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影店舗',
-                          child: FormValue(widget.interview.insertedShopName),
+                          child: FormValue(
+                            widget.interview.insertedShopName,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'いらっしゃる人数',
-                          child: FormValue(widget.interview.insertedVisitors),
+                          child: FormValue(
+                            widget.interview.insertedVisitors,
+                            onTap: () {},
+                          ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影内容・備考',
-                          child: FormValue(widget.interview.insertedContent),
+                          child: FormValue(
+                            widget.interview.insertedContent,
+                            onTap: () {},
+                          ),
                         ),
                       ],
                     )
@@ -457,7 +506,10 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 8),
               FormLabel(
                 'その他連絡事項',
-                child: FormValue(widget.interview.remarks),
+                child: FormValue(
+                  widget.interview.remarks,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),

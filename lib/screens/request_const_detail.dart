@@ -10,7 +10,6 @@ import 'package:miel_work_web/models/request_const.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_const.dart';
-import 'package:miel_work_web/screens/request_const_mod.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_const.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
@@ -24,7 +23,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -119,26 +117,6 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '編集する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: RequestConstModScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    requestConst: widget.requestConst,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -197,18 +175,20 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
@@ -223,17 +203,26 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.requestConst.companyName),
+                child: FormValue(
+                  widget.requestConst.companyName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
-                child: FormValue(widget.requestConst.companyUserName),
+                child: FormValue(
+                  widget.requestConst.companyUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
-                child: FormValue(widget.requestConst.companyUserEmail),
+                child: FormValue(
+                  widget.requestConst.companyUserEmail,
+                  onTap: () {},
+                ),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
@@ -248,7 +237,10 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者電話番号',
-                child: FormValue(widget.requestConst.companyUserTel),
+                child: FormValue(
+                  widget.requestConst.companyUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -264,27 +256,42 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工会社名',
-                child: FormValue(widget.requestConst.constName),
+                child: FormValue(
+                  widget.requestConst.constName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工代表者名',
-                child: FormValue(widget.requestConst.constUserName),
+                child: FormValue(
+                  widget.requestConst.constUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工代表者電話番号',
-                child: FormValue(widget.requestConst.constUserTel),
+                child: FormValue(
+                  widget.requestConst.constUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '当日担当者名',
-                child: FormValue(widget.requestConst.chargeUserName),
+                child: FormValue(
+                  widget.requestConst.chargeUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '当日担当者電話番号',
-                child: FormValue(widget.requestConst.chargeUserTel),
+                child: FormValue(
+                  widget.requestConst.chargeUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
@@ -298,7 +305,10 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '施工内容',
-                child: FormValue(widget.requestConst.constContent),
+                child: FormValue(
+                  widget.requestConst.constContent,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(

@@ -8,7 +8,6 @@ import 'package:miel_work_web/models/request_cycle.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_cycle.dart';
-import 'package:miel_work_web/screens/request_cycle_mod.dart';
 import 'package:miel_work_web/services/pdf.dart';
 import 'package:miel_work_web/services/request_cycle.dart';
 import 'package:miel_work_web/widgets/approval_user_list.dart';
@@ -20,7 +19,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -113,26 +111,6 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
           const SizedBox(width: 4),
           CustomButton(
             type: ButtonSizeType.sm,
-            label: '編集する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: RequestCycleModScreen(
-                    loginProvider: widget.loginProvider,
-                    homeProvider: widget.homeProvider,
-                    cycle: widget.cycle,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
             label: '否決する',
             labelColor: kWhiteColor,
             backgroundColor: kRejectColor,
@@ -191,18 +169,20 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
@@ -217,17 +197,26 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '店舗名',
-                child: FormValue(widget.cycle.companyName),
+                child: FormValue(
+                  widget.cycle.companyName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者名',
-                child: FormValue(widget.cycle.companyUserName),
+                child: FormValue(
+                  widget.cycle.companyUserName,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者メールアドレス',
-                child: FormValue(widget.cycle.companyUserEmail),
+                child: FormValue(
+                  widget.cycle.companyUserEmail,
+                  onTap: () {},
+                ),
               ),
               LinkText(
                 label: 'メールソフトを起動する',
@@ -242,12 +231,18 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '使用者電話番号',
-                child: FormValue(widget.cycle.companyUserTel),
+                child: FormValue(
+                  widget.cycle.companyUserTel,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '住所',
-                child: FormValue(widget.cycle.companyAddress),
+                child: FormValue(
+                  widget.cycle.companyAddress,
+                  onTap: () {},
+                ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
