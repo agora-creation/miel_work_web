@@ -18,16 +18,17 @@ import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
+import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
-class ApplyModScreen extends StatefulWidget {
+class ApplyDetailScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
   final ApplyModel apply;
 
-  const ApplyModScreen({
+  const ApplyDetailScreen({
     required this.loginProvider,
     required this.homeProvider,
     required this.apply,
@@ -35,17 +36,56 @@ class ApplyModScreen extends StatefulWidget {
   });
 
   @override
-  State<ApplyModScreen> createState() => _ApplyModScreenState();
+  State<ApplyDetailScreen> createState() => _ApplyDetailScreenState();
 }
 
-class _ApplyModScreenState extends State<ApplyModScreen> {
+class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
   ApplyService applyService = ApplyService();
-  TextEditingController numberController = TextEditingController();
-  String type = kApplyTypes.first;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController contentController = TextEditingController();
-  TextEditingController priceController = TextEditingController(text: '0');
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     ApplyModel? tmpApply = await applyService.selectData(
@@ -54,22 +94,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
     if (tmpApply == null) return;
     comments = tmpApply.comments;
     setState(() {});
-  }
-
-  void _init() async {
-    numberController.text = widget.apply.number;
-    type = widget.apply.type;
-    titleController.text = widget.apply.title;
-    contentController.text = widget.apply.content;
-    priceController.text = widget.apply.price.toString();
-    comments = widget.apply.comments;
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    _init();
-    super.initState();
   }
 
   @override
@@ -116,7 +140,7 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          '申請情報を編集',
+          '申請情報',
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
@@ -161,36 +185,6 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
             ),
             disabled: !isApproval,
           ),
-          const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '保存する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () async {
-              int price = 0;
-              if (type == '稟議' || type == '支払伺い') {
-                price = int.parse(priceController.text);
-              }
-              String? error = await applyProvider.update(
-                apply: widget.apply,
-                number: numberController.text,
-                type: type,
-                title: titleController.text,
-                content: contentController.text,
-                price: price,
-                loginUser: widget.loginProvider.user,
-              );
-              if (error != null) {
-                if (!mounted) return;
-                showMessage(context, error, false);
-                return;
-              }
-              if (!mounted) return;
-              showMessage(context, '申請情報が変更されました', true);
-              Navigator.pop(context);
-            },
-          ),
           const SizedBox(width: 8),
         ],
         shape: Border(bottom: BorderSide(color: kBorderColor)),
@@ -219,84 +213,126 @@ class _ApplyModScreenState extends State<ApplyModScreen> {
                     '申請者: ${widget.apply.createdUserName}',
                     style: const TextStyle(color: kGreyColor),
                   ),
+                  widget.apply.approval == 1
+                      ? Text(
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.apply.approvedAt)}',
+                          style: const TextStyle(color: kRedColor),
+                        )
+                      : Container(),
+                  widget.apply.approval == 1
+                      ? Text(
+                          '承認番号: ${widget.apply.approvalNumber}',
+                          style: const TextStyle(color: kRedColor),
+                        )
+                      : Container(),
                 ],
               ),
               const SizedBox(height: 8),
-              FormLabel(
-                '承認者一覧',
-                child: Container(
-                  color: kRedColor.withOpacity(0.3),
-                  width: double.infinity,
-                  child: Column(
-                    children: reApprovalUsers.map((approvalUser) {
-                      return ApprovalUserList(approvalUser: approvalUser);
-                    }).toList(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              FormLabel(
-                '申請番号',
-                child: CustomTextField(
-                  controller: numberController,
-                  textInputType: TextInputType.number,
-                  maxLines: 1,
-                ),
-              ),
-              const SizedBox(height: 8),
-              FormLabel(
-                '申請種別',
-                child: Column(
-                  children: kApplyTypes.map((e) {
-                    return RadioListTile(
-                      title: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Chip(
-                          label: Text(e),
-                          backgroundColor: generateApplyColor(e),
+              reApprovalUsers.isNotEmpty
+                  ? FormLabel(
+                      '承認者一覧',
+                      child: Container(
+                        color: kRedColor.withOpacity(0.3),
+                        width: double.infinity,
+                        child: Column(
+                          children: reApprovalUsers.map((approvalUser) {
+                            return ApprovalUserList(approvalUser: approvalUser);
+                          }).toList(),
                         ),
                       ),
-                      value: e,
-                      groupValue: type,
-                      onChanged: (value) {
-                        if (value == null) return;
-                        setState(() {
-                          type = value;
-                        });
-                      },
-                    );
-                  }).toList(),
+                    )
+                  : Container(),
+              const SizedBox(height: 16),
+              FormLabel(
+                '申請種別',
+                child: Chip(
+                  label: Text('${widget.apply.type}申請'),
+                  backgroundColor: widget.apply.typeColor(),
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '件名',
-                child: CustomTextField(
-                  controller: titleController,
-                  textInputType: TextInputType.text,
-                  maxLines: 1,
+                child: FormValue(
+                  widget.apply.title,
+                  onTap: () {
+                    final titleController = TextEditingController(
+                      text: widget.apply.title,
+                    );
+                    _showTextField(
+                      controller: titleController,
+                      onPressed: () {
+                        applyService.update({
+                          'id': widget.apply.id,
+                          'title': titleController.text,
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
-              type == '稟議' || type == '支払伺い'
+              widget.apply.type == '稟議' || widget.apply.type == '支払伺い'
                   ? FormLabel(
                       '金額',
-                      child: CustomTextField(
-                        controller: priceController,
-                        textInputType: TextInputType.number,
-                        maxLines: 1,
+                      child: FormValue(
+                        '¥ ${widget.apply.formatPrice()}',
+                        onTap: () {
+                          final priceController = TextEditingController(
+                            text: widget.apply.price.toString(),
+                          );
+                          _showTextField(
+                            controller: priceController,
+                            onPressed: () {
+                              applyService.update({
+                                'id': widget.apply.id,
+                                'price': int.parse(priceController.text),
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
                       ),
                     )
                   : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '内容',
-                child: CustomTextField(
-                  controller: contentController,
-                  textInputType: TextInputType.multiline,
-                  maxLines: 30,
+                child: FormValue(
+                  widget.apply.content,
+                  onTap: () {
+                    final contentController = TextEditingController(
+                      text: widget.apply.content,
+                    );
+                    _showTextField(
+                      controller: contentController,
+                      textInputType: TextInputType.multiline,
+                      onPressed: () {
+                        applyService.update({
+                          'id': widget.apply.id,
+                          'content': contentController.text,
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
+              const SizedBox(height: 8),
+              widget.apply.approvalReason != ''
+                  ? FormLabel(
+                      '承認理由',
+                      child: FormValue(widget.apply.approvalReason),
+                    )
+                  : Container(),
+              const SizedBox(height: 8),
+              widget.apply.reason != ''
+                  ? FormLabel(
+                      '否決理由',
+                      child: FormValue(widget.apply.reason),
+                    )
+                  : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '添付ファイル',

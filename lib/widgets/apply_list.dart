@@ -22,7 +22,7 @@ class ApplyList extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: kBorderColor)),
         ),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -32,6 +32,12 @@ class ApplyList extends StatelessWidget {
                 Chip(
                   label: Text('${apply.type}申請'),
                   backgroundColor: apply.typeColor(),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    side: BorderSide.none,
+                  ),
                 ),
                 Text(
                   apply.title,
@@ -39,12 +45,43 @@ class ApplyList extends StatelessWidget {
                 ),
                 Text(
                   '申請日時: ${dateText('yyyy/MM/dd HH:mm', apply.createdAt)}',
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    color: kGreyColor,
+                    fontSize: 14,
+                  ),
                 ),
                 Text(
                   '申請番号: ${apply.number}',
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    color: kGreyColor,
+                    fontSize: 14,
+                  ),
                 ),
+                Text(
+                  '申請者: ${apply.createdUserName}',
+                  style: const TextStyle(
+                    color: kGreyColor,
+                    fontSize: 14,
+                  ),
+                ),
+                apply.approval == 1
+                    ? Text(
+                        '承認日時: ${dateText('yyyy/MM/dd HH:mm', apply.approvedAt)}',
+                        style: const TextStyle(
+                          color: kRedColor,
+                          fontSize: 14,
+                        ),
+                      )
+                    : Container(),
+                apply.approval == 1
+                    ? Text(
+                        '承認番号: ${apply.approvalNumber}',
+                        style: const TextStyle(
+                          color: kRedColor,
+                          fontSize: 14,
+                        ),
+                      )
+                    : Container(),
               ],
             ),
             const FaIcon(

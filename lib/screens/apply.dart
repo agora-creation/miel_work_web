@@ -7,10 +7,11 @@ import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/screens/apply_add.dart';
-import 'package:miel_work_web/screens/apply_history.dart';
-import 'package:miel_work_web/screens/apply_mod.dart';
+import 'package:miel_work_web/screens/apply_detail.dart';
 import 'package:miel_work_web/services/apply.dart';
 import 'package:miel_work_web/widgets/apply_list.dart';
+import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
+import 'package:miel_work_web/widgets/custom_button.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -32,6 +33,18 @@ class _ApplyScreenState extends State<ApplyScreen> {
   ApplyService applyService = ApplyService();
   DateTime? searchStart;
   DateTime? searchEnd;
+  int searchApproval = 0;
+
+  void _getApproval() async {
+    searchApproval = await getPrefsInt('approval') ?? 0;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getApproval();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +52,17 @@ class _ApplyScreenState extends State<ApplyScreen> {
     if (searchStart != null && searchEnd != null) {
       searchText =
           '${dateText('yyyy/MM/dd', searchStart)}～${dateText('yyyy/MM/dd', searchEnd)}';
+    }
+    String searchApprovalText = '承認待ち';
+    switch (searchApproval) {
+      case 0:
+        searchApprovalText = '承認待ち';
+      case 1:
+        searchApprovalText = '承認済み';
+      case 9:
+        searchApprovalText = '否決';
+      default:
+        searchApprovalText = '承認待ち';
     }
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -100,49 +124,36 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     ),
                     const SizedBox(width: 4),
                     CustomIconTextButton(
-                      label: '件名検索: ',
+                      label: '承認状況検索: $searchApprovalText',
                       labelColor: kWhiteColor,
                       backgroundColor: kSearchColor,
                       leftIcon: FontAwesomeIcons.magnifyingGlass,
-                      onPressed: () {},
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) => SearchApprovalDialog(
+                          getApproval: _getApproval,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    CustomIconTextButton(
-                      label: '承認済一覧',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kGreyColor,
-                      leftIcon: FontAwesomeIcons.list,
-                      onPressed: () => showBottomUpScreen(
-                        context,
-                        ApplyHistoryScreen(
+                CustomIconTextButton(
+                  label: '新規申請',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  leftIcon: FontAwesomeIcons.plus,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ApplyAddScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: '新規申請',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kBlueColor,
-                      leftIcon: FontAwesomeIcons.plus,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: ApplyAddScreen(
-                              loginProvider: widget.loginProvider,
-                              homeProvider: widget.homeProvider,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -153,7 +164,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   organizationId: widget.loginProvider.organization?.id,
                   searchStart: searchStart,
                   searchEnd: searchEnd,
-                  approval: [0],
+                  approval: [searchApproval],
                 ),
                 builder: (context, snapshot) {
                   List<ApplyModel> applies = [];
@@ -181,7 +192,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                             context,
                             PageTransition(
                               type: PageTransitionType.rightToLeft,
-                              child: ApplyModScreen(
+                              child: ApplyDetailScreen(
                                 loginProvider: widget.loginProvider,
                                 homeProvider: widget.homeProvider,
                                 apply: apply,
@@ -198,6 +209,102 @@ class _ApplyScreenState extends State<ApplyScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SearchApprovalDialog extends StatefulWidget {
+  final Function() getApproval;
+
+  const SearchApprovalDialog({
+    required this.getApproval,
+    super.key,
+  });
+
+  @override
+  State<SearchApprovalDialog> createState() => _SearchApprovalDialogState();
+}
+
+class _SearchApprovalDialogState extends State<SearchApprovalDialog> {
+  int approval = 0;
+
+  void _getApproval() async {
+    approval = await getPrefsInt('approval') ?? 0;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getApproval();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            RadioListTile(
+              title: const Text('承認待ち'),
+              value: 0,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('承認済み'),
+              value: 1,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
+            ),
+            RadioListTile(
+              title: const Text('否決'),
+              value: 9,
+              groupValue: approval,
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  approval = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '検索する',
+          labelColor: kWhiteColor,
+          backgroundColor: kSearchColor,
+          onPressed: () async {
+            await setPrefsInt('approval', approval);
+            widget.getApproval();
+            if (!mounted) return;
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
