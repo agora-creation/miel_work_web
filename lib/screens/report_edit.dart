@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/comment.dart';
+import 'package:miel_work_web/models/plan.dart';
+import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/models/report_check.dart';
 import 'package:miel_work_web/models/report_equipment.dart';
@@ -17,6 +19,8 @@ import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
 import 'package:miel_work_web/services/pdf.dart';
+import 'package:miel_work_web/services/plan.dart';
+import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/services/report.dart';
 import 'package:miel_work_web/widgets/comment_list.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
@@ -29,25 +33,28 @@ import 'package:miel_work_web/widgets/report_table_button.dart';
 import 'package:miel_work_web/widgets/report_table_th.dart';
 import 'package:provider/provider.dart';
 
-class ReportModScreen extends StatefulWidget {
+class ReportEditScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final ReportModel report;
+  final ReportModel? report;
 
-  const ReportModScreen({
+  const ReportEditScreen({
     required this.loginProvider,
     required this.homeProvider,
-    required this.report,
+    this.report,
     super.key,
   });
 
   @override
-  State<ReportModScreen> createState() => _ReportModScreenState();
+  State<ReportEditScreen> createState() => _ReportEditScreenState();
 }
 
-class _ReportModScreenState extends State<ReportModScreen> {
+class _ReportEditScreenState extends State<ReportEditScreen> {
   GlobalKey printKey = GlobalKey();
+  PlanService planService = PlanService();
+  ProblemService problemService = ProblemService();
   ReportService reportService = ReportService();
+  DateTime createdAt = DateTime.now();
   List<ReportWorkerModel> reportWorkers = [];
   List<ReportWorkerModel> reportWorkersGuardsman = [];
   List<ReportWorkerModel> reportWorkersGarbageman = [];
@@ -103,11 +110,13 @@ class _ReportModScreenState extends State<ReportModScreen> {
   List<CommentModel> comments = [];
 
   void _reloadComments() async {
-    ReportModel? tmpReport = await reportService.selectData(
-      id: widget.report.id,
-    );
-    if (tmpReport == null) return;
-    comments = tmpReport.comments;
+    if (widget.report != null) {
+      ReportModel? tmpReport = await reportService.selectData(
+        id: widget.report!.id,
+      );
+      if (tmpReport == null) return;
+      comments = tmpReport.comments;
+    }
     setState(() {});
   }
 
@@ -195,73 +204,156 @@ class _ReportModScreenState extends State<ReportModScreen> {
   }
 
   void _init() async {
-    reportWorkers = widget.report.reportWorkers;
-    reportWorkersGuardsman = widget.report.reportWorkersGuardsman;
-    reportWorkersGarbageman = widget.report.reportWorkersGarbageman;
-    reportVisitor = widget.report.reportVisitor;
-    reportLocker = widget.report.reportLocker;
-    reportPlans = widget.report.reportPlans;
-    reportCheck = widget.report.reportCheck;
-    advancePayment1 = widget.report.advancePayment1;
-    advancePayment2 = widget.report.advancePayment2;
-    reportRepairs = widget.report.reportRepairs;
-    reportProblems = widget.report.reportProblems;
-    reportPamphlets = widget.report.reportPamphlets;
-    reportEquipments = widget.report.reportEquipments;
-    remarks = widget.report.remarks;
-    agenda = widget.report.agenda;
-    lastConfirmShop = widget.report.lastConfirmShop;
-    lastConfirmShopAt = widget.report.lastConfirmShopAt;
-    lastConfirmShopName = widget.report.lastConfirmShopName;
-    lastConfirmCenter = widget.report.lastConfirmCenter;
-    lastConfirmCenterAt = widget.report.lastConfirmCenterAt;
-    lastConfirmExhaust = widget.report.lastConfirmExhaust;
-    lastConfirmExhaustAt = widget.report.lastConfirmExhaustAt;
-    lastConfirmRoof = widget.report.lastConfirmRoof;
-    lastConfirmRoofAt = widget.report.lastConfirmRoofAt;
-    lastConfirmAirCon = widget.report.lastConfirmAirCon;
-    lastConfirmAirConAt = widget.report.lastConfirmAirConAt;
-    lastConfirmToilet = widget.report.lastConfirmToilet;
-    lastConfirmToiletAt = widget.report.lastConfirmToiletAt;
-    lastConfirmBaby = widget.report.lastConfirmBaby;
-    lastConfirmBabyAt = widget.report.lastConfirmBabyAt;
-    lastConfirmPC = widget.report.lastConfirmPC;
-    lastConfirmPCAt = widget.report.lastConfirmPCAt;
-    lastConfirmTel = widget.report.lastConfirmTel;
-    lastConfirmTelAt = widget.report.lastConfirmTelAt;
-    lastConfirmCoupon = widget.report.lastConfirmCoupon;
-    lastConfirmCouponAt = widget.report.lastConfirmCouponAt;
-    lastConfirmCouponNumber = widget.report.lastConfirmCouponNumber;
-    lastConfirmCalendar = widget.report.lastConfirmCalendar;
-    lastConfirmCalendarAt = widget.report.lastConfirmCalendarAt;
-    lastConfirmMoney = widget.report.lastConfirmMoney;
-    lastConfirmMoneyAt = widget.report.lastConfirmMoneyAt;
-    lastConfirmLock = widget.report.lastConfirmLock;
-    lastConfirmLockAt = widget.report.lastConfirmLockAt;
-    lastConfirmLockName = widget.report.lastConfirmLockName;
-    lastConfirmUser = widget.report.lastConfirmUser;
-    lastConfirmUserAt = widget.report.lastConfirmUserAt;
-    lastConfirmUserName = widget.report.lastConfirmUserName;
-    lastExitUser = widget.report.lastExitUser;
-    lastExitUserAt = widget.report.lastExitUserAt;
-    lastExitUserName = widget.report.lastExitUserName;
-    visitor1DayAlls = await reportService.getVisitorAll(
-      organizationId: widget.loginProvider.organization?.id,
-      day: DateTime(
-        widget.report.createdAt.year,
-        widget.report.createdAt.month,
-        widget.report.createdAt.day,
-      ).subtract(const Duration(days: 1)),
-    );
-    visitor1YearAlls = await reportService.getVisitorAll(
-      organizationId: widget.loginProvider.organization?.id,
-      day: DateTime(
-        widget.report.createdAt.year - 1,
-        widget.report.createdAt.month,
-        widget.report.createdAt.day,
-      ),
-    );
-    comments = widget.report.comments;
+    if (widget.report != null) {
+      createdAt = widget.report!.createdAt;
+      reportWorkers = widget.report!.reportWorkers;
+      reportWorkersGuardsman = widget.report!.reportWorkersGuardsman;
+      reportWorkersGarbageman = widget.report!.reportWorkersGarbageman;
+      reportVisitor = widget.report!.reportVisitor;
+      reportLocker = widget.report!.reportLocker;
+      reportPlans = widget.report!.reportPlans;
+      reportCheck = widget.report!.reportCheck;
+      advancePayment1 = widget.report!.advancePayment1;
+      advancePayment2 = widget.report!.advancePayment2;
+      reportRepairs = widget.report!.reportRepairs;
+      reportProblems = widget.report!.reportProblems;
+      reportPamphlets = widget.report!.reportPamphlets;
+      reportEquipments = widget.report!.reportEquipments;
+      remarks = widget.report!.remarks;
+      agenda = widget.report!.agenda;
+      lastConfirmShop = widget.report!.lastConfirmShop;
+      lastConfirmShopAt = widget.report!.lastConfirmShopAt;
+      lastConfirmShopName = widget.report!.lastConfirmShopName;
+      lastConfirmCenter = widget.report!.lastConfirmCenter;
+      lastConfirmCenterAt = widget.report!.lastConfirmCenterAt;
+      lastConfirmExhaust = widget.report!.lastConfirmExhaust;
+      lastConfirmExhaustAt = widget.report!.lastConfirmExhaustAt;
+      lastConfirmRoof = widget.report!.lastConfirmRoof;
+      lastConfirmRoofAt = widget.report!.lastConfirmRoofAt;
+      lastConfirmAirCon = widget.report!.lastConfirmAirCon;
+      lastConfirmAirConAt = widget.report!.lastConfirmAirConAt;
+      lastConfirmToilet = widget.report!.lastConfirmToilet;
+      lastConfirmToiletAt = widget.report!.lastConfirmToiletAt;
+      lastConfirmBaby = widget.report!.lastConfirmBaby;
+      lastConfirmBabyAt = widget.report!.lastConfirmBabyAt;
+      lastConfirmPC = widget.report!.lastConfirmPC;
+      lastConfirmPCAt = widget.report!.lastConfirmPCAt;
+      lastConfirmTel = widget.report!.lastConfirmTel;
+      lastConfirmTelAt = widget.report!.lastConfirmTelAt;
+      lastConfirmCoupon = widget.report!.lastConfirmCoupon;
+      lastConfirmCouponAt = widget.report!.lastConfirmCouponAt;
+      lastConfirmCouponNumber = widget.report!.lastConfirmCouponNumber;
+      lastConfirmCalendar = widget.report!.lastConfirmCalendar;
+      lastConfirmCalendarAt = widget.report!.lastConfirmCalendarAt;
+      lastConfirmMoney = widget.report!.lastConfirmMoney;
+      lastConfirmMoneyAt = widget.report!.lastConfirmMoneyAt;
+      lastConfirmLock = widget.report!.lastConfirmLock;
+      lastConfirmLockAt = widget.report!.lastConfirmLockAt;
+      lastConfirmLockName = widget.report!.lastConfirmLockName;
+      lastConfirmUser = widget.report!.lastConfirmUser;
+      lastConfirmUserAt = widget.report!.lastConfirmUserAt;
+      lastConfirmUserName = widget.report!.lastConfirmUserName;
+      lastExitUser = widget.report!.lastExitUser;
+      lastExitUserAt = widget.report!.lastExitUserAt;
+      lastExitUserName = widget.report!.lastExitUserName;
+      visitor1DayAlls = await reportService.getVisitorAll(
+        organizationId: widget.loginProvider.organization?.id,
+        day: DateTime(
+          widget.report!.createdAt.year,
+          widget.report!.createdAt.month,
+          widget.report!.createdAt.day,
+        ).subtract(const Duration(days: 1)),
+      );
+      visitor1YearAlls = await reportService.getVisitorAll(
+        organizationId: widget.loginProvider.organization?.id,
+        day: DateTime(
+          widget.report!.createdAt.year - 1,
+          widget.report!.createdAt.month,
+          widget.report!.createdAt.day,
+        ),
+      );
+      comments = widget.report!.comments;
+    } else {
+      DateTime now = DateTime.now();
+      createdAt = now;
+      reportWorkers.add(ReportWorkerModel.fromMap({}));
+      List<PlanModel> plans = await planService.selectList(
+        organizationId: widget.loginProvider.organization?.id,
+        searchStart: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          0,
+          0,
+          0,
+        ),
+        searchEnd: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          23,
+          59,
+          59,
+        ),
+      );
+      if (plans.isNotEmpty) {
+        for (PlanModel plan in plans) {
+          reportPlans.add(ReportPlanModel.fromMap({
+            'title': '[${plan.category}]${plan.subject}',
+            'time':
+                '${dateText('HH:mm', plan.startedAt)}～${dateText('HH:mm', plan.endedAt)}',
+          }));
+        }
+      }
+      reportRepairs.add(ReportRepairModel.fromMap({}));
+      reportProblems.add(ReportProblemModel.fromMap({}));
+      List<ProblemModel> problems = await problemService.selectList(
+        organizationId: widget.loginProvider.organization?.id,
+        searchStart: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          0,
+          0,
+          0,
+        ),
+        searchEnd: DateTime(
+          now.year,
+          now.month,
+          now.day,
+          23,
+          59,
+          59,
+        ),
+      );
+      if (problems.isNotEmpty) {
+        reportProblems.clear();
+        for (ProblemModel problem in problems) {
+          reportProblems.add(ReportProblemModel.fromMap({
+            'title': '[${problem.type}]${problem.title}',
+            'deal': '',
+          }));
+        }
+      }
+      reportPamphlets.add(ReportPamphletModel.fromMap({}));
+      reportEquipments.add(ReportEquipmentModel.fromMap({}));
+      visitor1DayAlls = await reportService.getVisitorAll(
+        organizationId: widget.loginProvider.organization?.id,
+        day: DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).subtract(const Duration(days: 1)),
+      );
+      visitor1YearAlls = await reportService.getVisitorAll(
+        organizationId: widget.loginProvider.organization?.id,
+        day: DateTime(
+          now.year - 1,
+          now.month,
+          now.day,
+        ),
+      );
+    }
     setState(() {});
   }
 
@@ -287,121 +379,203 @@ class _ReportModScreenState extends State<ReportModScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          '${dateText('MM月dd日(E)', widget.report.createdAt)}の日報',
+          '${dateText('MM月dd日(E)', createdAt)}の日報',
           style: const TextStyle(color: kBlackColor),
         ),
         actions: [
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: 'PDF出力',
-            labelColor: kWhiteColor,
-            backgroundColor: kPdfColor,
-            onPressed: () async => await PdfService().reportDownload(
-              widget.report,
-            ),
-          ),
+          widget.report != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'PDF出力',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kPdfColor,
+                  onPressed: () async => await PdfService().reportDownload(
+                    widget.report!,
+                  ),
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '承認する',
-            labelColor: kWhiteColor,
-            backgroundColor: kApprovalColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => ApprovalReportDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                report: widget.report,
-              ),
-            ),
-            disabled: widget.loginProvider.user?.president == false,
-          ),
+          widget.report != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '承認する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kApprovalColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => ApprovalReportDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      report: widget.report!,
+                    ),
+                  ),
+                  disabled: widget.loginProvider.user?.president == false,
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelReportDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                report: widget.report,
-              ),
-            ),
-          ),
+          widget.report != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '削除する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kRedColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => DelReportDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      report: widget.report!,
+                    ),
+                  ),
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '保存する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () async {
-              String? error = await reportProvider.update(
-                report: widget.report,
-                reportWorkers: reportWorkers,
-                reportWorkersGuardsman: reportWorkersGuardsman,
-                reportWorkersGarbageman: reportWorkersGarbageman,
-                reportVisitor: reportVisitor,
-                reportLocker: reportLocker,
-                reportPlans: reportPlans,
-                reportCheck: reportCheck,
-                advancePayment1: advancePayment1,
-                advancePayment2: advancePayment2,
-                reportRepairs: reportRepairs,
-                reportProblems: reportProblems,
-                reportPamphlets: reportPamphlets,
-                reportEquipments: reportEquipments,
-                remarks: remarks,
-                agenda: agenda,
-                lastConfirmShop: lastConfirmShop,
-                lastConfirmShopAt: lastConfirmShopAt,
-                lastConfirmShopName: lastConfirmShopName,
-                lastConfirmCenter: lastConfirmCenter,
-                lastConfirmCenterAt: lastConfirmCenterAt,
-                lastConfirmExhaust: lastConfirmExhaust,
-                lastConfirmExhaustAt: lastConfirmExhaustAt,
-                lastConfirmRoof: lastConfirmRoof,
-                lastConfirmRoofAt: lastConfirmRoofAt,
-                lastConfirmAirCon: lastConfirmAirCon,
-                lastConfirmAirConAt: lastConfirmAirConAt,
-                lastConfirmToilet: lastConfirmToilet,
-                lastConfirmToiletAt: lastConfirmToiletAt,
-                lastConfirmBaby: lastConfirmBaby,
-                lastConfirmBabyAt: lastConfirmBabyAt,
-                lastConfirmPC: lastConfirmPC,
-                lastConfirmPCAt: lastConfirmPCAt,
-                lastConfirmTel: lastConfirmTel,
-                lastConfirmTelAt: lastConfirmTelAt,
-                lastConfirmCoupon: lastConfirmCoupon,
-                lastConfirmCouponAt: lastConfirmCouponAt,
-                lastConfirmCouponNumber: lastConfirmCouponNumber,
-                lastConfirmCalendar: lastConfirmCalendar,
-                lastConfirmCalendarAt: lastConfirmCalendarAt,
-                lastConfirmMoney: lastConfirmMoney,
-                lastConfirmMoneyAt: lastConfirmMoneyAt,
-                lastConfirmLock: lastConfirmLock,
-                lastConfirmLockAt: lastConfirmLockAt,
-                lastConfirmLockName: lastConfirmLockName,
-                lastConfirmUser: lastConfirmUser,
-                lastConfirmUserAt: lastConfirmUserAt,
-                lastConfirmUserName: lastConfirmUserName,
-                lastExitUser: lastExitUser,
-                lastExitUserAt: lastExitUserAt,
-                lastExitUserName: lastExitUserName,
-                loginUser: widget.loginProvider.user,
-              );
-              if (error != null) {
-                if (!mounted) return;
-                showMessage(context, error, false);
-                return;
-              }
-              if (!mounted) return;
-              showMessage(context, '日報が保存されました', true);
-              Navigator.pop(context);
-            },
-          ),
+          widget.report != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () async {
+                    String? error = await reportProvider.update(
+                      report: widget.report!,
+                      reportWorkers: reportWorkers,
+                      reportWorkersGuardsman: reportWorkersGuardsman,
+                      reportWorkersGarbageman: reportWorkersGarbageman,
+                      reportVisitor: reportVisitor,
+                      reportLocker: reportLocker,
+                      reportPlans: reportPlans,
+                      reportCheck: reportCheck,
+                      advancePayment1: advancePayment1,
+                      advancePayment2: advancePayment2,
+                      reportRepairs: reportRepairs,
+                      reportProblems: reportProblems,
+                      reportPamphlets: reportPamphlets,
+                      reportEquipments: reportEquipments,
+                      remarks: remarks,
+                      agenda: agenda,
+                      lastConfirmShop: lastConfirmShop,
+                      lastConfirmShopAt: lastConfirmShopAt,
+                      lastConfirmShopName: lastConfirmShopName,
+                      lastConfirmCenter: lastConfirmCenter,
+                      lastConfirmCenterAt: lastConfirmCenterAt,
+                      lastConfirmExhaust: lastConfirmExhaust,
+                      lastConfirmExhaustAt: lastConfirmExhaustAt,
+                      lastConfirmRoof: lastConfirmRoof,
+                      lastConfirmRoofAt: lastConfirmRoofAt,
+                      lastConfirmAirCon: lastConfirmAirCon,
+                      lastConfirmAirConAt: lastConfirmAirConAt,
+                      lastConfirmToilet: lastConfirmToilet,
+                      lastConfirmToiletAt: lastConfirmToiletAt,
+                      lastConfirmBaby: lastConfirmBaby,
+                      lastConfirmBabyAt: lastConfirmBabyAt,
+                      lastConfirmPC: lastConfirmPC,
+                      lastConfirmPCAt: lastConfirmPCAt,
+                      lastConfirmTel: lastConfirmTel,
+                      lastConfirmTelAt: lastConfirmTelAt,
+                      lastConfirmCoupon: lastConfirmCoupon,
+                      lastConfirmCouponAt: lastConfirmCouponAt,
+                      lastConfirmCouponNumber: lastConfirmCouponNumber,
+                      lastConfirmCalendar: lastConfirmCalendar,
+                      lastConfirmCalendarAt: lastConfirmCalendarAt,
+                      lastConfirmMoney: lastConfirmMoney,
+                      lastConfirmMoneyAt: lastConfirmMoneyAt,
+                      lastConfirmLock: lastConfirmLock,
+                      lastConfirmLockAt: lastConfirmLockAt,
+                      lastConfirmLockName: lastConfirmLockName,
+                      lastConfirmUser: lastConfirmUser,
+                      lastConfirmUserAt: lastConfirmUserAt,
+                      lastConfirmUserName: lastConfirmUserName,
+                      lastExitUser: lastExitUser,
+                      lastExitUserAt: lastExitUserAt,
+                      lastExitUserName: lastExitUserName,
+                      loginUser: widget.loginProvider.user,
+                    );
+                    if (error != null) {
+                      if (!mounted) return;
+                      showMessage(context, error, false);
+                      return;
+                    }
+                    if (!mounted) return;
+                    showMessage(context, '日報が保存されました', true);
+                    Navigator.pop(context);
+                  },
+                )
+              : Container(),
+          const SizedBox(width: 4),
+          widget.report == null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '以下の内容で保存する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () async {
+                    String? error = await reportProvider.create(
+                      organization: widget.loginProvider.organization,
+                      createdAt: createdAt,
+                      reportWorkers: reportWorkers,
+                      reportWorkersGuardsman: reportWorkersGuardsman,
+                      reportWorkersGarbageman: reportWorkersGarbageman,
+                      reportVisitor: reportVisitor,
+                      reportLocker: reportLocker,
+                      reportPlans: reportPlans,
+                      reportCheck: reportCheck,
+                      advancePayment1: advancePayment1,
+                      advancePayment2: advancePayment2,
+                      reportRepairs: reportRepairs,
+                      reportProblems: reportProblems,
+                      reportPamphlets: reportPamphlets,
+                      reportEquipments: reportEquipments,
+                      remarks: remarks,
+                      agenda: agenda,
+                      lastConfirmShop: lastConfirmShop,
+                      lastConfirmShopAt: lastConfirmShopAt,
+                      lastConfirmShopName: lastConfirmShopName,
+                      lastConfirmCenter: lastConfirmCenter,
+                      lastConfirmCenterAt: lastConfirmCenterAt,
+                      lastConfirmExhaust: lastConfirmExhaust,
+                      lastConfirmExhaustAt: lastConfirmExhaustAt,
+                      lastConfirmRoof: lastConfirmRoof,
+                      lastConfirmRoofAt: lastConfirmRoofAt,
+                      lastConfirmAirCon: lastConfirmAirCon,
+                      lastConfirmAirConAt: lastConfirmAirConAt,
+                      lastConfirmToilet: lastConfirmToilet,
+                      lastConfirmToiletAt: lastConfirmToiletAt,
+                      lastConfirmBaby: lastConfirmBaby,
+                      lastConfirmBabyAt: lastConfirmBabyAt,
+                      lastConfirmPC: lastConfirmPC,
+                      lastConfirmPCAt: lastConfirmPCAt,
+                      lastConfirmTel: lastConfirmTel,
+                      lastConfirmTelAt: lastConfirmTelAt,
+                      lastConfirmCoupon: lastConfirmCoupon,
+                      lastConfirmCouponAt: lastConfirmCouponAt,
+                      lastConfirmCalendar: lastConfirmCalendar,
+                      lastConfirmCalendarAt: lastConfirmCalendarAt,
+                      lastConfirmCouponNumber: lastConfirmCouponNumber,
+                      lastConfirmMoney: lastConfirmMoney,
+                      lastConfirmMoneyAt: lastConfirmMoneyAt,
+                      lastConfirmLock: lastConfirmLock,
+                      lastConfirmLockAt: lastConfirmLockAt,
+                      lastConfirmLockName: lastConfirmLockName,
+                      lastConfirmUser: lastConfirmUser,
+                      lastConfirmUserAt: lastConfirmUserAt,
+                      lastConfirmUserName: lastConfirmUserName,
+                      lastExitUser: lastExitUser,
+                      lastExitUserAt: lastExitUserAt,
+                      lastExitUserName: lastExitUserName,
+                      loginUser: widget.loginProvider.user,
+                    );
+                    if (error != null) {
+                      if (!mounted) return;
+                      showMessage(context, error, false);
+                      return;
+                    }
+                    if (!mounted) return;
+                    showMessage(context, '日報が保存されました', true);
+                    Navigator.pop(context);
+                  },
+                )
+              : Container(),
           const SizedBox(width: 8),
         ],
         shape: Border(bottom: BorderSide(color: kBorderColor)),
@@ -1886,91 +2060,98 @@ class _ReportModScreenState extends State<ReportModScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Container(
-                color: kGreyColor.withOpacity(0.2),
-                padding: const EdgeInsets.all(16),
-                child: FormLabel(
-                  '社内コメント',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      comments.isNotEmpty
-                          ? Column(
-                              children: comments.map((comment) {
-                                return CommentList(comment: comment);
-                              }).toList(),
-                            )
-                          : const ListTile(title: Text('コメントがありません')),
-                      const SizedBox(height: 8),
-                      CustomButton(
-                        type: ButtonSizeType.sm,
-                        label: 'コメント追加',
-                        labelColor: kWhiteColor,
-                        backgroundColor: kBlueColor,
-                        onPressed: () {
-                          TextEditingController commentContentController =
-                              TextEditingController();
-                          showDialog(
-                            context: context,
-                            builder: (context) => CustomAlertDialog(
-                              content: SizedBox(
-                                width: 600,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    CustomTextField(
-                                      controller: commentContentController,
-                                      textInputType: TextInputType.multiline,
-                                      maxLines: null,
+              widget.report != null
+                  ? Container(
+                      color: kGreyColor.withOpacity(0.2),
+                      padding: const EdgeInsets.all(16),
+                      child: FormLabel(
+                        '社内コメント',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            comments.isNotEmpty
+                                ? Column(
+                                    children: comments.map((comment) {
+                                      return CommentList(comment: comment);
+                                    }).toList(),
+                                  )
+                                : const ListTile(title: Text('コメントがありません')),
+                            const SizedBox(height: 8),
+                            CustomButton(
+                              type: ButtonSizeType.sm,
+                              label: 'コメント追加',
+                              labelColor: kWhiteColor,
+                              backgroundColor: kBlueColor,
+                              onPressed: () {
+                                TextEditingController commentContentController =
+                                    TextEditingController();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CustomAlertDialog(
+                                    content: SizedBox(
+                                      width: 600,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(height: 8),
+                                          CustomTextField(
+                                            controller:
+                                                commentContentController,
+                                            textInputType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                CustomButton(
-                                  type: ButtonSizeType.sm,
-                                  label: 'キャンセル',
-                                  labelColor: kWhiteColor,
-                                  backgroundColor: kGreyColor,
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                                CustomButton(
-                                  type: ButtonSizeType.sm,
-                                  label: '追記する',
-                                  labelColor: kWhiteColor,
-                                  backgroundColor: kBlueColor,
-                                  onPressed: () async {
-                                    String? error =
-                                        await reportProvider.addComment(
-                                      organization:
-                                          widget.loginProvider.organization,
-                                      report: widget.report,
-                                      content: commentContentController.text,
-                                      loginUser: widget.loginProvider.user,
-                                    );
-                                    if (error != null) {
-                                      if (!mounted) return;
-                                      showMessage(context, error, false);
-                                      return;
-                                    }
-                                    _reloadComments();
-                                    if (!mounted) return;
-                                    showMessage(
-                                        context, '社内コメントが追記されました', true);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
+                                    actions: [
+                                      CustomButton(
+                                        type: ButtonSizeType.sm,
+                                        label: 'キャンセル',
+                                        labelColor: kWhiteColor,
+                                        backgroundColor: kGreyColor,
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                      CustomButton(
+                                        type: ButtonSizeType.sm,
+                                        label: '追記する',
+                                        labelColor: kWhiteColor,
+                                        backgroundColor: kBlueColor,
+                                        onPressed: () async {
+                                          String? error =
+                                              await reportProvider.addComment(
+                                            organization: widget
+                                                .loginProvider.organization,
+                                            report: widget.report!,
+                                            content:
+                                                commentContentController.text,
+                                            loginUser:
+                                                widget.loginProvider.user,
+                                          );
+                                          if (error != null) {
+                                            if (!mounted) return;
+                                            showMessage(context, error, false);
+                                            return;
+                                          }
+                                          _reloadComments();
+                                          if (!mounted) return;
+                                          showMessage(
+                                              context, '社内コメントが追記されました', true);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : Container(),
               const SizedBox(height: 80),
             ],
           ),

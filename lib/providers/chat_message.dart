@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/chat.dart';
 import 'package:miel_work_web/models/chat_message.dart';
 import 'package:miel_work_web/models/reply_source.dart';
@@ -97,6 +98,7 @@ class ChatMessageProvider with ChangeNotifier {
       String fileName = p.basename(result.files.single.name);
       Reference storageRef =
           FirebaseStorage.instance.ref().child('chat/${chat.id}/$id/$fileName');
+      uploadFile = await compressImage(uploadFile);
       UploadTask uploadTask = storageRef.putData(uploadFile);
       TaskSnapshot downloadUrl = await uploadTask;
       String url = (await downloadUrl.ref.getDownloadURL());

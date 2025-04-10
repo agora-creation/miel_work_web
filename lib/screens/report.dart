@@ -6,8 +6,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/report.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
-import 'package:miel_work_web/screens/report_add.dart';
-import 'package:miel_work_web/screens/report_mod.dart';
+import 'package:miel_work_web/screens/report_edit.dart';
 import 'package:miel_work_web/services/report.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/day_list.dart';
@@ -118,10 +117,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       context,
                       PageTransition(
                         type: PageTransitionType.rightToLeft,
-                        child: ReportAddScreen(
+                        child: ReportEditScreen(
                           loginProvider: widget.loginProvider,
                           homeProvider: widget.homeProvider,
-                          day: DateTime.now(),
                         ),
                       ),
                     );
@@ -189,7 +187,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   context,
                                   PageTransition(
                                     type: PageTransitionType.rightToLeft,
-                                    child: ReportModScreen(
+                                    child: ReportEditScreen(
                                       loginProvider: widget.loginProvider,
                                       homeProvider: widget.homeProvider,
                                       report: report,

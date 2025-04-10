@@ -1,7 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:miel_work_web/common/functions.dart';
+import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/organization.dart';
@@ -48,7 +50,13 @@ class ApplyProvider with ChangeNotifier {
             .ref()
             .child('apply')
             .child('/$id$ext');
-        uploadTask = ref.putData(pickedFile.bytes!);
+        Uint8List? bytes;
+        if (imageExtensions.contains(ext)) {
+          bytes = await compressImage(pickedFile.bytes!);
+        } else {
+          bytes = pickedFile.bytes;
+        }
+        uploadTask = ref.putData(bytes!);
         await uploadTask.whenComplete(() => null);
         file = await ref.getDownloadURL();
         fileExt = ext;
@@ -62,7 +70,13 @@ class ApplyProvider with ChangeNotifier {
             .ref()
             .child('apply')
             .child('/${id}_2$ext');
-        uploadTask = ref.putData(pickedFile2.bytes!);
+        Uint8List? bytes;
+        if (imageExtensions.contains(ext)) {
+          bytes = await compressImage(pickedFile2.bytes!);
+        } else {
+          bytes = pickedFile2.bytes;
+        }
+        uploadTask = ref.putData(bytes!);
         await uploadTask.whenComplete(() => null);
         file2 = await ref.getDownloadURL();
         file2Ext = ext;
@@ -76,7 +90,13 @@ class ApplyProvider with ChangeNotifier {
             .ref()
             .child('apply')
             .child('/${id}_3$ext');
-        uploadTask = ref.putData(pickedFile3.bytes!);
+        Uint8List? bytes;
+        if (imageExtensions.contains(ext)) {
+          bytes = await compressImage(pickedFile3.bytes!);
+        } else {
+          bytes = pickedFile3.bytes;
+        }
+        uploadTask = ref.putData(bytes!);
         await uploadTask.whenComplete(() => null);
         file3 = await ref.getDownloadURL();
         file3Ext = ext;
@@ -90,7 +110,13 @@ class ApplyProvider with ChangeNotifier {
             .ref()
             .child('apply')
             .child('/${id}_4$ext');
-        uploadTask = ref.putData(pickedFile4.bytes!);
+        Uint8List? bytes;
+        if (imageExtensions.contains(ext)) {
+          bytes = await compressImage(pickedFile4.bytes!);
+        } else {
+          bytes = pickedFile4.bytes;
+        }
+        uploadTask = ref.putData(bytes!);
         await uploadTask.whenComplete(() => null);
         file4 = await ref.getDownloadURL();
         file4Ext = ext;
@@ -104,7 +130,13 @@ class ApplyProvider with ChangeNotifier {
             .ref()
             .child('apply')
             .child('/${id}_5$ext');
-        uploadTask = ref.putData(pickedFile5.bytes!);
+        Uint8List? bytes;
+        if (imageExtensions.contains(ext)) {
+          bytes = await compressImage(pickedFile5.bytes!);
+        } else {
+          bytes = pickedFile5.bytes;
+        }
+        uploadTask = ref.putData(bytes!);
         await uploadTask.whenComplete(() => null);
         file5 = await ref.getDownloadURL();
         file5Ext = ext;

@@ -49,6 +49,7 @@ class ProblemProvider with ChangeNotifier {
         String fileName = p.basename(imageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$fileName');
+        uploadFile = await compressImage(uploadFile);
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
@@ -60,6 +61,7 @@ class ProblemProvider with ChangeNotifier {
         String file2Name = p.basename(image2Result.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$file2Name');
+        upload2File = await compressImage(upload2File);
         UploadTask uploadTask = storageRef.putData(upload2File);
         TaskSnapshot downloadUrl = await uploadTask;
         image2 = (await downloadUrl.ref.getDownloadURL());
@@ -71,6 +73,7 @@ class ProblemProvider with ChangeNotifier {
         String file3Name = p.basename(image3Result.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('problem/$id/$file3Name');
+        upload3File = await compressImage(upload3File);
         UploadTask uploadTask = storageRef.putData(upload3File);
         TaskSnapshot downloadUrl = await uploadTask;
         image3 = (await downloadUrl.ref.getDownloadURL());
@@ -153,6 +156,7 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$fileName');
+        uploadFile = await compressImage(uploadFile);
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         image = (await downloadUrl.ref.getDownloadURL());
@@ -165,6 +169,7 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$file2Name');
+        upload2File = await compressImage(upload2File);
         UploadTask uploadTask = storageRef.putData(upload2File);
         TaskSnapshot downloadUrl = await uploadTask;
         image2 = (await downloadUrl.ref.getDownloadURL());
@@ -177,6 +182,7 @@ class ProblemProvider with ChangeNotifier {
         Reference storageRef = FirebaseStorage.instance
             .ref()
             .child('problem/${problem.id}/$file3Name');
+        upload3File = await compressImage(upload3File);
         UploadTask uploadTask = storageRef.putData(upload3File);
         TaskSnapshot downloadUrl = await uploadTask;
         image3 = (await downloadUrl.ref.getDownloadURL());

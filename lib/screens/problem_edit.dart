@@ -21,23 +21,23 @@ import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:provider/provider.dart';
 
-class ProblemModScreen extends StatefulWidget {
+class ProblemEditScreen extends StatefulWidget {
   final LoginProvider loginProvider;
   final HomeProvider homeProvider;
-  final ProblemModel problem;
+  final ProblemModel? problem;
 
-  const ProblemModScreen({
+  const ProblemEditScreen({
     required this.loginProvider,
     required this.homeProvider,
-    required this.problem,
+    this.problem,
     super.key,
   });
 
   @override
-  State<ProblemModScreen> createState() => _ProblemModScreenState();
+  State<ProblemEditScreen> createState() => _ProblemEditScreenState();
 }
 
-class _ProblemModScreenState extends State<ProblemModScreen> {
+class _ProblemEditScreenState extends State<ProblemEditScreen> {
   ProblemService problemService = ProblemService();
   String type = kProblemTypes.first;
   DateTime createdAt = DateTime.now();
@@ -56,28 +56,37 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
   List<CommentModel> comments = [];
 
   void _reloadComments() async {
-    ProblemModel? tmpProblem = await problemService.selectData(
-      id: widget.problem.id,
-    );
-    if (tmpProblem == null) return;
-    comments = tmpProblem.comments;
+    if (widget.problem != null) {
+      ProblemModel? tmpProblem = await problemService.selectData(
+        id: widget.problem!.id,
+      );
+      if (tmpProblem == null) return;
+      comments = tmpProblem.comments;
+    }
+    setState(() {});
+  }
+
+  void _init() {
+    if (widget.problem != null) {
+      type = widget.problem!.type;
+      createdAt = widget.problem!.createdAt;
+      titleController.text = widget.problem!.title;
+      picNameController.text = widget.problem!.picName;
+      targetNameController.text = widget.problem!.targetName;
+      targetAgeController.text = widget.problem!.targetAge;
+      targetTelController.text = widget.problem!.targetTel;
+      targetAddressController.text = widget.problem!.targetAddress;
+      detailsController.text = widget.problem!.details;
+      states = widget.problem!.states;
+      countController.text = widget.problem!.count.toString();
+      comments = widget.problem!.comments;
+    }
     setState(() {});
   }
 
   @override
   void initState() {
-    type = widget.problem.type;
-    createdAt = widget.problem.createdAt;
-    titleController.text = widget.problem.title;
-    picNameController.text = widget.problem.picName;
-    targetNameController.text = widget.problem.targetName;
-    targetAgeController.text = widget.problem.targetAge;
-    targetTelController.text = widget.problem.targetTel;
-    targetAddressController.text = widget.problem.targetAddress;
-    detailsController.text = widget.problem.details;
-    states = widget.problem.states;
-    countController.text = widget.problem.count.toString();
-    comments = widget.problem.comments;
+    _init();
     super.initState();
   }
 
@@ -101,83 +110,128 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
           style: TextStyle(color: kBlackColor),
         ),
         actions: [
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: 'PDF出力',
-            labelColor: kWhiteColor,
-            backgroundColor: kPdfColor,
-            onPressed: () async => await PdfService().problemDownload(
-              widget.problem,
-            ),
-          ),
+          widget.problem != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'PDF出力',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kPdfColor,
+                  onPressed: () async => await PdfService().problemDownload(
+                    widget.problem!,
+                  ),
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '処理済にする',
-            labelColor: kWhiteColor,
-            backgroundColor: kCheckColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => ProcessProblemDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                problem: widget.problem,
-              ),
-            ),
-          ),
+          widget.problem != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '処理済にする',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kCheckColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => ProcessProblemDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      problem: widget.problem!,
+                    ),
+                  ),
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '削除する',
-            labelColor: kWhiteColor,
-            backgroundColor: kRedColor,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => DelProblemDialog(
-                loginProvider: widget.loginProvider,
-                homeProvider: widget.homeProvider,
-                problem: widget.problem,
-              ),
-            ),
-            disabled:
-                widget.problem.createdUserId != widget.loginProvider.user!.id,
-          ),
+          widget.problem != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '削除する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kRedColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => DelProblemDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      problem: widget.problem!,
+                    ),
+                  ),
+                  disabled: widget.problem!.createdUserId !=
+                      widget.loginProvider.user!.id,
+                )
+              : Container(),
           const SizedBox(width: 4),
-          CustomButton(
-            type: ButtonSizeType.sm,
-            label: '保存する',
-            labelColor: kWhiteColor,
-            backgroundColor: kBlueColor,
-            onPressed: () async {
-              String? error = await problemProvider.update(
-                organization: widget.loginProvider.organization,
-                problem: widget.problem,
-                type: type,
-                title: titleController.text,
-                createdAt: createdAt,
-                picName: picNameController.text,
-                targetName: targetNameController.text,
-                targetAge: targetAgeController.text,
-                targetTel: targetTelController.text,
-                targetAddress: targetAddressController.text,
-                details: detailsController.text,
-                imageResult: imageResult,
-                image2Result: image2Result,
-                image3Result: image3Result,
-                states: states,
-                count: int.parse(countController.text),
-                loginUser: widget.loginProvider.user,
-              );
-              if (error != null) {
-                if (!mounted) return;
-                showMessage(context, error, false);
-                return;
-              }
-              if (!mounted) return;
-              showMessage(context, 'クレーム／要望情報が編集されました', true);
-              Navigator.pop(context);
-            },
-          ),
+          widget.problem != null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () async {
+                    String? error = await problemProvider.update(
+                      organization: widget.loginProvider.organization,
+                      problem: widget.problem!,
+                      type: type,
+                      title: titleController.text,
+                      createdAt: createdAt,
+                      picName: picNameController.text,
+                      targetName: targetNameController.text,
+                      targetAge: targetAgeController.text,
+                      targetTel: targetTelController.text,
+                      targetAddress: targetAddressController.text,
+                      details: detailsController.text,
+                      imageResult: imageResult,
+                      image2Result: image2Result,
+                      image3Result: image3Result,
+                      states: states,
+                      count: int.parse(countController.text),
+                      loginUser: widget.loginProvider.user,
+                    );
+                    if (error != null) {
+                      if (!mounted) return;
+                      showMessage(context, error, false);
+                      return;
+                    }
+                    if (!mounted) return;
+                    showMessage(context, 'クレーム／要望情報が編集されました', true);
+                    Navigator.pop(context);
+                  },
+                )
+              : Container(),
+          const SizedBox(width: 4),
+          widget.problem == null
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '以下の内容で追加する',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: () async {
+                    String? error = await problemProvider.create(
+                      organization: widget.loginProvider.organization,
+                      type: type,
+                      title: titleController.text,
+                      createdAt: createdAt,
+                      picName: picNameController.text,
+                      targetName: targetNameController.text,
+                      targetAge: targetAgeController.text,
+                      targetTel: targetTelController.text,
+                      targetAddress: targetAddressController.text,
+                      details: detailsController.text,
+                      imageResult: imageResult,
+                      image2Result: image2Result,
+                      image3Result: image3Result,
+                      states: states,
+                      count: int.parse(countController.text),
+                      loginUser: widget.loginProvider.user,
+                    );
+                    if (error != null) {
+                      if (!mounted) return;
+                      showMessage(context, error, false);
+                      return;
+                    }
+                    if (!mounted) return;
+                    showMessage(context, 'クレーム／要望が追加されました', true);
+                    Navigator.pop(context);
+                  },
+                )
+              : Container(),
           const SizedBox(width: 8),
         ],
         shape: Border(bottom: BorderSide(color: kBorderColor)),
@@ -341,9 +395,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                           fit: BoxFit.cover,
                           width: double.infinity,
                         )
-                      : widget.problem.image != ''
+                      : widget.problem?.image != ''
                           ? Image.network(
-                              widget.problem.image,
+                              widget.problem?.image ?? '',
                               fit: BoxFit.cover,
                               width: double.infinity,
                             )
@@ -376,9 +430,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                           fit: BoxFit.cover,
                           width: double.infinity,
                         )
-                      : widget.problem.image2 != ''
+                      : widget.problem?.image2 != ''
                           ? Image.network(
-                              widget.problem.image2,
+                              widget.problem?.image2 ?? '',
                               fit: BoxFit.cover,
                               width: double.infinity,
                             )
@@ -411,9 +465,9 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                           fit: BoxFit.cover,
                           width: double.infinity,
                         )
-                      : widget.problem.image3 != ''
+                      : widget.problem?.image3 != ''
                           ? Image.network(
-                              widget.problem.image3,
+                              widget.problem?.image3 ?? '',
                               fit: BoxFit.cover,
                               width: double.infinity,
                             )
@@ -457,91 +511,98 @@ class _ProblemModScreenState extends State<ProblemModScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              Container(
-                color: kGreyColor.withOpacity(0.2),
-                padding: const EdgeInsets.all(16),
-                child: FormLabel(
-                  '社内コメント',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      comments.isNotEmpty
-                          ? Column(
-                              children: comments.map((comment) {
-                                return CommentList(comment: comment);
-                              }).toList(),
-                            )
-                          : const ListTile(title: Text('コメントがありません')),
-                      const SizedBox(height: 8),
-                      CustomButton(
-                        type: ButtonSizeType.sm,
-                        label: 'コメント追加',
-                        labelColor: kWhiteColor,
-                        backgroundColor: kBlueColor,
-                        onPressed: () {
-                          TextEditingController commentContentController =
-                              TextEditingController();
-                          showDialog(
-                            context: context,
-                            builder: (context) => CustomAlertDialog(
-                              content: SizedBox(
-                                width: 600,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    CustomTextField(
-                                      controller: commentContentController,
-                                      textInputType: TextInputType.multiline,
-                                      maxLines: null,
+              widget.problem != null
+                  ? Container(
+                      color: kGreyColor.withOpacity(0.2),
+                      padding: const EdgeInsets.all(16),
+                      child: FormLabel(
+                        '社内コメント',
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            comments.isNotEmpty
+                                ? Column(
+                                    children: comments.map((comment) {
+                                      return CommentList(comment: comment);
+                                    }).toList(),
+                                  )
+                                : const ListTile(title: Text('コメントがありません')),
+                            const SizedBox(height: 8),
+                            CustomButton(
+                              type: ButtonSizeType.sm,
+                              label: 'コメント追加',
+                              labelColor: kWhiteColor,
+                              backgroundColor: kBlueColor,
+                              onPressed: () {
+                                TextEditingController commentContentController =
+                                    TextEditingController();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CustomAlertDialog(
+                                    content: SizedBox(
+                                      width: 600,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(height: 8),
+                                          CustomTextField(
+                                            controller:
+                                                commentContentController,
+                                            textInputType:
+                                                TextInputType.multiline,
+                                            maxLines: null,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                CustomButton(
-                                  type: ButtonSizeType.sm,
-                                  label: 'キャンセル',
-                                  labelColor: kWhiteColor,
-                                  backgroundColor: kGreyColor,
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                                CustomButton(
-                                  type: ButtonSizeType.sm,
-                                  label: '追記する',
-                                  labelColor: kWhiteColor,
-                                  backgroundColor: kBlueColor,
-                                  onPressed: () async {
-                                    String? error =
-                                        await problemProvider.addComment(
-                                      organization:
-                                          widget.loginProvider.organization,
-                                      problem: widget.problem,
-                                      content: commentContentController.text,
-                                      loginUser: widget.loginProvider.user,
-                                    );
-                                    if (error != null) {
-                                      if (!mounted) return;
-                                      showMessage(context, error, false);
-                                      return;
-                                    }
-                                    _reloadComments();
-                                    if (!mounted) return;
-                                    showMessage(
-                                        context, '社内コメントが追記されました', true);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
+                                    actions: [
+                                      CustomButton(
+                                        type: ButtonSizeType.sm,
+                                        label: 'キャンセル',
+                                        labelColor: kWhiteColor,
+                                        backgroundColor: kGreyColor,
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                      CustomButton(
+                                        type: ButtonSizeType.sm,
+                                        label: '追記する',
+                                        labelColor: kWhiteColor,
+                                        backgroundColor: kBlueColor,
+                                        onPressed: () async {
+                                          String? error =
+                                              await problemProvider.addComment(
+                                            organization: widget
+                                                .loginProvider.organization,
+                                            problem: widget.problem!,
+                                            content:
+                                                commentContentController.text,
+                                            loginUser:
+                                                widget.loginProvider.user,
+                                          );
+                                          if (error != null) {
+                                            if (!mounted) return;
+                                            showMessage(context, error, false);
+                                            return;
+                                          }
+                                          _reloadComments();
+                                          if (!mounted) return;
+                                          showMessage(
+                                              context, '社内コメントが追記されました', true);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : Container(),
               const SizedBox(height: 80),
             ],
           ),

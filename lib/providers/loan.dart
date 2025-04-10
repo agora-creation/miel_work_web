@@ -45,6 +45,7 @@ class LoanProvider with ChangeNotifier {
         String fileName = p.basename(itemImageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('loan/$id/$fileName');
+        uploadFile = await compressImage(uploadFile);
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());

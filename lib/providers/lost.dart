@@ -43,6 +43,7 @@ class LostProvider with ChangeNotifier {
         String fileName = p.basename(itemImageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('lost/$id/$fileName');
+        uploadFile = await compressImage(uploadFile);
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());
@@ -117,6 +118,7 @@ class LostProvider with ChangeNotifier {
         String fileName = p.basename(itemImageResult.files.single.name);
         Reference storageRef =
             FirebaseStorage.instance.ref().child('lost/${lost.id}/$fileName');
+        uploadFile = await compressImage(uploadFile);
         UploadTask uploadTask = storageRef.putData(uploadFile);
         TaskSnapshot downloadUrl = await uploadTask;
         itemImage = (await downloadUrl.ref.getDownloadURL());
@@ -180,6 +182,7 @@ class LostProvider with ChangeNotifier {
       String fileName = 'sign.png';
       Reference storageRef =
           FirebaseStorage.instance.ref().child('lost/${lost.id}/$fileName');
+      uploadFile = await compressImage(uploadFile);
       UploadTask uploadTask = storageRef.putData(uploadFile);
       TaskSnapshot downloadUrl = await uploadTask;
       String signImage = (await downloadUrl.ref.getDownloadURL());

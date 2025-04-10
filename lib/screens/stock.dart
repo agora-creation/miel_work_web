@@ -101,14 +101,6 @@ class _StockScreenState extends State<StockScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    CustomIconTextButton(
-                      label: '品名検索: ',
-                      labelColor: kWhiteColor,
-                      backgroundColor: kSearchColor,
-                      leftIcon: FontAwesomeIcons.magnifyingGlass,
-                      onPressed: () {},
-                    ),
                   ],
                 ),
                 CustomIconTextButton(

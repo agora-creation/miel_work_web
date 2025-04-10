@@ -3,6 +3,8 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:miel_work_web/common/date_machine_util.dart';
 import 'package:miel_work_web/common/style.dart';
@@ -250,4 +252,11 @@ void downloadFile({
   anchorElement.target = 'blank';
   anchorElement.download = name;
   anchorElement.click();
+}
+
+Future<Uint8List> compressImage(Uint8List list) async {
+  return await FlutterImageCompress.compressWithList(
+    list,
+    quality: 60,
+  );
 }
