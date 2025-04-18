@@ -38,6 +38,7 @@ class ApplyList extends StatelessWidget {
                     ),
                     side: BorderSide.none,
                   ),
+                  side: BorderSide.none,
                 ),
                 Text(
                   apply.title,
@@ -84,11 +85,18 @@ class ApplyList extends StatelessWidget {
                     : Container(),
               ],
             ),
-            const FaIcon(
-              FontAwesomeIcons.chevronRight,
-              color: kDisabledColor,
-              size: 16,
-            ),
+            apply.pending
+                ? const Chip(
+                    label: Text('保留中'),
+                    backgroundColor: kYellowColor,
+                    shape: StadiumBorder(side: BorderSide.none),
+                    side: BorderSide.none,
+                  )
+                : const FaIcon(
+                    FontAwesomeIcons.chevronRight,
+                    color: kDisabledColor,
+                    size: 16,
+                  ),
           ],
         ),
       ),
