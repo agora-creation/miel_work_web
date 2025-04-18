@@ -1307,7 +1307,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -1315,7 +1314,6 @@ class PdfService {
                 '申込者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1337,7 +1335,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1359,7 +1357,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1381,7 +1379,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1403,7 +1401,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1425,7 +1423,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1447,7 +1445,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1469,7 +1467,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1491,7 +1489,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1513,12 +1511,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 4),
               pw.Text(
                 '取材当日情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1542,7 +1539,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1564,7 +1561,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1586,7 +1583,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1608,7 +1605,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1630,7 +1627,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1652,7 +1649,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -1674,17 +1671,15 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               interview.location
                   ? pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.SizedBox(height: 8),
                         pw.Text(
                           'ロケハン情報',
                           style: bodyStyle,
                         ),
-                        pw.SizedBox(height: 8),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1708,7 +1703,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1730,7 +1725,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1752,7 +1747,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1774,7 +1769,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1802,17 +1797,15 @@ class PdfService {
                       'ロケハンなし',
                       style: bodyStyle,
                     ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               interview.insert
                   ? pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.SizedBox(height: 8),
                         pw.Text(
                           'インサート撮影情報',
                           style: bodyStyle,
                         ),
-                        pw.SizedBox(height: 8),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1836,7 +1829,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1858,7 +1851,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1880,7 +1873,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1902,7 +1895,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1924,7 +1917,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1946,7 +1939,7 @@ class PdfService {
                             ),
                           ],
                         ),
-                        pw.SizedBox(height: 8),
+                        pw.SizedBox(height: 4),
                         pw.Table(
                           border: pw.TableBorder.all(color: PdfColors.grey),
                           children: [
@@ -1974,7 +1967,7 @@ class PdfService {
                       'インサート撮影なし',
                       style: bodyStyle,
                     ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2029,7 +2022,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -2037,7 +2029,6 @@ class PdfService {
                 '申込者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2059,7 +2050,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2081,7 +2072,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2103,7 +2094,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2125,7 +2116,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2147,12 +2138,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Text(
                 '使用者情報 (申込者情報と異なる場合のみ)',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2174,7 +2164,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2196,12 +2186,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Text(
                 '使用情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2225,7 +2214,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2282,7 +2271,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2344,7 +2333,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -2352,7 +2340,6 @@ class PdfService {
                 '申込者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2374,7 +2361,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2396,7 +2383,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2418,7 +2405,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2440,12 +2427,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Text(
                 '旧梵屋跡の倉庫を使用します (貸出面積：約12㎡)',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2469,7 +2455,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2524,7 +2510,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -2532,7 +2517,6 @@ class PdfService {
                 '申込者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2554,7 +2538,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2576,7 +2560,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2598,7 +2582,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2620,7 +2604,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2675,7 +2659,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -2683,7 +2666,6 @@ class PdfService {
                 '申請者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2705,7 +2687,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2727,7 +2709,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2749,7 +2731,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2771,12 +2753,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Text(
                 '作業情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2800,7 +2781,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2855,7 +2836,6 @@ class PdfService {
               style: titleStyle,
             ),
           ),
-          pw.SizedBox(height: 4),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -2863,7 +2843,6 @@ class PdfService {
                 '申請者情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2885,7 +2864,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2907,7 +2886,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2929,7 +2908,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2951,12 +2930,11 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 16),
+              pw.SizedBox(height: 8),
               pw.Text(
                 '工事施工情報',
                 style: bodyStyle,
               ),
-              pw.SizedBox(height: 8),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -2978,7 +2956,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3000,7 +2978,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3022,7 +3000,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3044,7 +3022,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3066,7 +3044,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3090,7 +3068,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3112,7 +3090,7 @@ class PdfService {
                   ),
                 ],
               ),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3160,7 +3138,7 @@ class PdfService {
                       ),
                     )
                   : pw.Container(),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
@@ -3208,7 +3186,7 @@ class PdfService {
                       ),
                     )
                   : pw.Container(),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.grey),
                 children: [
