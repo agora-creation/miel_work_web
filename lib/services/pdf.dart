@@ -1289,11 +1289,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -2011,11 +2011,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -2326,11 +2326,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -2506,11 +2506,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -2657,11 +2657,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
@@ -2837,11 +2837,11 @@ class PdfService {
     final ttf = pw.Font.ttf(font);
     final titleStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 12,
+      fontSize: 10,
     );
     final bodyStyle = pw.TextStyle(
       font: ttf,
-      fontSize: 10,
+      fontSize: 8,
     );
     pdf.addPage(pw.Page(
       margin: const pw.EdgeInsets.all(16),
