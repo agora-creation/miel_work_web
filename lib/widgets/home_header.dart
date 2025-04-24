@@ -187,6 +187,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                         backgroundColor: kRedColor,
                         onPressed: () async {
                           await widget.loginProvider.logout();
+                          widget.homeProvider.currentGroupClear();
                           if (!mounted) return;
                           Navigator.pushReplacement(
                             context,
