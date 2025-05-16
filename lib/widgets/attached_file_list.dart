@@ -21,7 +21,13 @@ class AttachedFileList extends StatelessWidget {
         border: Border(bottom: BorderSide(color: kBorderColor)),
       ),
       child: ListTile(
-        title: Text(fileName),
+        title: Text(
+          fileName,
+          style: const TextStyle(
+            color: kBlueColor,
+            decoration: TextDecoration.lineThrough,
+          ),
+        ),
         trailing: isClose
             ? const Icon(
                 FontAwesomeIcons.xmark,

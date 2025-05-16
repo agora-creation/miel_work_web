@@ -20,7 +20,6 @@ import 'package:miel_work_web/widgets/dotted_divider.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:miel_work_web/widgets/form_value.dart';
 import 'package:miel_work_web/widgets/link_text.dart';
-import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -490,11 +489,11 @@ class _RequestInterviewDetailScreenState
                     Column(
                       children: widget.interview.attachedFiles.map((file) {
                         return AttachedFileList(
-                          fileName: p.basename(file),
+                          fileName: getFileNameFromUrl(file),
                           onTap: () {
                             downloadFile(
                               url: file,
-                              name: p.basename(file),
+                              name: getFileNameFromUrl(file),
                             );
                           },
                         );

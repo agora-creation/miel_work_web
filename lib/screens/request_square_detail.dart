@@ -353,11 +353,11 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                     Column(
                       children: widget.square.attachedFiles.map((file) {
                         return AttachedFileList(
-                          fileName: p.basename(file),
+                          fileName: getFileNameFromUrl(file),
                           onTap: () {
                             downloadFile(
                               url: file,
-                              name: p.basename(file),
+                              name: getFileNameFromUrl(file),
                             );
                           },
                         );
