@@ -23,10 +23,7 @@ class AttachedFileList extends StatelessWidget {
       child: ListTile(
         title: Text(
           fileName,
-          style: const TextStyle(
-            color: kBlueColor,
-            decoration: TextDecoration.lineThrough,
-          ),
+          style: const TextStyle(color: kBlueColor),
         ),
         trailing: isClose
             ? const Icon(
