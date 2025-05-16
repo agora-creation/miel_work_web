@@ -251,15 +251,6 @@ class _RequestFacilityDetailScreenState
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              const Text(
-                '旧梵屋跡の倉庫を使用します (貸出面積：約12㎡)',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'SourceHanSansJP-Bold',
-                ),
-              ),
-              const SizedBox(height: 8),
               FormLabel(
                 '使用場所を記したPDFファイル',
                 child: widget.facility.useLocationFile != ''
