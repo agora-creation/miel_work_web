@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_overtime.dart';
@@ -71,6 +72,7 @@ class _RequestOvertimeDetailScreenState
   @override
   Widget build(BuildContext context) {
     final overtimeProvider = Provider.of<RequestOvertimeProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.overtime.approvalUsers.isNotEmpty) {
@@ -356,6 +358,17 @@ class _RequestOvertimeDetailScreenState
                                         await overtimeProvider.addComment(
                                       overtime: widget.overtime,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+夜間居残り作業申請「${widget.overtime.companyName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {

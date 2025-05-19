@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/problem.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/problem.dart';
@@ -93,6 +94,7 @@ class _ProblemEditScreenState extends State<ProblemEditScreen> {
   @override
   Widget build(BuildContext context) {
     final problemProvider = Provider.of<ProblemProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -578,6 +580,19 @@ class _ProblemEditScreenState extends State<ProblemEditScreen> {
                                             problem: widget.problem!,
                                             content:
                                                 commentContentController.text,
+                                            loginUser:
+                                                widget.loginProvider.user,
+                                          );
+                                          String content = '''
+クレーム／要望の「${widget.problem?.title}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                          error =
+                                              await messageProvider.sendComment(
+                                            organization: widget
+                                                .loginProvider.organization,
+                                            content: content,
                                             loginUser:
                                                 widget.loginProvider.user,
                                           );

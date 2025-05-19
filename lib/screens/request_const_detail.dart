@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_const.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_const.dart';
@@ -70,6 +71,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final constProvider = Provider.of<RequestConstProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.requestConst.approvalUsers.isNotEmpty) {
@@ -438,6 +440,17 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                                         await constProvider.addComment(
                                       requestConst: widget.requestConst,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+店舗工事作業申請「${widget.requestConst.companyName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {

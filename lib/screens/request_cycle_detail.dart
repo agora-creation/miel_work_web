@@ -5,6 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_cycle.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_cycle.dart';
@@ -66,6 +67,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final cycleProvider = Provider.of<RequestCycleProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.cycle.approvalUsers.isNotEmpty) {
@@ -307,6 +309,17 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                                         await cycleProvider.addComment(
                                       cycle: widget.cycle,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+自転車置き場使用申込「${widget.cycle.companyName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {

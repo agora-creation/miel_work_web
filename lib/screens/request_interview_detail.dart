@@ -5,6 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_interview.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_interview.dart';
@@ -68,6 +69,7 @@ class _RequestInterviewDetailScreenState
   @override
   Widget build(BuildContext context) {
     final interviewProvider = Provider.of<RequestInterviewProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.interview.approvalUsers.isNotEmpty) {
@@ -573,6 +575,17 @@ class _RequestInterviewDetailScreenState
                                         await interviewProvider.addComment(
                                       interview: widget.interview,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+取材申込「${widget.interview.companyName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {

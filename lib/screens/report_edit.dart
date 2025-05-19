@@ -15,6 +15,7 @@ import 'package:miel_work_web/models/report_problem.dart';
 import 'package:miel_work_web/models/report_repair.dart';
 import 'package:miel_work_web/models/report_visitor.dart';
 import 'package:miel_work_web/models/report_worker.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/report.dart';
@@ -366,6 +367,7 @@ class _ReportEditScreenState extends State<ReportEditScreen> {
   @override
   Widget build(BuildContext context) {
     final reportProvider = Provider.of<ReportProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -2127,6 +2129,19 @@ class _ReportEditScreenState extends State<ReportEditScreen> {
                                             report: widget.report!,
                                             content:
                                                 commentContentController.text,
+                                            loginUser:
+                                                widget.loginProvider.user,
+                                          );
+                                          String content = '''
+業務日報の「${dateText('MM月dd日', widget.report?.createdAt)}分」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                          error =
+                                              await messageProvider.sendComment(
+                                            organization: widget
+                                                .loginProvider.organization,
+                                            content: content,
                                             loginUser:
                                                 widget.loginProvider.user,
                                           );

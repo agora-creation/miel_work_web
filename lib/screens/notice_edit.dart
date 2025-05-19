@@ -7,6 +7,7 @@ import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/notice.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/notice.dart';
@@ -85,6 +86,7 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
   @override
   Widget build(BuildContext context) {
     final noticeProvider = Provider.of<NoticeProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     List<DropdownMenuItem<OrganizationGroupModel>> groupItems = [];
     if (widget.homeProvider.groups.isNotEmpty) {
       groupItems.add(const DropdownMenuItem(
@@ -319,6 +321,19 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
                                             notice: widget.notice!,
                                             content:
                                                 commentContentController.text,
+                                            loginUser:
+                                                widget.loginProvider.user,
+                                          );
+                                          String content = '''
+お知らせの「${widget.notice?.title}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                          error =
+                                              await messageProvider.sendComment(
+                                            organization: widget
+                                                .loginProvider.organization,
+                                            content: content,
                                             loginUser:
                                                 widget.loginProvider.user,
                                           );

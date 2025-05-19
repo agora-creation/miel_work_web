@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/lost.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/lost.dart';
@@ -79,6 +80,7 @@ class _LostModScreenState extends State<LostModScreen> {
   @override
   Widget build(BuildContext context) {
     final lostProvider = Provider.of<LostProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -479,6 +481,17 @@ class _LostModScreenState extends State<LostModScreen> {
                                           widget.loginProvider.organization,
                                       lost: widget.lost,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+落とし物の「${widget.lost.itemName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {

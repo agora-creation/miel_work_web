@@ -6,6 +6,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_facility.dart';
+import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/request_facility.dart';
@@ -70,6 +71,7 @@ class _RequestFacilityDetailScreenState
   @override
   Widget build(BuildContext context) {
     final facilityProvider = Provider.of<RequestFacilityProvider>(context);
+    final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
     if (widget.facility.approvalUsers.isNotEmpty) {
@@ -369,6 +371,17 @@ class _RequestFacilityDetailScreenState
                                         await facilityProvider.addComment(
                                       facility: widget.facility,
                                       content: commentContentController.text,
+                                      loginUser: widget.loginProvider.user,
+                                    );
+                                    String content = '''
+施設使用申込「${widget.facility.companyName}」に、社内コメントを追記しました。
+コメント内容:
+${commentContentController.text}
+                                    ''';
+                                    error = await messageProvider.sendComment(
+                                      organization:
+                                          widget.loginProvider.organization,
+                                      content: content,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     if (error != null) {
