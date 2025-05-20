@@ -223,7 +223,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
 
 exports.lostStatusCheck = functions.region('asia-northeast1')
     .runWith({memory: '512MB'})
-    .pubsub.schedule('every 1 days')
+    .pubsub.schedule('0 0 * * *')
     .timeZone('Asia/Tokyo')
     .onRun(async (context) => {
 
@@ -239,7 +239,7 @@ exports.lostStatusCheck = functions.region('asia-northeast1')
     //DB取得
     const lostRef = firestore.collection('lost')
     const lostSnapshot = await planRef.where('status', '==', 0)
-        .where('createdAt', '==', months3)
+        .where('createdAt', '<=', months3)
         .get()
     if (!lostSnapshot.empty) {
         lostSnapshot.forEach(async lostDoc => {
