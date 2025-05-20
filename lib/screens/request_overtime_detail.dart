@@ -147,6 +147,38 @@ class _RequestOvertimeDetailScreenState
             ),
             disabled: !isApproval,
           ),
+          const SizedBox(width: 4),
+          widget.overtime.pending == true
+              ? CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保留を解除する',
+                  labelColor: kBlackColor,
+                  backgroundColor: kYellowColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => PendingCancelRequestOvertimeDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      overtime: widget.overtime,
+                    ),
+                  ),
+                  disabled: widget.overtime.approval != 0,
+                )
+              : CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保留中にする',
+                  labelColor: kBlackColor,
+                  backgroundColor: kYellowColor,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => PendingRequestOvertimeDialog(
+                      loginProvider: widget.loginProvider,
+                      homeProvider: widget.homeProvider,
+                      overtime: widget.overtime,
+                    ),
+                  ),
+                  disabled: widget.overtime.approval != 0,
+                ),
           const SizedBox(width: 8),
         ],
         shape: Border(bottom: BorderSide(color: kBorderColor)),
@@ -494,6 +526,120 @@ class _ModUseAtDialogState extends State<ModUseAtDialog> {
             if (!mounted) return;
             showMessage(context, '作業予定日時が変更されました', true);
             Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class PendingRequestOvertimeDialog extends StatelessWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestOvertimeModel overtime;
+
+  const PendingRequestOvertimeDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.overtime,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final overtimeProvider = Provider.of<RequestOvertimeProvider>(context);
+    return CustomAlertDialog(
+      content: const SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text('本当に保留中にしますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '保留中にする',
+          labelColor: kBlackColor,
+          backgroundColor: kYellowColor,
+          onPressed: () async {
+            String? error = await overtimeProvider.pending(
+              overtime: overtime,
+            );
+            if (error != null) {
+              showMessage(context, error, false);
+              return;
+            }
+            showMessage(context, '申請を保留中にしました', true);
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class PendingCancelRequestOvertimeDialog extends StatelessWidget {
+  final LoginProvider loginProvider;
+  final HomeProvider homeProvider;
+  final RequestOvertimeModel overtime;
+
+  const PendingCancelRequestOvertimeDialog({
+    required this.loginProvider,
+    required this.homeProvider,
+    required this.overtime,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final overtimeProvider = Provider.of<RequestOvertimeProvider>(context);
+    return CustomAlertDialog(
+      content: const SizedBox(
+        width: 600,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 8),
+            Text('本当に保留を解除しますか？'),
+          ],
+        ),
+      ),
+      actions: [
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: 'キャンセル',
+          labelColor: kWhiteColor,
+          backgroundColor: kGreyColor,
+          onPressed: () => Navigator.pop(context),
+        ),
+        CustomButton(
+          type: ButtonSizeType.sm,
+          label: '保留を解除する',
+          labelColor: kBlackColor,
+          backgroundColor: kYellowColor,
+          onPressed: () async {
+            String? error = await overtimeProvider.pendingCancel(
+              overtime: overtime,
+            );
+            if (error != null) {
+              showMessage(context, error, false);
+              return;
+            }
+            showMessage(context, '保留を解除しました', true);
             Navigator.pop(context);
           },
         ),
