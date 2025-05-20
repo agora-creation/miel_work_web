@@ -1,5 +1,4 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
-import 'package:calendar_view/calendar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,19 +9,18 @@ import 'package:miel_work_web/models/plan_guardsman.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
 import 'package:miel_work_web/providers/plan_guardsman.dart';
-import 'package:miel_work_web/screens/plan_guardsman_timeline.dart';
 import 'package:miel_work_web/screens/plan_guardsman_week.dart';
 import 'package:miel_work_web/services/plan_guardsman.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
-import 'package:miel_work_web/widgets/custom_calendar.dart';
 import 'package:miel_work_web/widgets/custom_icon_text_button.dart';
 import 'package:miel_work_web/widgets/custom_text_field.dart';
 import 'package:miel_work_web/widgets/datetime_range_form.dart';
+import 'package:miel_work_web/widgets/day_list.dart';
 import 'package:miel_work_web/widgets/form_label.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class PlanGuardsmanScreen extends StatefulWidget {
   final LoginProvider loginProvider;
@@ -39,8 +37,7 @@ class PlanGuardsmanScreen extends StatefulWidget {
 }
 
 class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
-  EventController controller = EventController();
-  GlobalKey<MonthViewState> globalKey = GlobalKey<MonthViewState>();
+  AutoScrollController controller = AutoScrollController();
   PlanGuardsmanService guardsmanService = PlanGuardsmanService();
   DateTime searchMonth = DateTime.now();
   List<DateTime> days = [];
@@ -48,9 +45,6 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
   void _changeMonth(DateTime value) {
     searchMonth = value;
     days = generateDays(value);
-    if (globalKey.currentState != null) {
-      globalKey.currentState?.jumpToMonth(searchMonth);
-    }
     setState(() {});
   }
 
@@ -67,6 +61,10 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    controller.scrollToIndex(
+      DateTime.now().day,
+      preferPosition: AutoScrollPosition.begin,
+    );
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
@@ -160,50 +158,88 @@ class _PlanGuardsmanScreenState extends State<PlanGuardsmanScreen> {
                   searchEnd: days.last,
                 ),
                 builder: (context, snapshot) {
-                  controller = EventController();
                   List<PlanGuardsmanModel> guardsMans = [];
                   if (snapshot.hasData) {
                     guardsMans = guardsmanService.generateList(
                       data: snapshot.data,
                     );
                   }
-                  if (guardsMans.isNotEmpty) {
-                    List<CalendarEventData> events = [];
-                    for (final guardsman in guardsMans) {
-                      events.add(
-                        CalendarEventData(
-                          title:
-                              '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)} ${guardsman.remarks}',
-                          date: guardsman.startedAt,
-                          startTime: guardsman.startedAt,
-                          endTime: guardsman.endedAt,
-                        ),
-                      );
-                    }
-                    controller.addAll(events);
-                  }
-                  return CustomCalendar(
-                    controller: controller,
-                    globalKey: globalKey,
-                    initialMonth: searchMonth,
-                    cellAspectRatio: 1.5,
-                    onCellTap: (events, day) {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: PlanGuardsmanTimelineScreen(
-                            loginProvider: widget.loginProvider,
-                            homeProvider: widget.homeProvider,
-                            day: day,
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kBorderColor),
+                    ),
+                    child: ListView.builder(
+                      controller: controller,
+                      itemCount: days.length,
+                      itemBuilder: (context, index) {
+                        DateTime day = days[index];
+                        return AutoScrollTag(
+                          key: ValueKey(day.day),
+                          controller: controller,
+                          index: day.day,
+                          child: DayList(
+                            day,
+                            child: Container(),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 },
               ),
             ),
+            // Expanded(
+            //   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            //     stream: guardsmanService.streamList(
+            //       organizationId: widget.loginProvider.organization?.id,
+            //       searchStart: days.first,
+            //       searchEnd: days.last,
+            //     ),
+            //     builder: (context, snapshot) {
+            //       controller = EventController();
+            //       List<PlanGuardsmanModel> guardsMans = [];
+            //       if (snapshot.hasData) {
+            //         guardsMans = guardsmanService.generateList(
+            //           data: snapshot.data,
+            //         );
+            //       }
+            //       if (guardsMans.isNotEmpty) {
+            //         List<CalendarEventData> events = [];
+            //         for (final guardsman in guardsMans) {
+            //           events.add(
+            //             CalendarEventData(
+            //               title:
+            //                   '${dateText('HH:mm', guardsman.startedAt)}〜${dateText('HH:mm', guardsman.endedAt)} ${guardsman.remarks}',
+            //               date: guardsman.startedAt,
+            //               startTime: guardsman.startedAt,
+            //               endTime: guardsman.endedAt,
+            //             ),
+            //           );
+            //         }
+            //         controller.addAll(events);
+            //       }
+            //       return CustomCalendar(
+            //         controller: controller,
+            //         globalKey: globalKey,
+            //         initialMonth: searchMonth,
+            //         cellAspectRatio: 1.5,
+            //         onCellTap: (events, day) {
+            //           Navigator.push(
+            //             context,
+            //             PageTransition(
+            //               type: PageTransitionType.rightToLeft,
+            //               child: PlanGuardsmanTimelineScreen(
+            //                 loginProvider: widget.loginProvider,
+            //                 homeProvider: widget.homeProvider,
+            //                 day: day,
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
