@@ -68,9 +68,13 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
           'readUserIds': readUserIds,
         });
       }
+      bool commentNotRead = true;
+      List<Map> comments = [];
       if (widget.notice!.comments.isNotEmpty) {
-        List<Map> comments = [];
         for (final comment in widget.notice!.comments) {
+          if (comment.readUserIds.contains(user?.id)) {
+            commentNotRead = false;
+          }
           List<String> commentReadUserIds = comment.readUserIds;
           if (!commentReadUserIds.contains(user?.id)) {
             commentReadUserIds.add(user?.id ?? '');
@@ -78,6 +82,8 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
           comment.readUserIds = commentReadUserIds;
           comments.add(comment.toMap());
         }
+      }
+      if (commentNotRead) {
         noticeService.update({
           'id': widget.notice!.id,
           'comments': comments,

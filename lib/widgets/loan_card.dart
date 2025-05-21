@@ -173,7 +173,7 @@ class LoanCard extends StatelessWidget {
               ),
             ),
           ),
-          commentNotRead
+          commentNotRead && loan.comments.isNotEmpty
               ? const Positioned(
                   top: 8,
                   right: 8,

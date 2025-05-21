@@ -58,9 +58,13 @@ class _RequestInterviewDetailScreenState
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.interview.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.interview.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -68,6 +72,8 @@ class _RequestInterviewDetailScreenState
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       interviewService.update({
         'id': widget.interview.id,
         'comments': comments,

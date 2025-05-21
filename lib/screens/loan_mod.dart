@@ -66,9 +66,13 @@ class _LoanModScreenState extends State<LoanModScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.loan.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.loan.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -76,6 +80,8 @@ class _LoanModScreenState extends State<LoanModScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       loanService.update({
         'id': widget.loan.id,
         'comments': comments,

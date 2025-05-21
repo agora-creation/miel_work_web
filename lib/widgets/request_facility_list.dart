@@ -67,7 +67,7 @@ class RequestFacilityList extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                commentNotRead
+                commentNotRead && facility.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(

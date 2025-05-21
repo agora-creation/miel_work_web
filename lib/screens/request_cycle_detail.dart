@@ -56,9 +56,13 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.cycle.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.cycle.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -66,6 +70,8 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       cycleService.update({
         'id': widget.cycle.id,
         'comments': comments,

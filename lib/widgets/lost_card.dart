@@ -173,7 +173,7 @@ class LostCard extends StatelessWidget {
               ),
             ),
           ),
-          commentNotRead
+          commentNotRead && lost.comments.isNotEmpty
               ? const Positioned(
                   top: 8,
                   right: 8,

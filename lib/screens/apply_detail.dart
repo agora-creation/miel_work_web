@@ -110,9 +110,13 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.apply.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.apply.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -120,6 +124,8 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       applyService.update({
         'id': widget.apply.id,
         'comments': comments,

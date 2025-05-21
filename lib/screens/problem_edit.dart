@@ -71,9 +71,13 @@ class _ProblemEditScreenState extends State<ProblemEditScreen> {
   void _read() async {
     if (widget.problem != null) {
       UserModel? user = widget.loginProvider.user;
+      bool commentNotRead = true;
+      List<Map> comments = [];
       if (widget.problem!.comments.isNotEmpty) {
-        List<Map> comments = [];
         for (final comment in widget.problem!.comments) {
+          if (comment.readUserIds.contains(user?.id)) {
+            commentNotRead = false;
+          }
           List<String> commentReadUserIds = comment.readUserIds;
           if (!commentReadUserIds.contains(user?.id)) {
             commentReadUserIds.add(user?.id ?? '');
@@ -81,6 +85,8 @@ class _ProblemEditScreenState extends State<ProblemEditScreen> {
           comment.readUserIds = commentReadUserIds;
           comments.add(comment.toMap());
         }
+      }
+      if (commentNotRead) {
         problemService.update({
           'id': widget.problem!.id,
           'comments': comments,

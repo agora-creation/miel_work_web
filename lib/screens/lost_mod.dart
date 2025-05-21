@@ -69,9 +69,13 @@ class _LostModScreenState extends State<LostModScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.lost.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.lost.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -79,6 +83,8 @@ class _LostModScreenState extends State<LostModScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       lostService.update({
         'id': widget.lost.id,
         'comments': comments,

@@ -61,9 +61,13 @@ class _RequestOvertimeDetailScreenState
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.overtime.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.overtime.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -71,6 +75,8 @@ class _RequestOvertimeDetailScreenState
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       overtimeService.update({
         'id': widget.overtime.id,
         'comments': comments,

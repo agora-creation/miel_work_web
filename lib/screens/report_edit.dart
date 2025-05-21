@@ -208,9 +208,13 @@ class _ReportEditScreenState extends State<ReportEditScreen> {
   void _read() async {
     if (widget.report != null) {
       UserModel? user = widget.loginProvider.user;
+      bool commentNotRead = true;
+      List<Map> comments = [];
       if (widget.report!.comments.isNotEmpty) {
-        List<Map> comments = [];
         for (final comment in widget.report!.comments) {
+          if (comment.readUserIds.contains(user?.id)) {
+            commentNotRead = false;
+          }
           List<String> commentReadUserIds = comment.readUserIds;
           if (!commentReadUserIds.contains(user?.id)) {
             commentReadUserIds.add(user?.id ?? '');
@@ -218,6 +222,8 @@ class _ReportEditScreenState extends State<ReportEditScreen> {
           comment.readUserIds = commentReadUserIds;
           comments.add(comment.toMap());
         }
+      }
+      if (commentNotRead) {
         reportService.update({
           'id': widget.report!.id,
           'comments': comments,

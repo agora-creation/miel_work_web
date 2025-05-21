@@ -94,7 +94,7 @@ class ProblemList extends StatelessWidget {
                       maxLines: 1,
                     )
                   : Container(),
-              commentNotRead
+              commentNotRead && problem.comments.isNotEmpty
                   ? const Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: Chip(

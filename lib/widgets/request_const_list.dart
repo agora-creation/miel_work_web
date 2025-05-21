@@ -67,7 +67,7 @@ class RequestConstList extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                commentNotRead
+                commentNotRead && requestConst.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(

@@ -94,7 +94,7 @@ class ApplyList extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                commentNotRead
+                commentNotRead && apply.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(

@@ -60,9 +60,13 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.requestConst.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.requestConst.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -70,6 +74,8 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       constService.update({
         'id': widget.requestConst.id,
         'comments': comments,

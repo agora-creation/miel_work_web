@@ -58,9 +58,13 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
 
   void _read() async {
     UserModel? user = widget.loginProvider.user;
+    bool commentNotRead = true;
+    List<Map> comments = [];
     if (widget.square.comments.isNotEmpty) {
-      List<Map> comments = [];
       for (final comment in widget.square.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
         List<String> commentReadUserIds = comment.readUserIds;
         if (!commentReadUserIds.contains(user?.id)) {
           commentReadUserIds.add(user?.id ?? '');
@@ -68,6 +72,8 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
         comment.readUserIds = commentReadUserIds;
         comments.add(comment.toMap());
       }
+    }
+    if (commentNotRead) {
       squareService.update({
         'id': widget.square.id,
         'comments': comments,

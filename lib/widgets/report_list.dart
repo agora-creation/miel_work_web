@@ -45,7 +45,7 @@ class ReportList extends StatelessWidget {
                     fontFamily: 'SourceHanSansJP-Bold',
                   ),
                 ),
-                commentNotRead
+                commentNotRead && report!.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(left: 4),
                         child: Chip(

@@ -67,7 +67,7 @@ class RequestInterviewList extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                commentNotRead
+                commentNotRead && interview.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(

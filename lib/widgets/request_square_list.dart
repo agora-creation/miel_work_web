@@ -67,7 +67,7 @@ class RequestSquareList extends StatelessWidget {
                         ),
                       )
                     : Container(),
-                commentNotRead
+                commentNotRead && square.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(

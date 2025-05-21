@@ -54,7 +54,7 @@ class NoticeList extends StatelessWidget {
                     fontSize: 14,
                   ),
                 ),
-                commentNotRead
+                commentNotRead && notice.comments.isNotEmpty
                     ? const Padding(
                         padding: EdgeInsets.only(top: 4),
                         child: Chip(
