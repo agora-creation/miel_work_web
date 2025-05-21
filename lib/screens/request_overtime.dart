@@ -164,6 +164,7 @@ class _RequestOvertimeScreenState extends State<RequestOvertimeScreen> {
                       RequestOvertimeModel overtime = overtimes[index];
                       return RequestOvertimeList(
                         overtime: overtime,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,

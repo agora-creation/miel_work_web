@@ -18,6 +18,14 @@ class ProblemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool commentNotRead = true;
+    if (problem.comments.isNotEmpty) {
+      for (final comment in problem.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
+      }
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: GestureDetector(
@@ -86,12 +94,12 @@ class ProblemList extends StatelessWidget {
                       maxLines: 1,
                     )
                   : Container(),
-              problem.comments.isNotEmpty
+              commentNotRead
                   ? const Padding(
                       padding: EdgeInsets.only(top: 4),
                       child: Chip(
                         label: Text(
-                          'コメントあり',
+                          '未読コメントあり',
                           style: TextStyle(
                             color: kLightGreenColor,
                             fontSize: 12,

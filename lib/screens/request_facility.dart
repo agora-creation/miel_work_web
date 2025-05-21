@@ -164,6 +164,7 @@ class _RequestFacilityScreenState extends State<RequestFacilityScreen> {
                       RequestFacilityModel facility = facilities[index];
                       return RequestFacilityList(
                         facility: facility,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,

@@ -164,6 +164,7 @@ class _RequestInterviewScreenState extends State<RequestInterviewScreen> {
                       RequestInterviewModel interview = interviews[index];
                       return RequestInterviewList(
                         interview: interview,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,

@@ -164,6 +164,7 @@ class _RequestCycleScreenState extends State<RequestCycleScreen> {
                       RequestCycleModel cycle = cycles[index];
                       return RequestCycleList(
                         cycle: cycle,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,

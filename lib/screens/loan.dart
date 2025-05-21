@@ -177,6 +177,7 @@ class _LoanScreenState extends State<LoanScreen> {
                         LoanModel loan = loans[index];
                         return LoanCard(
                           loan: loan,
+                          user: widget.loginProvider.user,
                           onTap: () {
                             Navigator.push(
                               context,

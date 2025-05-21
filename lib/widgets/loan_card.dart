@@ -2,19 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/loan.dart';
+import 'package:miel_work_web/models/user.dart';
 
 class LoanCard extends StatelessWidget {
   final LoanModel loan;
+  final UserModel? user;
   final Function()? onTap;
 
   const LoanCard({
     required this.loan,
+    required this.user,
     this.onTap,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool commentNotRead = true;
+    if (loan.comments.isNotEmpty) {
+      for (final comment in loan.comments) {
+        if (comment.readUserIds.contains(user?.id)) {
+          commentNotRead = false;
+        }
+      }
+    }
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -162,13 +173,13 @@ class LoanCard extends StatelessWidget {
               ),
             ),
           ),
-          loan.comments.isNotEmpty
+          commentNotRead
               ? const Positioned(
                   top: 8,
                   right: 8,
                   child: Chip(
                     label: Text(
-                      'コメントあり',
+                      '未読コメントあり',
                       style: TextStyle(
                         color: kLightGreenColor,
                         fontSize: 10,

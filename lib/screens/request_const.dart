@@ -164,6 +164,7 @@ class _RequestConstScreenState extends State<RequestConstScreen> {
                       RequestConstModel requestConst = requestConsts[index];
                       return RequestConstList(
                         requestConst: requestConst,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,

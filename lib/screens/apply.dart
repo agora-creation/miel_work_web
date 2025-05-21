@@ -187,6 +187,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                       ApplyModel apply = applies[index];
                       return ApplyList(
                         apply: apply,
+                        user: widget.loginProvider.user,
                         onTap: () {
                           Navigator.push(
                             context,
