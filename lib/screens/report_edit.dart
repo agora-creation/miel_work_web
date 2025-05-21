@@ -15,6 +15,7 @@ import 'package:miel_work_web/models/report_problem.dart';
 import 'package:miel_work_web/models/report_repair.dart';
 import 'package:miel_work_web/models/report_visitor.dart';
 import 'package:miel_work_web/models/report_worker.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -204,8 +205,30 @@ class _ReportEditScreenState extends State<ReportEditScreen> {
     );
   }
 
+  void _read() async {
+    if (widget.report != null) {
+      UserModel? user = widget.loginProvider.user;
+      if (widget.report!.comments.isNotEmpty) {
+        List<Map> comments = [];
+        for (final comment in widget.report!.comments) {
+          List<String> commentReadUserIds = comment.readUserIds;
+          if (!commentReadUserIds.contains(user?.id)) {
+            commentReadUserIds.add(user?.id ?? '');
+          }
+          comment.readUserIds = commentReadUserIds;
+          comments.add(comment.toMap());
+        }
+        reportService.update({
+          'id': widget.report!.id,
+          'comments': comments,
+        });
+      }
+    }
+  }
+
   void _init() async {
     if (widget.report != null) {
+      _read();
       createdAt = widget.report!.createdAt;
       reportWorkers = widget.report!.reportWorkers;
       reportWorkersGuardsman = widget.report!.reportWorkersGuardsman;

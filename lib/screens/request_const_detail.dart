@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_const.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -57,7 +58,27 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
     setState(() {});
   }
 
+  void _read() async {
+    UserModel? user = widget.loginProvider.user;
+    if (widget.requestConst.comments.isNotEmpty) {
+      List<Map> comments = [];
+      for (final comment in widget.requestConst.comments) {
+        List<String> commentReadUserIds = comment.readUserIds;
+        if (!commentReadUserIds.contains(user?.id)) {
+          commentReadUserIds.add(user?.id ?? '');
+        }
+        comment.readUserIds = commentReadUserIds;
+        comments.add(comment.toMap());
+      }
+      constService.update({
+        'id': widget.requestConst.id,
+        'comments': comments,
+      });
+    }
+  }
+
   void _init() async {
+    _read();
     comments = widget.requestConst.comments;
     setState(() {});
   }

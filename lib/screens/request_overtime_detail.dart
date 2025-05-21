@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -58,7 +59,27 @@ class _RequestOvertimeDetailScreenState
     setState(() {});
   }
 
+  void _read() async {
+    UserModel? user = widget.loginProvider.user;
+    if (widget.overtime.comments.isNotEmpty) {
+      List<Map> comments = [];
+      for (final comment in widget.overtime.comments) {
+        List<String> commentReadUserIds = comment.readUserIds;
+        if (!commentReadUserIds.contains(user?.id)) {
+          commentReadUserIds.add(user?.id ?? '');
+        }
+        comment.readUserIds = commentReadUserIds;
+        comments.add(comment.toMap());
+      }
+      overtimeService.update({
+        'id': widget.overtime.id,
+        'comments': comments,
+      });
+    }
+  }
+
   void _init() async {
+    _read();
     comments = widget.overtime.comments;
     setState(() {});
   }

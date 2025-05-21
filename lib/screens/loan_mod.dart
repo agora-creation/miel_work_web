@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/loan.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/loan.dart';
@@ -63,8 +64,28 @@ class _LoanModScreenState extends State<LoanModScreen> {
     setState(() {});
   }
 
+  void _read() async {
+    UserModel? user = widget.loginProvider.user;
+    if (widget.loan.comments.isNotEmpty) {
+      List<Map> comments = [];
+      for (final comment in widget.loan.comments) {
+        List<String> commentReadUserIds = comment.readUserIds;
+        if (!commentReadUserIds.contains(user?.id)) {
+          commentReadUserIds.add(user?.id ?? '');
+        }
+        comment.readUserIds = commentReadUserIds;
+        comments.add(comment.toMap());
+      }
+      loanService.update({
+        'id': widget.loan.id,
+        'comments': comments,
+      });
+    }
+  }
+
   @override
   void initState() {
+    _read();
     loanAt = widget.loan.loanAt;
     loanUserController.text = widget.loan.loanUser;
     loanCompanyController.text = widget.loan.loanCompany;

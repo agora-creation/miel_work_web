@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/apply.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/apply.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
@@ -107,8 +108,28 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
     setState(() {});
   }
 
+  void _read() async {
+    UserModel? user = widget.loginProvider.user;
+    if (widget.apply.comments.isNotEmpty) {
+      List<Map> comments = [];
+      for (final comment in widget.apply.comments) {
+        List<String> commentReadUserIds = comment.readUserIds;
+        if (!commentReadUserIds.contains(user?.id)) {
+          commentReadUserIds.add(user?.id ?? '');
+        }
+        comment.readUserIds = commentReadUserIds;
+        comments.add(comment.toMap());
+      }
+      applyService.update({
+        'id': widget.apply.id,
+        'comments': comments,
+      });
+    }
+  }
+
   @override
   void initState() {
+    _read();
     _reloadApply();
     super.initState();
   }

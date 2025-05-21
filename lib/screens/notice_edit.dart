@@ -57,7 +57,7 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
     setState(() {});
   }
 
-  void _init() async {
+  void _read() async {
     if (widget.notice != null) {
       UserModel? user = widget.loginProvider.user;
       List<String> readUserIds = widget.notice!.readUserIds;
@@ -68,6 +68,27 @@ class _NoticeEditScreenState extends State<NoticeEditScreen> {
           'readUserIds': readUserIds,
         });
       }
+      if (widget.notice!.comments.isNotEmpty) {
+        List<Map> comments = [];
+        for (final comment in widget.notice!.comments) {
+          List<String> commentReadUserIds = comment.readUserIds;
+          if (!commentReadUserIds.contains(user?.id)) {
+            commentReadUserIds.add(user?.id ?? '');
+          }
+          comment.readUserIds = commentReadUserIds;
+          comments.add(comment.toMap());
+        }
+        noticeService.update({
+          'id': widget.notice!.id,
+          'comments': comments,
+        });
+      }
+    }
+  }
+
+  void _init() async {
+    if (widget.notice != null) {
+      _read();
       titleController.text = widget.notice!.title;
       contentController.text = widget.notice!.content;
       selectedGroup = widget.noticeInGroup;

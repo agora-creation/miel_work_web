@@ -5,6 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/approval_user.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/request_square.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -55,7 +56,27 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
     setState(() {});
   }
 
+  void _read() async {
+    UserModel? user = widget.loginProvider.user;
+    if (widget.square.comments.isNotEmpty) {
+      List<Map> comments = [];
+      for (final comment in widget.square.comments) {
+        List<String> commentReadUserIds = comment.readUserIds;
+        if (!commentReadUserIds.contains(user?.id)) {
+          commentReadUserIds.add(user?.id ?? '');
+        }
+        comment.readUserIds = commentReadUserIds;
+        comments.add(comment.toMap());
+      }
+      squareService.update({
+        'id': widget.square.id,
+        'comments': comments,
+      });
+    }
+  }
+
   void _init() async {
+    _read();
     comments = widget.square.comments;
     setState(() {});
   }

@@ -7,6 +7,7 @@ import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/comment.dart';
 import 'package:miel_work_web/models/problem.dart';
+import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/providers/chat_message.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
@@ -67,8 +68,30 @@ class _ProblemEditScreenState extends State<ProblemEditScreen> {
     setState(() {});
   }
 
+  void _read() async {
+    if (widget.problem != null) {
+      UserModel? user = widget.loginProvider.user;
+      if (widget.problem!.comments.isNotEmpty) {
+        List<Map> comments = [];
+        for (final comment in widget.problem!.comments) {
+          List<String> commentReadUserIds = comment.readUserIds;
+          if (!commentReadUserIds.contains(user?.id)) {
+            commentReadUserIds.add(user?.id ?? '');
+          }
+          comment.readUserIds = commentReadUserIds;
+          comments.add(comment.toMap());
+        }
+        problemService.update({
+          'id': widget.problem!.id,
+          'comments': comments,
+        });
+      }
+    }
+  }
+
   void _init() {
     if (widget.problem != null) {
+      _read();
       type = widget.problem!.type;
       createdAt = widget.problem!.createdAt;
       titleController.text = widget.problem!.title;
