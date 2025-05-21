@@ -266,6 +266,7 @@ class ProblemProvider with ChangeNotifier {
         'userId': loginUser.id,
         'userName': loginUser.name,
         'content': content,
+        'readUserIds': [loginUser.id],
         'createdAt': DateTime.now(),
       });
       _problemService.update({
