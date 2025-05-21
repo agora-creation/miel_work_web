@@ -238,7 +238,7 @@ exports.lostStatusCheck = functions.region('asia-northeast1')
 
     //DB取得
     const lostRef = firestore.collection('lost')
-    const lostSnapshot = await planRef.where('status', '==', 0)
+    const lostSnapshot = await lostRef.where('status', '==', 0)
         .where('createdAt', '<=', months3)
         .get()
     if (!lostSnapshot.empty) {
