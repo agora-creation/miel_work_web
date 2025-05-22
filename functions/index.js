@@ -235,6 +235,7 @@ exports.lostStatusCheck = functions.region('asia-northeast1')
         const s = nowSeconds - months3Seconds
         return new admin.firestore.Timestamp(s, 0)
     })()
+    console.log(months3)
 
     //DB取得
     const lostRef = firestore.collection('lost')
