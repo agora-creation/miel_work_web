@@ -223,7 +223,7 @@ exports.planShiftAlertMessages = functions.region('asia-northeast1')
 
 exports.lostStatusCheck = functions.region('asia-northeast1')
     .runWith({memory: '512MB'})
-    .pubsub.schedule('0 0 * * *')
+    .pubsub.schedule('0 0 1 * *')
     .timeZone('Asia/Tokyo')
     .onRun(async (context) => {
 
