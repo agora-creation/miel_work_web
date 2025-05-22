@@ -45,7 +45,52 @@ class RequestSquareDetailScreen extends StatefulWidget {
 
 class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
   RequestSquareService squareService = RequestSquareService();
+  RequestSquareModel? square;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestSquareModel? tmpSquare = await squareService.selectData(
@@ -81,15 +126,20 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.square.comments;
+  void _reloadRequestSquare() async {
+    RequestSquareModel? tmpSquare = await squareService.selectData(
+      id: widget.square.id,
+    );
+    if (tmpSquare == null) return;
+    square = tmpSquare;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestSquare();
+    _reloadComments();
     super.initState();
   }
 
@@ -99,19 +149,19 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.square.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.square.approvalUsers) {
+    if (square!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in square!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.square.approval == 1 || widget.square.approval == 9) {
+    if (square!.approval == 1 || square!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.square.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = square!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -136,7 +186,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestSquareDownload(
-              widget.square,
+              square!,
             ),
           ),
           const SizedBox(width: 4),
@@ -150,7 +200,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               builder: (context) => RejectRequestSquareDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                square: widget.square,
+                square: square!,
               ),
             ),
             disabled: !isReject,
@@ -166,13 +216,13 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               builder: (context) => ApprovalRequestSquareDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                square: widget.square,
+                square: square!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.square.pending == true
+          square!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -183,10 +233,10 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                     builder: (context) => PendingCancelRequestSquareDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      square: widget.square,
+                      square: square!,
                     ),
                   ),
-                  disabled: widget.square.approval != 0,
+                  disabled: square!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -198,10 +248,10 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                     builder: (context) => PendingRequestSquareDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      square: widget.square,
+                      square: square!,
                     ),
                   ),
-                  disabled: widget.square.approval != 0,
+                  disabled: square!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -220,12 +270,12 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.square.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', square!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.square.approval == 1
+                  square!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.square.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', square!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -261,24 +311,69 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               FormLabel(
                 '申込会社名(又は店名)',
                 child: FormValue(
-                  widget.square.companyName,
-                  onTap: () {},
+                  square!.companyName,
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: square!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者名',
                 child: FormValue(
-                  widget.square.companyUserName,
-                  onTap: () {},
+                  square!.companyUserName,
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: square!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者メールアドレス',
                 child: FormValue(
-                  widget.square.companyUserEmail,
-                  onTap: () {},
+                  square!.companyUserEmail,
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: square!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -286,7 +381,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.square.companyUserEmail}',
+                    'mailto:${square!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -295,16 +390,46 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               FormLabel(
                 '申込担当者電話番号',
                 child: FormValue(
-                  widget.square.companyUserTel,
-                  onTap: () {},
+                  square!.companyUserTel,
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: square!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '住所',
                 child: FormValue(
-                  widget.square.companyAddress,
-                  onTap: () {},
+                  square!.companyAddress,
+                  onTap: () {
+                    final companyAddressController = TextEditingController(
+                      text: square!.companyAddress,
+                    );
+                    _showTextField(
+                      controller: companyAddressController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'companyAddress': companyAddressController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -322,16 +447,47 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               FormLabel(
                 '使用会社名(又は店名)',
                 child: FormValue(
-                  widget.square.useCompanyName,
-                  onTap: () {},
+                  square!.useCompanyName,
+                  onTap: () {
+                    final useCompanyNameController = TextEditingController(
+                      text: square!.useCompanyName,
+                    );
+                    _showTextField(
+                      controller: useCompanyNameController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'useCompanyName': useCompanyNameController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者名',
                 child: FormValue(
-                  widget.square.useCompanyUserName,
-                  onTap: () {},
+                  square!.useCompanyUserName,
+                  onTap: () {
+                    final useCompanyUserNameController = TextEditingController(
+                      text: square!.useCompanyUserName,
+                    );
+                    _showTextField(
+                      controller: useCompanyUserNameController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'useCompanyUserName':
+                              useCompanyUserNameController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -348,13 +504,13 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               const SizedBox(height: 8),
               FormLabel(
                 '使用場所を記したPDFファイル',
-                child: widget.square.useLocationFile != ''
+                child: square!.useLocationFile != ''
                     ? AttachedFileList(
-                        fileName: p.basename(widget.square.useLocationFile),
+                        fileName: p.basename(square!.useLocationFile),
                         onTap: () {
                           downloadFile(
-                            url: widget.square.useLocationFile,
-                            name: p.basename(widget.square.useLocationFile),
+                            url: square!.useLocationFile,
+                            name: p.basename(square!.useLocationFile),
                           );
                         },
                       )
@@ -364,9 +520,9 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               FormLabel(
                 '使用予定日時',
                 child: FormValue(
-                  widget.square.useAtPending
+                  square!.useAtPending
                       ? '未定'
-                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.square.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.square.useEndedAt)}',
+                      : '${dateText('yyyy年MM月dd日 HH:mm', square!.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', square!.useEndedAt)}',
                 ),
               ),
               const SizedBox(height: 8),
@@ -374,21 +530,20 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                 '使用区分',
                 child: Column(
                   children: [
-                    widget.square.useFull
+                    square!.useFull
                         ? const ListTile(
                             title: Text('全面使用'),
                           )
                         : Container(),
-                    widget.square.useChair
+                    square!.useChair
                         ? ListTile(
-                            title:
-                                Text('折りたたみイス：${widget.square.useChairNum}脚'),
+                            title: Text('折りたたみイス：${square!.useChairNum}脚'),
                             subtitle: const Text('150円(税抜)／1脚・1日'),
                           )
                         : Container(),
-                    widget.square.useDesk
+                    square!.useDesk
                         ? ListTile(
-                            title: Text('折りたたみ机：${widget.square.useDeskNum}台'),
+                            title: Text('折りたたみ机：${square!.useDeskNum}台'),
                             subtitle: const Text('300円(税抜)／1台・1日'),
                           )
                         : Container(),
@@ -399,8 +554,23 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
               FormLabel(
                 '使用内容',
                 child: FormValue(
-                  widget.square.useContent,
-                  onTap: () {},
+                  square!.useContent,
+                  onTap: () {
+                    final useContentController = TextEditingController(
+                      text: square!.useContent,
+                    );
+                    _showTextField(
+                      controller: useContentController,
+                      onPressed: () {
+                        squareService.update({
+                          'id': square!.id,
+                          'useContent': useContentController.text,
+                        });
+                        _reloadRequestSquare();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -412,7 +582,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
-                      children: widget.square.attachedFiles.map((file) {
+                      children: square!.attachedFiles.map((file) {
                         return AttachedFileList(
                           fileName: getFileNameFromUrl(file),
                           onTap: () {
@@ -488,12 +658,12 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await squareProvider.addComment(
-                                      square: widget.square,
+                                      square: square!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-よさこい広場使用申込「${widget.square.companyName}」に、社内コメントを追記しました。
+よさこい広場使用申込「${square!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

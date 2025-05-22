@@ -47,7 +47,52 @@ class RequestFacilityDetailScreen extends StatefulWidget {
 class _RequestFacilityDetailScreenState
     extends State<RequestFacilityDetailScreen> {
   RequestFacilityService facilityService = RequestFacilityService();
+  RequestFacilityModel? facility;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestFacilityModel? tmpFacility = await facilityService.selectData(
@@ -83,15 +128,20 @@ class _RequestFacilityDetailScreenState
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.facility.comments;
+  void _reloadRequestFacility() async {
+    RequestFacilityModel? tmpFacility = await facilityService.selectData(
+      id: widget.facility.id,
+    );
+    if (tmpFacility == null) return;
+    facility = tmpFacility;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestFacility();
+    _reloadComments();
     super.initState();
   }
 
@@ -101,25 +151,24 @@ class _RequestFacilityDetailScreenState
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.facility.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.facility.approvalUsers) {
+    if (facility!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in facility!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.facility.approval == 1 || widget.facility.approval == 9) {
+    if (facility!.approval == 1 || facility!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.facility.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = facility!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     int useAtDaysPrice = 0;
-    if (!widget.facility.useAtPending) {
-      int useAtDays = widget.facility.useEndedAt
-          .difference(widget.facility.useStartedAt)
-          .inDays;
+    if (!facility!.useAtPending) {
+      int useAtDays =
+          facility!.useEndedAt.difference(facility!.useStartedAt).inDays;
       int price = 1200;
       useAtDaysPrice = price * useAtDays;
     }
@@ -146,7 +195,7 @@ class _RequestFacilityDetailScreenState
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestFacilityDownload(
-              widget.facility,
+              facility!,
             ),
           ),
           const SizedBox(width: 4),
@@ -160,7 +209,7 @@ class _RequestFacilityDetailScreenState
               builder: (context) => RejectRequestFacilityDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                facility: widget.facility,
+                facility: facility!,
               ),
             ),
             disabled: !isReject,
@@ -176,13 +225,13 @@ class _RequestFacilityDetailScreenState
               builder: (context) => ApprovalRequestFacilityDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                facility: widget.facility,
+                facility: facility!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.facility.pending == true
+          facility!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -193,10 +242,10 @@ class _RequestFacilityDetailScreenState
                     builder: (context) => PendingCancelRequestFacilityDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      facility: widget.facility,
+                      facility: facility!,
                     ),
                   ),
-                  disabled: widget.facility.approval != 0,
+                  disabled: facility!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -208,10 +257,10 @@ class _RequestFacilityDetailScreenState
                     builder: (context) => PendingRequestFacilityDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      facility: widget.facility,
+                      facility: facility!,
                     ),
                   ),
-                  disabled: widget.facility.approval != 0,
+                  disabled: facility!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -230,12 +279,12 @@ class _RequestFacilityDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.facility.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', facility!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.facility.approval == 1
+                  facility!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.facility.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', facility!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -271,7 +320,7 @@ class _RequestFacilityDetailScreenState
               FormLabel(
                 '店舗名',
                 child: FormValue(
-                  widget.facility.companyName,
+                  facility!.companyName,
                   onTap: () {},
                 ),
               ),
@@ -279,7 +328,7 @@ class _RequestFacilityDetailScreenState
               FormLabel(
                 '店舗責任者名',
                 child: FormValue(
-                  widget.facility.companyUserName,
+                  facility!.companyUserName,
                   onTap: () {},
                 ),
               ),
@@ -287,7 +336,7 @@ class _RequestFacilityDetailScreenState
               FormLabel(
                 '店舗責任者メールアドレス',
                 child: FormValue(
-                  widget.facility.companyUserEmail,
+                  facility!.companyUserEmail,
                   onTap: () {},
                 ),
               ),
@@ -296,7 +345,7 @@ class _RequestFacilityDetailScreenState
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.facility.companyUserEmail}',
+                    'mailto:${facility!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -305,7 +354,7 @@ class _RequestFacilityDetailScreenState
               FormLabel(
                 '店舗責任者電話番号',
                 child: FormValue(
-                  widget.facility.companyUserTel,
+                  facility!.companyUserTel,
                   onTap: () {},
                 ),
               ),
@@ -314,13 +363,13 @@ class _RequestFacilityDetailScreenState
               const SizedBox(height: 16),
               FormLabel(
                 '使用場所を記したPDFファイル',
-                child: widget.facility.useLocationFile != ''
+                child: facility!.useLocationFile != ''
                     ? AttachedFileList(
-                        fileName: p.basename(widget.facility.useLocationFile),
+                        fileName: p.basename(facility!.useLocationFile),
                         onTap: () {
                           downloadFile(
-                            url: widget.facility.useLocationFile,
-                            name: p.basename(widget.facility.useLocationFile),
+                            url: facility!.useLocationFile,
+                            name: p.basename(facility!.useLocationFile),
                           );
                         },
                       )
@@ -330,9 +379,9 @@ class _RequestFacilityDetailScreenState
               FormLabel(
                 '使用予定日時',
                 child: FormValue(
-                  widget.facility.useAtPending
+                  facility!.useAtPending
                       ? '未定'
-                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.facility.useEndedAt)}',
+                      : '${dateText('yyyy年MM月dd日 HH:mm', facility!.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', facility!.useEndedAt)}',
                 ),
               ),
               const SizedBox(height: 8),
@@ -340,7 +389,6 @@ class _RequestFacilityDetailScreenState
                 '使用料合計(税抜)',
                 child: FormValue(
                   '${NumberFormat("#,###").format(useAtDaysPrice)}円',
-                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 16),
@@ -352,7 +400,7 @@ class _RequestFacilityDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
-                      children: widget.facility.attachedFiles.map((file) {
+                      children: facility!.attachedFiles.map((file) {
                         return AttachedFileList(
                           fileName: getFileNameFromUrl(file),
                           onTap: () {
@@ -428,12 +476,12 @@ class _RequestFacilityDetailScreenState
                                   onPressed: () async {
                                     String? error =
                                         await facilityProvider.addComment(
-                                      facility: widget.facility,
+                                      facility: facility!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-施設使用申込「${widget.facility.companyName}」に、社内コメントを追記しました。
+施設使用申込「${facility!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

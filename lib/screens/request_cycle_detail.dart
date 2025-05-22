@@ -43,7 +43,52 @@ class RequestCycleDetailScreen extends StatefulWidget {
 
 class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
   RequestCycleService cycleService = RequestCycleService();
+  RequestCycleModel? cycle;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestCycleModel? tmpCycle = await cycleService.selectData(
@@ -79,15 +124,20 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.cycle.comments;
+  void _reloadRequestCycle() async {
+    RequestCycleModel? tmpCycle = await cycleService.selectData(
+      id: widget.cycle.id,
+    );
+    if (tmpCycle == null) return;
+    cycle = tmpCycle;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestCycle();
+    _reloadComments();
     super.initState();
   }
 
@@ -97,19 +147,19 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.cycle.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.cycle.approvalUsers) {
+    if (cycle!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in cycle!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.cycle.approval == 1 || widget.cycle.approval == 9) {
+    if (cycle!.approval == 1 || cycle!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.cycle.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = cycle!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -134,7 +184,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestCycleDownload(
-              widget.cycle,
+              cycle!,
             ),
           ),
           const SizedBox(width: 4),
@@ -148,7 +198,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               builder: (context) => RejectRequestCycleDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                cycle: widget.cycle,
+                cycle: cycle!,
               ),
             ),
             disabled: !isReject,
@@ -164,13 +214,13 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               builder: (context) => ApprovalRequestCycleDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                cycle: widget.cycle,
+                cycle: cycle!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.cycle.pending == true
+          cycle!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -181,10 +231,10 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                     builder: (context) => PendingCancelRequestCycleDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      cycle: widget.cycle,
+                      cycle: cycle!,
                     ),
                   ),
-                  disabled: widget.cycle.approval != 0,
+                  disabled: cycle!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -196,10 +246,10 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                     builder: (context) => PendingRequestCycleDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      cycle: widget.cycle,
+                      cycle: cycle!,
                     ),
                   ),
-                  disabled: widget.cycle.approval != 0,
+                  disabled: cycle!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -218,12 +268,12 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.cycle.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', cycle!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.cycle.approval == 1
+                  cycle!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.cycle.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', cycle!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -259,24 +309,69 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               FormLabel(
                 '店舗名',
                 child: FormValue(
-                  widget.cycle.companyName,
-                  onTap: () {},
+                  cycle!.companyName,
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: cycle!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        cycleService.update({
+                          'id': cycle!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestCycle();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者名',
                 child: FormValue(
-                  widget.cycle.companyUserName,
-                  onTap: () {},
+                  cycle!.companyUserName,
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: cycle!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        cycleService.update({
+                          'id': cycle!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestCycle();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '使用者メールアドレス',
                 child: FormValue(
-                  widget.cycle.companyUserEmail,
-                  onTap: () {},
+                  cycle!.companyUserEmail,
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: cycle!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        cycleService.update({
+                          'id': cycle!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestCycle();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -284,7 +379,7 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.cycle.companyUserEmail}',
+                    'mailto:${cycle!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -293,16 +388,46 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
               FormLabel(
                 '使用者電話番号',
                 child: FormValue(
-                  widget.cycle.companyUserTel,
-                  onTap: () {},
+                  cycle!.companyUserTel,
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: cycle!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        cycleService.update({
+                          'id': cycle!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestCycle();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '住所',
                 child: FormValue(
-                  widget.cycle.companyAddress,
-                  onTap: () {},
+                  cycle!.companyAddress,
+                  onTap: () {
+                    final companyAddressController = TextEditingController(
+                      text: cycle!.companyAddress,
+                    );
+                    _showTextField(
+                      controller: companyAddressController,
+                      onPressed: () {
+                        cycleService.update({
+                          'id': cycle!.id,
+                          'companyAddress': companyAddressController.text,
+                        });
+                        _reloadRequestCycle();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -366,12 +491,12 @@ class _RequestCycleDetailScreenState extends State<RequestCycleDetailScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await cycleProvider.addComment(
-                                      cycle: widget.cycle,
+                                      cycle: cycle!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-自転車置き場使用申込「${widget.cycle.companyName}」に、社内コメントを追記しました。
+自転車置き場使用申込「${cycle!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

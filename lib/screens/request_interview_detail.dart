@@ -45,7 +45,52 @@ class RequestInterviewDetailScreen extends StatefulWidget {
 class _RequestInterviewDetailScreenState
     extends State<RequestInterviewDetailScreen> {
   RequestInterviewService interviewService = RequestInterviewService();
+  RequestInterviewModel? interview;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestInterviewModel? tmpInterview = await interviewService.selectData(
@@ -81,15 +126,20 @@ class _RequestInterviewDetailScreenState
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.interview.comments;
+  void _reloadRequestInterview() async {
+    RequestInterviewModel? tmpInterview = await interviewService.selectData(
+      id: widget.interview.id,
+    );
+    if (tmpInterview == null) return;
+    interview = tmpInterview;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestInterview();
+    _reloadComments();
     super.initState();
   }
 
@@ -99,19 +149,19 @@ class _RequestInterviewDetailScreenState
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.interview.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.interview.approvalUsers) {
+    if (interview!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in interview!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.interview.approval == 1 || widget.interview.approval == 9) {
+    if (interview!.approval == 1 || interview!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.interview.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = interview!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -136,7 +186,7 @@ class _RequestInterviewDetailScreenState
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestInterviewDownload(
-              widget.interview,
+              interview!,
             ),
           ),
           const SizedBox(width: 4),
@@ -150,7 +200,7 @@ class _RequestInterviewDetailScreenState
               builder: (context) => RejectRequestInterviewDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                interview: widget.interview,
+                interview: interview!,
               ),
             ),
             disabled: !isReject,
@@ -166,13 +216,13 @@ class _RequestInterviewDetailScreenState
               builder: (context) => ApprovalRequestInterviewDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                interview: widget.interview,
+                interview: interview!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.interview.pending == true
+          interview!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -183,10 +233,10 @@ class _RequestInterviewDetailScreenState
                     builder: (context) => PendingCancelRequestInterviewDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      interview: widget.interview,
+                      interview: interview!,
                     ),
                   ),
-                  disabled: widget.interview.approval != 0,
+                  disabled: interview!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -198,10 +248,10 @@ class _RequestInterviewDetailScreenState
                     builder: (context) => PendingRequestInterviewDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      interview: widget.interview,
+                      interview: interview!,
                     ),
                   ),
-                  disabled: widget.interview.approval != 0,
+                  disabled: interview!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -220,12 +270,12 @@ class _RequestInterviewDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.createdAt)}',
+                    '申込日時: ${dateText('yyyy/MM/dd HH:mm', interview!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.interview.approval == 1
+                  interview!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.interview.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', interview!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -261,24 +311,69 @@ class _RequestInterviewDetailScreenState
               FormLabel(
                 '申込会社名',
                 child: FormValue(
-                  widget.interview.companyName,
-                  onTap: () {},
+                  interview!.companyName,
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: interview!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者名',
                 child: FormValue(
-                  widget.interview.companyUserName,
-                  onTap: () {},
+                  interview!.companyUserName,
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: interview!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '申込担当者メールアドレス',
                 child: FormValue(
-                  widget.interview.companyUserEmail,
-                  onTap: () {},
+                  interview!.companyUserEmail,
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: interview!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -286,7 +381,7 @@ class _RequestInterviewDetailScreenState
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.interview.companyUserEmail}',
+                    'mailto:${interview!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -295,49 +390,121 @@ class _RequestInterviewDetailScreenState
               FormLabel(
                 '申込担当者電話番号',
                 child: FormValue(
-                  widget.interview.companyUserTel,
-                  onTap: () {},
+                  interview!.companyUserTel,
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: interview!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '媒体名',
                 child: FormValue(
-                  widget.interview.mediaName,
-                  onTap: () {},
+                  interview!.mediaName,
+                  onTap: () {
+                    final mediaNameController = TextEditingController(
+                      text: interview!.mediaName,
+                    );
+                    _showTextField(
+                      controller: mediaNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'mediaName': mediaNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '番組・雑誌名',
                 child: FormValue(
-                  widget.interview.programName,
-                  onTap: () {},
+                  interview!.programName,
+                  onTap: () {
+                    final programNameController = TextEditingController(
+                      text: interview!.programName,
+                    );
+                    _showTextField(
+                      controller: programNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'programName': programNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '出演者情報',
                 child: FormValue(
-                  widget.interview.castInfo,
-                  onTap: () {},
+                  interview!.castInfo,
+                  onTap: () {
+                    final castInfoController = TextEditingController(
+                      text: interview!.castInfo,
+                    );
+                    _showTextField(
+                      controller: castInfoController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'castInfo': castInfoController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '特集内容・備考',
                 child: FormValue(
-                  widget.interview.featureContent,
-                  onTap: () {},
+                  interview!.featureContent,
+                  onTap: () {
+                    final featureContentController = TextEditingController(
+                      text: interview!.featureContent,
+                    );
+                    _showTextField(
+                      controller: featureContentController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'featureContent': featureContentController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 'OA・掲載予定日',
-                child: FormValue(
-                  widget.interview.publishedAt,
-                  onTap: () {},
-                ),
+                child: FormValue(interview!.publishedAt),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
@@ -354,61 +521,140 @@ class _RequestInterviewDetailScreenState
               FormLabel(
                 '取材予定日時',
                 child: FormValue(
-                  widget.interview.interviewedAtPending
+                  interview!.interviewedAtPending
                       ? '未定'
-                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.interviewedEndedAt)}',
+                      : '${dateText('yyyy年MM月dd日 HH:mm', interview!.interviewedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview!.interviewedEndedAt)}',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者名',
                 child: FormValue(
-                  widget.interview.interviewedUserName,
-                  onTap: () {},
+                  interview!.interviewedUserName,
+                  onTap: () {
+                    final interviewedUserNameController = TextEditingController(
+                      text: interview!.interviewedUserName,
+                    );
+                    _showTextField(
+                      controller: interviewedUserNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'interviewedUserName':
+                              interviewedUserNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材担当者電話番号',
                 child: FormValue(
-                  widget.interview.interviewedUserTel,
-                  onTap: () {},
+                  interview!.interviewedUserTel,
+                  onTap: () {
+                    final interviewedUserTelController = TextEditingController(
+                      text: interview!.interviewedUserTel,
+                    );
+                    _showTextField(
+                      controller: interviewedUserTelController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'interviewedUserTel':
+                              interviewedUserTelController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '席の予約',
-                child:
-                    FormValue(widget.interview.interviewedReserved ? '必要' : ''),
+                child: FormValue(interview!.interviewedReserved ? '必要' : ''),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材店舗',
                 child: FormValue(
-                  widget.interview.interviewedShopName,
-                  onTap: () {},
+                  interview!.interviewedShopName,
+                  onTap: () {
+                    final interviewedShopNameController = TextEditingController(
+                      text: interview!.interviewedShopName,
+                    );
+                    _showTextField(
+                      controller: interviewedShopNameController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'interviewedShopName':
+                              interviewedShopNameController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 'いらっしゃる人数',
                 child: FormValue(
-                  widget.interview.interviewedVisitors,
-                  onTap: () {},
+                  interview!.interviewedVisitors,
+                  onTap: () {
+                    final interviewedVisitorsController = TextEditingController(
+                      text: interview!.interviewedVisitors,
+                    );
+                    _showTextField(
+                      controller: interviewedVisitorsController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'interviewedVisitors':
+                              interviewedVisitorsController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '取材内容・備考',
                 child: FormValue(
-                  widget.interview.interviewedContent,
-                  onTap: () {},
+                  interview!.interviewedContent,
+                  onTap: () {
+                    final interviewedContentController = TextEditingController(
+                      text: interview!.interviewedContent,
+                    );
+                    _showTextField(
+                      controller: interviewedContentController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'interviewedContent':
+                              interviewedContentController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              widget.interview.location
+              interview!.location
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -425,41 +671,109 @@ class _RequestInterviewDetailScreenState
                         FormLabel(
                           'ロケハン予定日時',
                           child: FormValue(
-                            widget.interview.locationAtPending
+                            interview!.locationAtPending
                                 ? '未定'
-                                : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.locationEndedAt)}',
+                                : '${dateText('yyyy年MM月dd日 HH:mm', interview!.locationStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview!.locationEndedAt)}',
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者名',
                           child: FormValue(
-                            widget.interview.locationUserName,
-                            onTap: () {},
+                            interview!.locationUserName,
+                            onTap: () {
+                              final locationUserNameController =
+                                  TextEditingController(
+                                text: interview!.locationUserName,
+                              );
+                              _showTextField(
+                                controller: locationUserNameController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'locationUserName':
+                                        locationUserNameController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン担当者電話番号',
                           child: FormValue(
-                            widget.interview.locationUserTel,
-                            onTap: () {},
+                            interview!.locationUserTel,
+                            onTap: () {
+                              final locationUserTelController =
+                                  TextEditingController(
+                                text: interview!.locationUserTel,
+                              );
+                              _showTextField(
+                                controller: locationUserTelController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'locationUserTel':
+                                        locationUserTelController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'いらっしゃる人数',
                           child: FormValue(
-                            widget.interview.locationVisitors,
-                            onTap: () {},
+                            interview!.locationVisitors,
+                            onTap: () {
+                              final locationVisitorsController =
+                                  TextEditingController(
+                                text: interview!.locationVisitors,
+                              );
+                              _showTextField(
+                                controller: locationVisitorsController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'locationVisitors':
+                                        locationVisitorsController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'ロケハン内容・備考',
                           child: FormValue(
-                            widget.interview.locationContent,
-                            onTap: () {},
+                            interview!.locationContent,
+                            onTap: () {
+                              final locationContentController =
+                                  TextEditingController(
+                                text: interview!.locationContent,
+                              );
+                              _showTextField(
+                                controller: locationContentController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'locationContent':
+                                        locationContentController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -468,7 +782,7 @@ class _RequestInterviewDetailScreenState
               const SizedBox(height: 16),
               const DottedDivider(),
               const SizedBox(height: 16),
-              widget.interview.insert
+              interview!.insert
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -485,55 +799,140 @@ class _RequestInterviewDetailScreenState
                         FormLabel(
                           '撮影予定日時',
                           child: FormValue(
-                            widget.interview.insertedAtPending
+                            interview!.insertedAtPending
                                 ? '未定'
-                                : '${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.interview.insertedEndedAt)}',
+                                : '${dateText('yyyy年MM月dd日 HH:mm', interview!.insertedStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', interview!.insertedEndedAt)}',
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影担当者名',
                           child: FormValue(
-                            widget.interview.insertedUserName,
-                            onTap: () {},
+                            interview!.insertedUserName,
+                            onTap: () {
+                              final insertedUserNameController =
+                                  TextEditingController(
+                                text: interview!.insertedUserName,
+                              );
+                              _showTextField(
+                                controller: insertedUserNameController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'insertedUserName':
+                                        insertedUserNameController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影担当者電話番号',
                           child: FormValue(
-                            widget.interview.insertedUserTel,
-                            onTap: () {},
+                            interview!.insertedUserTel,
+                            onTap: () {
+                              final insertedUserTelController =
+                                  TextEditingController(
+                                text: interview!.insertedUserTel,
+                              );
+                              _showTextField(
+                                controller: insertedUserTelController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'insertedUserTel':
+                                        insertedUserTelController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '席の予約',
                           child: FormValue(
-                              widget.interview.insertedReserved ? '必要' : ''),
+                              interview!.insertedReserved ? '必要' : ''),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影店舗',
                           child: FormValue(
-                            widget.interview.insertedShopName,
-                            onTap: () {},
+                            interview!.insertedShopName,
+                            onTap: () {
+                              final insertedShopNameController =
+                                  TextEditingController(
+                                text: interview!.insertedShopName,
+                              );
+                              _showTextField(
+                                controller: insertedShopNameController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'insertedShopName':
+                                        insertedShopNameController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           'いらっしゃる人数',
                           child: FormValue(
-                            widget.interview.insertedVisitors,
-                            onTap: () {},
+                            interview!.insertedVisitors,
+                            onTap: () {
+                              final insertedVisitorsController =
+                                  TextEditingController(
+                                text: interview!.insertedVisitors,
+                              );
+                              _showTextField(
+                                controller: insertedVisitorsController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'insertedVisitors':
+                                        insertedVisitorsController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 8),
                         FormLabel(
                           '撮影内容・備考',
                           child: FormValue(
-                            widget.interview.insertedContent,
-                            onTap: () {},
+                            interview!.insertedContent,
+                            onTap: () {
+                              final insertedContentController =
+                                  TextEditingController(
+                                text: interview!.insertedContent,
+                              );
+                              _showTextField(
+                                controller: insertedContentController,
+                                onPressed: () {
+                                  interviewService.update({
+                                    'id': interview!.id,
+                                    'insertedContent':
+                                        insertedContentController.text,
+                                  });
+                                  _reloadRequestInterview();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -548,7 +947,7 @@ class _RequestInterviewDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
-                      children: widget.interview.attachedFiles.map((file) {
+                      children: interview!.attachedFiles.map((file) {
                         return AttachedFileList(
                           fileName: getFileNameFromUrl(file),
                           onTap: () {
@@ -567,8 +966,23 @@ class _RequestInterviewDetailScreenState
               FormLabel(
                 'その他連絡事項',
                 child: FormValue(
-                  widget.interview.remarks,
-                  onTap: () {},
+                  interview!.remarks,
+                  onTap: () {
+                    final remarksController = TextEditingController(
+                      text: interview!.remarks,
+                    );
+                    _showTextField(
+                      controller: remarksController,
+                      onPressed: () {
+                        interviewService.update({
+                          'id': interview!.id,
+                          'remarks': remarksController.text,
+                        });
+                        _reloadRequestInterview();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -632,12 +1046,12 @@ class _RequestInterviewDetailScreenState
                                   onPressed: () async {
                                     String? error =
                                         await interviewProvider.addComment(
-                                      interview: widget.interview,
+                                      interview: interview!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-取材申込「${widget.interview.companyName}」に、社内コメントを追記しました。
+取材申込「${interview!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

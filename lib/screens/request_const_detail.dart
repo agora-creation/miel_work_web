@@ -47,7 +47,52 @@ class RequestConstDetailScreen extends StatefulWidget {
 
 class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
   RequestConstService constService = RequestConstService();
+  RequestConstModel? requestConst;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestConstModel? tmpRequestConst = await constService.selectData(
@@ -83,15 +128,20 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.requestConst.comments;
+  void _reloadRequestConst() async {
+    RequestConstModel? tmpConst = await constService.selectData(
+      id: widget.requestConst.id,
+    );
+    if (tmpConst == null) return;
+    requestConst = tmpConst;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestConst();
+    _reloadComments();
     super.initState();
   }
 
@@ -101,20 +151,19 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.requestConst.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.requestConst.approvalUsers) {
+    if (requestConst!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in requestConst!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.requestConst.approval == 1 ||
-        widget.requestConst.approval == 9) {
+    if (requestConst!.approval == 1 || requestConst!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.requestConst.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = requestConst!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -139,7 +188,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestConstDownload(
-              widget.requestConst,
+              requestConst!,
             ),
           ),
           const SizedBox(width: 4),
@@ -153,7 +202,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               builder: (context) => RejectRequestConstDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                requestConst: widget.requestConst,
+                requestConst: requestConst!,
               ),
             ),
             disabled: !isReject,
@@ -169,13 +218,13 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               builder: (context) => ApprovalRequestConstDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                requestConst: widget.requestConst,
+                requestConst: requestConst!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.requestConst.pending == true
+          requestConst!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -186,10 +235,10 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                     builder: (context) => PendingCancelRequestConstDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      requestConst: widget.requestConst,
+                      requestConst: requestConst!,
                     ),
                   ),
-                  disabled: widget.requestConst.approval != 0,
+                  disabled: requestConst!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -201,10 +250,10 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                     builder: (context) => PendingRequestConstDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      requestConst: widget.requestConst,
+                      requestConst: requestConst!,
                     ),
                   ),
-                  disabled: widget.requestConst.approval != 0,
+                  disabled: requestConst!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -223,12 +272,12 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.requestConst.createdAt)}',
+                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', requestConst!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.requestConst.approval == 1
+                  requestConst!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.requestConst.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', requestConst!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -264,24 +313,69 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               FormLabel(
                 '店舗名',
                 child: FormValue(
-                  widget.requestConst.companyName,
-                  onTap: () {},
+                  requestConst!.companyName,
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: requestConst!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
                 child: FormValue(
-                  widget.requestConst.companyUserName,
-                  onTap: () {},
+                  requestConst!.companyUserName,
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: requestConst!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
                 child: FormValue(
-                  widget.requestConst.companyUserEmail,
-                  onTap: () {},
+                  requestConst!.companyUserEmail,
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: requestConst!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -289,7 +383,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.requestConst.companyUserEmail}',
+                    'mailto:${requestConst!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -298,8 +392,23 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               FormLabel(
                 '店舗責任者電話番号',
                 child: FormValue(
-                  widget.requestConst.companyUserTel,
-                  onTap: () {},
+                  requestConst!.companyUserTel,
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: requestConst!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -317,98 +426,188 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
               FormLabel(
                 '工事施工会社名',
                 child: FormValue(
-                  widget.requestConst.constName,
-                  onTap: () {},
+                  requestConst!.constName,
+                  onTap: () {
+                    final constNameController = TextEditingController(
+                      text: requestConst!.constName,
+                    );
+                    _showTextField(
+                      controller: constNameController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'constName': constNameController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工代表者名',
                 child: FormValue(
-                  widget.requestConst.constUserName,
-                  onTap: () {},
+                  requestConst!.constUserName,
+                  onTap: () {
+                    final constUserNameController = TextEditingController(
+                      text: requestConst!.constUserName,
+                    );
+                    _showTextField(
+                      controller: constUserNameController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'constUserName': constUserNameController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '工事施工代表者電話番号',
                 child: FormValue(
-                  widget.requestConst.constUserTel,
-                  onTap: () {},
+                  requestConst!.constUserTel,
+                  onTap: () {
+                    final constUserTelController = TextEditingController(
+                      text: requestConst!.constUserTel,
+                    );
+                    _showTextField(
+                      controller: constUserTelController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'constUserTel': constUserTelController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '当日担当者名',
                 child: FormValue(
-                  widget.requestConst.chargeUserName,
-                  onTap: () {},
+                  requestConst!.chargeUserName,
+                  onTap: () {
+                    final chargeUserNameController = TextEditingController(
+                      text: requestConst!.chargeUserName,
+                    );
+                    _showTextField(
+                      controller: chargeUserNameController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'chargeUserName': chargeUserNameController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '当日担当者電話番号',
                 child: FormValue(
-                  widget.requestConst.chargeUserTel,
-                  onTap: () {},
+                  requestConst!.chargeUserTel,
+                  onTap: () {
+                    final chargeUserTelController = TextEditingController(
+                      text: requestConst!.chargeUserTel,
+                    );
+                    _showTextField(
+                      controller: chargeUserTelController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'chargeUserTel': chargeUserTelController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '施工予定日時',
                 child: FormValue(
-                  widget.requestConst.constAtPending
+                  requestConst!.constAtPending
                       ? '未定'
-                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.requestConst.constEndedAt)}',
+                      : '${dateText('yyyy年MM月dd日 HH:mm', requestConst!.constStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', requestConst!.constEndedAt)}',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '施工内容',
                 child: FormValue(
-                  widget.requestConst.constContent,
-                  onTap: () {},
+                  requestConst!.constContent,
+                  onTap: () {
+                    final constContentController = TextEditingController(
+                      text: requestConst!.constContent,
+                    );
+                    _showTextField(
+                      controller: constContentController,
+                      onPressed: () {
+                        constService.update({
+                          'id': requestConst!.id,
+                          'constContent': constContentController.text,
+                        });
+                        _reloadRequestConst();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '騒音',
-                child: FormValue(widget.requestConst.noise ? '有' : '無'),
+                child: FormValue(requestConst!.noise ? '有' : '無'),
               ),
-              widget.requestConst.noise
+              requestConst!.noise
                   ? Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: FormLabel(
                         '騒音対策',
-                        child: FormValue(widget.requestConst.noiseMeasures),
+                        child: FormValue(requestConst!.noiseMeasures),
                       ),
                     )
                   : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '粉塵',
-                child: FormValue(widget.requestConst.dust ? '有' : '無'),
+                child: FormValue(requestConst!.dust ? '有' : '無'),
               ),
-              widget.requestConst.dust
+              requestConst!.dust
                   ? Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: FormLabel(
                         '粉塵対策',
-                        child: FormValue(widget.requestConst.dustMeasures),
+                        child: FormValue(requestConst!.dustMeasures),
                       ),
                     )
                   : Container(),
               const SizedBox(height: 8),
               FormLabel(
                 '火気の使用',
-                child: FormValue(widget.requestConst.fire ? '有' : '無'),
+                child: FormValue(requestConst!.fire ? '有' : '無'),
               ),
-              widget.requestConst.fire
+              requestConst!.fire
                   ? Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: FormLabel(
                         '火気対策',
-                        child: FormValue(widget.requestConst.fireMeasures),
+                        child: FormValue(requestConst!.fireMeasures),
                       ),
                     )
                   : Container(),
@@ -421,7 +620,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
-                      children: widget.requestConst.attachedFiles.map((file) {
+                      children: requestConst!.attachedFiles.map((file) {
                         return AttachedFileList(
                           fileName: getFileNameFromUrl(file),
                           onTap: () {
@@ -497,12 +696,12 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await constProvider.addComment(
-                                      requestConst: widget.requestConst,
+                                      requestConst: requestConst!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-店舗工事作業申請「${widget.requestConst.companyName}」に、社内コメントを追記しました。
+店舗工事作業申請「${requestConst!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

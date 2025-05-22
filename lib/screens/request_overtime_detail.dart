@@ -48,7 +48,52 @@ class RequestOvertimeDetailScreen extends StatefulWidget {
 class _RequestOvertimeDetailScreenState
     extends State<RequestOvertimeDetailScreen> {
   RequestOvertimeService overtimeService = RequestOvertimeService();
+  RequestOvertimeModel? overtime;
   List<CommentModel> comments = [];
+
+  void _showTextField({
+    required TextEditingController controller,
+    TextInputType textInputType = TextInputType.text,
+    required Function() onPressed,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        contentPadding: const EdgeInsets.all(16),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              controller: controller,
+              textInputType: textInputType,
+              maxLines: textInputType == TextInputType.text ? 1 : null,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: 'キャンセル',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kGreyColor,
+                  onPressed: () => Navigator.pop(context),
+                ),
+                CustomButton(
+                  type: ButtonSizeType.sm,
+                  label: '保存',
+                  labelColor: kWhiteColor,
+                  backgroundColor: kBlueColor,
+                  onPressed: onPressed,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _reloadComments() async {
     RequestOvertimeModel? tmpOvertime = await overtimeService.selectData(
@@ -84,15 +129,20 @@ class _RequestOvertimeDetailScreenState
     }
   }
 
-  void _init() async {
-    _read();
-    comments = widget.overtime.comments;
+  void _reloadRequestOvertime() async {
+    RequestOvertimeModel? tmpOvertime = await overtimeService.selectData(
+      id: widget.overtime.id,
+    );
+    if (tmpOvertime == null) return;
+    overtime = tmpOvertime;
     setState(() {});
   }
 
   @override
   void initState() {
-    _init();
+    _read();
+    _reloadRequestOvertime();
+    _reloadComments();
     super.initState();
   }
 
@@ -102,19 +152,19 @@ class _RequestOvertimeDetailScreenState
     final messageProvider = Provider.of<ChatMessageProvider>(context);
     bool isApproval = true;
     bool isReject = true;
-    if (widget.overtime.approvalUsers.isNotEmpty) {
-      for (ApprovalUserModel user in widget.overtime.approvalUsers) {
+    if (overtime!.approvalUsers.isNotEmpty) {
+      for (ApprovalUserModel user in overtime!.approvalUsers) {
         if (user.userId == widget.loginProvider.user?.id) {
           isApproval = false;
           isReject = false;
         }
       }
     }
-    if (widget.overtime.approval == 1 || widget.overtime.approval == 9) {
+    if (overtime!.approval == 1 || overtime!.approval == 9) {
       isApproval = false;
       isReject = false;
     }
-    List<ApprovalUserModel> approvalUsers = widget.overtime.approvalUsers;
+    List<ApprovalUserModel> approvalUsers = overtime!.approvalUsers;
     List<ApprovalUserModel> reApprovalUsers = approvalUsers.reversed.toList();
     return Scaffold(
       backgroundColor: kWhiteColor,
@@ -139,7 +189,7 @@ class _RequestOvertimeDetailScreenState
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().requestOvertimeDownload(
-              widget.overtime,
+              overtime!,
             ),
           ),
           const SizedBox(width: 4),
@@ -153,7 +203,7 @@ class _RequestOvertimeDetailScreenState
               builder: (context) => RejectRequestOvertimeDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                overtime: widget.overtime,
+                overtime: overtime!,
               ),
             ),
             disabled: !isReject,
@@ -169,13 +219,13 @@ class _RequestOvertimeDetailScreenState
               builder: (context) => ApprovalRequestOvertimeDialog(
                 loginProvider: widget.loginProvider,
                 homeProvider: widget.homeProvider,
-                overtime: widget.overtime,
+                overtime: overtime!,
               ),
             ),
             disabled: !isApproval,
           ),
           const SizedBox(width: 4),
-          widget.overtime.pending == true
+          overtime!.pending == true
               ? CustomButton(
                   type: ButtonSizeType.sm,
                   label: '保留を解除する',
@@ -186,10 +236,10 @@ class _RequestOvertimeDetailScreenState
                     builder: (context) => PendingCancelRequestOvertimeDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      overtime: widget.overtime,
+                      overtime: overtime!,
                     ),
                   ),
-                  disabled: widget.overtime.approval != 0,
+                  disabled: overtime!.approval != 0,
                 )
               : CustomButton(
                   type: ButtonSizeType.sm,
@@ -201,10 +251,10 @@ class _RequestOvertimeDetailScreenState
                     builder: (context) => PendingRequestOvertimeDialog(
                       loginProvider: widget.loginProvider,
                       homeProvider: widget.homeProvider,
-                      overtime: widget.overtime,
+                      overtime: overtime!,
                     ),
                   ),
-                  disabled: widget.overtime.approval != 0,
+                  disabled: overtime!.approval != 0,
                 ),
           const SizedBox(width: 8),
         ],
@@ -223,12 +273,12 @@ class _RequestOvertimeDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.createdAt)}',
+                    '申請日時: ${dateText('yyyy/MM/dd HH:mm', overtime!.createdAt)}',
                     style: const TextStyle(color: kGreyColor),
                   ),
-                  widget.overtime.approval == 1
+                  overtime!.approval == 1
                       ? Text(
-                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', widget.overtime.approvedAt)}',
+                          '承認日時: ${dateText('yyyy/MM/dd HH:mm', overtime!.approvedAt)}',
                           style: const TextStyle(color: kRedColor),
                         )
                       : Container(),
@@ -264,24 +314,69 @@ class _RequestOvertimeDetailScreenState
               FormLabel(
                 '店舗名',
                 child: FormValue(
-                  widget.overtime.companyName,
-                  onTap: () {},
+                  overtime!.companyName,
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: overtime!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        overtimeService.update({
+                          'id': overtime!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestOvertime();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者名',
                 child: FormValue(
-                  widget.overtime.companyUserName,
-                  onTap: () {},
+                  overtime!.companyUserName,
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: overtime!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        overtimeService.update({
+                          'id': overtime!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestOvertime();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '店舗責任者メールアドレス',
                 child: FormValue(
-                  widget.overtime.companyUserEmail,
-                  onTap: () {},
+                  overtime!.companyUserEmail,
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: overtime!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        overtimeService.update({
+                          'id': overtime!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestOvertime();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -289,7 +384,7 @@ class _RequestOvertimeDetailScreenState
                 color: kBlueColor,
                 onTap: () async {
                   final url = Uri.parse(
-                    'mailto:${widget.overtime.companyUserEmail}',
+                    'mailto:${overtime!.companyUserEmail}',
                   );
                   await launchUrl(url);
                 },
@@ -298,8 +393,23 @@ class _RequestOvertimeDetailScreenState
               FormLabel(
                 '店舗責任者電話番号',
                 child: FormValue(
-                  widget.overtime.companyUserTel,
-                  onTap: () {},
+                  overtime!.companyUserTel,
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: overtime!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        overtimeService.update({
+                          'id': overtime!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestOvertime();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -317,17 +427,32 @@ class _RequestOvertimeDetailScreenState
               FormLabel(
                 '作業予定日時',
                 child: FormValue(
-                  widget.overtime.useAtPending
+                  overtime!.useAtPending
                       ? '未定'
-                      : '${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', widget.overtime.useEndedAt)}',
+                      : '${dateText('yyyy年MM月dd日 HH:mm', overtime!.useStartedAt)}〜${dateText('yyyy年MM月dd日 HH:mm', overtime!.useEndedAt)}',
                 ),
               ),
               const SizedBox(height: 8),
               FormLabel(
                 '作業内容',
                 child: FormValue(
-                  widget.overtime.useContent,
-                  onTap: () {},
+                  overtime!.useContent,
+                  onTap: () {
+                    final useContentController = TextEditingController(
+                      text: overtime!.useContent,
+                    );
+                    _showTextField(
+                      controller: useContentController,
+                      onPressed: () {
+                        overtimeService.update({
+                          'id': overtime!.id,
+                          'useContent': useContentController.text,
+                        });
+                        _reloadRequestOvertime();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -339,7 +464,7 @@ class _RequestOvertimeDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Column(
-                      children: widget.overtime.attachedFiles.map((file) {
+                      children: overtime!.attachedFiles.map((file) {
                         return AttachedFileList(
                           fileName: getFileNameFromUrl(file),
                           onTap: () {
@@ -415,12 +540,12 @@ class _RequestOvertimeDetailScreenState
                                   onPressed: () async {
                                     String? error =
                                         await overtimeProvider.addComment(
-                                      overtime: widget.overtime,
+                                      overtime: overtime!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-夜間居残り作業申請「${widget.overtime.companyName}」に、社内コメントを追記しました。
+夜間居残り作業申請「${overtime!.companyName}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';

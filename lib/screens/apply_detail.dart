@@ -137,6 +137,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
   void initState() {
     _read();
     _reloadApply();
+    _reloadComments();
     super.initState();
   }
 
@@ -195,7 +196,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
             labelColor: kWhiteColor,
             backgroundColor: kPdfColor,
             onPressed: () async => await PdfService().applyDownload(
-              widget.apply,
+              apply!,
             ),
           ),
           const SizedBox(width: 4),
@@ -600,7 +601,7 @@ class _ApplyDetailScreenState extends State<ApplyDetailScreen> {
                                       loginUser: widget.loginProvider.user,
                                     );
                                     String content = '''
-${widget.apply.type}申請の「${widget.apply.title}」に、社内コメントを追記しました。
+${apply!.type}申請の「${apply!.title}」に、社内コメントを追記しました。
 コメント内容:
 ${commentContentController.text}
                                     ''';
