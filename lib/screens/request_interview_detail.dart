@@ -489,6 +489,7 @@ class _RequestInterviewDetailScreenState
                     );
                     _showTextField(
                       controller: featureContentController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         interviewService.update({
                           'id': interview!.id,
@@ -638,6 +639,7 @@ class _RequestInterviewDetailScreenState
                     );
                     _showTextField(
                       controller: interviewedContentController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         interviewService.update({
                           'id': interview!.id,
@@ -763,6 +765,7 @@ class _RequestInterviewDetailScreenState
                               );
                               _showTextField(
                                 controller: locationContentController,
+                                textInputType: TextInputType.multiline,
                                 onPressed: () {
                                   interviewService.update({
                                     'id': interview!.id,
@@ -922,6 +925,7 @@ class _RequestInterviewDetailScreenState
                               );
                               _showTextField(
                                 controller: insertedContentController,
+                                textInputType: TextInputType.multiline,
                                 onPressed: () {
                                   interviewService.update({
                                     'id': interview!.id,
@@ -973,6 +977,7 @@ class _RequestInterviewDetailScreenState
                     );
                     _showTextField(
                       controller: remarksController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         interviewService.update({
                           'id': interview!.id,

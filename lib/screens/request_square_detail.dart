@@ -561,6 +561,7 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                     );
                     _showTextField(
                       controller: useContentController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         squareService.update({
                           'id': square!.id,

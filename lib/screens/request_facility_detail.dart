@@ -321,7 +321,22 @@ class _RequestFacilityDetailScreenState
                 '店舗名',
                 child: FormValue(
                   facility!.companyName,
-                  onTap: () {},
+                  onTap: () {
+                    final companyNameController = TextEditingController(
+                      text: facility!.companyName,
+                    );
+                    _showTextField(
+                      controller: companyNameController,
+                      onPressed: () {
+                        facilityService.update({
+                          'id': facility!.id,
+                          'companyName': companyNameController.text,
+                        });
+                        _reloadRequestFacility();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
@@ -329,7 +344,22 @@ class _RequestFacilityDetailScreenState
                 '店舗責任者名',
                 child: FormValue(
                   facility!.companyUserName,
-                  onTap: () {},
+                  onTap: () {
+                    final companyUserNameController = TextEditingController(
+                      text: facility!.companyUserName,
+                    );
+                    _showTextField(
+                      controller: companyUserNameController,
+                      onPressed: () {
+                        facilityService.update({
+                          'id': facility!.id,
+                          'companyUserName': companyUserNameController.text,
+                        });
+                        _reloadRequestFacility();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 8),
@@ -337,7 +367,22 @@ class _RequestFacilityDetailScreenState
                 '店舗責任者メールアドレス',
                 child: FormValue(
                   facility!.companyUserEmail,
-                  onTap: () {},
+                  onTap: () {
+                    final companyUserEmailController = TextEditingController(
+                      text: facility!.companyUserEmail,
+                    );
+                    _showTextField(
+                      controller: companyUserEmailController,
+                      onPressed: () {
+                        facilityService.update({
+                          'id': facility!.id,
+                          'companyUserEmail': companyUserEmailController.text,
+                        });
+                        _reloadRequestFacility();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               LinkText(
@@ -355,7 +400,22 @@ class _RequestFacilityDetailScreenState
                 '店舗責任者電話番号',
                 child: FormValue(
                   facility!.companyUserTel,
-                  onTap: () {},
+                  onTap: () {
+                    final companyUserTelController = TextEditingController(
+                      text: facility!.companyUserTel,
+                    );
+                    _showTextField(
+                      controller: companyUserTelController,
+                      onPressed: () {
+                        facilityService.update({
+                          'id': facility!.id,
+                          'companyUserTel': companyUserTelController.text,
+                        });
+                        _reloadRequestFacility();
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 16),

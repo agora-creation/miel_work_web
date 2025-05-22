@@ -443,6 +443,7 @@ class _RequestOvertimeDetailScreenState
                     );
                     _showTextField(
                       controller: useContentController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         overtimeService.update({
                           'id': overtime!.id,

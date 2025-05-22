@@ -557,6 +557,7 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                     );
                     _showTextField(
                       controller: constContentController,
+                      textInputType: TextInputType.multiline,
                       onPressed: () {
                         constService.update({
                           'id': requestConst!.id,
