@@ -536,6 +536,8 @@ class _RequestFacilityDetailScreenState
                                   onPressed: () async {
                                     String? error =
                                         await facilityProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       facility: facility!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
@@ -623,7 +625,9 @@ class PendingRequestFacilityDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await facilityProvider.pending(
+              organization: loginProvider.organization,
               facility: facility,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -680,7 +684,9 @@ class PendingCancelRequestFacilityDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await facilityProvider.pendingCancel(
+              organization: loginProvider.organization,
               facility: facility,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -744,6 +750,7 @@ class _ApprovalRequestFacilityDialogState
           backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await facilityProvider.approval(
+              organization: widget.loginProvider.organization,
               facility: widget.facility,
               loginUser: widget.loginProvider.user,
             );
@@ -812,6 +819,7 @@ class _RejectRequestFacilityDialogState
           backgroundColor: kRejectColor,
           onPressed: () async {
             String? error = await facilityProvider.reject(
+              organization: widget.loginProvider.organization,
               facility: widget.facility,
               loginUser: widget.loginProvider.user,
             );

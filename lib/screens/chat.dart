@@ -212,6 +212,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   onTapDelete: () => showDialog(
                                     context: context,
                                     builder: (context) => DelMessageDialog(
+                                      loginProvider: widget.loginProvider,
                                       messageProvider: messageProvider,
                                       message: message,
                                     ),
@@ -504,10 +505,12 @@ class _ReadUsersDialogState extends State<ReadUsersDialog> {
 }
 
 class DelMessageDialog extends StatefulWidget {
+  final LoginProvider loginProvider;
   final ChatMessageProvider messageProvider;
   final ChatMessageModel message;
 
   const DelMessageDialog({
+    required this.loginProvider,
     required this.messageProvider,
     required this.message,
     super.key,
@@ -560,6 +563,7 @@ class _DelMessageDialogState extends State<DelMessageDialog> {
           onPressed: () async {
             String? error = await widget.messageProvider.delete(
               message: widget.message,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

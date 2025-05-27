@@ -201,6 +201,7 @@ class _DelStockHistoryDialogState extends State<DelStockHistoryDialog> {
             String? error = await stockHistoryProvider.delete(
               stock: widget.stock,
               stockHistory: widget.stockHistory,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

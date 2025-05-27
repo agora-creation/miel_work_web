@@ -2255,6 +2255,7 @@ class _DelReportDialogState extends State<DelReportDialog> {
           onPressed: () async {
             String? error = await reportProvider.delete(
               report: widget.report,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

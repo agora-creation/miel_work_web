@@ -190,6 +190,7 @@ class _PlanEditScreenState extends State<PlanEditScreen> {
                       repeatWeeks: repeatWeeks,
                       memo: memoController.text,
                       alertMinute: alertMinute,
+                      loginUser: widget.loginProvider.user,
                     );
                     if (error != null) {
                       if (!mounted) return;
@@ -224,6 +225,7 @@ class _PlanEditScreenState extends State<PlanEditScreen> {
                       repeatWeeks: repeatWeeks,
                       memo: memoController.text,
                       alertMinute: alertMinute,
+                      loginUser: widget.loginProvider.user,
                     );
                     if (error != null) {
                       if (!mounted) return;
@@ -442,6 +444,7 @@ class _DelPlanDialogState extends State<DelPlanDialog> {
           onPressed: () async {
             String? error = await planProvider.delete(
               plan: widget.plan,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

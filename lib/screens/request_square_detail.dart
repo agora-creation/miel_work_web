@@ -659,6 +659,8 @@ class _RequestSquareDetailScreenState extends State<RequestSquareDetailScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await squareProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       square: square!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
@@ -746,7 +748,9 @@ class PendingRequestSquareDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await squareProvider.pending(
+              organization: loginProvider.organization,
               square: square,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -803,7 +807,9 @@ class PendingCancelRequestSquareDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await squareProvider.pendingCancel(
+              organization: loginProvider.organization,
               square: square,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -867,6 +873,7 @@ class _ApprovalRequestSquareDialogState
           backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await squareProvider.approval(
+              organization: widget.loginProvider.organization,
               square: widget.square,
               loginUser: widget.loginProvider.user,
             );
@@ -934,6 +941,7 @@ class _RejectRequestSquareDialogState extends State<RejectRequestSquareDialog> {
           backgroundColor: kRejectColor,
           onPressed: () async {
             String? error = await squareProvider.reject(
+              organization: widget.loginProvider.organization,
               square: widget.square,
               loginUser: widget.loginProvider.user,
             );

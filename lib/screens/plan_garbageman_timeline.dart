@@ -268,6 +268,7 @@ class _ModGarbagemanDialogState extends State<ModGarbagemanDialog> {
           onPressed: () async {
             String? error = await garbagemanProvider.delete(
               garbageman: widget.garbageman,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -292,6 +293,7 @@ class _ModGarbagemanDialogState extends State<ModGarbagemanDialog> {
               startedAt: startedAt,
               endedAt: endedAt,
               remarks: remarksController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

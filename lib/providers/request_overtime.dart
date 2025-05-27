@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:miel_work_web/common/functions.dart';
 import 'package:miel_work_web/models/approval_user.dart';
+import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/request_overtime.dart';
 import 'package:miel_work_web/models/user.dart';
+import 'package:miel_work_web/services/log.dart';
 import 'package:miel_work_web/services/mail.dart';
 import 'package:miel_work_web/services/request_overtime.dart';
 
 class RequestOvertimeProvider with ChangeNotifier {
   final RequestOvertimeService _overtimeService = RequestOvertimeService();
   final MailService _mailService = MailService();
+  final LogService _logService = LogService();
 
   Future<String?> addComment({
+    required OrganizationModel? organization,
     required RequestOvertimeModel overtime,
     required String content,
     required UserModel? loginUser,
   }) async {
     String? error;
+    if (organization == null) return '社内コメントの追記に失敗しました';
     if (content == '') return '社内コメントの追記に失敗しました';
     if (loginUser == null) return '社内コメントの追記に失敗しました';
     try {
@@ -37,6 +42,17 @@ class RequestOvertimeProvider with ChangeNotifier {
         'id': overtime.id,
         'comments': comments,
       });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': '申請に社内コメントを追記しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
     } catch (e) {
       error = '社内コメントの追記に失敗しました';
     }
@@ -44,13 +60,28 @@ class RequestOvertimeProvider with ChangeNotifier {
   }
 
   Future<String?> pending({
+    required OrganizationModel? organization,
     required RequestOvertimeModel overtime,
+    required UserModel? loginUser,
   }) async {
     String? error;
+    if (organization == null) return '申請情報の更新に失敗しました';
+    if (loginUser == null) return '申請情報の更新に失敗しました';
     try {
       _overtimeService.update({
         'id': overtime.id,
         'pending': true,
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': '申請を保留中にしました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = '申請情報の更新に失敗しました';
@@ -59,13 +90,28 @@ class RequestOvertimeProvider with ChangeNotifier {
   }
 
   Future<String?> pendingCancel({
+    required OrganizationModel? organization,
     required RequestOvertimeModel overtime,
+    required UserModel? loginUser,
   }) async {
     String? error;
+    if (organization == null) return '申請情報の更新に失敗しました';
+    if (loginUser == null) return '申請情報の更新に失敗しました';
     try {
       _overtimeService.update({
         'id': overtime.id,
         'pending': false,
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': '申請の保留中を解除しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = '申請情報の更新に失敗しました';
@@ -74,10 +120,12 @@ class RequestOvertimeProvider with ChangeNotifier {
   }
 
   Future<String?> approval({
+    required OrganizationModel? organization,
     required RequestOvertimeModel overtime,
     required UserModel? loginUser,
   }) async {
     String? error;
+    if (organization == null) return '申請の承認に失敗しました';
     if (loginUser == null) return '申請の承認に失敗しました';
     try {
       List<Map> approvalUsers = [];
@@ -139,6 +187,17 @@ $attachedFilesText
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(hours: 1)),
       });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': '申請を承認しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
     } catch (e) {
       error = '申請の承認に失敗しました';
     }
@@ -146,10 +205,12 @@ $attachedFilesText
   }
 
   Future<String?> reject({
+    required OrganizationModel? organization,
     required RequestOvertimeModel overtime,
     required UserModel? loginUser,
   }) async {
     String? error;
+    if (organization == null) return '申請の否決に失敗しました';
     if (loginUser == null) return '申請の否決に失敗しました';
     try {
       _overtimeService.update({
@@ -196,6 +257,17 @@ $attachedFilesText
         'message': message,
         'createdAt': DateTime.now(),
         'expirationAt': DateTime.now().add(const Duration(hours: 1)),
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': '申請を否決しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = '申請の否決に失敗しました';

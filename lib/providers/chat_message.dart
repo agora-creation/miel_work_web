@@ -313,8 +313,10 @@ class ChatMessageProvider with ChangeNotifier {
 
   Future<String?> delete({
     required ChatMessageModel message,
+    required UserModel? loginUser,
   }) async {
     String? error;
+    if (loginUser == null) return 'メッセージの削除に失敗しました';
     try {
       _messageService.delete({
         'id': message.id,

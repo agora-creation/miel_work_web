@@ -136,45 +136,6 @@ class _HomeHeaderState extends State<HomeHeader> {
           ),
           Row(
             children: [
-              // CustomButton(
-              //   type: ButtonSizeType.sm,
-              //   label: 'テスト',
-              //   labelColor: kWhiteColor,
-              //   backgroundColor: kGreyColor,
-              //   onPressed: () async {
-              //     List<String> readUserIds = [
-              //       '8ZjWkkUw4JjJaWACujmf',
-              //       '9H7C6WYEa8hUi74KNroC',
-              //       'Be9XaKKAXeM8eDV0Fub1',
-              //       'C6Tab32HXzlmYBQDDug6',
-              //       'CpQJzOzjtuEf5F1oA67T',
-              //       'Huicf7BgoP58DYCHY8cw',
-              //       'IvdEFUhwqNlJXhkUZeM8',
-              //       'JsrxFlPv8HUKeWDoekrZ',
-              //       'KNuolLqxFhzyVkpotOD7',
-              //       'KYT4dL9gSwTypYVfYfwj',
-              //       'SuNW9OqsyzYiI90YvfF9',
-              //       'SujDydmEt5RNjJwN2QI8',
-              //       'U8tcvnnQSExwQOd94OMj',
-              //       'X9c8yU0TLHPEwaBH8uKO',
-              //       'ZqjdJdpwOPkCuerakAT5',
-              //       'alzjUJXaGY5F4hIriH9o',
-              //       'b2AbhbbH4jwVipaQbMYl',
-              //       'dlgobtLuo7ReiHCe4QiM',
-              //       'duWkZiZhBubTZi8R8g1G',
-              //       'fD0oi7YeXAvJ3LS9p8DP',
-              //       'hfM0PPZH9D7UfaNPa88b',
-              //       'm23dL0JgXshknlfPVcxf',
-              //       'sXEvSK7MQLIIMLLMZ6g2',
-              //       'x6kMRG7x15Hbz4VU8ka7',
-              //       'yBFDRkfX3MbmPL81o5Vj',
-              //       'yVETxIcgWPzAYNa8s47c',
-              //       'yc1DhZx2jp0FYGKVwcQe',
-              //     ];
-              //     //comments: readUserIds
-              //   },
-              // ),
-              // const SizedBox(width: 4),
               CustomButton(
                 type: ButtonSizeType.sm,
                 label: 'マニュアルPDF',
@@ -355,6 +316,7 @@ class _AddGroupDialogState extends State<AddGroupDialog> {
             String? error = await widget.homeProvider.groupCreate(
               organization: widget.loginProvider.organization,
               name: nameController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -432,6 +394,7 @@ class _ModGroupDialogState extends State<ModGroupDialog> {
               organization: widget.loginProvider.organization,
               group: widget.group,
               name: nameController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -501,6 +464,7 @@ class _DelGroupDialogState extends State<DelGroupDialog> {
             String? error = await widget.homeProvider.groupDelete(
               organization: widget.loginProvider.organization,
               group: widget.group,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

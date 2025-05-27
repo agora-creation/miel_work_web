@@ -391,6 +391,7 @@ class _ModUserDialogState extends State<ModUserDialog> {
               aftGroup: selectedGroup,
               admin: admin,
               president: president,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -557,6 +558,7 @@ class _DelUserDialogState extends State<DelUserDialog> {
               organization: widget.loginProvider.organization,
               user: widget.user,
               group: widget.userInGroup,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

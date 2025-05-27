@@ -684,6 +684,7 @@ class PendingApplyDialog extends StatelessWidget {
           onPressed: () async {
             String? error = await applyProvider.pending(
               apply: apply,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -741,6 +742,7 @@ class PendingCancelApplyDialog extends StatelessWidget {
           onPressed: () async {
             String? error = await applyProvider.pendingCancel(
               apply: apply,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);

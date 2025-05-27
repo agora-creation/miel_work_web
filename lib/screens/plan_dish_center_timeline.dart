@@ -268,6 +268,7 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
           onPressed: () async {
             String? error = await dishCenterProvider.delete(
               dishCenter: widget.dishCenter,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;
@@ -292,6 +293,7 @@ class _ModDishCenterDialogState extends State<ModDishCenterDialog> {
               startedAt: startedAt,
               endedAt: endedAt,
               remarks: remarksController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

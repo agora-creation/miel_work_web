@@ -9,6 +9,7 @@ import 'package:miel_work_web/models/organization.dart';
 import 'package:miel_work_web/models/problem.dart';
 import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/fm.dart';
+import 'package:miel_work_web/services/log.dart';
 import 'package:miel_work_web/services/problem.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:path/path.dart' as p;
@@ -17,6 +18,7 @@ class ProblemProvider with ChangeNotifier {
   final ProblemService _problemService = ProblemService();
   final UserService _userService = UserService();
   final FmService _fmService = FmService();
+  final LogService _logService = LogService();
 
   Future<String?> create({
     required OrganizationModel? organization,
@@ -127,6 +129,17 @@ class ProblemProvider with ChangeNotifier {
           }
         }
       }
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': 'クレーム／要望を追加しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
     } catch (e) {
       error = 'クレーム／要望の追加に失敗しました';
     }
@@ -238,6 +251,17 @@ class ProblemProvider with ChangeNotifier {
           'count': count,
         });
       }
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': 'クレーム／要望情報を編集しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
     } catch (e) {
       error = 'クレーム／要望情報の編集に失敗しました';
     }
@@ -290,6 +314,17 @@ class ProblemProvider with ChangeNotifier {
           }
         }
       }
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': organization.id,
+        'content': 'クレーム／要望に社内コメントを追記しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
+      });
     } catch (e) {
       error = '社内コメントの追記に失敗しました';
     }
@@ -298,12 +333,25 @@ class ProblemProvider with ChangeNotifier {
 
   Future<String?> process({
     required ProblemModel problem,
+    required UserModel? loginUser,
   }) async {
     String? error;
+    if (loginUser == null) return 'クレーム／要望情報の処理に失敗しました';
     try {
       _problemService.update({
         'id': problem.id,
         'processed': true,
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': problem.organizationId,
+        'content': 'クレーム／要望を処理済しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = 'クレーム／要望情報の処理に失敗しました';
@@ -313,11 +361,24 @@ class ProblemProvider with ChangeNotifier {
 
   Future<String?> delete({
     required ProblemModel problem,
+    required UserModel? loginUser,
   }) async {
     String? error;
+    if (loginUser == null) return 'クレーム／要望情報の削除に失敗しました';
     try {
       _problemService.delete({
         'id': problem.id,
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': problem.organizationId,
+        'content': 'クレーム／要望を削除しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = 'クレーム／要望情報の削除に失敗しました';

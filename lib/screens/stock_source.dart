@@ -405,10 +405,12 @@ class _ModStockDialogState extends State<ModStockDialog> {
             ),
           ),
           const SizedBox(height: 8),
-          widget.stock.category == 0 ? FormLabel(
-            '現在の在庫数',
-            child: FormValue(widget.stock.quantity.toString()),
-          ) : Container(),
+          widget.stock.category == 0
+              ? FormLabel(
+                  '現在の在庫数',
+                  child: FormValue(widget.stock.quantity.toString()),
+                )
+              : Container(),
         ],
       ),
       actions: [
@@ -492,10 +494,12 @@ class _DelStockDialogState extends State<DelStockDialog> {
             child: FormValue(widget.stock.name),
           ),
           const SizedBox(height: 8),
-          widget.stock.category == 0 ? FormLabel(
-            '現在の在庫数',
-            child: FormValue(widget.stock.quantity.toString()),
-          ) : Container(),
+          widget.stock.category == 0
+              ? FormLabel(
+                  '現在の在庫数',
+                  child: FormValue(widget.stock.quantity.toString()),
+                )
+              : Container(),
         ],
       ),
       actions: [
@@ -514,6 +518,7 @@ class _DelStockDialogState extends State<DelStockDialog> {
           onPressed: () async {
             String? error = await stockProvider.delete(
               stock: widget.stock,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

@@ -394,6 +394,7 @@ class _PlanGuardsmanWeekScreenState extends State<PlanGuardsmanWeekScreen> {
                       organization: widget.loginProvider.organization,
                       guardsmanWeeks: guardsmanWeeks,
                       days: widget.days,
+                      loginUser: widget.loginProvider.user,
                     );
                     if (error != null) {
                       if (!mounted) return;

@@ -182,6 +182,7 @@ class _DelCategoryDialogState extends State<DelCategoryDialog> {
           onPressed: () async {
             String? error = await categoryProvider.delete(
               category: widget.category,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

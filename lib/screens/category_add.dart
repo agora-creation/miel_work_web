@@ -59,6 +59,7 @@ class _CategoryAddScreenState extends State<CategoryAddScreen> {
                 organization: widget.loginProvider.organization,
                 name: nameController.text,
                 color: color,
+                loginUser: widget.loginProvider.user,
               );
               if (error != null) {
                 if (!mounted) return;

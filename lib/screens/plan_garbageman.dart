@@ -363,6 +363,7 @@ class _AddGarbagemanDialogState extends State<AddGarbagemanDialog> {
               startedAt: startedAt,
               endedAt: endedAt,
               remarks: remarksController.text,
+              loginUser: widget.loginProvider.user,
             );
             if (error != null) {
               if (!mounted) return;

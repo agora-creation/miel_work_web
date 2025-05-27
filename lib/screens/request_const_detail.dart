@@ -697,6 +697,8 @@ class _RequestConstDetailScreenState extends State<RequestConstDetailScreen> {
                                   onPressed: () async {
                                     String? error =
                                         await constProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       requestConst: requestConst!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
@@ -885,7 +887,9 @@ class PendingRequestConstDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await constProvider.pending(
+              organization: loginProvider.organization,
               requestConst: requestConst,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -942,7 +946,9 @@ class PendingCancelRequestConstDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await constProvider.pendingCancel(
+              organization: loginProvider.organization,
               requestConst: requestConst,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -1062,6 +1068,7 @@ class _ApprovalRequestConstDialogState
           backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await constProvider.approval(
+              organization: widget.loginProvider.organization,
               requestConst: widget.requestConst,
               meeting: meeting,
               meetingAt: meetingAt,
@@ -1132,6 +1139,7 @@ class _RejectRequestConstDialogState extends State<RejectRequestConstDialog> {
           backgroundColor: kRejectColor,
           onPressed: () async {
             String? error = await constProvider.reject(
+              organization: widget.loginProvider.organization,
               requestConst: widget.requestConst,
               loginUser: widget.loginProvider.user,
             );

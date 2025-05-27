@@ -1051,6 +1051,8 @@ class _RequestInterviewDetailScreenState
                                   onPressed: () async {
                                     String? error =
                                         await interviewProvider.addComment(
+                                      organization:
+                                          widget.loginProvider.organization,
                                       interview: interview!,
                                       content: commentContentController.text,
                                       loginUser: widget.loginProvider.user,
@@ -1138,7 +1140,9 @@ class PendingRequestInterviewDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await interviewProvider.pending(
+              organization: loginProvider.organization,
               interview: interview,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -1195,7 +1199,9 @@ class PendingCancelRequestInterviewDialog extends StatelessWidget {
           backgroundColor: kYellowColor,
           onPressed: () async {
             String? error = await interviewProvider.pendingCancel(
+              organization: loginProvider.organization,
               interview: interview,
+              loginUser: loginProvider.user,
             );
             if (error != null) {
               showMessage(context, error, false);
@@ -1259,6 +1265,7 @@ class _ApprovalRequestInterviewDialogState
           backgroundColor: kApprovalColor,
           onPressed: () async {
             String? error = await interviewProvider.approval(
+              organization: widget.loginProvider.organization,
               interview: widget.interview,
               loginUser: widget.loginProvider.user,
             );
@@ -1327,6 +1334,7 @@ class _RejectRequestInterviewDialogState
           backgroundColor: kRejectColor,
           onPressed: () async {
             String? error = await interviewProvider.reject(
+              organization: widget.loginProvider.organization,
               interview: widget.interview,
               loginUser: widget.loginProvider.user,
             );
