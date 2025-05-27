@@ -139,7 +139,7 @@ class _HomeHeaderState extends State<HomeHeader> {
             children: [
               CustomButton(
                 type: ButtonSizeType.sm,
-                label: '操作ログ',
+                label: '操作ログを確認',
                 labelColor: kBlackColor,
                 backgroundColor: kGreyColor,
                 onPressed: () => showBottomUpScreen(
