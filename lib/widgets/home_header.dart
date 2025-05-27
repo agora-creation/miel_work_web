@@ -5,6 +5,7 @@ import 'package:miel_work_web/common/style.dart';
 import 'package:miel_work_web/models/organization_group.dart';
 import 'package:miel_work_web/providers/home.dart';
 import 'package:miel_work_web/providers/login.dart';
+import 'package:miel_work_web/screens/log.dart';
 import 'package:miel_work_web/screens/login.dart';
 import 'package:miel_work_web/widgets/custom_alert_dialog.dart';
 import 'package:miel_work_web/widgets/custom_button.dart';
@@ -136,6 +137,20 @@ class _HomeHeaderState extends State<HomeHeader> {
           ),
           Row(
             children: [
+              CustomButton(
+                type: ButtonSizeType.sm,
+                label: '操作ログ',
+                labelColor: kBlackColor,
+                backgroundColor: kGreyColor,
+                onPressed: () => showBottomUpScreen(
+                  context,
+                  LogScreen(
+                    loginProvider: widget.loginProvider,
+                    homeProvider: widget.homeProvider,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
               CustomButton(
                 type: ButtonSizeType.sm,
                 label: 'マニュアルPDF',
