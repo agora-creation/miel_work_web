@@ -12,6 +12,7 @@ import 'package:miel_work_web/models/user.dart';
 import 'package:miel_work_web/services/chat.dart';
 import 'package:miel_work_web/services/chat_message.dart';
 import 'package:miel_work_web/services/fm.dart';
+import 'package:miel_work_web/services/log.dart';
 import 'package:miel_work_web/services/user.dart';
 import 'package:path/path.dart' as p;
 
@@ -20,6 +21,7 @@ class ChatMessageProvider with ChangeNotifier {
   final ChatMessageService _messageService = ChatMessageService();
   final UserService _userService = UserService();
   final FmService _fmService = FmService();
+  final LogService _logService = LogService();
 
   Future<String?> send({
     required ChatModel? chat,
@@ -320,6 +322,17 @@ class ChatMessageProvider with ChangeNotifier {
     try {
       _messageService.delete({
         'id': message.id,
+      });
+      //ログ保存
+      String logId = _logService.id();
+      _logService.create({
+        'id': logId,
+        'organizationId': message.organizationId,
+        'content': 'チャットメッセージを削除しました。',
+        'device': 'PC(ブラウザ)',
+        'createdUserId': loginUser.id,
+        'createdUserName': loginUser.name,
+        'createdAt': DateTime.now(),
       });
     } catch (e) {
       error = 'メッセージの削除に失敗しました';
